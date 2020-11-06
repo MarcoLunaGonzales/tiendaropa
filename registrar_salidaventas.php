@@ -2,11 +2,12 @@
     <head>
         <title>Busqueda</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
-		
+		<script type="text/javascript" src="functionsGeneral.js"></script>
 <script type='text/javascript' language='javascript'>
 function funcionInicio(){
-	document.getElementById('nitCliente').focus();
+	//document.getElementById('nitCliente').focus();
 }
 
 
@@ -155,18 +156,78 @@ function totales(){
     }
 	subtotal=Math.round(subtotal*100)/100;
 	
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+
     document.getElementById("totalVenta").value=subtotal;
 	document.getElementById("totalFinal").value=subtotal;
+
+	document.getElementById("totalVentaUSD").value=Math.round((subtotal/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((subtotal/tipo_cambio)*100)/100;
+
+    //setear descuento o aplicar la suma total final con el descuento
+	document.getElementById("descuentoVenta").value=0;
+	document.getElementById("descuentoVentaUSD").value=0;
+	minimoEfectivo();
 }
 
 function aplicarDescuento(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
 	var descuento=document.getElementById("descuentoVenta").value;
 	
 	descuento=Math.round(descuento*100)/100;
 	
 	document.getElementById("totalFinal").value=parseFloat(total)-parseFloat(descuento);
+	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
+	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+	minimoEfectivo();
+	//totales();
 	
+}
+function aplicarDescuentoUSD(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+	var total=document.getElementById("totalVentaUSD").value;
+	var descuento=document.getElementById("descuentoVentaUSD").value;
+	
+	descuento=Math.round(descuento*100)/100;
+	
+	document.getElementById("totalFinalUSD").value=parseFloat(total)-parseFloat(descuento);
+	var descuentoBOB=(parseFloat(total)-parseFloat(descuento))*tipo_cambio;
+	document.getElementById("descuentoVenta").value=Math.round((descuento*tipo_cambio)*100)/100;
+	document.getElementById("totalFinal").value=Math.round((descuentoBOB)*100)/100;
+	minimoEfectivo();
+	//totales();
+}
+function minimoEfectivo(){
+  //obtener el minimo a pagar
+	var minimoEfectivo=$("#totalFinal").val();
+	var minimoEfectivoUSD=$("#totalFinalUSD").val();
+	//asignar el minimo al atributo min
+	$("#efectivoRecibido").attr("min",minimoEfectivo);
+	$("#efectivoRecibidoUSD").attr("min",minimoEfectivoUSD);		
+}
+function aplicarCambioEfectivo(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+	var recibido=document.getElementById("efectivoRecibido").value;
+	var total=document.getElementById("totalFinal").value;
+
+	var cambio=Math.round((parseFloat(recibido)-parseFloat(total))*100)/100;
+	document.getElementById("cambioEfectivo").value=parseFloat(cambio);
+	document.getElementById("efectivoRecibidoUSD").value=Math.round((recibido/tipo_cambio)*100)/100;
+	document.getElementById("cambioEfectivoUSD").value=Math.round((cambio/tipo_cambio)*100)/100;	
+	minimoEfectivo();
+}
+function aplicarCambioEfectivoUSD(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+	var recibido=document.getElementById("efectivoRecibidoUSD").value;
+	var total=document.getElementById("totalFinalUSD").value;
+
+	var cambio=Math.round((parseFloat(recibido)-parseFloat(total))*100)/100;
+	document.getElementById("cambioEfectivoUSD").value=parseFloat(cambio);
+	document.getElementById("efectivoRecibido").value=Math.round((recibido*tipo_cambio)*100)/100;
+	document.getElementById("cambioEfectivo").value=Math.round((cambio*tipo_cambio)*100)/100;	
+	minimoEfectivo();
 }
 function buscarMaterial(f, numMaterial){
 	f.materialActivo.value=numMaterial;
@@ -358,6 +419,13 @@ if($fecha==""){
 	$fecha=date("Y-m-d");
 }
 
+	$sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
+	$respUsd=mysql_query($sqlCambioUsd);
+	$tipoCambio=1;
+	while($filaUSD=mysql_fetch_array($respUsd)){
+		$tipoCambio=$filaUSD[0];	
+	}
+?><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
 $usuarioVentas=$_COOKIE['global_usuario'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
@@ -397,9 +465,10 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 </tr>
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
+
 <td align='center'>
 	<?php
-		
+
 		if($facturacionActivada==1){
 			$sql="select codigo, nombre, abreviatura from tipos_docs where codigo in (1,2) order by 2 desc";
 		}else{
@@ -537,9 +606,11 @@ if($tipoDocDefault==2){
 </tr>
 
 </table>
-
-
-
+<br>
+<input type="hidden" id="ventas_codigo"><!--para validar la funcion mas desde ventas-->
+<div class="codigo-barras div-center">
+               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+</div>
 
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="100%" id="data0">
@@ -561,32 +632,6 @@ if($tipoDocDefault==2){
 	</tr>
 	</table>
 </fieldset>
-	<table id='pieNota' width='100%' border="0">
-		<tr>
-			<td align='right' width='90%'>Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%'>Descuento Bs.</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' value="0" step='0.01' required></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%'>Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly></td>
-		</tr>
-
-	</table>
-
-
-<?php
-
-if($banderaErrorFacturacion==0){
-	echo "<div class='divBotones'><input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
-			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';></div>";
-	echo "</div>";	
-}else{
-	echo "";
-}
-
-
-?>
 
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
@@ -629,6 +674,74 @@ if($banderaErrorFacturacion==0){
 		</div>
 	
 	</div>
+</div>
+<div style="height:200px;"></div>
+
+<div class="pie-div">
+	<table class="pie-montos">
+      <tr>
+        <td>
+	<table id='' width='100%' border="0">
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+		</tr>
+
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" step='0.01' required></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:25px;font-size:18px;width:100%;color:#fff;"></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibido' id='efectivoRecibido' required step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
+		</tr>
+	</table>
+      
+        </td>
+        <td>
+	<table id='' width='100%' border="0">
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#189B22;">$ USD</b></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='0.01' required></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:25px;font-size:18px;width:100%;color:#fff;"> </td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' step="any" required onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
+		</tr>
+	</table>
+        </td>
+      </tr>
+	</table>
+
+
+<?php
+
+if($banderaErrorFacturacion==0){
+	echo "<div class='divBotones'><input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
+			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';></div>";
+	echo "</div>";	
+}else{
+	echo "";
+}
+
+
+?>
 </div>
 
 <input type='hidden' name='materialActivo' value="0">

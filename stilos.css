@@ -1,3 +1,46 @@
+.div-center{
+        margin: 0 auto !important; /* Added */
+        float: none !important; /* Added */
+        margin-bottom: 10px !important; /* Added */
+}
+.codigo-barras{
+    width: 400px;
+    height:90px;
+}
+
+.pie-div{
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  background-color: #fff;
+  background:#EBEBE7;
+  padding-bottom:10px;
+  padding-top:10px; 
+}
+.pie-montos{
+    width: 70%;
+    float: right;
+}
+.mensaje-codigo-barras{
+    padding-top: 12px;
+    color: #2583C2;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+.form-codigo-barras{
+   width: 390px;
+   height: 40px;
+   font-size: 18px;
+   text-align: center;
+   border-radius: 2px;
+   border: 1px solid #2E4053;
+   color:#2E4053;
+}
+.form-codigo-barras:focus,.form-codigo-barras:active,.form-codigo-barras:hover{
+   border: 1px solid #2E4053 !important;
+}
+
 input[data-readonly] {
   pointer-events: none;
 }

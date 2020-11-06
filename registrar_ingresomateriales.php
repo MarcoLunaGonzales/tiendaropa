@@ -8,6 +8,7 @@ require("estilos.inc");
         <title>Busqueda</title>
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="dlcalendar.js"></script>
+        <script type="text/javascript" src="functionsGeneral.js"></script>
 <script>
 function nuevoAjax()
 {	var xmlhttp=false;
@@ -67,6 +68,9 @@ function buscarMaterial(f, numMaterial){
 	document.getElementById('itemNombreMaterial').value='';	
 	document.getElementById('itemNombreMaterial').focus();		
 }
+
+
+
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -74,6 +78,8 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
+
+
 function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem){
 	var numRegistro=f.materialActivo.value;
 	
@@ -132,7 +138,9 @@ function enviar_form(f)
 			}		
 			ajax.send(null);
 		
-	}	
+	}
+
+	
 		
 	function menos(numero) {
 		if(numero==num){
@@ -176,6 +184,7 @@ function validar(f){
 		return(false);
 	}
 }
+
 
 
 	</script>
@@ -234,6 +243,9 @@ echo "</select></td>";
 echo "<td colspan='4' align='center'><input type='text' class='texto' name='observaciones' value='$observaciones' size='100'></td></tr>";
 echo "</table><br>";
 ?>
+         <div class="codigo-barras div-center">
+               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+         </div>
 		<fieldset id="fiel" style="width:98%;border:0;" >
 			<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 				<tr>
