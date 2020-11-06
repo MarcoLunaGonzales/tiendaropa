@@ -2,11 +2,15 @@
 	require_once("../conexion.inc");
 	require_once("../estilos2.inc");
 	require_once("configModule.php");
+	require_once("../funcion_nombres.php");
+	
+	$codMaestro=$_GET['codigo'];
+	$nameMaestro=obtenerNombreMaestro($table,$codMaestro);
 
 
 echo "<script language='Javascript'>
 		function enviar_nav()
-		{	location.href='$urlRegister';
+		{	location.href='$urlRegisterDet?cod_maestro=$codMaestro';
 		}
 		function eliminar_nav(f)
 		{
@@ -29,7 +33,7 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					location.href='$urlDelete?datos='+datos+'';
+					location.href='$urlDeleteDet?datos='+datos+'';
 				}
 				else
 				{
@@ -63,7 +67,7 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					location.href='$urlEdit?codigo_registro='+j_cod_registro+'';
+					location.href='$urlEditDet?codigo_registro='+j_cod_registro+'&cod_maestro=$codMaestro';
 				}
 			}
 		}
@@ -71,9 +75,13 @@ echo "<script language='Javascript'>
 	
 	
 	echo "<form method='post' action=''>";
-	$sql="select codigo, nombre, abreviatura, estado from $table where estado=1 order by 2";
+	$sql="select codigo, nombre, abreviatura, estado from $tableDetalle where estado=1 and $campoForaneo=$codMaestro order by 2";
+	//echo $sql;
 	$resp=mysql_query($sql);
-	echo "<h1>Lista de $moduleNamePlural</h1>";
+	echo "<h1>Lista de $moduleDetNamePlural</h1>";
+	
+	echo "<h1>$moduleNameSingular $nameMaestro</h1>";
+	
 	
 	echo "<div class='divBotones'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
@@ -87,7 +95,6 @@ echo "<script language='Javascript'>
 	<th>&nbsp;</th>
 	<th>Nombre</th>
 	<th>Abreviatura</th>
-	<th>Sub-Grupos</th>
 	</tr>";
 	while($dat=mysql_fetch_array($resp))
 	{
@@ -98,7 +105,6 @@ echo "<script language='Javascript'>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>
 		<td>$abreviatura</td>
-		<td><a href='listDetalle.php?codigo=$codigo'><img src='../imagenes/go2.png' width='40'></a></td>
 		</tr>";
 	}
 	echo "</table></center><br>";

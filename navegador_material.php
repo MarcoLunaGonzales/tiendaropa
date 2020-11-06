@@ -117,7 +117,7 @@ echo "<script language='Javascript'>
 
 	echo "<form method='post' action=''>";
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		(select e.nombre_grupo from grupos e where e.cod_grupo=m.cod_grupo), 
+		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre_tipomaterial from tipos_material t where t.cod_tipomaterial=m.cod_tipomaterial), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen
@@ -125,7 +125,7 @@ echo "<script language='Javascript'>
 		where m.estado='1' and m.cod_tipomaterial in (1,2)";
 	if($vista==1)
 	{	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		(select e.nombre_grupo from grupos e where e.cod_grupo=m.cod_grupo), 
+		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre_tipomaterial from tipos_material t where t.cod_tipomaterial=m.cod_tipomaterial), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen
@@ -146,7 +146,7 @@ echo "<script language='Javascript'>
 	}
 	
 	
-	//echo $sql;
+	echo $sql;
 	$resp=mysql_query($sql);
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Productos:
@@ -159,7 +159,7 @@ echo "<script language='Javascript'>
 	<th>Filtrar Grupo:
 	<select name='grupo' class='texto' onChange='cambiar_vista(this.form)'>";
 	echo "<option value='0'>-</option>";
-	$sqlGrupo="select cod_grupo, nombre_grupo from grupos where estado=1 order by 2";
+	$sqlGrupo="select codigo, nombre from grupos where estado=1 order by 2";
 	$respGrupo=mysql_query($sqlGrupo);
 	while($datGrupo=mysql_fetch_array($respGrupo)){
 		$codGrupoX=$datGrupo[0];

@@ -116,5 +116,16 @@ function nombreGrupo($codigo){
 	return($nombre);
 }
 
+function obtenerNombreMaestro($tabla, $codigo){
+	$sql="select nombre from $tabla where codigo='$codigo'";
+	$resp=mysql_query($sql);
+	$nombre="";
+	while($dat=mysql_fetch_array($resp)){
+		$nombre.=$dat[0]."-";
+	}
+	return($nombre);
+}
+
+
 
 ?>
