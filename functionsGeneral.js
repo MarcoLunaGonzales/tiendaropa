@@ -128,6 +128,10 @@ function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){
 	$('#ultimoCosto'+numRegistro).val(costoItem);
 	$('#divUltimoCosto'+numRegistro).html("["+costoItem+"]");
 	$("#input_codigo_barras").focus();	
+    
+    $("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
+	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
+
 }
 
 function setMaterialesSoloVentas(cod, nombreMat){
@@ -137,6 +141,8 @@ function setMaterialesSoloVentas(cod, nombreMat){
 	$('#cod_material'+numRegistro).html(nombreMat);
 	$("#input_codigo_barras").focus();
 	actStock(numRegistro);
+	$("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
+	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
 }
 
 $(document).ready(function() {

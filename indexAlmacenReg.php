@@ -101,7 +101,7 @@ include("datosUsuario.php");
 					<li><a href="navegadorDolar.php" target="contenedorPrincipal">Cambiar Cotizacion de Dolar</a></li>
 				</ul>	
 			</li-->
-						<li><a href="registrar_salidaventas.php" target="contenedorPrincipal">Vender / Facturar</a></li>
+						<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
 
 			<li><span>Reportes</span>
 				<ul>
@@ -159,6 +159,9 @@ include("datosUsuario.php");
 						</ul>	
 					</li-->
 				</ul>
+			</li>
+
+			<li><a href="registrar_cotizacion_dolar.php" target="contenedorPrincipal"><span>Cotización Dolar</span></a>	
 			</li>			
 	</nav>
 </div>

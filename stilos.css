@@ -5,7 +5,7 @@
 }
 .codigo-barras{
     width: 400px;
-    height:90px;
+    height:65px;
 }
 
 .pie-div{
@@ -21,6 +21,7 @@
     width: 70%;
     float: right;
 }
+
 .mensaje-codigo-barras{
     padding-top: 12px;
     color: #2583C2;

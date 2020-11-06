@@ -410,7 +410,7 @@ function checkSubmit() {
 
 		
 <?php
-echo "<body onLoad='funcionInicio();'>";
+echo "</head><body onLoad='funcionInicio();'>";
 require("conexion.inc");
 require("estilos_almacenes.inc");
 require("funciones.php");
@@ -734,7 +734,10 @@ if($tipoDocDefault==2){
 
 if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'><input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
-			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';></div>";
+			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+			<br><hr>
+            <h2 style='font-size:12px;color:#9EA09E;float:left;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
+			</div>";
 	echo "</div>";	
 }else{
 	echo "";
@@ -742,6 +745,7 @@ if($banderaErrorFacturacion==0){
 
 
 ?>
+
 </div>
 
 <input type='hidden' name='materialActivo' value="0">
@@ -749,3 +753,4 @@ if($banderaErrorFacturacion==0){
 
 </form>
 </body>
+</html>
