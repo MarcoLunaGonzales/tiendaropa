@@ -118,7 +118,7 @@ echo "<script language='Javascript'>
 	echo "<form method='post' action=''>";
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
-		(select t.nombre_tipomaterial from tipos_material t where t.cod_tipomaterial=m.cod_tipomaterial), 
+		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen
 		from material_apoyo m
@@ -126,7 +126,7 @@ echo "<script language='Javascript'>
 	if($vista==1)
 	{	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
-		(select t.nombre_tipomaterial from tipos_material t where t.cod_tipomaterial=m.cod_tipomaterial), 
+		(select t.nombre from marcas t where t.codigo=m.cod_marca),
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen
 		from material_apoyo m
@@ -146,7 +146,7 @@ echo "<script language='Javascript'>
 	}
 	
 	
-	echo $sql;
+	//echo $sql;
 	$resp=mysql_query($sql);
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Productos:
@@ -194,8 +194,8 @@ echo "<script language='Javascript'>
 		</div>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>Indice</th><th>&nbsp;</th><th>Nombre Producto</th><th>Descripcion</th>
-		<th>Grupo</th><th>Tipo</th><th>Proveedor</th><th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+	echo "<tr><th>Indice</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th>
+		<th>Marca</th><th>Grupo/SubGrupo</th><th>Proveedor</th><th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
 	$indice_tabla=1;
 	while($dat=mysql_fetch_array($resp))
@@ -219,8 +219,8 @@ echo "<script language='Javascript'>
 		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
 		<input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombreProd</td><td>$observaciones</td>
-		<td>$grupo</td>
 		<td>$tipoMaterial</td>
+		<td>$grupo</td>
 		<td>$nombreLinea</td>
 		<td align='center'>$precioVenta</td>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'></td>
