@@ -167,6 +167,7 @@ function totales(){
     //setear descuento o aplicar la suma total final con el descuento
 	document.getElementById("descuentoVenta").value=0;
 	document.getElementById("descuentoVentaUSD").value=0;
+	aplicarCambioEfectivo();
 	minimoEfectivo();
 }
 
@@ -204,8 +205,8 @@ function minimoEfectivo(){
 	var minimoEfectivo=$("#totalFinal").val();
 	var minimoEfectivoUSD=$("#totalFinalUSD").val();
 	//asignar el minimo al atributo min
-	$("#efectivoRecibido").attr("min",minimoEfectivo);
-	$("#efectivoRecibidoUSD").attr("min",minimoEfectivoUSD);		
+	//$("#efectivoRecibidoUnido").attr("min",minimoEfectivo);
+	//$("#efectivoRecibidoUnidoUSD").attr("min",minimoEfectivoUSD);		
 }
 function aplicarCambioEfectivo(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
@@ -228,6 +229,23 @@ function aplicarCambioEfectivoUSD(f){
 	document.getElementById("efectivoRecibido").value=Math.round((recibido*tipo_cambio)*100)/100;
 	document.getElementById("cambioEfectivo").value=Math.round((cambio*tipo_cambio)*100)/100;	
 	minimoEfectivo();
+}
+function aplicarMontoCombinadoEfectivo(f){
+   var efectivo=$("#efectivoRecibidoUnido").val();	
+   var efectivoUSD=$("#efectivoRecibidoUnidoUSD").val();	
+  if(efectivo==""){
+   efectivo=0;
+  }
+  if(efectivoUSD==""){
+   efectivoUSD=0;
+  }	
+
+  var tipo_cambio=$("#tipo_cambio_dolar").val();
+  var monto_dolares_bolivianos=parseFloat(efectivoUSD)*parseFloat(tipo_cambio);
+  var monto_total_bolivianos=monto_dolares_bolivianos+parseFloat(efectivo);
+  document.getElementById("efectivoRecibido").value=Math.round((monto_total_bolivianos)*100)/100;
+  document.getElementById("efectivoRecibidoUSD").value=Math.round((monto_total_bolivianos/tipo_cambio)*100)/100;
+  aplicarCambioEfectivo(f);
 }
 function buscarMaterial(f, numMaterial){
 	f.materialActivo.value=numMaterial;
@@ -405,7 +423,20 @@ function checkSubmit() {
     document.getElementById("btsubmit").disabled = true;
     return true;
 }	
-	
+
+$(document).ready(function() {
+  $("#guardarSalidaVenta").submit(function(e) {
+      var mensaje="";
+      if(parseFloat($("#efectivoRecibido").val())<parseFloat($("#totalFinal").val())){
+        mensaje+="<p></p>";
+        alert("El monto en efectivo NO debe ser menor al monto total");
+        return false;
+      }else{
+      	document.getElementById("btsubmit").value = "Enviando...";
+        document.getElementById("btsubmit").disabled = true;
+      }     
+    });
+});
 </script>
 
 		
@@ -451,7 +482,7 @@ $respConf=mysql_query($sqlConf);
 $ventaDebajoCosto=mysql_result($respConf,0,0);
 
 ?>
-<form action='guardarSalidaMaterial.php' method='POST' name='form1' onsubmit='return checkSubmit();'>
+<form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" ><!--onsubmit='return checkSubmit();'-->
 
 <h1>Registrar Venta</h1>
 
@@ -696,7 +727,7 @@ if($tipoDocDefault==2){
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:25px;font-size:18px;width:100%;color:#fff;"></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibido' id='efectivoRecibido' required step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
@@ -719,7 +750,7 @@ if($tipoDocDefault==2){
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:25px;font-size:18px;width:100%;color:#fff;"> </td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' step="any" required onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
@@ -733,11 +764,23 @@ if($tipoDocDefault==2){
 <?php
 
 if($banderaErrorFacturacion==0){
-	echo "<div class='divBotones'><input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
+	echo "<div class='divBotones'>
+	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
 			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
-			<br><hr>
-            <h2 style='font-size:12px;color:#9EA09E;float:left;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
-			</div>";
+			<hr>
+            <h2 style='font-size:12px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
+            <hr>
+            <table style='width:230px;'>
+            <tr>
+               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
+               <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
+             </tr>
+             <tr>
+               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>
+               <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;' step='any'></td>
+             </tr>
+            </table>   
+			";
 	echo "</div>";	
 }else{
 	echo "";
