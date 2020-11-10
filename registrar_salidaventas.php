@@ -178,10 +178,11 @@ function aplicarDescuento(f){
 	
 	descuento=Math.round(descuento*100)/100;
 	
-	document.getElementById("totalFinal").value=parseFloat(total)-parseFloat(descuento);
+	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
 	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
 	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
 	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+	aplicarCambioEfectivo();
 	minimoEfectivo();
 	//totales();
 	
@@ -193,12 +194,13 @@ function aplicarDescuentoUSD(f){
 	
 	descuento=Math.round(descuento*100)/100;
 	
-	document.getElementById("totalFinalUSD").value=parseFloat(total)-parseFloat(descuento);
+	document.getElementById("totalFinalUSD").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
 	var descuentoBOB=(parseFloat(total)-parseFloat(descuento))*tipo_cambio;
 	document.getElementById("descuentoVenta").value=Math.round((descuento*tipo_cambio)*100)/100;
 	document.getElementById("totalFinal").value=Math.round((descuentoBOB)*100)/100;
+	aplicarCambioEfectivo();
 	minimoEfectivo();
-	//totales();
+	totales();
 }
 function minimoEfectivo(){
   //obtener el minimo a pagar
