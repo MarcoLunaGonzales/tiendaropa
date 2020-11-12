@@ -21,7 +21,7 @@ function cambiarDatosProductosTable(valor){
                            filaEncontrado=i;
 	            		}
 	            	}else{
-	            	  if($("#materiales"+i).length>0){
+	            	  if($("#materiales"+i).length>0){ //para ventas
 	            		if($("#materiales"+i).val()==resp[1]){
                            existeCodigo++; 
                            filaEncontrado=i;
@@ -31,9 +31,14 @@ function cambiarDatosProductosTable(valor){
 	            };
 	            if(existeCodigo==0){
 	              if($("#ventas_codigo").length>0){
-                    soloMasVentas(resp);	
+                    soloMasVentas(resp);	//para Ventas
 	              }else{
-	                soloMas(resp);		
+	              	if($("#tipoSalida").length>0){ //para salida
+                      soloMasSalida(resp);	//para Ingresos
+	              	}else{
+	              	  soloMas(resp);	//para Ingresos
+	              	}
+	                
 	              }	
 	              $("#mensaje_input_codigo_barras").html("Encontrado "+resp[2]+", código de barras: "+ valor);	 
 	            }else{
@@ -118,7 +123,62 @@ function soloMas(obj) {
 			}		
 			ajax.send(null);
 		
-	}	
+	}
+function soloMasSalida(obj) {
+	if(num>=15){
+		alert("No puede registrar mas de 15 items en una nota.");
+	}else{
+		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
+		var banderaItems0=0;
+		for(var j=1; j<=num; j++){
+			if(document.getElementById('materiales'+j)!=null){
+				if(document.getElementById('materiales'+j).value==0){
+					banderaItems0=1;
+				}
+			}
+		}
+		//fin validacion
+		console.log("bandera: "+banderaItems0);
+
+		if(banderaItems0==0){
+			num++;
+			$('input[name=materialActivo]').val(num);
+			cantidad_items++;
+			console.log("num: "+num);
+			console.log("cantidadItems: "+cantidad_items);
+			fi = document.getElementById('fiel');
+			contenedor = document.createElement('div');
+			contenedor.id = 'div'+num;  
+			fi.type="style";
+			fi.appendChild(contenedor);
+			var div_material;
+			div_material=document.getElementById("div"+num);			
+			ajax=nuevoAjax();
+			ajax.open("GET","ajaxMaterialSalida.php?codigo="+num,true);
+			ajax.onreadystatechange=function(){
+				if (ajax.readyState==4) {
+					div_material.innerHTML=ajax.responseText;
+					setMaterialesSoloSalidas(obj[1],obj[2]);
+				}
+			}		
+			ajax.send(null);
+		}
+
+	}
+	
+}		
+
+function setMaterialesSoloSalidas(cod, nombreMat){
+	var numRegistro=$('input[name=materialActivo]').val();
+	$('#materiales'+numRegistro).val(cod);
+	$('#cod_material'+numRegistro).html(nombreMat);
+	$("#input_codigo_barras").focus();
+	actStock(numRegistro);
+    $("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
+	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
+	
+}
+
 
 function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){	
 	var numRegistro=$('input[name=materialActivo]').val();
