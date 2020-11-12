@@ -12,8 +12,8 @@ if(!function_exists('register_globals')){
 //$bd=mysql_select_db("tuadmintecniplast");
 
 
-$conexion=mysql_connect("localhost","root","");
+$conexion=mysql_connect("localhost","root","4868422Marco");
 //$bd=mysql_select_db("tecniplast2810");
-$bd=mysql_select_db("tienda1000");
+$bd=mysql_select_db("tiendatest");
 
 ?>

@@ -43,9 +43,10 @@ while($datRef=mysql_fetch_array($respRef)){
 }
 
 
-$sql="select id, id_anterior, barcode, nombre, color, talla, marca, precio, costo, grupo from importacion_productos limit 0,200";
+$sql="select id, id_anterior, barcode, nombre, color, talla, marca, precio, costo, grupo from importacion_productos";
 $resp=mysql_query($sql);
 
+$indice=1;
 while($dat=mysql_fetch_array($resp)){
 	$idNuevo=$dat[0];
 	$idAnterior=$dat[1];
@@ -66,6 +67,9 @@ while($dat=mysql_fetch_array($resp)){
 	
 	
 	$idCreacionItem=crearProducto($idNuevo, $barCode, $nombreItem, $codigoMarca, $codigoGrupo, $codigoSubGrupo, $talla, $color, $descripcionItem, $idAnterior,$precioItem);	
+	
+	echo $idCreacionItem." ".$indice."<br>";
+	$indice++;
 }
 
 ?>
