@@ -8,7 +8,7 @@ if(!function_exists('register_globals')){
 }else{
 }
 
-$enlaceCon=mysqli_connect("localhost","root","","tienda1000");
+$enlaceCon=mysqli_connect("localhost","root","","tienda2000");
 
 if (mysqli_connect_errno())
 {

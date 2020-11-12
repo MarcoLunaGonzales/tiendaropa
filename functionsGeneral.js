@@ -21,7 +21,7 @@ function cambiarDatosProductosTable(valor){
                            filaEncontrado=i;
 	            		}
 	            	}else{
-	            	  if($("#materiales"+i).length>0){
+	            	  if($("#materiales"+i).length>0){ //para ventas
 	            		if($("#materiales"+i).val()==resp[1]){
                            existeCodigo++; 
                            filaEncontrado=i;
@@ -31,9 +31,14 @@ function cambiarDatosProductosTable(valor){
 	            };
 	            if(existeCodigo==0){
 	              if($("#ventas_codigo").length>0){
-                    soloMasVentas(resp);	
+                    soloMasVentas(resp);	//para Ventas
 	              }else{
-	                soloMas(resp);		
+	              	if($("#tipoSalida").length>0){ //para salida
+                      soloMasSalida(resp);	//para Ingresos
+	              	}else{
+	              	  soloMas(resp);	//para Ingresos
+	              	}
+	                
 	              }	
 	              $("#mensaje_input_codigo_barras").html("Encontrado "+resp[2]+", código de barras: "+ valor);	 
 	            }else{
@@ -45,7 +50,11 @@ function cambiarDatosProductosTable(valor){
 	            	if($("#ventas_codigo").length>0){
                       calculaMontoMaterial(filaEncontrado);
 	            	}else{
-	            	  cambiaCosto(document.getElementsByName('form1'),filaEncontrado);	
+	            		if($("#tipoSalida").length>0){
+                          //sin funciones 
+	            		}else{
+	            	      cambiaCosto(document.getElementsByName('form1'),filaEncontrado);			
+	            		}	            	  
 	            	}
 	            	
 	            	$("#mensaje_input_codigo_barras").html(resp[2]+" + 1 :"+ valor);	 
@@ -118,7 +127,62 @@ function soloMas(obj) {
 			}		
 			ajax.send(null);
 		
-	}	
+	}
+function soloMasSalida(obj) {
+	if(num>=15){
+		alert("No puede registrar mas de 15 items en una nota.");
+	}else{
+		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
+		var banderaItems0=0;
+		for(var j=1; j<=num; j++){
+			if(document.getElementById('materiales'+j)!=null){
+				if(document.getElementById('materiales'+j).value==0){
+					banderaItems0=1;
+				}
+			}
+		}
+		//fin validacion
+		console.log("bandera: "+banderaItems0);
+
+		if(banderaItems0==0){
+			num++;
+			$('input[name=materialActivo]').val(num);
+			cantidad_items++;
+			console.log("num: "+num);
+			console.log("cantidadItems: "+cantidad_items);
+			fi = document.getElementById('fiel');
+			contenedor = document.createElement('div');
+			contenedor.id = 'div'+num;  
+			fi.type="style";
+			fi.appendChild(contenedor);
+			var div_material;
+			div_material=document.getElementById("div"+num);			
+			ajax=nuevoAjax();
+			ajax.open("GET","ajaxMaterialSalida.php?codigo="+num,true);
+			ajax.onreadystatechange=function(){
+				if (ajax.readyState==4) {
+					div_material.innerHTML=ajax.responseText;
+					setMaterialesSoloSalidas(obj[1],obj[2]);
+				}
+			}		
+			ajax.send(null);
+		}
+
+	}
+	
+}		
+
+function setMaterialesSoloSalidas(cod, nombreMat){
+	var numRegistro=$('input[name=materialActivo]').val();
+	$('#materiales'+numRegistro).val(cod);
+	$('#cod_material'+numRegistro).html(nombreMat);
+	$("#input_codigo_barras").focus();
+	actStock(numRegistro);
+    $("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
+	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
+	
+}
+
 
 function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){	
 	var numRegistro=$('input[name=materialActivo]').val();
@@ -159,3 +223,99 @@ $(document).ready(function() {
 	}	
 });
 
+
+
+function mostrarArchivoCambios(filename,idname){
+  $("#label_txt_"+idname).html(filename);
+  if(filename.length>28){
+    $("#label_txt_"+idname).html(filename.substr(0,28)+"...");
+  }  
+   $("#label_"+idname).attr("title",filename);
+   if(filename==""||filename==null){
+    $("#label_"+idname).html('<i class="fa fa-upload"></i> SUBIR DATOS EXCEL');
+    $("#label_"+idname).removeClass('boton-azul');
+    if(!$("#label_"+idname).hasClass("boton-verde")){
+      $("#label_"+idname).addClass('boton-verde');//cambiar estilo
+    } 
+    if($(".confirmar_archivo").length>0){
+      if(!$(".confirmar_archivo").hasClass("d-none")){
+    	$(".confirmar_archivo").addClass("d-none")
+      }	
+    } 
+   }else{
+    $("#label_"+idname).html('<i class="fa fa-check"></i> Cambiar');
+    $("#label_"+idname).removeClass('boton-verde');
+    if(!($("#label_"+idname).hasClass("boton-azul"))){
+      $("#label_"+idname).addClass('boton-azul');//cambiar estilo
+    }
+
+    if($(".confirmar_archivo").length>0){
+      if($(".confirmar_archivo").hasClass("d-none")){
+    	$(".confirmar_archivo").removeClass("d-none")
+      }	
+    }
+   }
+}
+
+$(document).ready(function() {
+  $(".archivo").change(function(e) {
+     var filename = $(this).val().split('\\').pop();
+     var idname = $(this).attr('id');
+     mostrarArchivoCambios(filename,idname);
+   });
+  
+  /*$("#guarda_ingresomateriales").submit(function( event ) {
+  	if($("#tipo_submit").val()==1){
+  	  cargarDatosExcelIngresos();	
+  	}    
+  });*/
+});
+
+function cargarSubmitArchivo(valor){
+  $("#tipo_submit").val(valor);
+}
+
+function cargarDatosExcelIngresos(){
+	swal({
+        title: '¿Esta Seguro?',
+        text: "Se guardarán los datos",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'boton-azul',
+        cancelButtonClass: 'boton-rojo',
+        confirmButtonText: 'GUARDAR',
+        cancelButtonText: 'CANCELAR',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+              cargarDatosExcelIngresosSave();            
+            return(true);
+          } else if (result.dismiss === 'cancel') {
+            return(false);
+          }
+        });
+}
+
+function cargarDatosExcelIngresosSave(){
+  $("#tipo_submit").val(1);
+}
+
+function cambiarNotaRemision(){
+	if($("#boton_nota_remision").length>0){
+		var tipo=$("#tipoDoc").val();
+		if(tipo==2){
+			$("#tipoDoc").val(1);
+			$("#boton_nota_remision").addClass("boton-plomo");
+			if($("#boton_nota_remision").hasClass("boton-plomo-osc")){
+              $("#boton_nota_remision").removeClass("boton-plomo-osc");  
+			}
+		}else{
+			$("#tipoDoc").val(2);
+			$("#boton_nota_remision").addClass("boton-plomo-osc");
+			if($("#boton_nota_remision").hasClass("boton-plomo")){
+              $("#boton_nota_remision").removeClass("boton-plomo");  
+			}
+		}
+		ajaxNroDoc(form1);
+	}
+}

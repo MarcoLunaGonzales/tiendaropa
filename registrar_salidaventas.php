@@ -500,6 +500,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
 
 <td align='center'>
+	<input type="hidden" value="" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
 	<?php
 
 		if($facturacionActivada==1){
@@ -509,7 +510,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 		}
 		$resp=mysql_query($sql);
 
-		echo "<select name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
+		echo "<select name='tipoDoc_extra' id='tipoDoc_extra' onChange='ajaxNroDoc(form1)' disabled>";
 		echo "<option value=''>-</option>";
 		while($dat=mysql_fetch_array($resp)){
 			$codigo=$dat[0];
@@ -711,6 +712,7 @@ if($tipoDocDefault==2){
 <div style="height:200px;"></div>
 
 <div class="pie-div">
+	<div class='float-right' style="padding-right:15px;"><a href='#' class='boton-plomo' style="width:10px !important;height:10px !important;font-size:10px !important;" id="boton_nota_remision" onclick="cambiarNotaRemision()">NR</a></div>
 	<table class="pie-montos">
       <tr>
         <td>
@@ -781,7 +783,8 @@ if($banderaErrorFacturacion==0){
                <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>
                <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;' step='any'></td>
              </tr>
-            </table>   
+            </table>
+
 			";
 	echo "</div>";	
 }else{

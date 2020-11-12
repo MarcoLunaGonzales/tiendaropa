@@ -44,7 +44,19 @@ $sql_inserta = mysql_query($consulta);
 echo "aaaa:$consulta";
 
 if($sql_inserta==1){
-	for ($i = 1; $i <= $cantidad_material; $i++) {
+   $valorExcel=0;
+	if(isset($_POST["tipo_submit"])){
+		$valorExcel=$_POST["tipo_submit"];
+	} 
+    if($valorExcel=="1"){
+      include "subirDatosExcel.php";
+      //fin de if
+	echo "<script language='Javascript'>
+		alert('".$mensaje."');
+		location.href='navegador_ingresomateriales.php';
+		</script>";	
+    }else{
+      for ($i = 1; $i <= $cantidad_material; $i++) {
 		$cod_material = $_POST["material$i"];
 		
 		if($cod_material!=0){
@@ -103,13 +115,14 @@ if($sql_inserta==1){
 			$aa=recalculaCostos($cod_material, $global_almacen);
 			
 		}
-		
-
-	}
-	echo "<script language='Javascript'>
+	  }
+	  //fin de if
+	  echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_ingresomateriales.php';
-		</script>";		
+		</script>";	
+    }
+    	
 }else{
 	echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');

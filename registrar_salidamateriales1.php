@@ -3,7 +3,8 @@
         <title>Busqueda</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
-
+        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="functionsGeneral.js"></script>
 		
 		
 		        <script type='text/javascript' language='javascript'>
@@ -341,7 +342,9 @@ else
 </table>
 
 <br>
-
+<div class="codigo-barras div-center">
+               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+         </div>
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="80%" border="0" id="data0" style="border:#ccc 1px solid;">
 	<tr>
