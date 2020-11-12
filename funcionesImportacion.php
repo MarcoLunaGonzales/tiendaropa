@@ -107,7 +107,13 @@ function crearProducto($idNuevo, $barCode, $nombreItem, $codMarca, $codGrupo, $c
 	$sqlInsertItem="insert into material_apoyo (codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial, cantidad_presentacion, observaciones, imagen, cod_unidad, cod_subgrupo, cod_marca, codigo_barras, talla, color, codigo_anterior) values 
 	('$idNuevo','$nombreItem','$estadoItem','$lineaProveedorItem','$codGrupo','$codTipoMaterial','$cantidadPresentacion','','','$codUnidad','$codSubGrupo','$codMarca','$barCode','$tallaItem','$colorItem','$idAnterior')";
 	$respInsertItem=mysql_query($sqlInsertItem);
-	$codigoDevolver=mysql_insert_id();
+	
+	
+	$sqlDelPrecio="delete from precios where codigo_material='$idNuevo'";
+	$respDelPrecio=mysql_query($sqlDelPrecio);
+	
+	$sqlInsertPrecio="insert into precios (codigo_material, cod_precio, precio, cod_ciudad) values ('$idNuevo','1','$precioItem','1')";
+	$respInsertPrecio=mysql_query($sqlInsertPrecio);
 	
 	return($codigoDevolver);
 	
