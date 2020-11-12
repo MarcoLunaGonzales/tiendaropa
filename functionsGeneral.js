@@ -305,8 +305,16 @@ function cambiarNotaRemision(){
 		var tipo=$("#tipoDoc").val();
 		if(tipo==2){
 			$("#tipoDoc").val(1);
+			$("#boton_nota_remision").addClass("boton-plomo");
+			if($("#boton_nota_remision").hasClass("boton-plomo-osc")){
+              $("#boton_nota_remision").removeClass("boton-plomo-osc");  
+			}
 		}else{
 			$("#tipoDoc").val(2);
+			$("#boton_nota_remision").addClass("boton-plomo-osc");
+			if($("#boton_nota_remision").hasClass("boton-plomo")){
+              $("#boton_nota_remision").removeClass("boton-plomo");  
+			}
 		}
 	}
 }
