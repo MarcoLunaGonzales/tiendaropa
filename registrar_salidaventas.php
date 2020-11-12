@@ -500,6 +500,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
 
 <td align='center'>
+	<input type="hidden" value="" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
 	<?php
 
 		if($facturacionActivada==1){
@@ -509,7 +510,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 		}
 		$resp=mysql_query($sql);
 
-		echo "<select name='tipoDoc' id='tipoDoc' onChange='ajaxNroDoc(form1)' required>";
+		echo "<select name='tipoDoc_extra' id='tipoDoc_extra' onChange='ajaxNroDoc(form1)' disabled>";
 		echo "<option value=''>-</option>";
 		while($dat=mysql_fetch_array($resp)){
 			$codigo=$dat[0];

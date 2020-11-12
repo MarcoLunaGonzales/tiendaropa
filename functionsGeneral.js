@@ -316,5 +316,6 @@ function cambiarNotaRemision(){
               $("#boton_nota_remision").removeClass("boton-plomo");  
 			}
 		}
+		ajaxNroDoc(form1);
 	}
 }
