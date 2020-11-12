@@ -9,6 +9,7 @@ require("estilos.inc");
         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="dlcalendar.js"></script>
         <script type="text/javascript" src="functionsGeneral.js"></script>
+        <script src="lib/sweetalert2/sweetalert2.all.js"></script>
 <script>
 function nuevoAjax()
 {	var xmlhttp=false;
@@ -160,7 +161,8 @@ function pressEnter(e, f){
 	}
 }
 	
-function validar(f){   
+function validar(f){
+	document.getElementById("tipo_submit").value="0";  
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
 	
@@ -185,6 +187,10 @@ function validar(f){
 	}
 }
 
+function validar2(f){   
+	document.getElementById("tipo_submit").value="1"; 
+	return true;
+}
 
 
 	</script>
@@ -195,7 +201,7 @@ if($fecha=="")
 {   $fecha=date("d/m/Y");
 }
 
-echo "<form action='guarda_ingresomateriales.php' method='post' name='form1'>";
+echo "<form id='guarda_ingresomateriales' action='guarda_ingresomateriales.php' method='post' name='form1' enctype='multipart/form-data'>";
 echo "<table border='0' class='textotit' align='center'><tr><th>Registrar Ingreso de Materiales</th></tr></table><br>";
 echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%' style='border:#ccc 1px solid;'>";
 echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura</th></tr>";
@@ -242,10 +248,27 @@ while($dat1=mysql_fetch_array($resp1))
 echo "</select></td>";
 echo "<td colspan='4' align='center'><input type='text' class='texto' name='observaciones' value='$observaciones' size='100'></td></tr>";
 echo "</table><br>";
-?>
+?>       
+        <div class="contenedor">
+        	<div class="float-right">
+                <input type="hidden" class="form-control" name="lista_padre" id="lista_padre" value="-1">
+                <input type="hidden" class="form-control" name="codigo" id="codigo" value="-1">
+                <small id="label_txt_documentos_excel"></small> 
+                <span class="input-archivo">
+                  <input type="file" class="archivo" accept=".xls,.xlsx" name="documentos_excel" id="documentos_excel"/>
+                </span>
+                <label title="Ningún archivo" for="documentos_excel" id="label_documentos_excel" class="label-archivo boton-verde"> <span class="fa fa-upload"></span> SUBIR DATOS EXCEL
+                </label>	
+                <button type="submit" onClick='return validar2(this.form);' class="boton-rojo confirmar_archivo d-none" title="GUARDAR DATOS EXCEL"><span class="fa fa-save"></span></button>
+        	</div>
+        	<input id="tipo_submit" name="tipo_submit" value="0" type="hidden">
+
          <div class="codigo-barras div-center">
                <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
          </div>
+
+        </div>
+
 		<fieldset id="fiel" style="width:98%;border:0;" >
 			<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 				<tr>

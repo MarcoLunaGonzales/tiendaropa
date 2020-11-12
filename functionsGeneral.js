@@ -50,7 +50,11 @@ function cambiarDatosProductosTable(valor){
 	            	if($("#ventas_codigo").length>0){
                       calculaMontoMaterial(filaEncontrado);
 	            	}else{
-	            	  cambiaCosto(document.getElementsByName('form1'),filaEncontrado);	
+	            		if($("#tipoSalida").length>0){
+                          //sin funciones 
+	            		}else{
+	            	      cambiaCosto(document.getElementsByName('form1'),filaEncontrado);			
+	            		}	            	  
 	            	}
 	            	
 	            	$("#mensaje_input_codigo_barras").html(resp[2]+" + 1 :"+ valor);	 
@@ -219,3 +223,90 @@ $(document).ready(function() {
 	}	
 });
 
+
+
+function mostrarArchivoCambios(filename,idname){
+  $("#label_txt_"+idname).html(filename);
+  if(filename.length>28){
+    $("#label_txt_"+idname).html(filename.substr(0,28)+"...");
+  }  
+   $("#label_"+idname).attr("title",filename);
+   if(filename==""||filename==null){
+    $("#label_"+idname).html('<i class="fa fa-upload"></i> SUBIR DATOS EXCEL');
+    $("#label_"+idname).removeClass('boton-azul');
+    if(!$("#label_"+idname).hasClass("boton-verde")){
+      $("#label_"+idname).addClass('boton-verde');//cambiar estilo
+    } 
+    if($(".confirmar_archivo").length>0){
+      if(!$(".confirmar_archivo").hasClass("d-none")){
+    	$(".confirmar_archivo").addClass("d-none")
+      }	
+    } 
+   }else{
+    $("#label_"+idname).html('<i class="fa fa-check"></i> Cambiar');
+    $("#label_"+idname).removeClass('boton-verde');
+    if(!($("#label_"+idname).hasClass("boton-azul"))){
+      $("#label_"+idname).addClass('boton-azul');//cambiar estilo
+    }
+
+    if($(".confirmar_archivo").length>0){
+      if($(".confirmar_archivo").hasClass("d-none")){
+    	$(".confirmar_archivo").removeClass("d-none")
+      }	
+    }
+   }
+}
+
+$(document).ready(function() {
+  $(".archivo").change(function(e) {
+     var filename = $(this).val().split('\\').pop();
+     var idname = $(this).attr('id');
+     mostrarArchivoCambios(filename,idname);
+   });
+  
+  /*$("#guarda_ingresomateriales").submit(function( event ) {
+  	if($("#tipo_submit").val()==1){
+  	  cargarDatosExcelIngresos();	
+  	}    
+  });*/
+});
+
+function cargarSubmitArchivo(valor){
+  $("#tipo_submit").val(valor);
+}
+
+function cargarDatosExcelIngresos(){
+	swal({
+        title: '¿Esta Seguro?',
+        text: "Se guardarán los datos",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'boton-azul',
+        cancelButtonClass: 'boton-rojo',
+        confirmButtonText: 'GUARDAR',
+        cancelButtonText: 'CANCELAR',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+              cargarDatosExcelIngresosSave();            
+            return(true);
+          } else if (result.dismiss === 'cancel') {
+            return(false);
+          }
+        });
+}
+
+function cargarDatosExcelIngresosSave(){
+  $("#tipo_submit").val(1);
+}
+
+function cambiarNotaRemision(){
+	if($("#boton_nota_remision").length>0){
+		var tipo=$("#tipoDoc").val();
+		if(tipo==2){
+			$("#tipoDoc").val(1);
+		}else{
+			$("#tipoDoc").val(2);
+		}
+	}
+}

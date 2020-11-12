@@ -711,6 +711,7 @@ if($tipoDocDefault==2){
 <div style="height:200px;"></div>
 
 <div class="pie-div">
+	<div class='float-right' style="padding-right:15px;"><a href='#' class='boton-plomo' style="width:10px !important;height:10px !important;font-size:10px !important;" id="boton_nota_remision" onclick="cambiarNotaRemision()">NR</a></div>
 	<table class="pie-montos">
       <tr>
         <td>
@@ -781,7 +782,8 @@ if($banderaErrorFacturacion==0){
                <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>
                <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;' step='any'></td>
              </tr>
-            </table>   
+            </table>
+
 			";
 	echo "</div>";	
 }else{

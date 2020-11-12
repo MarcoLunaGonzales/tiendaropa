@@ -333,7 +333,99 @@ a:active {
     color: #000000;
     background-color: #ffffff;
   }
+  .boton-verde
+{
+    text-decoration: none !important;
+    padding: 10px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    color: #ffffff !important;
+    background-color: #1EB11E !important;
+    border-radius: 3px !important;
+    border: 2px solid #1EB11E !important;
+}
+.boton-verde:hover{
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
 
+  .boton-rojo
+{
+    text-decoration: none !important;
+    padding: 10px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    color: #ffffff !important;
+    background-color: #E73024 !important;
+    border-radius: 3px !important;
+    border: 2px solid #E73024 !important;
+}
+.boton-rojo:hover{
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+ 
+ .boton-azul
+{
+    text-decoration: none !important;
+    padding: 10px !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    color: #ffffff !important;
+    background-color: #248CE7 !important;
+    border-radius: 3px !important;
+    border: 2px solid #248CE7 !important;
+}
+.boton-azul:hover{
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+   .boton-plomo
+{
+    text-decoration: none !important;
+    padding: 10px !important;
+    font-weight: 0 !important;
+    font-size: 12px !important;
+    color: #ffffff !important;
+    background-color: #88898A !important;
+    border-radius: 3px !important;
+    border: 2px solid #88898A !important;
+}
+.boton-plomo:hover{
+    color: #000000 !important;
+    background-color: #ffffff !important;
+  }
+
+  .input-archivo {
+ width: 0.1px;
+ height: 0.1px;
+ opacity: 0;
+ overflow: hidden;
+ position: absolute;
+ z-index: -1;
+ }
+
+ .label-archivo {
+ font-size: 13px;
+ display: inline-block;
+ cursor: pointer;
+ text-transform: uppercase;
+ text-align: center;
+ }
+
+.float-right{
+    float: right;
+}
+.float-left{
+    float: left;
+}
+.contenedor{
+    width: 92%;
+}
+.d-none{
+    display: none;
+}
 .boton2peque
 {
 	text-decoration: none;
