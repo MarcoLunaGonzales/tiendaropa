@@ -4,6 +4,8 @@ require('conexion.inc');
 
 
 function insertaMarca($marca){
+	$marca=ucwords($marca);
+	
 	$sql="select count(*), codigo from marcas where nombre='$marca' ";
 	$resp=mysql_query($sql);
 	$contador=mysql_result($resp,0,0);
@@ -21,6 +23,8 @@ function insertaMarca($marca){
 }
 
 function insertaGrupo($grupo){
+	$grupo=ucwords($grupo);
+	
 	if($grupo=="CONJUNTO"){$grupo="CONJUNTOS";}
 	if($grupo=="MEDIA"){$grupo="MEDIAS";}
 	if($grupo=="CALZA"){$grupo="CALZAS";}
@@ -44,6 +48,8 @@ function insertaGrupo($grupo){
 }
 
 function insertaSubGrupo($codigoGrupo, $subgrupo){
+	$subgrupo=ucwords($subgrupo);
+	
 	$sql="select count(*), codigo from subgrupos where nombre='$subgrupo' and cod_grupo='$codigoGrupo'";
 	$resp=mysql_query($sql);
 	$contador=mysql_result($resp,0,0);
@@ -91,6 +97,10 @@ function crearProducto($idNuevo, $barCode, $nombreItem, $codMarca, $codGrupo, $c
 	$codTipoMaterial=1;
 	$cantidadPresentacion=1;
 	$codUnidad=1;
+	
+	$nombreItem=strtoupper($nombreItem);
+	$colorItem=ucwords($colorItem);
+	$tallaItem=ucwords($tallaItem);
 	
 	if($idNuevo==0){
 		$sqlMax="select max(codigo_material)+1 from material_apoyo";
