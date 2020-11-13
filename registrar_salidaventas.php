@@ -500,7 +500,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
 
 <td align='center'>
-	<input type="hidden" value="" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
+	<input type="hidden" value="<?=$tipoDocDefault?>" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
 	<?php
 
 		if($facturacionActivada==1){
