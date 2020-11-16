@@ -156,8 +156,9 @@ function numeroCorrelativo($tipoDoc){
 			return $vectorCodigo;
 		}
 	}
-	if(($facturacionActivada==1 && $tipoDoc==2) || $facturacionActivada!=1){
+	if(($facturacionActivada==1 && ($tipoDoc==2 || $tipoDoc==3)) || $facturacionActivada!=1){
 		$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' and cod_almacen='$globalAlmacen'";
+		//echo $sql;
 		$resp=mysql_query($sql);
 		while($dat=mysql_fetch_array($resp)){
 			$codigo=$dat[0];
