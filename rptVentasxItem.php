@@ -4,13 +4,15 @@ require('function_formatofecha.php');
 require('conexion.inc');
 require('funcion_nombres.php');
 
+$sqlUTF=mysql_query("SET NAMES utf8");
+
 $fecha_ini=$_GET['fecha_ini'];
 $fecha_fin=$_GET['fecha_fin'];
 $rpt_ver=$_GET['rpt_ver'];
 
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=$fecha_ini;
+$fecha_finconsulta=$fecha_fin;
 
 
 $rpt_territorio=$_GET['rpt_territorio'];
@@ -23,7 +25,7 @@ echo "<table align='center' class='textotit' width='100%'><tr><td align='center'
 	<br>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
 	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 	
-$sql="select m.`codigo_material`, m.`descripcion_material`, 
+$sql="select m.`codigo_material`, concat(m.`descripcion_material`,' (',m.color,' ',m.talla,' ',m.codigo_barras,')'), 
 	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total
 	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
@@ -31,6 +33,7 @@ $sql="select m.`codigo_material`, m.`descripcion_material`,
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
 	group by m.`codigo_material` order by 3 desc;";
 	
+//	echo $sql;
 $resp=mysql_query($sql);
 
 echo "<br><table align='center' class='texto' width='100%'>

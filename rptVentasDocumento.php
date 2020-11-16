@@ -4,18 +4,18 @@ require('function_formatofecha.php');
 require('conexion.inc');
 require('funcion_nombres.php');
 
-$fecha_ini=$_GET['fecha_ini'];
-$fecha_fin=$_GET['fecha_fin'];
-$rpt_ver=$_GET['rpt_ver'];
-$codTipoDoc=$_GET['codTipoDoc'];
+$fecha_ini=$_POST['exafinicial'];
+$fecha_fin=$_POST['exaffinal'];
+$codTipoDoc=$_POST['rpt_tipodoc'];
+
+$codTipoDoc=implode(",",$codTipoDoc);
 
 
-//desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=$fecha_ini;
+$fecha_finconsulta=$fecha_fin;
 
 
-$rpt_territorio=$_GET['rpt_territorio'];
+$rpt_territorio=$_POST['rpt_territorio'];
 
 $fecha_reporte=date("d/m/Y");
 
@@ -35,12 +35,9 @@ $sql="select s.`fecha`,
 	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' and 
 	s.cod_tipo_doc in ($codTipoDoc)";
 
-if($rpt_ver==1){
-	$sql.=" and s.estado_salida=4 ";
-}
-
 $sql.=" order by s.fecha, s.nro_correlativo";
-	
+
+//echo $sql;
 $resp=mysql_query($sql);
 
 echo "<br><table align='center' class='texto' width='70%'>

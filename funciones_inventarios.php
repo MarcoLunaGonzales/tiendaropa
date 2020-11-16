@@ -40,6 +40,8 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 			$sqlInsert="insert into salida_detalle_almacenes (cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, precio_unitario,
 			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle) values ('$cod_salida', '$codMaterial', '$cantidadInsert', '$loteProducto', '$fechaVencProducto',
 			'$precio','$descuento','$montoparcial','$codIngreso','$orden')";
+			
+			//echo $sqlInsert;
 			$respInsert=mysql_query($sqlInsert);
 			
 			//AQUI DAMOS DE BAJA EL DESCUENTO POR SI HUBIERAN DOS REGISTROS O MAS
@@ -61,6 +63,27 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	}
 	recalculaCostos($codMaterial, $cod_almacen);
 	
+	return($banderaError);
+}
+
+function insertar_detalleSalidaVenta($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaStock, $orden){
+	
+	//la $banderaStock es 1 cuando se validan stocks y 0 cuando no se validan los stocks
+	//echo $cod_salida." ".$cod_almacen." ".$cod_material." ".$cantidad;
+	$cantidadPivote=$cantidad;
+	
+	$banderaError=1;
+	
+	$sqlInsert="insert into salida_detalle_almacenes (cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, precio_unitario,
+	descuento_unitario, monto_unitario, orden_detalle) values ('$cod_salida', '$cod_material', '$cantidad', '0', '0000-00-00',
+	'$precio','$descuento','$montoparcial','$orden')";
+	
+	//echo $sqlInsert;
+	
+	$respInsert=mysql_query($sqlInsert);
+	if($respInsert!=1){
+		$banderaError=2;
+	}
 	return($banderaError);
 }
 

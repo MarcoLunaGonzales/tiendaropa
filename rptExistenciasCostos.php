@@ -4,7 +4,6 @@ require('function_formatofecha.php');
 require('funciones.php');
 require('conexion.inc');
 
-$rpt_fecha=cambia_formatofecha($rpt_fecha);
 $rptGrupo=$_GET["rpt_grupo"];
 
 list($anio, $mes, $dia) = split('-', $rpt_fecha);
@@ -24,8 +23,8 @@ $nombre_almacen=$datos_nombre_almacen[0];
 	echo "<h1>Reporte Existencias Almacen Valorado<h1>
 	<h2>Territorio: <strong>$nombre_territorio</strong> Nombre Almacen: <strong>$nombre_almacen</strong> <br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</h2>";
 	//desde esta parte viene el reporte en si
-	$sql_item="select m.codigo_material, m.descripcion_material, g.nombre_grupo from material_apoyo m, grupos g
-	where m.codigo_material<>0 and m.estado='1' and m.cod_grupo=g.cod_grupo and m.cod_grupo in ($rptGrupo) order by 3,2";
+	$sql_item="select m.codigo_material, m.descripcion_material, g.nombre, m.color, m.talla, m.codigo_barras from material_apoyo m, grupos g
+	where m.codigo_material<>0 and m.estado='1' and m.cod_grupo=g.codigo and m.cod_grupo in ($rptGrupo) order by 3,2";
 	
 	$resp_item=mysql_query($sql_item);
 	
@@ -33,8 +32,10 @@ $nombre_almacen=$datos_nombre_almacen[0];
 	<tr>
 	<th>&nbsp;</th>
 	<th>Codigo</th>
-	<th>Material</th>
 	<th>Grupo</th>
+	<th>Producto</th>
+	<th>Color</th>
+	<th>Talla</th>
 	<th>Cantidad</th>
 	<th>Costo Unitario</th>
 	<th>Valor</th>
@@ -48,8 +49,13 @@ $nombre_almacen=$datos_nombre_almacen[0];
 
 		$nombre_item=$datos_item[1];
 		$nombreGrupo=$datos_item[2];
+		
+		$colorItem=$datos_item[3];
+		$tallaItem=$datos_item[4];
+		
+		$barCode=$datos_item[5];
 
-		$cadena_mostrar="<tr><td>$indice</td><td>$codigo_item</td><td>$nombre_item</td><td>$nombreGrupo</td>";
+		$cadena_mostrar="<tr><td>$indice</td><td>$barCode</td><td>$nombreGrupo</td><td>$nombre_item</td><td>$colorItem</td><td>$tallaItem</td>";
 
 		$sql_ingresos="select sum(id.cantidad_unitaria), sum(id.cantidad_unitaria*costo_almacen) from ingreso_almacenes i, ingreso_detalle_almacenes id
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$rpt_fecha' and i.cod_almacen='$rpt_almacen'
@@ -135,7 +141,7 @@ $nombre_almacen=$datos_nombre_almacen[0];
 		}
 	}
 	$totalValorAlmacen=redondear2($totalValorAlmacen);
-	echo "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td align='right'>$totalValorAlmacen</td><tr>";
+	echo "<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td align='right'>$totalValorAlmacen</td><tr>";
 	echo "</table>";
 include("imprimirInc.php");
 ?>

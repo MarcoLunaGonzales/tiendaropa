@@ -4,7 +4,7 @@ $codGrupo=$_GET['codGrupo'];
 
 	echo "<select name='rpt_item' class='texto'>";
 	
-	$sql_item="select codigo_material, descripcion_material from material_apoyo where cod_grupo='$codGrupo' and codigo_material<>0 order by descripcion_material";
+	$sql_item="select codigo_material, concat(descripcion_material,'-',color,' ',talla) from material_apoyo where cod_grupo='$codGrupo' and codigo_material<>0 order by descripcion_material";
 	
 	$resp=mysql_query($sql_item);
 	echo "<option value=''></option>";

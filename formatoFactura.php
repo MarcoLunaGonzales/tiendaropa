@@ -59,6 +59,7 @@ $nitTxt=mysql_result($respConf,0,1);
 
 $sqlDatosFactura="select d.nro_autorizacion, DATE_FORMAT(d.fecha_limite_emision, '%d/%m/%Y'), f.codigo_control, f.nit, f.razon_social from facturas_venta f, dosificaciones d
 	where f.cod_dosificacion=d.cod_dosificacion and f.cod_venta=$codigoVenta";
+//echo $sqlDatosFactura;
 $respDatosFactura=mysql_query($sqlDatosFactura);
 $nroAutorizacion=mysql_result($respDatosFactura,0,0);
 $fechaLimiteEmision=mysql_result($respDatosFactura,0,1);

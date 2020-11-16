@@ -6,7 +6,7 @@ $sql_visitador="select distinct(f.codigo_funcionario), f.paterno, f.materno, f.n
 	where f.cod_cargo=c.cod_cargo and f.estado=1 and f.cod_ciudad in ($codTerritorio) 
 	order by f.paterno";
 $resp_visitador=mysql_query($sql_visitador);
-echo "<select name='rpt_persona' id='rpt_persona' class='texto' size='10' multiple>";
+echo "<select name='rpt_persona' id='rpt_persona' class='texto' size='10' multiple required>";
 while($dat_visitador=mysql_fetch_array($resp_visitador))
 {	$codigo=$dat_visitador[0];
 	$nombre="$dat_visitador[1] $dat_visitador[2] $dat_visitador[3]";

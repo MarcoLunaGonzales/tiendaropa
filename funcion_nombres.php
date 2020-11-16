@@ -105,7 +105,7 @@ function nombreAlmacen($codigo){
 }
 
 function nombreGrupo($codigo){
-	$sql="select nombre_grupo from grupos where cod_grupo in ($codigo)";
+	$sql="select nombre from grupos where codigo in ($codigo)";
 	$resp=mysql_query($sql);
 	$nombre="";
 	while($dat=mysql_fetch_array($resp)){

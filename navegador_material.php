@@ -120,7 +120,7 @@ echo "<script language='Javascript'>
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen
+		m.observaciones, imagen, m.color, m.talla, m.codigo_barras
 		from material_apoyo m
 		where m.estado='1' and m.cod_tipomaterial in (1,2)";
 	if($vista==1)
@@ -128,7 +128,7 @@ echo "<script language='Javascript'>
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca),
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen
+		m.observaciones, imagen, m.color, m.talla, m.codigo_barras
 		from material_apoyo m
 		where m.estado='0' and m.cod_tipomaterial in (1,2)";
 	}
@@ -195,7 +195,8 @@ echo "<script language='Javascript'>
 	
 	echo "<center><table class='texto'>";
 	echo "<tr><th>Indice</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th>
-		<th>Marca</th><th>Grupo/SubGrupo</th><th>Proveedor</th><th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+		<th>Marca</th><th>Grupo/SubGrupo</th><th>Color</th><th>Talla</th>
+		<th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
 	$indice_tabla=1;
 	while($dat=mysql_fetch_array($resp))
@@ -208,20 +209,25 @@ echo "<script language='Javascript'>
 		$nombreLinea=$dat[5];
 		$observaciones=$dat[6];
 		$imagen=$dat[7];
+		$color=$dat[8];
+		$talla=$dat[9];
+		$codigoBarras=$dat[10];
+		
 		$precioVenta=precioVenta($codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
 		
 		if($imagen=='default.png'){
 			$tamanioImagen=80;
 		}else{
-			$tamanioImagen=200;
+			$tamanioImagen=80;
 		}
 		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
 		<input type='checkbox' name='codigo' value='$codigo'></td>
-		<td>$nombreProd</td><td>$observaciones</td>
+		<td>$nombreProd</td><td>($codigoBarras) $observaciones</td>
 		<td>$tipoMaterial</td>
 		<td>$grupo</td>
-		<td>$nombreLinea</td>
+		<td>$color</td>
+		<td>$talla</td>
 		<td align='center'>$precioVenta</td>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'></td>
 		<td><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='40' title='Reemplazar Imagen'></a></td>

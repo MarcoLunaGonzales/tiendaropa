@@ -50,8 +50,16 @@ function envia_formulario(f)
 			j++;
 		}
 	}
-	window.open('rptVentasxVendedorDetalle.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&rpt_persona='+rpt_persona+'&rpt_grupo='+rpt_grupo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
-	return(true);
+	
+	var forms = f;
+    if(forms.checkValidity()){
+		window.open('rptVentasxVendedorDetalle.php?rpt_territorio='+rpt_territorio+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&rpt_persona='+rpt_persona+'&rpt_grupo='+rpt_grupo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+		return(true);
+	} else{
+        alert("Debe seleccionar todos los campos del reporte.");
+		return false;
+    }
+
 }
 </script>
 <?php
@@ -76,11 +84,14 @@ echo"<form method='post' action=''>";
 	echo "</select></td></tr>";
 	
 	echo "<tr><th align='left'>Personal</th>";
-	echo "<td><div id='divPersonal'></div>
+	echo "<td><div id='divPersonal'>
+	<select name='rpt_persona' id='rpt_persona' class='texto' size='10' multiple required></select>
+	</div>
 	</td></tr>";
 
-	echo "<tr><th align='left'>Grupo</th><td><select name='rpt_grupo[]' id='rpt_grupo' class='texto' size='5' onChange='ajaxReporteItems(this.form);' multiple>";
-	$sql="select cod_grupo, nombre_grupo from grupos where estado=1 order by 2";
+	echo "<tr><th align='left'>Grupo</th>
+	<td><select name='rpt_grupo[]' id='rpt_grupo' class='texto' size='5' onChange='ajaxReporteItems(this.form);' multiple required>";
+	$sql="select codigo, nombre from grupos where estado=1 order by 2";
 	$resp=mysql_query($sql);
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo=$dat[0];
@@ -105,6 +116,5 @@ echo"<form method='post' action=''>";
 	</center><br>";
 	echo"</form>";
 	echo "</div>";
-	echo"<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>";
 
 ?>

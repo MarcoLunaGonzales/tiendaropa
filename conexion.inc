@@ -13,4 +13,6 @@ if(!function_exists('register_globals')){
 $conexion=mysql_connect("localhost","root","4868422Marco");
 $bd=mysql_select_db("tiendatest");
 
+$sqlUTF=mysql_query("SET NAMES utf8");
+
 ?>

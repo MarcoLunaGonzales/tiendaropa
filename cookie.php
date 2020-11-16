@@ -35,8 +35,8 @@ if ($num_filas != 0) {
 	setcookie("global_almacen",$global_almacen);
 	setcookie("globalGestion", $globalGestion);
 	
-	if($cod_cargo==1000){
-		header("location:index_administracion.html");
+	if($cod_cargo==1000 || $cod_cargo==1016){
+		header("location:indexAlmacenReg.php");
 	}else{
 		header("location:indexAlmacenReg.php");
 	}

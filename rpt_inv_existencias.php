@@ -9,8 +9,9 @@ $rptOrdenar=$_GET["rpt_ordenar"];
 $rptGrupo=$_GET["rpt_grupo"];
 $rptFormato=$_GET["rpt_formato"];
 
+$rptFechaInicio="2020-11-01";
 
-$rpt_fecha=cambia_formatofecha($rpt_fecha);
+//$rpt_fecha=cambia_formatofecha($rpt_fecha);
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 
@@ -28,13 +29,16 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 		
 		if($rptOrdenar==1){
 			$sql_item="select ma.codigo_material, ma.descripcion_material, ma.cantidad_presentacion,
-			(select g.nombre_grupo from grupos g where g.cod_grupo=ma.cod_grupo)as nombregrupo, ma.peso
+			(select g.nombre from grupos g where g.codigo=ma.cod_grupo)as nombregrupo, ma.peso, ma.color, ma.talla, ma.codigo_barras,
+			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
 			from material_apoyo ma
 			where ma.codigo_material<>0 and ma.estado='1' and ma.cod_grupo in ($rptGrupo) order by ma.descripcion_material";
 		}else{
 			$sql_item="select m.codigo_material,
-			m.descripcion_material, cantidad_presentacion, g.nombre_grupo, m.peso from grupos g, 
-			material_apoyo m where g.cod_grupo=m.cod_grupo and m.estado='1' 
+			m.descripcion_material, cantidad_presentacion, g.nombre, m.peso, ma.color, ma.talla, ma.codigo_barras,			
+			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
+			from grupos g, 
+			material_apoyo m where g.codigo=m.cod_grupo and m.estado='1' 
 			and m.cod_grupo in ($rptGrupo) order by 4,2";
 		}
 		
@@ -43,20 +47,15 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 		$resp_item=mysql_query($sql_item);
 		
 		if($rptOrdenar==1){
-			/*echo "<br><table border=0 align='center' class='textomediano' width='70%'>
-			<thead>
-				<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Peso[Kg]</th>
-				<th>Cantidad</th></tr>
-			</thead>";*/
 			if($rptFormato==1){
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Cantidad</th></tr>
+					<tr><th>&nbsp;</th><th>Codigo</th><th>Marca</th><th>Material</th><th>Cantidad</th></tr>
 				</thead>";				
 			}else{//PARA INVENTARIO
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>Material</th><th>Cantidad</th>
+					<tr><th>&nbsp;</th><th>Marca</th><th>Material</th><th>Cantidad</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -73,12 +72,12 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			if($rptFormato==1){
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>Codigo</th><th>Grupo</th><th>Material</th><th>Cantidad</th></tr>
+					<tr><th>&nbsp;</th><th>Codigo</th><th>Marca</th><th>Grupo</th><th>Material</th><th>Cantidad</th></tr>
 				</thead>";				
 			}else{//PARA INVENTARIO
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>Grupo</th><th>Material</th><th>Cantidad</th>
+					<tr><th>&nbsp;</th><th>Marca</th><th>Grupo</th><th>Material</th><th>Cantidad</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr>
@@ -93,33 +92,43 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$cantidadPresentacion=$datos_item[2];
 			$nombreLinea=$datos_item[3];
 			$pesoItem=$datos_item[4];
+			$colorItem=$datos_item[5];
+			$tallaItem=$datos_item[6];
+			$barCode=$datos_item[7];
+			$nombreMarca=$datos_item[8];
 			
 			$cadena_mostrar="<tbody>";
 			if($rptOrdenar==1){
 				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombre_item</td><td>$pesoItem</td>";
 				if($rptFormato==1){
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombre_item</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$barCode</td><td>$nombreMarca</td><td>$nombre_item - $colorItem $tallaItem</td>";
 				}else{//para inventario
-					$cadena_mostrar.="<tr><td>$indice</td><td>$nombre_item</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreMarca</td><td>$nombre_item - $colorItem $tallaItem/td>";
 				}
 			}else{
 				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombreLinea</td><td>$nombre_item</td><td>$pesoItem</td>";				
 				if($rptFormato==1){
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombreLinea</td><td>$nombre_item</td>";			
+					$cadena_mostrar.="<tr><td>$indice</td><td>$barCode</td><td>$nombreMarca</td><td>$nombreLinea</td><td>$nombre_item</td>";			
 				}else{
-					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreLinea</td><td>$nombre_item</td>";				
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreMarca</td><td>$nombreLinea</td><td>$nombre_item</td>";				
 				}
 			}
 			
 			$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
-			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$rpt_fecha' and i.cod_almacen='$rpt_almacen'
+			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and i.cod_almacen='$rpt_almacen'
 			and id.cod_material='$codigo_item' and i.ingreso_anulado=0";
+			
+			//echo $sql_ingresos;
+			
 			$resp_ingresos=mysql_query($sql_ingresos);
 			$dat_ingresos=mysql_fetch_array($resp_ingresos);
 			$cant_ingresos=$dat_ingresos[0];
 			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
-			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$rpt_fecha' and s.cod_almacen='$rpt_almacen'
+			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and s.cod_almacen='$rpt_almacen'
 			and sd.cod_material='$codigo_item' and s.salida_anulada=0";
+			
+			//echo $sql_salidas;
+			
 			$resp_salidas=mysql_query($sql_salidas);
 			$dat_salidas=mysql_fetch_array($resp_salidas);
 			$cant_salidas=$dat_salidas[0];

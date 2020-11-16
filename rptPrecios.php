@@ -79,7 +79,7 @@ function ajaxBuscarItems(f){
 <?php
 
 	require("conexion.inc");
-	require("estilos_almacenes.inc");
+	require("estilos_reportes_almacencentral.php");
 	require("funciones.php");
 	require("funcion_nombres.php");
 	
@@ -95,19 +95,25 @@ function ajaxBuscarItems(f){
 	
 	
 	echo "<div id='divCuerpo'>";
-	$sql="select codigo_material, descripcion_material, (select g.nombre_grupo from grupos g where g.cod_grupo=ma.cod_grupo)grupo from material_apoyo ma
+	$sql="select codigo_material, descripcion_material, (select g.nombre from grupos g where g.codigo=ma.cod_grupo)grupo, color, talla,
+	(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
+	from material_apoyo ma
 			where ma.estado=1 and ma.cod_grupo in ($rpt_grupo) order by 3,2";
 	$resp=mysql_query($sql);
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>Material</th>
+	echo "<tr>
 	<th>Grupo</th>
+	<th>Marca</th>
+	<th>Producto</th>
+	<th>Color</th>
+	<th>Talla</th>
 	<th>Existencias</th>
 	<th>Costo</th>
-	<th>Precio A</th>
-	<th>Precio B</th>
-	<th>Precio C</th>
-	<th>Precio Factura</th>
+	<th>Precio Normal</th>
+	<th>Precio Descuento1</th>
+	<th>Precio Descuento2</th>
+	<th>Precio Descuento3</th>
 	</tr>";
 	$indice=1;
 	while($dat=mysql_fetch_array($resp))
@@ -115,6 +121,9 @@ function ajaxBuscarItems(f){
 		$codigo=$dat[0];
 		$nombreMaterial=$dat[1];
 		$nombreGrupo=$dat[2];
+		$color=$dat[3];
+		$talla=$dat[4];
+		$nombreMarca=$dat[5];
 		
 		//sacamos existencias
 		$rpt_fecha=date("Y-m-d");
@@ -133,7 +142,12 @@ function ajaxBuscarItems(f){
 		$stock2=$cant_ingresos-$cant_salidas;
 
 		
-		echo "<tr><td>$nombreMaterial </td><td>$nombreGrupo</td>";
+		echo "<tr>
+		<td>$nombreGrupo</td>
+		<td>$nombreMarca</td>
+		<td>$nombreMaterial </td>
+		<td>$color</td>
+		<td>$talla</td>";
 		echo "<td align='center'>$stock2</td>";
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";

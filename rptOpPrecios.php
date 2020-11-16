@@ -46,7 +46,7 @@ echo"<form method='post' action=''>";
 	echo "</select></td></tr>";
 	
 	echo "<tr><th align='left'>Grupo</th><td><select name='rpt_grupo' class='texto' size='10' multiple>";
-	$sql="select cod_grupo, nombre_grupo from grupos where estado=1 order by 2";
+	$sql="select codigo, nombre from grupos where estado=1 order by 2";
 	$resp=mysql_query($sql);
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo=$dat[0];
