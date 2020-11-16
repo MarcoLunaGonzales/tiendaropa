@@ -12,6 +12,14 @@ function cambiarDatosProductosTable(valor){
                $("#mensaje_input_codigo_barras").html("No se encontró el código de barras: "+ valor);
                $("#input_codigo_barras").val("");
         	}else{
+        	  if($("#divItemReporte").length>0){ //para el reporte 
+                $('select[name=rpt_item]').val(resp[1]);
+        	  }else{
+                if($("#itemNombreBusqueda").length>0){
+                	$("#btnBusqueda").click();
+                }else{
+        	   //para los formularios de ventas, ingresos o salidas
+
         		var existeCodigo=0;var filaEncontrado=0;
         		var numRegistro=$('input[name=materialActivo]').val();
 	            for (var i = 1; i <= numRegistro; i++) {
@@ -59,6 +67,8 @@ function cambiarDatosProductosTable(valor){
 	            	
 	            	$("#mensaje_input_codigo_barras").html(resp[2]+" + 1 :"+ valor);	 
 	            }
+	           }//fin else para registro kardex
+	          }//fin de para salidas ingresos o ventas 
                $("#input_codigo_barras").val("");      
         	}
         }

@@ -7,6 +7,10 @@
     width: 400px;
     height:65px;
 }
+.codigo-barras-sm{
+    width: 200px;
+    height:30px;
+}
 
 .pie-div{
   position: fixed;
@@ -39,6 +43,19 @@
    color:#2E4053;
 }
 .form-codigo-barras:focus,.form-codigo-barras:active,.form-codigo-barras:hover{
+   border: 1px solid #2E4053 !important;
+}
+
+.form-codigo-barras-sm{
+   width: 190px;
+   height: 25px;
+   font-size: 14px;
+   text-align: center;
+   border-radius: 2px;
+   border: 1px solid #2E4053;
+   color:#2E4053;
+}
+.form-codigo-barras-sm:focus,.form-codigo-barras-sm:active,.form-codigo-barras-sm:hover{
    border: 1px solid #2E4053 !important;
 }
 

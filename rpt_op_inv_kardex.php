@@ -52,6 +52,8 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexion.inc");
+?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="functionsGeneral.js"></script><?php
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
@@ -134,7 +136,16 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo "</select></td>
 	</div>
 	</tr>";
-
+     ?>
+   <tr>
+   	<th align='left'>Codigo de Barras</th>
+   	   <td>
+        <div class="codigo-barras-sm">
+               <input type="text" class="form-codigo-barras-sm" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+         </div>
+       </td>
+    </tr>
+     <?php
 	
 	echo "<tr><th align='left'>Fecha inicio:</th>";
 			echo" <TD bgcolor='#ffffff'>

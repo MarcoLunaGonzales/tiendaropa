@@ -62,15 +62,22 @@ echo "<script language='Javascript'>
 				}
 			}
 		}
-		function cambiar_vista(f)
+        function cambiar_vista(f)
 		{
 			var modo_vista;
 			var modo_orden;
 			var grupo;
 			modo_vista=f.vista.value;
 			modo_orden=f.vista_ordenar.value;
-			grupo=f.grupo.value;
-			location.href='navegador_material.php?vista='+modo_vista+'&vista_ordenar='+modo_orden+'&grupo='+grupo;
+			grupo=f.grupo.value;			
+
+			var grupo2=$('#itemGrupoBusqueda').val();
+			var marca=$('#itemMarcaBusqueda').val();
+			var talla=$('#itemTallaBusqueda').val();
+			var color=$('#itemColorBusqueda').val();
+			var nombre=$('#itemNombreBusqueda').val();
+			var cod_barras=$('#input_codigo_barras').val();
+			location.href='navegador_material.php?vista='+modo_vista+'&vista_ordenar='+modo_orden+'&grupo='+grupo+'&gr='+grupo2+'&ma='+marca+'&ta='+talla+'&cl='+color+'&nm='+nombre+'&cb='+cod_barras;
 		}
 		function duplicar(f)
 		{
@@ -107,11 +114,16 @@ echo "<script language='Javascript'>
 	require("conexion.inc");
 	require('estilos.inc');
 	require("funciones.php");
-	
+	?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="functionsGeneral.js">
+
+
+</script><?php
 	$vista_ordenar=$_GET['vista_ordenar'];
 	$vista=$_GET['vista'];
 	$globalAgencia=$_COOKIE['global_agencia'];
 	$grupo=$_GET['grupo'];
+    
 
 	echo "<h1>Registro de Productos</h1>";
 
@@ -135,7 +147,35 @@ echo "<script language='Javascript'>
 	if($grupo!=0){
 		$sql.=" and m.cod_grupo in ($grupo) ";
 	}
-	if($vista_ordenar==0){
+
+	//nuevos filtros
+  $gr=0;$ma=0;$ta="";$cl="";$nm="";$cb="";
+  if(isset($_GET['gr'])&&$_GET['gr']!=0){
+      $sql.=" and m.cod_grupo in (".$_GET["gr"].")";
+      $gr=$_GET['gr'];
+  }
+  if(isset($_GET['ma'])&&$_GET['ma']!=0){
+      $sql.=" and m.cod_marca in (".$_GET["ma"].")";
+      $ma=$_GET['ma'];
+  }
+  if(isset($_GET['ta'])&&$_GET['ta']!=""){
+      $sql.=" and m.talla='".$_GET["ta"]."'";
+      $ta=$_GET['ta'];
+  }
+  if(isset($_GET['cl'])&&$_GET['cl']!=""){
+      $sql.=" and m.color like '%".$_GET["cl"]."%'";
+      $cl=$_GET['cl'];
+  }
+  if(isset($_GET['nm'])&&$_GET['nm']!=""){
+      $sql.=" and m.descripcion_material like '%".$_GET["nm"]."%'";
+      $nm=$_GET['nm'];
+  }
+  if(isset($_GET['cb'])&&$_GET['cb']!=""){
+      $sql.=" and m.codigo_barras='".$_GET["cb"]."'";
+      $cb=$_GET['cb'];
+  }
+
+   if($vista_ordenar==0){
 		$sql=$sql." order by 4,2";
 	}
 	if($vista_ordenar==1){
@@ -144,7 +184,11 @@ echo "<script language='Javascript'>
 	if($vista_ordenar==2){
 		$sql=$sql." order by 6,2";	
 	}
+    if($gr==0&&$ma==0&&$ta==""&&$cl==""&&$nm==""&&$cb==""){
+      $sql=$sql." limit 50";
+    }
 	
+
 	
 	//echo $sql;
 	$resp=mysql_query($sql);
@@ -191,6 +235,7 @@ echo "<script language='Javascript'>
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 		<input type='button' value='Duplicar' name='Duplicar' class='boton' onclick='duplicar(this.form)'>
+		<a href='#' class='boton-verde' onclick='mostrarBusqueda()'><i class='fa fa-search'></i></a>
 		</div>";
 	
 	echo "<center><table class='texto'>";
@@ -243,5 +288,111 @@ echo "<script language='Javascript'>
 		<input type='button' value='Duplicar' name='Duplicar' class='boton' onclick='duplicar(this.form)'>
 		</div>";
 		
-	echo "</form>";
+	echo "";
 ?>
+
+
+<script>
+function mostrarBusqueda(){
+	document.getElementById('divRecuadroExt').style.visibility='visible';
+	document.getElementById('divProfileData').style.visibility='visible';
+	document.getElementById('divProfileDetail').style.visibility='visible';
+	document.getElementById('divboton').style.visibility='visible';
+	document.getElementById('divListaMateriales').innerHTML='';
+	document.getElementById('itemNombreMaterial').value='';	
+	document.getElementById('itemNombreMaterial').focus();		
+}
+
+
+
+function Hidden(){
+	document.getElementById('divRecuadroExt').style.visibility='hidden';
+	document.getElementById('divProfileData').style.visibility='hidden';
+	document.getElementById('divProfileDetail').style.visibility='hidden';
+	document.getElementById('divboton').style.visibility='hidden';
+
+}
+</script>
+
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+</div>
+
+<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
+	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
+</div>
+
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+  	<div id="divProfileDetail" style="visibility:hidden; text-align:center; height:445px; overflow-y: scroll;">
+		<table align='center' class="texto">
+			<tr><th>Grupo</th><th>Marca</th></tr>
+			<tr>
+			<td><select name='itemGrupoBusqueda' id="itemGrupoBusqueda" class="textomedianorojo" style="width:300px">
+			<?php
+			$sqlTipo="select g.codigo, g.nombre from grupos g
+			where g.estado=1 order by 2;";
+			$respTipo=mysql_query($sqlTipo);
+			echo "<option value='0'>--</option>";
+			while($datTipo=mysql_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				if($codTipoMat==$gr){
+				  echo "<option value=$codTipoMat selected>$nombreTipoMat</option>";	
+				}else{
+					echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+				}
+			}
+			?>
+			</select>
+			</td>
+			<td>
+				<select name='itemMarcaBusqueda' id="itemMarcaBusqueda" class="textomedianorojo" style="width:300px">
+			<?php
+			$sqlTipo="select g.codigo, g.nombre from marcas g
+			where g.estado=1 order by 2;";
+			$respTipo=mysql_query($sqlTipo);
+			echo "<option value='0'>--</option>";
+			while($datTipo=mysql_fetch_array($respTipo)){
+				$codTipoMat=$datTipo[0];
+				$nombreTipoMat=$datTipo[1];
+				if($codTipoMat==$ma){
+				  echo "<option value=$codTipoMat selected>$nombreTipoMat</option>";	
+				}else{
+					echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+				}
+				
+			}
+			?>
+			</select>
+			</td>
+			</tr>
+			<tr><th>Talla</th><th>Color</th></tr>
+			<tr>
+			<td>
+				<input type='text' name='itemTallaBusqueda' id="itemTallaBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$ta?>">
+			</td>
+			<td>
+				<input type='text' name='itemColorBusqueda' id="itemColorBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$cl?>">
+			</td>
+			</tr>
+			<tr><th colspan="2">Nombre Producto</th></tr>
+			<tr>
+			<td colspan="2">
+				<input type='text' style="width:100%" name='itemNombreBusqueda' id="itemNombreBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$nm?>">
+			</td>
+			</tr>
+			<tr><th colspan="2">Codigo de Barras</th></tr>
+			<tr>
+			<td colspan="2" style="text-align:center;">
+				<div class="codigo-barras div-center">
+               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el codigo de barras." autofocus autocomplete="off">
+         </div>
+			</td>
+			</tr>
+		</table>
+		<div class="div-center">
+             <input type='button' class='boton-verde' value='Buscar Producto' id="btnBusqueda" onClick="cambiar_vista(this.form)">
+		</div>
+	
+	</div>
+</div>
+</form>
