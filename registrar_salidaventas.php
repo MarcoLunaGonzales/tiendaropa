@@ -387,7 +387,15 @@ function validar(f, ventaDebajoCosto){
 			if(document.getElementById("materiales"+i)!=null){
 				item=parseFloat(document.getElementById("materiales"+i).value);
 				cantidad=parseFloat(document.getElementById("cantidad_unitaria"+i).value);
-				stock=parseFloat(document.getElementById("stock"+i).value);
+				
+				//VALIDACION DE VARIABLE DE STOCK QUE NO SE VALIDA
+				stock=document.getElementById("stock"+i).value;
+				if(stock=="-"){
+					stock=10000;
+				}else{
+					stock=parseFloat(document.getElementById("stock"+i).value);
+				}
+				
 				descuento=parseFloat(document.getElementById("descuentoProducto"+i).value);
 				precioUnit=parseFloat(document.getElementById("precio_unitario"+i).value);				
 				var costoUnit=parseFloat(document.getElementById("costoUnit"+i).value);
@@ -500,7 +508,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
 
 <td align='center'>
-	<input type="hidden" value="<?=$tipoDocDefault?>" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
+	<input type="hidden" value="<?=$tipoDocDefault;?>" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
 	<?php
 
 		if($facturacionActivada==1){
@@ -780,8 +788,8 @@ if($banderaErrorFacturacion==0){
                <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
              </tr>
              <tr>
-               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>
-               <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' required id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;' step='any'></td>
+               <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>
+               <td><input type='number' name='efectivoRecibidoUnidoUSD' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnidoUSD' style='height:25px;font-size:18px;width:100%;' step='any'></td>
              </tr>
             </table>
 

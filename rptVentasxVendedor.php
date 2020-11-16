@@ -9,8 +9,8 @@ $fecha_fin=$_GET['fecha_fin'];
 $rpt_ver=$_GET['rpt_ver'];
 
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+$fecha_iniconsulta=($fecha_ini);
+$fecha_finconsulta=($fecha_fin);
 
 
 $rpt_territorio=$_GET['rpt_territorio'];

@@ -23,12 +23,12 @@
 	$nro_correlativo=$dat[4];
 	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$fecha_ingreso_mostrar</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td></tr>";
 	echo "</table>";
-	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material from ingreso_detalle_almacenes i, material_apoyo m
+	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras from ingreso_detalle_almacenes i, material_apoyo m
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by m.descripcion_material";
 	$resp_detalle=mysql_query($sql_detalle);
 
 	echo "<br><table border=0 class='texto' align='center'>";
-	echo "<tr><th>&nbsp;</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Precio(Bs.)</th><th>Total(Bs.)</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Precio(Bs.)</th><th>Total(Bs.)</th></tr>";
 	$indice=1;
 	while($dat_detalle=mysql_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
@@ -36,6 +36,10 @@
 		$precioNeto=redondear2($dat_detalle[2]);
 		$loteProducto=$dat_detalle[3];
 		$fechaVenc=$dat_detalle[4];
+		$color=$dat_detalle[5];
+		$talla=$dat_detalle[6];
+		$barCode=$dat_detalle[7];
+		
 		
 		$totalValorItem=$cantidad_unitaria*$precioNeto;
 		
@@ -44,7 +48,7 @@
 		$resp_nombre_material=mysql_query($sql_nombre_material);
 		$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
 		$nombre_material=$dat_nombre_material[0];
-		echo "<tr><td align='center'>$indice</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td>
+		echo "<tr><td align='center'>$indice</td><td>$barCode</td><td>$nombre_material - $color $talla</td><td align='center'>$cantidad_unitaria</td>
 		<td align='center'>$loteProducto</td>
 		<td align='center'>$precioNeto</td><td align='center'>$totalValorItem</td></tr>";
 		$indice++;

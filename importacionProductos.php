@@ -66,7 +66,7 @@ while($dat=mysql_fetch_array($resp)){
 	$codigoSubGrupo=insertaSubGrupo($codigoGrupo,$codSubgrupoItem);
 	
 	
-	$idCreacionItem=crearProducto($idNuevo, $barCode, $nombreItem, $codigoMarca, $codigoGrupo, $codigoSubGrupo, $talla, $color, $descripcionItem, $idAnterior,$precioItem);	
+	$idCreacionItem=crearProducto($idNuevo, $barCode, $nombreItem, $codigoMarca, $codigoGrupo, $codigoSubGrupo, $tallaItem, $colorItem, $descripcionItem, $idAnterior,$precioItem);	
 	
 	echo $idCreacionItem." ".$indice."<br>";
 	$indice++;

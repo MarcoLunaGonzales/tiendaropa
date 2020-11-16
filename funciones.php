@@ -235,4 +235,22 @@ function costoVenta($codigo,$agencia){
 	return $costoVenta;
 }
 
+
+function codigoSalida($cod_almacen){	
+	$consulta="select IFNULL(max(s.cod_salida_almacenes)+1,1) as codigo from salida_almacenes s where s.cod_almacen=$cod_almacen";
+	$rs=mysql_query($consulta);
+	$registro=mysql_fetch_array($rs);
+	$codigo=$registro[0];
+
+	return $codigo;
+}
+
+function obtieneIdProducto($idProducto){
+	$sql="select m.codigo_material from material_apoyo m where m.codigo_anterior='$idProducto'";
+	$resp=mysql_query($sql);
+	$dat=mysql_fetch_array($resp);
+	$idProducto=$dat[0];
+	return($idProducto);	
+}
+
 ?>

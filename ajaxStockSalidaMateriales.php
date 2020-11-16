@@ -7,11 +7,17 @@ $indice = $_GET["indice"];
 
 //
 require("conexion.inc");
+//SACAMOS LA CONFIGURACION PARA LA  VALIDACION DE STOCKS
+$sqlConf="select valor_configuracion from configuraciones where id_configuracion=4";
+$respConf=mysql_query($sqlConf);
+$banderaValidacionStock=mysql_result($respConf,0,0);
 
 $stockProducto=stockProducto($codAlmacen, $codMaterial);
 
-echo "<input type='text' id='stock$indice' name='stock$indice' value='$stockProducto' readonly size='4'>";
-//echo "$cadRespuesta -> ".rand(0, 10);
-//
+if($banderaValidacionStock!=1){
+	echo "<input type='text' id='stock$indice' name='stock$indice' value='-' readonly size='4'>";
+}else{
+	echo "<input type='text' id='stock$indice' name='stock$indice' value='$cadRespuesta' readonly size='4'>";
+}
 
 ?>

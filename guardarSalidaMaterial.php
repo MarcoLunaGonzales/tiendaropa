@@ -53,6 +53,10 @@ $sqlConf="select valor_configuracion from configuraciones where id_configuracion
 $respConf=mysql_query($sqlConf);
 $facturacionActivada=mysql_result($respConf,0,0);
 
+$sqlConf="select valor_configuracion from configuraciones where id_configuracion=4";
+$respConf=mysql_query($sqlConf);
+$banderaValidacionStock=mysql_result($respConf,0,0);
+
 
 $sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
 $resp=mysql_query($sql);
@@ -113,8 +117,13 @@ if($sql_inserta==1){
 			$montoMaterial=$_POST["montoMaterial$i"];
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterial;
-			
-			$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+			if($banderaValidacionStock==1){
+				//echo "descontando aca";
+				$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+			}else{
+				$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
+			}
+	
 			if($respuesta!=1){
 				echo "<script>
 					alert('Existio un error en el detalle. Contacte con el administrador del sistema.');
@@ -135,34 +144,20 @@ if($sql_inserta==1){
 	}
 	
 	if($tipoSalida==1001){
-		/*if($tipoDoc==1){
-			echo "<script type='text/javascript' language='javascript'>	
-			location.href='formatoFactura.php?codVenta=$codigo';
-			</script>";	
-			//window.open('formatoFactura.php?codVenta=$codigo','','scrollbars=yes,width=1000,height=800');	
-		}
-		if($tipoDoc==2){
-			echo "<script type='text/javascript' language='javascript'>
-			location.href='formatoNotaRemision.php?codVenta=$codigo';
-			</script>";	
-		}*/		
 		echo "<script type='text/javascript' language='javascript'>
 			location.href='navegadorVentas.php';
 			</script>";
-	}else{
-		/*echo "<script type='text/javascript' language='javascript'>
-		location.href='navegador_detallesalidamateriales.php?codigo_salida=$codigo';
-		</script>";*/
+	}else{	
 		echo "<script type='text/javascript' language='javascript'>
 			location.href='navegador_salidamateriales.php';
-			</script>";
+		</script>";
 	}
 
 	
 }else{
 		echo "<script type='text/javascript' language='javascript'>
-		alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-		location.href='navegador_salidamateriales.php';
+			alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
+			location.href='navegador_salidamateriales.php';
 		</script>";
 }
 
