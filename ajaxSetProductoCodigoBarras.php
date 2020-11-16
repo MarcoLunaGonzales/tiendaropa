@@ -4,7 +4,7 @@ $codigoItem=$_GET['codigo'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
-	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion from material_apoyo m where estado=1 
+	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion,m.cod_grupo from material_apoyo m where estado=1 
 		and m.codigo_barras = '$codigoItem'";
 	$sql=$sql." limit 1";
 	$resp=mysql_query($sql);
@@ -13,6 +13,7 @@ $globalAgencia=$_COOKIE['global_agencia'];
 		while($dat=mysql_fetch_array($resp)){
 			$codigo=$dat[0];
 			$nombre=$dat[1];
+			$grupo=$dat[3];
 			$nombre=addslashes($nombre);
 			$cantidadPresentacion=$dat[2];			
 			//SACAMOS EL PRECIO
@@ -35,10 +36,10 @@ $globalAgencia=$_COOKIE['global_agencia'];
 				}
 			}
 			
-			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem;
+			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$grupo;
 		}
 	}else{
-		echo "0#####_#####_#####_#####_";
+		echo "0#####_#####_#####_#####_#####_";
 	}
 
 ?>
