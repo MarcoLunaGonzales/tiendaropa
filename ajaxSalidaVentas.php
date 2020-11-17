@@ -8,6 +8,8 @@ $nroCorrelativoBusqueda=$_GET['nroCorrelativoBusqueda'];
 $verBusqueda=$_GET['verBusqueda'];
 $global_almacen=$_GET['global_almacen'];
 $clienteBusqueda=$_GET['clienteBusqueda'];
+$vendedorBusqueda=$_GET['vendedorBusqueda'];
+$tipoVentaBusqueda=$_GET['tipoVentaBusqueda'];
 
 $fechaIniBusqueda=formateaFechaVista($fechaIniBusqueda);
 $fechaFinBusqueda=formateaFechaVista($fechaFinBusqueda);
@@ -33,6 +35,13 @@ if($fechaIniBusqueda!="--" && $fechaFinBusqueda!="--")
    }
 if($clienteBusqueda!=0){
 	$consulta=$consulta." and cod_cliente='$clienteBusqueda' ";
+}
+
+if($vendedorBusqueda!=0){
+	$consulta=$consulta." and cod_chofer='$vendedorBusqueda' ";
+}
+if($tipoVentaBusqueda!=0){
+	$consulta=$consulta." and cod_tipopago='$tipoVentaBusqueda' ";
 }   
 if($verBusqueda==1){
 	$consulta=$consulta." AND estado_salida=4 ";

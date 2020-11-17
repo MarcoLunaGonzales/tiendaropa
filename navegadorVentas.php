@@ -70,18 +70,21 @@ function funOk(codReg,funOkConfirm)
 }
 
 function ajaxBuscarVentas(f){
-	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda, verBusqueda, global_almacen, clienteBusqueda;
+	var fechaIniBusqueda, fechaFinBusqueda, nroCorrelativoBusqueda, verBusqueda, global_almacen, clienteBusqueda,vendedorBusqueda,tipoVentaBusqueda;
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	nroCorrelativoBusqueda=document.getElementById("nroCorrelativoBusqueda").value;
 	verBusqueda=document.getElementById("verBusqueda").value;
 	global_almacen=document.getElementById("global_almacen").value;
 	clienteBusqueda=document.getElementById("clienteBusqueda").value;
+    vendedorBusqueda=document.getElementById("vendedorBusqueda").value;
+    tipoVentaBusqueda=document.getElementById("tipoVentaBusqueda").value;
+
 	var contenedor;
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda,true);
+	ajax.open("GET", "ajaxSalidaVentas.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&nroCorrelativoBusqueda="+nroCorrelativoBusqueda+"&verBusqueda="+verBusqueda+"&global_almacen="+global_almacen+"&clienteBusqueda="+clienteBusqueda+"&vendedorBusqueda="+vendedorBusqueda+"&tipoVentaBusqueda="+tipoVentaBusqueda,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -333,7 +336,7 @@ echo "<div class='divBotones'>
 		<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
     </div>";
 		
-echo "<center><table class='texto'>";
+echo "<div id='divCuerpo'><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
 	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th></tr>";
 	
@@ -429,10 +432,10 @@ echo "</form>";
 
 ?>
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 450px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:400px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<h2 align='center' class='texto'>Buscar Ventas</h2>
 		<table align='center' class='texto'>
@@ -473,8 +476,47 @@ echo "</form>";
 					</select>
 				
 				</td>
-			</tr>			
-
+			</tr>
+            <tr>
+                <td>Vendedor:</td>
+                <td>
+                    <select name="vendedorBusqueda" class="texto" id="vendedorBusqueda">
+                        <option value="0">Todos</option>
+                    <?php
+                        $sqlClientes="SELECT DISTINCT c.codigo_funcionario,CONCAT(c.paterno,' ',c.materno,' ',c.nombres) as personal from salida_almacenes s join funcionarios c on c.codigo_funcionario=s.cod_chofer order by 2;";
+                        $respClientes=mysql_query($sqlClientes);
+                        while($datClientes=mysql_fetch_array($respClientes)){
+                            $codCliBusqueda=$datClientes[0];
+                            $nombreCliBusqueda=$datClientes[1];
+                    ?>
+                            <option value="<?php echo $codCliBusqueda;?>"><?php echo $nombreCliBusqueda;?></option>
+                    <?php
+                        }
+                    ?>
+                    </select>
+                
+                </td>
+            </tr>			
+            <tr>
+                <td>Tipo Pago:</td>
+                <td>
+                    <select name="tipoVentaBusqueda" class="texto" id="tipoVentaBusqueda">
+                        <option value="0">Todos</option>
+                    <?php
+                        $sqlClientes="select c.`cod_tipopago`, c.`nombre_tipopago` from tipos_pago c order by 2";
+                        $respClientes=mysql_query($sqlClientes);
+                        while($datClientes=mysql_fetch_array($respClientes)){
+                            $codCliBusqueda=$datClientes[0];
+                            $nombreCliBusqueda=$datClientes[1];
+                    ?>
+                            <option value="<?php echo $codCliBusqueda;?>"><?php echo $nombreCliBusqueda;?></option>
+                    <?php
+                        }
+                    ?>
+                    </select>
+                
+                </td>
+            </tr>
 			<tr>
 				<td>Ver:</td>
 				<td>
