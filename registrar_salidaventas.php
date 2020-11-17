@@ -503,6 +503,7 @@ $ventaDebajoCosto=mysql_result($respConf,0,0);
 <th>Fecha</th>
 <th>Cliente</th>
 <th>Precio</th>
+<th>Tipo Pago</th>
 </tr>
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1001">
@@ -590,7 +591,22 @@ while($dat2=mysql_fetch_array($resp2)){
 
 	</div>
 </td>
+<td>
+	<div id='divTipoVenta'>
+		<?php
+			$sql1="select cod_tipopago, nombre_tipopago from tipos_pago order by 1";
+			$resp1=mysql_query($sql1);
+			echo "<select name='tipoVenta' class='texto' id='tipoVenta'>";
+			while($dat=mysql_fetch_array($resp1)){
+				$codigo=$dat[0];
+				$nombre=$dat[1];
+				echo "<option value='$codigo'>$nombre</option>";
+			}
+			echo "</select>";
+			?>
 
+	</div>
+</td>
 
 </tr>
 
@@ -607,7 +623,7 @@ if($tipoDocDefault==2){
 	<th>NIT</th>
 	<th>Nombre/RazonSocial</th>
 	<th>Vendedor</th>
-	<th colspan="2">Observaciones</th>
+	<th colspan="3">Observaciones</th>
 </tr>
 <tr>	
 	<td>
@@ -642,7 +658,7 @@ if($tipoDocDefault==2){
 		</select>
 	</td>
 
-	<th align='center' colspan="2">
+	<th align='center' colspan="3">
 		<input type='text' class='texto' name='observaciones' value='' size='40' rows="3">
 	</th>
 </tr>

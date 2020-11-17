@@ -14,6 +14,7 @@ $almacenDestino=$_POST['almacen'];
 $codCliente=$_POST['cliente'];
 
 $tipoPrecio=$_POST['tipoPrecio'];
+$tipoVenta=$_POST['tipoVenta'];
 $razonSocial=$_POST['razonSocial'];
 $nitCliente=$_POST['nitCliente'];
 
@@ -90,10 +91,10 @@ if($facturacionActivada==1 && $tipoDoc==1){
 $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion)
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion')";
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta')";
 $sql_inserta=mysql_query($sql_inserta);
 
 if($sql_inserta==1){

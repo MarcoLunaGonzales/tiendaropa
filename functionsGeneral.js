@@ -13,6 +13,8 @@ function cambiarDatosProductosTable(valor){
                $("#input_codigo_barras").val("");
         	}else{
         	  if($("#divItemReporte").length>0){ //para el reporte 
+        	  	$('select[name=rpt_grupo]').val(resp[5]);
+        	  	//ajaxReporteItems();
                 $('select[name=rpt_item]').val(resp[1]);
         	  }else{
                 if($("#itemNombreBusqueda").length>0){
