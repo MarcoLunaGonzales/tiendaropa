@@ -99,7 +99,8 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	}
 	echo "</select></td></tr>";
 
-	echo "<tr><th align='left'>Grupo</th><td><select name='rpt_grupo' class='texto' size='5' onChange='ajaxReporteItems(this.form);' required>";
+	echo "<tr><th align='left'>Grupo</th><td><select name='rpt_grupo' class='texto' size='5' onChange='ajaxReporteItems(this.form);' required>
+	<option value='-1'>TODOS</option>";
 	$sql="select codigo, nombre from grupos where estado=1 order by 2";
 	$resp=mysql_query($sql);
 	while($dat=mysql_fetch_array($resp))

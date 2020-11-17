@@ -36,7 +36,13 @@ $globalAgencia=$_COOKIE['global_agencia'];
 				}
 			}
 			
-			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$grupo;
+			$sqlGrupo="select g.codigo from grupos g where estado=1 and g.codigo = '$grupo'";
+	        $respGrupo=mysql_query($sqlGrupo);
+	        $envioGrupo=-1;
+		    while($datGrupo=mysql_fetch_array($respGrupo)){
+              $envioGrupo=$datGrupo[0];
+		    }
+			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$envioGrupo;
 		}
 	}else{
 		echo "0#####_#####_#####_#####_#####_";

@@ -21,7 +21,6 @@ function cambiarDatosProductosTable(valor){
                 	$("#btnBusqueda").click();
                 }else{
         	   //para los formularios de ventas, ingresos o salidas
-
         		var existeCodigo=0;var filaEncontrado=0;
         		var numRegistro=$('input[name=materialActivo]').val();
 	            for (var i = 1; i <= numRegistro; i++) {

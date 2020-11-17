@@ -1,10 +1,15 @@
 <?php
 require("conexion.inc");
 $codGrupo=$_GET['codGrupo'];
+$sql_item="select codigo_material, concat(descripcion_material,'-',color,' ',talla) from material_apoyo where  codigo_material<>0 ";
+if($codGrupo!=-1){
+   $sql_item.="and cod_grupo='$codGrupo'";
+}
 
+$sql_item.="order by descripcion_material";
 	echo "<select name='rpt_item' class='texto'>";
 	
-	$sql_item="select codigo_material, concat(descripcion_material,'-',color,' ',talla) from material_apoyo where cod_grupo='$codGrupo' and codigo_material<>0 order by descripcion_material";
+	
 	
 	$resp=mysql_query($sql_item);
 	echo "<option value=''></option>";
