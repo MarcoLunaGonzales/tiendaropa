@@ -15,7 +15,8 @@ $banderaValidacionStock=mysql_result($respConf,0,0);
 $stockProducto=stockProducto($codAlmacen, $codMaterial);
 
 if($banderaValidacionStock!=1){
-	echo "<input type='text' id='stock$indice' name='stock$indice' value='-' readonly size='4'>";
+	echo "<input type='text' id='stock$indice' name='stock$indice' value='-' readonly size='4'>
+	<span style='color:red'>S:$stockProducto</span>";
 }else{
 	echo "<input type='text' id='stock$indice' name='stock$indice' value='$cadRespuesta' readonly size='4'>";
 }

@@ -104,6 +104,7 @@ if($sql_inserta==1){
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 
 		codigo_control, cod_venta) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
 		'$code','$codigo')";
+		echo $sqlInsertFactura;
 		$respInsertFactura=mysql_query($sqlInsertFactura);	
 	}
 
