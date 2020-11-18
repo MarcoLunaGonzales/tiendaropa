@@ -578,13 +578,14 @@ while($dat2=mysql_fetch_array($resp2)){
 <td>
 	<div id='divTipoPrecio'>
 		<?php
-			$sql1="select codigo, nombre from tipos_precio order by 1";
+			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
 			$resp1=mysql_query($sql1);
 			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio'>";
 			while($dat=mysql_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
-				echo "<option value='$codigo'>$nombre</option>";
+				$abreviatura=$dat[2];
+				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";
 			}
 			echo "</select>";
 			?>
@@ -651,7 +652,7 @@ if($tipoDocDefault==2){
 				$codVendedor=$dat2[0];
 				$nombreVendedor=$dat2[1];
 			?>		
-			<option value='<?php echo $codVendedor?>'><?php echo $nombreVendedor?></option>
+			<option value='<?php echo $codVendedor?>' <?=($codVendedor==$global_usuario)?"selected":"";?> ><?php echo $nombreVendedor?></option>
 			<?php    
 			}
 			?>
