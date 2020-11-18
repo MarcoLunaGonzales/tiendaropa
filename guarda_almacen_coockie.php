@@ -1,9 +1,8 @@
 <?php
-setcookie("global_almacen", "", time() - 3600);
-$global_almacen=$_POST['almacen'];
-setcookie("global_almacen",$global_almacen);
+$variable=$_POST['almacen'];
+setcookie("global_almacen",$variable);
 echo "<script language='Javascript'>
 			alert('El valor fue cambiado con éxito.');
-			location.href='cambiar_almacen_trabajo.php';
+			location.href='inicio_almacenes.php';
 			</script>";
 ?>

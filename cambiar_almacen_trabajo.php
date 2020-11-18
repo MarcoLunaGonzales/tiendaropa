@@ -23,7 +23,7 @@ while($dat1=mysql_fetch_array($resp1))
 {   
 	$cod_almacen=$dat1[0];
     $nombre_almacen=$dat1[1];
-    if($cod_almacen==$global_almacen){
+    if($cod_almacen==$_COOKIE['global_almacen']){
       echo "<option value='$cod_almacen' selected>$nombre_almacen</option>";
     }else{
       echo "<option value='$cod_almacen'>$nombre_almacen</option>";	
