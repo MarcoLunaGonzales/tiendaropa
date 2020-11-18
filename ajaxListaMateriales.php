@@ -48,7 +48,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			{   $precioProducto=0;
 			}
 			$precioProducto=redondear2($precioProducto);
-			$nombreEnvio=$nombre." (".$marcaProducto." ".$colorProducto." ".$tallaProducto.")";
+			$nombreEnvio=$nombre." (<small>".$marcaProducto." ".$colorProducto." ".$tallaProducto."</small>)";
 			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\")'>$nombre</a></div></td>
 			
 			<td>$marcaProducto</td>

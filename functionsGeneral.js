@@ -110,7 +110,7 @@ function soloMasVentas(obj){
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
-					setMaterialesSoloVentas(obj[1],obj[2]+"("+obj[6]+" "+obj[8]+" "+obj[7]+")");
+					setMaterialesSoloVentas(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)");
 				}
 			}		
 			ajax.send(null);
