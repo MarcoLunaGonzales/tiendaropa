@@ -2,7 +2,7 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Producto</th><th>Linea</th><th>Stock</th><th>Precio</th></tr>
+<th>Producto</th><th>Linea</th><th>Marca</th><th>Color</th><th>Talla</th><th>Stock</th><th>Precio</th></tr>
 <?php
 require("conexion.inc");
 require("funciones.php");
@@ -17,7 +17,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 
 	$sql="select m.codigo_material, m.descripcion_material,
 	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)
-	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor) from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
+	from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),m.cod_marca,m.talla,m.color from material_apoyo m where estado=1 and m.codigo_material not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
@@ -37,7 +37,9 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			$linea=$dat[2];
 			
 			$stockProducto=stockProducto($globalAlmacen, $codigo);
-			
+			$marcaProducto=obtieneMarcaProducto($dat[3]);
+			$tallaProducto=$dat[4];
+			$colorProducto=$dat[5];
 			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$globalAgencia'";
 			$rs=mysql_query($consulta);
 			$registro=mysql_fetch_array($rs);
@@ -49,6 +51,9 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			
 			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\")'>$nombre</a></div></td>
 			<td>$linea</td>
+			<td>$marcaProducto</td>
+			<td>$colorProducto</td>
+			<td>$tallaProducto</td>
 			<td>$stockProducto</td>
 			<td>$precioProducto</td>
 			</tr>";

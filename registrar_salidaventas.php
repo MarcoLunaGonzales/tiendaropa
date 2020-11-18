@@ -707,7 +707,7 @@ if($tipoDocDefault==2){
 			<tr>
 			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
 			<?php
-			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
+			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";
 			$respTipo=mysql_query($sqlTipo);
 			echo "<option value='0'>--</option>";
