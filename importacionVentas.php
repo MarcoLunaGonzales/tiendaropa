@@ -6,18 +6,32 @@ require('funcionesImportacion.php');
 require('funciones.php');
 require('funciones_inventarios.php');
 
-$codAlmacen=1000;
 $codTipoSalida=1001;
 $codTipoDoc=2;
 
-$sqlCab="select v.BranchName, DATE_FORMAT(v.BillDate, '%Y-%m-%d') from ventas_anterior v where v.BranchName='principal' GROUP BY year(v.BillDate), month(v.BillDate), day(v.BillDate), v.BranchName";
+$sqlCab="select v.BranchName, DATE_FORMAT(v.BillDate, '%Y-%m-%d') from ventas_anterior v GROUP BY year(v.BillDate), month(v.BillDate), day(v.BillDate), v.BranchName";
 $respCab=mysql_query($sqlCab);
 while($datCab=mysql_fetch_array($respCab)){
+	$tienda=$datCab[0];
 	$fecha=$datCab[1];
+	
+	if($tienda=="Principal"){
+		$codAlmacen=1000;
+	}
+	if($tienda=="Sucursal 1"){
+		$codAlmacen=1002;
+	}
+	if($tienda=="Sucursal Multicine"){
+		$codAlmacen=1003;
+	}
+	if($tienda=="Sucursal San Miguel"){
+		$codAlmacen=1004;
+	}
+	
 	$codSalida=codigoSalida($codAlmacen);
 	
 	//echo $fecha.$codSalida."<br>";
-	$sqlInsertCab="insert into salida_almacenes (cod_salida_almacenes, cod_almacen, cod_tiposalida, cod_tipo_doc, fecha, hora_salida, observaciones, estado_salida, nro_correlativo, salida_anulada) values ('$codSalida','$codAlmacen','$codTipoSalida','$codTipoDoc','$fecha','00:00:00','HISTORICO',
+	$sqlInsertCab="insert into salida_almacenes (cod_salida_almacenes, cod_almacen, cod_tiposalida, cod_tipo_doc, fecha, hora_salida, observaciones, estado_salida, nro_correlativo, salida_anulada) values ('$codSalida','$codAlmacen','$codTipoSalida','$codTipoDoc','$fecha','00:00:00','HISTORICO $tienda',
 	'1','0','0')";
 	$respInsertCab=mysql_query($sqlInsertCab);
 	
