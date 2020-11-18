@@ -254,4 +254,11 @@ function obtieneIdProducto($idProducto){
 	return($idProducto);	
 }
 
+function obtieneMarcaProducto($idMarca){
+	$sql="select m.nombre from marcas m where m.codigo='$idMarca'";
+	$resp=mysql_query($sql);
+	$dat=mysql_fetch_array($resp);
+	$nombreMarca=$dat[0];
+	return($nombreMarca);	
+}
 ?>

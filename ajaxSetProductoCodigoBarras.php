@@ -1,10 +1,11 @@
 <?php
 require("conexion.inc");
+require("funciones.php");
 $codigoItem=$_GET['codigo'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
-	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion,m.cod_grupo from material_apoyo m where estado=1 
+	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion,m.cod_grupo,m.cod_marca,m.color,m.talla from material_apoyo m where estado=1 
 		and m.codigo_barras = '$codigoItem'";
 	$sql=$sql." limit 1";
 	$resp=mysql_query($sql);
@@ -42,10 +43,13 @@ $globalAgencia=$_COOKIE['global_agencia'];
 		    while($datGrupo=mysql_fetch_array($respGrupo)){
               $envioGrupo=$datGrupo[0];
 		    }
-			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$envioGrupo;
+		    $marcaProducto=obtieneMarcaProducto($dat[4]);
+			$tallaProducto=$dat[6];
+			$colorProducto=$dat[5];
+			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$envioGrupo."#####".$marcaProducto."#####".$tallaProducto."#####".$colorProducto;
 		}
 	}else{
-		echo "0#####_#####_#####_#####_#####_";
+		echo "0#####_#####_#####_#####_#####_#####_#####_#####_";
 	}
 
 ?>
