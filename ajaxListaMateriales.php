@@ -2,7 +2,7 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Producto</th><th>Linea</th><th>Marca</th><th>Color</th><th>Talla</th><th>Stock</th><th>Precio</th></tr>
+<th>Producto</th><th>Marca</th><th>Color</th><th>Talla</th><th>Stock</th><th>Precio</th></tr>
 <?php
 require("conexion.inc");
 require("funciones.php");
@@ -48,9 +48,9 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			{   $precioProducto=0;
 			}
 			$precioProducto=redondear2($precioProducto);
+			$nombreEnvio=$nombre." (".$marcaProducto." ".$colorProducto." ".$tallaProducto.")";
+			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\")'>$nombre</a></div></td>
 			
-			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\")'>$nombre</a></div></td>
-			<td>$linea</td>
 			<td>$marcaProducto</td>
 			<td>$colorProducto</td>
 			<td>$tallaProducto</td>
@@ -59,7 +59,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			</tr>";
 		}
 	}else{
-		echo "<tr><td colspan='3'>Sin Resultados en la busqueda.</td></tr>";
+		echo "<tr><td colspan='6'>Sin Resultados en la busqueda.</td></tr>";
 	}
 	
 ?>
