@@ -5,7 +5,7 @@
 
 	<link type="text/css" rel="stylesheet" href="menuLibs/css/demo.css" />
 	<link type="text/css" rel="stylesheet" href="menuLibs/dist/jquery.mmenu.css" />
-
+    <link type="text/css" rel="stylesheet" href="stilos.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<script type="text/javascript" src="menuLibs/dist/jquery.mmenu.js"></script>
 	<script type="text/javascript">
@@ -27,10 +27,12 @@ include("datosUsuario.php");
 		TuAdmin - KidsPlace
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
 			[<? echo $fechaSistemaSesion?>][<? echo $horaSistemaSesion;?>]			
-		<div>
+            <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
+		</div>
 		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
 			[<? echo $nombreUsuarioSesion?>][<? echo $nombreAlmacenSesion;?>]
-		<div>
+
+		</div>
 	</div>
 	
 	
@@ -162,6 +164,8 @@ include("datosUsuario.php");
 			</li>
 
 			<li><a href="registrar_cotizacion_dolar.php" target="contenedorPrincipal"><span>Cotización Dolar</span></a>	
+			</li>
+			<li><a href="cambiar_almacen_trabajo.php" target="contenedorPrincipal"><span>Cambiar Almacen Trabajo</span></a>	
 			</li>			
 	</nav>
 </div>
