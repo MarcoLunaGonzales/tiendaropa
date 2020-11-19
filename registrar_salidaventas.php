@@ -217,7 +217,7 @@ function aplicarDescuentoPorcentaje(f){
 
 	var descuento=document.getElementById("descuentoVenta").value;
 	
-	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total))/100;
+	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total)/100);
 	
 	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
 	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;

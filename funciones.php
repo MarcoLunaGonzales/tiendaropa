@@ -238,7 +238,7 @@ function costoVenta($codigo,$agencia){
 
 
 function codigoSalida($cod_almacen){	
-	$consulta="select IFNULL(max(s.cod_salida_almacenes)+1,1) as codigo from salida_almacenes s where s.cod_almacen=$cod_almacen";
+	$consulta="select IFNULL(max(s.cod_salida_almacenes)+1,1) as codigo from salida_almacenes s";
 	$rs=mysql_query($consulta);
 	$registro=mysql_fetch_array($rs);
 	$codigo=$registro[0];

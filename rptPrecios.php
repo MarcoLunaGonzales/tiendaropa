@@ -150,7 +150,7 @@ function ajaxBuscarItems(f){
 		<td>$talla</td>";
 		echo "<td align='center'>$stock2</td>";
 
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
+		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
 		$numFilas=mysql_num_rows($respPrecio);
 		if($numFilas==1){
@@ -161,49 +161,57 @@ function ajaxBuscarItems(f){
 			$precio0=redondear2($precio0);
 		}
 		
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
-		$respPrecio=mysql_query($sqlPrecio);
-		$numFilas=mysql_num_rows($respPrecio);
-		if($numFilas==1){
-			$precio1=mysql_result($respPrecio,0,0);
-			$precio1=redondear2($precio1);
-		}else{
-			$precio1=0;
-			$precio1=redondear2($precio1);
+		$precio1=$precio0;
+		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='1'";
+		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
+		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$descuentoPrecio=$datTipoPrecio[0];
+		$indiceConversion=0;
+		if($descuentoPrecio>0){
+			$indiceConversion=($descuentoPrecio/100);
+			$precio1=$precio1-($precio1*($indiceConversion));
 		}
+		$precio1=round($precio1);
 
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=2 and p.`codigo_material`=$codigo  and p.cod_ciudad='$global_agencia'";
-		$respPrecio=mysql_query($sqlPrecio);
-		$numFilas=mysql_num_rows($respPrecio);
-		if($numFilas==1){
-			$precio2=mysql_result($respPrecio,0,0);
-			$precio2=redondear2($precio2);
-		}else{
-			$precio2=0;
-			$precio2=redondear2($precio2);
+		$precio2=$precio0;
+		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='2'";
+		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
+		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$descuentoPrecio=$datTipoPrecio[0];
+		$indiceConversion=0;
+		if($descuentoPrecio>0){
+			$indiceConversion=($descuentoPrecio/100);
+			$precio2=$precio2-($precio2*($indiceConversion));
 		}
+		$precio2=round($precio2);
 
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=3 and p.`codigo_material`=$codigo  and p.cod_ciudad='$global_agencia'";
-		$respPrecio=mysql_query($sqlPrecio);
-		$numFilas=mysql_num_rows($respPrecio);
-		if($numFilas==1){
-			$precio3=mysql_result($respPrecio,0,0);
-			$precio3=redondear2($precio3);
-		}else{
-			$precio3=0;
-			$precio3=redondear2($precio3);
+		$precio3=$precio0;
+		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='3'";
+		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
+		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$descuentoPrecio=$datTipoPrecio[0];
+		$indiceConversion=0;
+		if($descuentoPrecio>0){
+			$indiceConversion=($descuentoPrecio/100);
+			$precio3=$precio3-($precio3*($indiceConversion));
 		}
+		$precio3=round($precio3);
 
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=4 and p.`codigo_material`=$codigo  and p.cod_ciudad='$global_agencia'";
-		$respPrecio=mysql_query($sqlPrecio);
-		$numFilas=mysql_num_rows($respPrecio);
-		if($numFilas==1){
-			$precio4=mysql_result($respPrecio,0,0);
-			$precio4=redondear2($precio4);
-		}else{
-			$precio4=0;
-			$precio4=redondear2($precio4);
+
+		$precio4=$precio0;
+		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='4'";
+		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
+		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$descuentoPrecio=$datTipoPrecio[0];
+		$indiceConversion=0;
+		if($descuentoPrecio>0){
+			$indiceConversion=($descuentoPrecio/100);
+			$precio4=$precio4-($precio4*($indiceConversion));
 		}
+		$precio4=round($precio4);
+
+
+
 
 		$indice++;
 		echo "<td align='center'>$precio0</td>";
