@@ -105,8 +105,9 @@ function soloMasVentas(obj){
 			fi.appendChild(contenedor);
 			var div_material;
 			div_material=document.getElementById("div"+num);			
+			var cod_precio=document.getElementById("tipoPrecio").value;			
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num,true);
+			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;

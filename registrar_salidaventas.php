@@ -381,7 +381,8 @@ function mas(obj) {
 			var div_material;
 			div_material=document.getElementById("div"+num);			
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num,true);
+			var cod_precio=document.getElementById("tipoPrecio").value;			
+			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
@@ -722,7 +723,7 @@ if($tipoDocDefault==2){
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="100%" id="data0">
 	<tr>
-		<td align="center" colspan="8">
+		<td align="center" colspan="9">
 			<b>Detalle de la Venta    </b><input class="boton" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/>
 		</td>
 	</tr>
@@ -732,7 +733,8 @@ if($tipoDocDefault==2){
 		<td width="35%">Material</td>
 		<td width="10%">Stock</td>
 		<td width="10%">Cantidad</td>
-		<td width="10%">Precio </td>
+		<td width="8%">Precio </td>
+		<td width="2%">&nbsp;</td>
 		<td width="10%">Desc.</td>
 		<td width="10%">Monto</td>
 		<td width="10%">&nbsp;</td>

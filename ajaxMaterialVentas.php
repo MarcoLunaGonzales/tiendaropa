@@ -7,6 +7,11 @@
 
 require("conexion.inc");
 	$num=$_GET['codigo'];
+	$cod_precio=0;
+	if(isset($_GET["cod_precio"])){
+		$cod_precio=$_GET["cod_precio"];
+	}
+
 ?>
 
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
@@ -32,12 +37,43 @@ require("conexion.inc");
 </td>
 
 
-<td align="center" width="10%">
+<td align="center" width="8%">
 	<div id='idprecio<?php echo $num;?>'>
 		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
+		<?php
+			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
+			$resp1=mysql_query($sql1);
+			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio' style='width:20px !important;'>";
+			while($dat=mysql_fetch_array($resp1)){
+				$codigo=$dat[0];
+				$nombre=$dat[1];
+				$abreviatura=$dat[2];
+				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";
+			}
+			echo "</select>";
+			?>
 	</div>
 </td>
-
+<td align="center" width="2%">
+	<div id='idpreciodesc<?php echo $num;?>'>
+		<?php
+			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
+			$resp1=mysql_query($sql1);
+			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:50px !important;' onchange=''>";
+			while($dat=mysql_fetch_array($resp1)){
+				$codigo=$dat[0];
+				$nombre=$dat[1];
+				$abreviatura=$dat[2];
+				if($codigo==$cod_precio){
+                 echo "<option value='$codigo' selected>$nombre ($abreviatura %)</option>";					 
+				}else{
+				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";					
+				}
+			}
+			echo "</select>";
+			?>
+	</div>
+</td>
 <td align="center" width="10%">
 	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
 </td>
