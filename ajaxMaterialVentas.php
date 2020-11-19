@@ -40,18 +40,6 @@ require("conexion.inc");
 <td align="center" width="8%">
 	<div id='idprecio<?php echo $num;?>'>
 		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
-		<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
-			$resp1=mysql_query($sql1);
-			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio' style='width:20px !important;'>";
-			while($dat=mysql_fetch_array($resp1)){
-				$codigo=$dat[0];
-				$nombre=$dat[1];
-				$abreviatura=$dat[2];
-				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";
-			}
-			echo "</select>";
-			?>
 	</div>
 </td>
 <td align="center" width="2%">
@@ -59,7 +47,7 @@ require("conexion.inc");
 		<?php
 			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
 			$resp1=mysql_query($sql1);
-			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:50px !important;' onchange=''>";
+			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:50px !important;' onchange='ajaxPrecioItem(".$num.")'>";
 			while($dat=mysql_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];

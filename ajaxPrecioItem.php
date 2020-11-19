@@ -24,9 +24,11 @@ $rsTipoPrecio=mysql_query($sqlTipoPrecio);
 $datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
 $descuentoPrecio=$datTipoPrecio[0];
 $indiceConversion=0;
+$descuentoPrecioMonto=0;
 if($descuentoPrecio>0){
 	$indiceConversion=($descuentoPrecio/100);
-	$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
+	$descuentoPrecioMonto=round($cadRespuesta*($indiceConversion));
+	//$cadRespuesta=$cadRespuesta-($cadRespuesta*($indiceConversion));
 }
 
 //$cadRespuesta=redondear2($cadRespuesta);
@@ -50,6 +52,6 @@ while($datCosto=mysql_fetch_array($respCosto)){
 
 echo "<input type='number' id='precio_unitario$indice' name='precio_unitario$indice' value='$cadRespuesta' class='inputnumber' onKeyUp='calculaMontoMaterial($indice);' step='0.01'>";
 echo " [$costoMaterialii] <span style='color:red'>D:$descuentoPrecio%</span>";
-echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>";
+echo "<input type='hidden' id='costoUnit$indice' value='$costoMaterialii' name='costoUnit$indice'>#####".$descuentoPrecioMonto;
 
 ?>

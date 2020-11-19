@@ -104,12 +104,14 @@ function ajaxPrecioItem(indice){
 	var contenedor;
 	contenedor=document.getElementById("idprecio"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
-	var tipoPrecio=document.getElementById("tipoPrecio").value;
+	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
 	ajax=nuevoAjax();
 	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
-			contenedor.innerHTML = ajax.responseText;
+			var respuesta=ajax.responseText.split("#####");
+			contenedor.innerHTML = respuesta[0];
+            document.getElementById("descuentoProducto"+indice).value=respuesta[1]; 
 			calculaMontoMaterial(indice);
 		}
 	}
@@ -730,11 +732,11 @@ if($tipoDocDefault==2){
 
 	<tr align="center">
 		<td width="5%">&nbsp;</td>
-		<td width="35%">Material</td>
+		<td width="30%">Material</td>
 		<td width="10%">Stock</td>
 		<td width="10%">Cantidad</td>
-		<td width="8%">Precio </td>
-		<td width="2%">&nbsp;</td>
+		<td width="10%">Precio </td>
+		<td width="5%">&nbsp;</td>
 		<td width="10%">Desc.</td>
 		<td width="10%">Monto</td>
 		<td width="10%">&nbsp;</td>
