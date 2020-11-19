@@ -21,7 +21,7 @@ require("conexion.inc");
 	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 
-<td width="35%" align="center">
+<td width="30%" align="center">
 	<input type="hidden" name="materiales<?php echo $num;?>" id="materiales<?php echo $num;?>" value="0">
 	<div id="cod_material<?php echo $num;?>" class='textomedianonegro'>-</div>
 </td>
@@ -37,17 +37,17 @@ require("conexion.inc");
 </td>
 
 
-<td align="center" width="8%">
+<td align="center" width="10%">
 	<div id='idprecio<?php echo $num;?>'>
 		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
 	</div>
 </td>
-<td align="center" width="2%">
-	<div id='idpreciodesc<?php echo $num;?>'>
-		<?php
+
+<td align="center" width="15%">
+	<?php
 			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
 			$resp1=mysql_query($sql1);
-			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:50px !important;' onchange='ajaxPrecioItem(".$num.")'>";
+			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:55px !important;float:left;' onchange='ajaxPrecioItem(".$num.")'>";
 			while($dat=mysql_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
@@ -60,9 +60,6 @@ require("conexion.inc");
 			}
 			echo "</select>";
 			?>
-	</div>
-</td>
-<td align="center" width="10%">
 	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
 </td>
 

@@ -736,8 +736,7 @@ if($tipoDocDefault==2){
 		<td width="10%">Stock</td>
 		<td width="10%">Cantidad</td>
 		<td width="10%">Precio </td>
-		<td width="5%">&nbsp;</td>
-		<td width="10%">Desc.</td>
+		<td width="15%">Desc.</td>
 		<td width="10%">Monto</td>
 		<td width="10%">&nbsp;</td>
 	</tr>
