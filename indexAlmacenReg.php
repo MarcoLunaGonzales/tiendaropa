@@ -18,7 +18,7 @@
 		
 </head>
 <body>
-<?
+<?php
 include("datosUsuario.php");
 ?>
 <div id="page">
@@ -26,11 +26,11 @@ include("datosUsuario.php");
 		<a href="#menu"><span></span></a>
 		TuAdmin - KidsPlace
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
-			[<? echo $fechaSistemaSesion?>][<? echo $horaSistemaSesion;?>]			
+			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
             <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
 		</div>
 		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
-			[<? echo $nombreUsuarioSesion?>][<? echo $nombreAlmacenSesion;?>]
+			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]
 
 		</div>
 	</div>

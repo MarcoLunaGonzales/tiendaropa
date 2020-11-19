@@ -182,6 +182,9 @@ function aplicarDescuento(f){
 	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
 	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
 	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+
+	document.getElementById("descuentoVentaPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
+	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
 	aplicarCambioEfectivo();
 	minimoEfectivo();
 	//totales();
@@ -198,9 +201,54 @@ function aplicarDescuentoUSD(f){
 	var descuentoBOB=(parseFloat(total)-parseFloat(descuento))*tipo_cambio;
 	document.getElementById("descuentoVenta").value=Math.round((descuento*tipo_cambio)*100)/100;
 	document.getElementById("totalFinal").value=Math.round((descuentoBOB)*100)/100;
+	document.getElementById("descuentoVentaPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
+	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
+	aplicarCambioEfectivoUSD();
+	minimoEfectivo();
+	//totales();
+}
+
+function aplicarDescuentoPorcentaje(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+	var total=document.getElementById("totalVenta").value;
+    
+    var descuentoPorcentaje=document.getElementById("descuentoVentaPorcentaje").value;
+    document.getElementById("descuentoVentaUSDPorcentaje").value=descuentoPorcentaje;
+
+	var descuento=document.getElementById("descuentoVenta").value;
+	
+	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total))/100;
+	
+	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
+	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
+	document.getElementById("descuentoVenta").value=Math.round((descuento)*100)/100;
+	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+	
 	aplicarCambioEfectivo();
 	minimoEfectivo();
-	totales();
+	//totales();
+}
+function aplicarDescuentoUSDPorcentaje(f){
+	var tipo_cambio=$("#tipo_cambio_dolar").val();
+	var total=document.getElementById("totalVenta").value;
+    
+    var descuentoPorcentaje=document.getElementById("descuentoVentaUSDPorcentaje").value;
+    document.getElementById("descuentoVentaPorcentaje").value=descuentoPorcentaje;
+
+	var descuento=document.getElementById("descuentoVenta").value;
+	
+	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total))/100;
+	
+	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
+	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
+	document.getElementById("descuentoVenta").value=Math.round((descuento)*100)/100;
+	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+	
+	aplicarCambioEfectivo();
+	minimoEfectivo();
+	//totales();
 }
 function minimoEfectivo(){
   //obtener el minimo a pagar
@@ -753,6 +801,9 @@ if($tipoDocDefault==2){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" step='0.01' required></td>
 		</tr>
 		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="0" step='0.01'></td>
+		</tr>
+		<tr>
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:25px;font-size:18px;width:100%;color:#fff;"></td>
 		</tr>
 		<tr>
@@ -774,6 +825,9 @@ if($tipoDocDefault==2){
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='0.01' required></td>
+		</tr>
+		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaUSDPorcentaje' id='descuentoVentaUSDPorcentaje' onChange='aplicarDescuentoUSDPorcentaje(form1);' onkeyup='aplicarDescuentoUSDPorcentaje(form1);' onkeydown='aplicarDescuentoUSDPorcentaje(form1);' value="0" step='0.01'></td>
 		</tr>
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:25px;font-size:18px;width:100%;color:#fff;"> </td>
