@@ -53,9 +53,9 @@ require("conexion.inc");
 				$nombre=$dat[1];
 				$abreviatura=$dat[2];
 				if($codigo==$cod_precio){
-                 echo "<option value='$codigo' selected>$nombre ($abreviatura %)</option>";					 
+                 echo "<option value='$codigo' selected>$abreviatura %</option>";					 
 				}else{
-				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";					
+				echo "<option value='$codigo'>$abreviatura %</option>";					
 				}
 			}
 			echo "</select>";
