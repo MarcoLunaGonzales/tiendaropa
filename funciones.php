@@ -55,15 +55,16 @@ function stockProducto($almacen, $item){
 	//
 	require("conexion.inc");
 	$fechaActual=date("Y-m-d");
-
+	$fechaInicioSistema="2020-11-19 00:00:00";
+	
 	$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
-			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$fechaActual' and i.cod_almacen='$almacen'
+			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$fechaInicioSistema' and '$fechaActual' and i.cod_almacen='$almacen'
 			and id.cod_material='$item' and i.ingreso_anulado=0";
 			$resp_ingresos=mysql_query($sql_ingresos);
 			$dat_ingresos=mysql_fetch_array($resp_ingresos);
 			$cant_ingresos=$dat_ingresos[0];
 			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
-			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$fechaActual' and s.cod_almacen='$almacen'
+			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$fechaInicioSistema' and '$fechaActual' and s.cod_almacen='$almacen'
 			and sd.cod_material='$item' and s.salida_anulada=0";
 			$resp_salidas=mysql_query($sql_salidas);
 			$dat_salidas=mysql_fetch_array($resp_salidas);

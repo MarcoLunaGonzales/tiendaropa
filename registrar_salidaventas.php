@@ -629,7 +629,7 @@ while($dat2=mysql_fetch_array($resp2)){
 <td>
 	<div id='divTipoPrecio'>
 		<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
+			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
 			$resp1=mysql_query($sql1);
 			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio'>";
 			while($dat=mysql_fetch_array($resp1)){
@@ -686,7 +686,7 @@ if($tipoDocDefault==2){
 	
 	<td>
 		<div id='divRazonSocial'>
-			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' required>
+			<input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault;?>' onKeyUp='javascript:this.value=this.value.toUpperCase();' required>
 		</div>
 	</td>
 
