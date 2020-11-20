@@ -45,7 +45,7 @@ require("conexion.inc");
 
 <td align="center" width="15%">
 	<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio order by 1";
+			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
 			$resp1=mysql_query($sql1);
 			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:55px !important;float:left;' onchange='ajaxPrecioItem(".$num.")'>";
 			while($dat=mysql_fetch_array($resp1)){
