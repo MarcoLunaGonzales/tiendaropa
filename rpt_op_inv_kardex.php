@@ -1,3 +1,6 @@
+<!--script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script-->
+<script type="text/javascript" src="functionsGeneral.js"></script>
+
 <?php
 echo "<script language='JavaScript'>
 		function envia_formulario(f)
@@ -51,15 +54,10 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
+
 require("conexion.inc");
-?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="functionsGeneral.js"></script><?php
-if($global_tipoalmacen==1)
-{	require("estilos_almacenes_central.inc");
-}
-else
-{	require("estilos_almacenes.inc");
-}
+require("estilos_almacenes.inc");
+
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Kardex de Existencia Fisica</th></tr></table><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";

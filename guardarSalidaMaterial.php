@@ -146,9 +146,17 @@ if($sql_inserta==1){
 	}
 	
 	if($tipoSalida==1001){
-		echo "<script type='text/javascript' language='javascript'>
-			location.href='navegadorVentas.php';
+		if($tipoDoc==1){
+			echo "<script type='text/javascript' language='javascript'>
+			location.href='formatoFactura2.php?codVenta=$codigo';
 			</script>";
+			
+		}else{
+			echo "<script type='text/javascript' language='javascript'>
+			location.href='formatoNotaRemision2.php?codVenta=$codigo';
+			</script>";
+
+		}
 	}else{	
 		echo "<script type='text/javascript' language='javascript'>
 			location.href='navegador_salidamateriales.php';

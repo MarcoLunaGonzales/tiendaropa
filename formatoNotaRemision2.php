@@ -105,14 +105,14 @@ $pdf->SetXY(0,$y+21);		$pdf->Cell(0,0,"R.S.: $razonSocial",0,0,"C");
 $pdf->SetXY(0,$y+24);		$pdf->Cell(0,0,utf8_decode("Válido para cambio por 7 días."),0,0,"C");
 
 $pdf->SetXY(0,$y+27);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-$pdf->SetXY(5,$y+30);		$pdf->Cell(0,0,"Cant.");
 $pdf->SetXY(15,$y+30);		$pdf->Cell(0,0,"ITEM");
+$pdf->SetXY(50,$y+30);		$pdf->Cell(0,0,"CANT.");
 //$pdf->SetXY(53,$y+30);		$pdf->Cell(0,0,"Importe");
 $pdf->SetXY(0,$y+33);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
 
 
 $sqlDetalle="select s.`orden_detalle`, s.`cantidad_unitaria`, m.`descripcion_material`, s.`precio_unitario`, 
-		s.`descuento_unitario`, s.`monto_unitario`, ss.descuento 
+		s.`descuento_unitario`, s.`monto_unitario`, ss.descuento, m.codigo_barras
 		from `salida_detalle_almacenes` s, `material_apoyo` m , salida_almacenes ss
 		where 
 		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta and s.cod_salida_almacen=ss.cod_salida_almacenes order by m.descripcion_material";
@@ -133,6 +133,7 @@ while($datDetalle=mysql_fetch_array($respDetalle)){
 	$montoUnit=$datDetalle[5];
 	$montoUnit=redondear2($montoUnit);
 	$descuentoNota=$datDetalle[6];
+	$codigoBarras=$datDetalle[7];
 	$descuentoNota=redondear2($descuentoNota);
 	$cadMaterial="";
 	if($abrevMat==""){
@@ -141,8 +142,9 @@ while($datDetalle=mysql_fetch_array($respDetalle)){
 		$cadMaterial=$abrevMat;
 	}
 	
-	$pdf->SetXY(7,$y+$yyy);		$pdf->Cell(0,0,"$cantUnit");
-	$pdf->SetXY(13,$y+$yyy);		$pdf->Cell(20,0,"$cadMaterial",0,0);
+
+	$pdf->SetXY(7,$y+$yyy);		$pdf->Cell(20,0,"$codigoBarras",0,0);
+	$pdf->SetXY(56,$y+$yyy);		$pdf->Cell(0,0,"$cantUnit");
 	//$pdf->SetXY(59,$y+$yyy);		$pdf->Cell(0,0,"$montoUnit");
 	$montoTotal=$montoTotal+$montoUnit;
 	

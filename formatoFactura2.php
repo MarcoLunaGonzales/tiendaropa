@@ -227,7 +227,7 @@ $pdf->SetXY(0,$y+52);		$pdf->Cell(0,0,"=========================================
 
 
 $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
-		sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
+		sum(s.`descuento_unitario`), sum(s.`monto_unitario`), m.codigo_barras from `salida_detalle_almacenes` s, `material_apoyo` m where 
 		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta 
 		group by s.cod_material
 		order by 3";
@@ -245,9 +245,10 @@ while($datDetalle=mysql_fetch_array($respDetalle)){
 	$precioUnit=redondear2($precioUnit);
 	$descUnit=$datDetalle[4];
 	$montoUnit=$datDetalle[5];
+	$codigoBarras=$datDetalle[6];
 	$montoUnit=redondear2($montoUnit);
 	
-	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$nombreMat","C");
+	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$codigoBarras","C");
 	$pdf->SetXY(56,$y+$yyy+1);		$pdf->Cell(0,0,"$cantUnit");
 	//$pdf->SetXY(61,$y+$yyy+1);		$pdf->Cell(0,0,"$montoUnit");
 	$montoTotal=$montoTotal+$montoUnit;
