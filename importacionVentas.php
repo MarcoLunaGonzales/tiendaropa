@@ -8,7 +8,7 @@ require('funciones_inventarios.php');
 
 $codTipoSalida=1001;
 $codTipoDoc=2;
-$tiendaCargar="Sucursal San Miguel";
+$tiendaCargar="Principal";
 
 $anioCarga=$_GET["anio"];
 

@@ -29,12 +29,7 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexion.inc");
-if($global_tipoalmacen==1)
-{	require("estilos_almacenes_central.inc");
-}
-else
-{	require("estilos_almacenes.inc");
-}
+	require("estilos_almacenes.inc");
 $fecha_rptdefault=date("d/m/Y");
 echo "<h1>Reporte Existencias Almacen</h1>";
 

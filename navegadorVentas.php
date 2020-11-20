@@ -317,6 +317,8 @@ $txtnroingreso = $_GET["txtnroingreso"];
 $fecha1 = $_GET["fecha1"];
 $fecha2 = $_GET["fecha2"];
 
+$view=$_GET["view"];
+
 require("estilos_almacenes.inc");
 
 echo "<form method='post' action=''>";
@@ -338,7 +340,7 @@ echo "<div class='divBotones'>
 		
 echo "<div id='divCuerpo'><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>Cliente</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th></tr>";
+	<th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th></tr>";
 	
 echo "<input type='hidden' name='global_almacen' value='$global_almacen' id='global_almacen'>";
 
@@ -346,7 +348,8 @@ $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit
+	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,
+	(select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 ";
 
@@ -354,9 +357,12 @@ if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
    }
 if($fecha1!="" && $fecha2!="")
-   {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
-   }
-$consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 50 ";
+{	$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
+}
+if($view==1){
+	$consulta = $consulta." and s.cod_tipo_doc=1 ";
+}   
+$consulta = $consulta."ORDER BY s.fecha desc, s.hora_salida desc limit 0, 50 ";
 
 //
 $resp = mysql_query($consulta);
@@ -379,6 +385,7 @@ while ($dat = mysql_fetch_array($resp)) {
 	$nombreTipoDoc=nombreTipoDoc($codTipoDoc);
 	$razonSocial=$dat[12];
 	$nitCli=$dat[13];
+	$tipoPago=$dat[14];
 	
     echo "<input type='hidden' name='fecha_salida$nro_correlativo' value='$fecha_salida_mostrar'>";
 	
@@ -400,7 +407,7 @@ while ($dat = mysql_fetch_array($resp)) {
     echo "<td align='center'>$nombreTipoDoc-$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
     echo "<td>$nombre_tiposalida</td>";
-    echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
+    echo "<td>$tipoPago</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
