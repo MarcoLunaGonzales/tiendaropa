@@ -5,7 +5,7 @@
 <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="functionsGeneral.js"></script>
 <?php
-echo "<script language='JavaScript'>
+echo "<script language='javaScript'>
 		function envia_formulario(f)
 		{	var rpt_territorio, rpt_almacen,tipo_ingreso,fecha_ini, fecha_fin, tipo_item, rpt_item;
 			rpt_territorio=f.rpt_territorio.value;
@@ -57,8 +57,9 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
+		?></head><body><?php
 require("conexion.inc");
-?></head><body><?php
+
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
