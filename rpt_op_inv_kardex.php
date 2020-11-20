@@ -1,3 +1,9 @@
+<html>
+    <head>
+        <title>Busqueda</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="functionsGeneral.js"></script>
 <?php
 echo "<script language='JavaScript'>
 		function envia_formulario(f)
@@ -52,8 +58,7 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexion.inc");
-?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="functionsGeneral.js"></script><?php
+?></head><body><?php
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
@@ -167,3 +172,5 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo "</div>";
 
 ?>
+</body>
+</html>
