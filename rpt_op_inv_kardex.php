@@ -9,7 +9,7 @@
 <script type="text/javascript" src="functionsGeneral.js"></script>
 
 <?php
-echo "<script language='JavaScript'>
+echo "<script language='javaScript'>
 		function envia_formulario(f)
 		{	var rpt_territorio, rpt_almacen,tipo_ingreso,fecha_ini, fecha_fin, tipo_item, rpt_item;
 			rpt_territorio=f.rpt_territorio.value;
@@ -62,19 +62,18 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 
+		?></head><body><?php
 require("conexion.inc");
-<<<<<<< HEAD
-require("estilos_almacenes.inc");
 
-=======
-?></head><body><?php
+//require("estilos_almacenes.inc");
+
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
 else
 {	require("estilos_almacenes.inc");
 }
->>>>>>> b4a83d62936ea754650548088b74db2813916606
+
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Kardex de Existencia Fisica</th></tr></table><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";
