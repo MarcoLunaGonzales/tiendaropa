@@ -156,6 +156,18 @@ function totales(){
 			subtotal=subtotal+parseFloat(monto);
 		}
     }
+    var subtotalPrecio=0;
+    for(var ii=1;ii<=num;ii++){
+	 	if(document.getElementById('materiales'+ii)!=null){
+			var precio=document.getElementById("precio_unitario"+ii).value;
+			var cantidad=document.getElementById("cantidad_unitaria"+ii).value;
+			subtotalPrecio=subtotalPrecio+parseFloat(precio*cantidad);
+		}
+    }
+    document.getElementById("total_precio_sin_descuento").innerHTML=subtotalPrecio;
+
+    subtotalPrecio=Math.round(subtotalPrecio*100)/100;
+
 	subtotal=Math.round(subtotal*100)/100;
 	
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
@@ -856,6 +868,12 @@ if($banderaErrorFacturacion==0){
             <h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
+            <tr>
+               <td style='font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
+             </tr>
+             <tr>
+               <td style='font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
+             </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
                <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>

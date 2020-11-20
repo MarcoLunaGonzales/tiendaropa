@@ -1,15 +1,11 @@
-<!--script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script-->
-<script type="text/javascript" src="functionsGeneral.js"></script>
-
 <html>
     <head>
         <title>Busqueda</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="functionsGeneral.js"></script>
+         <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+         <script type="text/javascript" src="functionsGeneral.js"></script>
 
-<?php
-echo "<script language='javaScript'>
+        <script language='javascript'>
 		function envia_formulario(f)
 		{	var rpt_territorio, rpt_almacen,tipo_ingreso,fecha_ini, fecha_fin, tipo_item, rpt_item;
 			rpt_territorio=f.rpt_territorio.value;
@@ -60,20 +56,10 @@ echo "<script language='javaScript'>
 			form.submit();
 			return(true);
 		}
-		</script>";
-
-		?></head><body><?php
+		</script>
+       </head><body><?php
 require("conexion.inc");
-
-//require("estilos_almacenes.inc");
-
-if($global_tipoalmacen==1)
-{	require("estilos_almacenes_central.inc");
-}
-else
-{	require("estilos_almacenes.inc");
-}
-
+require("estilos_almacenes.inc");
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Kardex de Existencia Fisica</th></tr></table><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";
@@ -136,17 +122,12 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo_item=$dat[0];
 		if($tipo_item==1)
-		{	$nombre_item="$dat[1] $dat[2]";
+		{	$nombre_item=$dat[1]." ".$dat[2];
 		}
 		else
 		{	$nombre_item=$dat[1];
 		}
-		if($rpt_item==$codigo_item)
-		{	echo "<option value='$codigo_item' selected>$nombre_item</option>";
-		}
-		else
-		{	echo "<option value='$codigo_item'>$nombre_item</option>";
-		}
+		?><option value='<?=$codigo_item?>'><?=$nombre_item?></option><?php
 	}
 	echo "</select></td>
 	</div>
@@ -163,14 +144,14 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
      <?php
 	
 	echo "<tr><th align='left'>Fecha inicio:</th>";
-			echo" <TD bgcolor='#ffffff'>
-			<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial' required>";
-    		echo" </TD>";
+			echo" <td bgcolor='#ffffff'>
+			<input  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial' required>";
+    		echo" </td>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Fecha final:</th>";
-			echo" <TD bgcolor='#ffffff'>
-			<INPUT  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal' required>";
-    		echo" </TD>";
+			echo" <td bgcolor='#ffffff'>
+			<input  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal' required>";
+    		echo" </td>";
 	echo "</tr>";
 	
 	echo"\n </table><br>";
@@ -178,7 +159,7 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form)' class='boton'>
 	</center><br>";
 	echo"</form>";
-	echo "</div>";
+	echo "";
 
 ?>
 </body>
