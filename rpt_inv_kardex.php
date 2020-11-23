@@ -15,14 +15,9 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	$resp_nombre_almacen=mysql_query($sql_nombre_almacen);
 	$dat_almacen=mysql_fetch_array($resp_nombre_almacen);
 	$nombre_almacen=$dat_almacen[0];
-	if($tipo_item==1)
-	{	$nombre_tipoitem="Muestra Médica";
-		$sql_item="select descripcion, presentacion from muestras_medicas where codigo='$rpt_item'";
-	}
-	else
-	{	$nombre_tipoitem="Material de Apoyo";
-		$sql_item="select descripcion_material from material_apoyo where codigo_material='$rpt_item'";
-	}
+	
+	$sql_item="select descripcion_material from material_apoyo where codigo_material='$rpt_item'";
+	
 	$resp_item=mysql_query($sql_item);
 	$dat_item=mysql_fetch_array($resp_item);
 	$nombre_item="$dat_item[0] $dat_item[1]";
@@ -31,8 +26,8 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	<strong>$fecha_fin</strong>Item: <strong>$nombre_item</strong><br>$txt_reporte</th></tr></table>";
 
 	//desde esta parte viene el reporte en si
-	$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
-	$fecha_finconsulta=cambia_formatofecha($fecha_fin);
+	$fecha_iniconsulta=$fecha_ini;
+	$fecha_finconsulta=$fecha_fin;
 	//aqui sacamos las existencias a una fecha
 	$sql="select sum(id.cantidad_unitaria) FROM ingreso_almacenes i, ingreso_detalle_almacenes id
 	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$rpt_almacen' and
@@ -80,7 +75,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	$zz=1;
 	
 	//echo "vector: ".var_dump($vector_fechas_salidas);
-	
+	$vector_final_fechas=array();
 	while($ii<=$i and $jj<=$j)
 	{	$fecha_ingresos=$vector_fechas_ingresos[$ii];
 		$fecha_salidas=$vector_fechas_salidas[$jj];
@@ -176,7 +171,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	}
 	$suma_saldo_final=$suma_ingresos-$suma_salidas+$cantidad_inicial_kardex;
 	$suma_saldo_final=formatonumeroDec($suma_saldo_final);
-	echo "<tr><td align='center'>&nbsp;</td><td>&nbsp;</td><td align='center'>&nbsp;</td><th align='right'>$suma_ingresos</td><th align='right'>$suma_salidas</td><th align='right'>$suma_saldo_final</td><td align='left'>&nbsp;</td><td>&nbsp;</td></tr>";
+	echo "<tr><td align='center'>&nbsp;</td><td>&nbsp;</td><td align='center'>&nbsp;</td><td align='right'>$suma_ingresos</td><td align='right'>$suma_salidas</td><td align='right'>$suma_saldo_final</td><td align='left'>&nbsp;</td><td>&nbsp;</td></tr>";
 	echo "</table></center><br>";
 	
 	include("imprimirInc.php");

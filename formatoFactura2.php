@@ -12,7 +12,7 @@ $sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_a
 $respNro=mysql_query($sqlNro);
 $nroItems=mysql_result($respNro,0,0);
 
-$tamanoLargo=200+($nroItems*3)-3;
+$tamanoLargo=210+($nroItems*3)-3;
 
 $pdf=new FPDF('P','mm',array(76,$tamanoLargo));
 
@@ -73,6 +73,7 @@ $fechaLimiteEmision=mysql_result($respDatosFactura,0,1);
 $codigoControl=mysql_result($respDatosFactura,0,2);
 $nitCliente=mysql_result($respDatosFactura,0,3);
 $razonSocialCliente=mysql_result($respDatosFactura,0,4);
+$razonSocialCliente=strtoupper($razonSocialCliente);
 
 //datos documento
 $sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento
@@ -107,10 +108,10 @@ $pdf->SetXY(0,$y+27);		$pdf->Cell(0,0,"Autorizacion Nro. $nroAutorizacion", 0,0,
 
 
 $pdf->SetXY(0,$y+30);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetXY(0,$y+32);		$pdf->MultiCell(0,3,$txt1,0,"C");
-$pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(0,$y+32);		$pdf->MultiCell(0,3,utf8_decode($txt1),0,"C");
+$pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
 
-$y=$y+3;
+$y=$y+7;
 $pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"FECHA: $fechaVenta",0,0,"C");
 $pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"Sr(es): $razonSocialCliente",0,0,"C");
 $pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"NIT/CI:	$nitCliente",0,0,"C");
@@ -136,17 +137,25 @@ $montoTotal=0;
 while($datDetalle=mysql_fetch_array($respDetalle)){
 	$codInterno=$datDetalle[0];
 	$cantUnit=$datDetalle[1];
-	$cantUnit=redondear2($cantUnit);
 	$nombreMat=$datDetalle[2];
 	$precioUnit=$datDetalle[3];
-	$precioUnit=redondear2($precioUnit);
 	$descUnit=$datDetalle[4];
-	$montoUnit=$datDetalle[5];
+	//$montoUnit=$datDetalle[5];
+	$montoUnit=($cantUnit*$precioUnit)-$descUnit;
+	
+	//recalculamos el precio unitario para mostrar en la factura.
+	$precioUnitFactura=$montoUnit/$cantUnit;
+	
+	$cantUnit=redondear2($cantUnit);
+	$precioUnit=redondear2($precioUnit);
 	$montoUnit=redondear2($montoUnit);
+	
+	$precioUnitFactura=redondear2($precioUnitFactura);
+	
 	
 	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$nombreMat","C");
 	$pdf->SetXY(20,$y+$yyy+4);		$pdf->Cell(0,0,"$cantUnit");
-	$pdf->SetXY(40,$y+$yyy+4);		$pdf->Cell(0,0,"$precioUnit");
+	$pdf->SetXY(40,$y+$yyy+4);		$pdf->Cell(0,0,"$precioUnitFactura");
 	$pdf->SetXY(61,$y+$yyy+4);		$pdf->Cell(0,0,"$montoUnit");
 	$montoTotal=$montoTotal+$montoUnit;
 	

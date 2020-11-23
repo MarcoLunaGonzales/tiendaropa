@@ -116,9 +116,13 @@ if($sql_inserta==1){
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
-			$montoMaterial=$_POST["montoMaterial$i"];
 			
-			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterial;
+			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
+			$montoMaterial=$precioUnitario*$cantidadUnitaria;
+			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
+			
+			
+			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			if($banderaValidacionStock==1){
 				//echo "descontando aca";
 				$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);

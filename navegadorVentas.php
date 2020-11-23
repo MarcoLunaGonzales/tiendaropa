@@ -384,6 +384,7 @@ while ($dat = mysql_fetch_array($resp)) {
 	$codTipoDoc=$dat[11];
 	$nombreTipoDoc=nombreTipoDoc($codTipoDoc);
 	$razonSocial=$dat[12];
+	$razonSocial=strtoupper($razonSocial);
 	$nitCli=$dat[13];
 	$tipoPago=$dat[14];
 	

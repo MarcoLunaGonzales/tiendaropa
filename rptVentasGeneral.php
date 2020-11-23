@@ -45,7 +45,9 @@ echo "<br><table align='center' class='texto' width='70%'>
 <th>
 	<table width='100%'>
 	<tr>
-		<th width='50%'>Item</th>
+		<th width='50%'>Codigo</th>
+		<th width='50%'>Producto</th>
+		<th width='50%'>Color/Talla</th>
 		<th width='25%'>Cantidad</th>
 		<th width='25%'>Monto</th>
 	</tr>
@@ -66,8 +68,8 @@ while($datos=mysql_fetch_array($resp)){
 	
 	$totalVenta=$totalVenta+$montoVenta;
 	
-	$sqlX="select m.`codigo_material`, m.`descripcion_material`, 
-	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total
+	$sqlX="select m.codigo_barras, m.`descripcion_material`, 
+	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla
 	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
 	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta'
 	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and
@@ -89,6 +91,9 @@ while($datos=mysql_fetch_array($resp)){
 		$descuentoVenta=$datosX[4];
 		$montoNota=$datosX[5];
 		
+		$colorItem=$datosX[6];
+		$tallaItem=$datosX[7];
+		
 		if($descuentoVenta>0){
 			$porcentajeVentaProd=($montoVenta/$montoNota);
 			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
@@ -100,7 +105,9 @@ while($datos=mysql_fetch_array($resp)){
 		
 		$totalVentaX=$totalVentaX+$montoVenta;
 		$tablaDetalle.="<tr>
+		<td>$codItem</td>
 		<td>$nombreItem</td>
+		<td>$colorItem/$tallaItem</td>
 		<td>$cantidadFormat</td>
 		<td>$montoPtr</td>		
 		</tr>";
@@ -112,6 +119,8 @@ while($datos=mysql_fetch_array($resp)){
 		$colorObs="#ffffff";
 	}
 	$tablaDetalle.="<tr>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<th>Total:</th>
 		<th bgcolor='$colorObs'>$totalPtr</th>

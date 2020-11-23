@@ -10,6 +10,6 @@ $nombre="";
 while($dat=mysql_fetch_array($resp)){
 	$nombre=$dat[0];
 }
-echo "<input type='text' value='$nombre' name='razonSocial' id='razonSocial'>";
+echo "<input type='text' value='$nombre' name='razonSocial' id='razonSocial' onKeyUp='javascript:this.value=this.value.toUpperCase();' required>";
 
 ?>

@@ -120,7 +120,7 @@ include("datosUsuario.php");
 				</ul>
 			</li>
 
-			<li><a href="rptOpArqueoDiario.php" target="contenedorPrincipal" >Arqueo de Caja</a></li>
+			<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
 
 			<!--li><a href="registrar_cotizacion_dolar.php" target="contenedorPrincipal"><span>Cotización Dolar</span></a>	
 			</li-->
