@@ -262,4 +262,8 @@ function obtieneMarcaProducto($idMarca){
 	$nombreMarca=$dat[0];
 	return($nombreMarca);	
 }
+function fechaInicioSistema(){
+	return("2020-11-20");
+}
+
 ?>

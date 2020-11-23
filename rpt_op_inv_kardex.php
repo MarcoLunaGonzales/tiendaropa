@@ -60,17 +60,16 @@
        </head><body><?php
 require("conexion.inc");
 require("estilos_almacenes.inc");
+require("funciones.php");
+
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Kardex de Existencia Fisica</th></tr></table><br>";
 echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto' onChange='envia_select(this.form)' required>";
-	if($global_tipoalmacen==1)
-	{	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
-	}
-	else
-	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
-	}
+	
+	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
+	
 	$resp=mysql_query($sql);
 	echo "<option value=''></option>";
 	while($dat=mysql_fetch_array($resp))
@@ -115,19 +114,15 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
 	<div id='divItemReporte'>
 	<select name='rpt_item' class='texto' required>";
 	
-	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 order by descripcion_material";
+	$sql_item="select codigo_material, descripcion_material, codigo_barras from material_apoyo where codigo_material<>0 order by descripcion_material";
 	
 	$resp=mysql_query($sql_item);
 	echo "<option value=''></option>";
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo_item=$dat[0];
-		if($tipo_item==1)
-		{	$nombre_item=$dat[1]." ".$dat[2];
-		}
-		else
-		{	$nombre_item=$dat[1];
-		}
-		?><option value='<?=$codigo_item?>'><?=$nombre_item?></option><?php
+		$nombre_item=$dat[1];
+		$barCode=$dat[2];
+		?><option value='<?=$codigo_item?>'><?=$barCode?>-<?=$nombre_item?></option><?php
 	}
 	echo "</select></td>
 	</div>
@@ -143,14 +138,17 @@ echo"<form method='post' action='rpt_op_inv_kardex.php'>";
     </tr>
      <?php
 	
+	$fechaIniDefault=fechaInicioSistema();
+	$fechaFinalDefault=date("Y-m-d");
+	
 	echo "<tr><th align='left'>Fecha inicio:</th>";
 			echo" <td bgcolor='#ffffff'>
-			<input  type='date' class='texto' value='$fecha_rptdefault' id='exafinicial' size='10' name='exafinicial' required>";
+			<input  type='date' class='texto' value='$fechaIniDefault' id='exafinicial' size='10' name='exafinicial' min='$fechaIniDefault' required>";
     		echo" </td>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Fecha final:</th>";
 			echo" <td bgcolor='#ffffff'>
-			<input  type='date' class='texto' value='$fecha_rptdefault' id='exaffinal' size='10' name='exaffinal' required>";
+			<input  type='date' class='texto' value='$fechaFinalDefault' id='exaffinal' size='10' name='exaffinal' min='$fechaIniDefault' required>";
     		echo" </td>";
 	echo "</tr>";
 	

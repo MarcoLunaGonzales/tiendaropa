@@ -105,13 +105,14 @@ function ajaxPrecioItem(indice){
 	contenedor=document.getElementById("idprecio"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
 	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
+	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
 	ajax=nuevoAjax();
 	ajax.open("GET", "ajaxPrecioItem.php?codmat="+codmat+"&indice="+indice+"&tipoPrecio="+tipoPrecio,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			var respuesta=ajax.responseText.split("#####");
 			contenedor.innerHTML = respuesta[0];
-            document.getElementById("descuentoProducto"+indice).value=respuesta[1]; 
+            document.getElementById("descuentoProducto"+indice).value=(respuesta[1]*parseFloat(cantidadUnitaria)); 
 			calculaMontoMaterial(indice);
 		}
 	}
@@ -140,7 +141,7 @@ function calculaMontoMaterial(indice){
 	var precioUnitario=document.getElementById("precio_unitario"+indice).value;
 	var descuentoUnitario=document.getElementById("descuentoProducto"+indice).value;
 	
-	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) - (descuentoUnitario);
+	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) - (parseFloat(descuentoUnitario));
 	montoUnitario=Math.round(montoUnitario*100)/100
 		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;

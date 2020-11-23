@@ -9,7 +9,7 @@ $rptOrdenar=$_GET["rpt_ordenar"];
 $rptGrupo=$_GET["rpt_grupo"];
 $rptFormato=$_GET["rpt_formato"];
 
-$rptFechaInicio="2020-11-01";
+$rptFechaInicio="2020-11-20";
 
 //$rpt_fecha=cambia_formatofecha($rpt_fecha);
 $fecha_reporte=date("d/m/Y");
@@ -160,21 +160,16 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$resp_linea=mysql_query($sql_linea);
 			
 			$num_filas=mysql_num_rows($resp_linea);
-			if($rpt_linea!=0 and $num_filas==0)
-			{	//no se muestra nada
+			if($rpt_ver==1)
+			{	echo $cadena_mostrar;
 			}
-			else
-			{	if($rpt_ver==1)
-				{	echo $cadena_mostrar;
-				}
-				if($rpt_ver==2 and $stock_real>0)
-				{	echo $cadena_mostrar;
-				}
-				if($rpt_ver==3 and $stock_real==0)
-				{	echo $cadena_mostrar;
-				}
-				$indice++;
+			if($rpt_ver==2 and $stock_real>0)
+			{	echo $cadena_mostrar;
 			}
+			if($rpt_ver==3 and $stock_real==0)
+			{	echo $cadena_mostrar;
+			}
+			$indice++;
 		}
 		$cadena_mostrar.="</tbody>";
 		echo "</table>";

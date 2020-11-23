@@ -11,7 +11,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 require("conexion.inc");
 $cadRespuesta="";
 $consulta="
-    select p.`precio` from precios p where p.`codigo_material`='$codMaterial'";
+    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1";
 $rs=mysql_query($consulta);
 $registro=mysql_fetch_array($rs);
 $cadRespuesta=$registro[0];
