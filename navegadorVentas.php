@@ -424,7 +424,7 @@ while ($dat = mysql_fetch_array($resp)) {
 	}
 	
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
-	echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/change.png' width='30' border='0' title='Cambio de Producto'></a></td>";
+	echo "<td  bgcolor='$color_fondo'><a href='cambiarProductoVenta.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/change.png' width='30' border='0' title='Cambio de Producto'></a></td>";
 	echo "</tr>";
 }
 echo "</table></center><br>";
