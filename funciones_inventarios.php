@@ -78,8 +78,6 @@ function insertar_detalleSalidaVenta($cod_salida, $cod_almacen, $cod_material, $
 	descuento_unitario, monto_unitario, orden_detalle) values ('$cod_salida', '$cod_material', '$cantidad', '0', '0000-00-00',
 	'$precio','$descuento','$montoparcial','$orden')";
 	
-	//echo $sqlInsert;
-	
 	$respInsert=mysql_query($sqlInsert);
 	if($respInsert!=1){
 		$banderaError=2;

@@ -73,6 +73,7 @@ values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$obs
 
 $sql_inserta = mysql_query($consulta);
 
+$montoTotalCambio=0;
 if($sql_inserta==1){
    $valorExcel="1";
     if($valorExcel=="1"){
@@ -90,6 +91,7 @@ if($sql_inserta==1){
         {	$cod_material=$dat_detalle[0];
             $cantidad=$dat_detalle[4];
 			$precioBruto=$dat_detalle[5];
+			$montoTotalCambio+=($dat_detalle[4]*$dat_detalle[5]);
 			$lote="";
         }
 		
@@ -102,6 +104,7 @@ if($sql_inserta==1){
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
 			values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
+			$respConsulta=mysql_query($consulta);
 		}
 	  }
 	  //fin de if
@@ -258,7 +261,51 @@ if($sql_inserta==1){
 					where cod_venta='$codigo'";
 		$respUpdMonto=mysql_query($sqlUpdMonto);
 	}
+
+
+
 	
+if($montoTotalConDescuento>$montoTotalCambio){	   
+	//insertar NOTA DE REMISION
+    $totalVenta=$montoTotalConDescuento-$montoTotalCambio;       	
+$sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
+$resp=mysql_query($sql);
+$codigo=mysql_result($resp,0,0);
+$codigoSalidaGeneralNota=$codigo;
+
+$vectorNroCorrelativo=numeroCorrelativo($tipoDoc);
+$nro_correlativo=$vectorNroCorrelativo[0];
+$cod_dosificacion=$vectorNroCorrelativo[2];
+
+$sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
+		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
+		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
+		values ('$codigo', '$almacenOrigen', '$tipoSalida', '2', '$fecha', '$hora', '0', '$almacenDestino', 
+		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '0', '$totalVenta', '$razonSocial', 
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','1')";
+$sql_inserta=mysql_query($sql_inserta);
+
+  if($sql_inserta==1){
+	$codMaterial=-100;
+	$cantidadUnitaria=1;
+	$precioUnitario=$totalVenta;
+	$descuentoProducto=0;
+			
+	//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
+	$montoMaterial=$precioUnitario*$cantidadUnitaria;
+	$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;			
+	  if($banderaValidacionStock==1){
+		//echo "descontando aca";
+	 	$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+	  }else{
+		$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i+1);
+	  }
+	 }			
+	 $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoVenta where cod_salida_almacenes=$codigoSalidaGeneralNota";
+     $sql_inserta = mysql_query($consulta);
+    }//Fin Nota de Remisión
+
 	$flagSuccessSalidas=1;	
 }
 
@@ -266,13 +313,13 @@ $mensajeAlert="";
 if($flagSuccessIngresos==0){
   $mensajeAlert.="Ocurrio un error al guardar los datos de Ingreso, ";
 }else{	
-  $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoIngresoGeneral where cod_salida_almacenes=$codigoSalidaGeneral";
+  $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoVenta where cod_salida_almacenes=$codigoSalidaGeneral";
   $sql_inserta = mysql_query($consulta);
 }
 if($flagSuccessSalidas==0){
   $mensajeAlert.="Ocurrio un error al guardar los datos de la Venta, "; 
 }else{
-  $consulta2="UPDATE ingreso_almacenes SET cod_cambio=$codigoSalidaGeneral where cod_ingreso_almacen=$codigoIngresoGeneral";
+  $consulta2="UPDATE ingreso_almacenes SET cod_cambio=$codigoVenta where cod_ingreso_almacen=$codigoIngresoGeneral";
   $sql_inserta2 = mysql_query($consulta2);	
 }
 
