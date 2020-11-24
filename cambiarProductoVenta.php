@@ -439,7 +439,7 @@ function validar(f, ventaDebajoCosto){
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
-		
+		if(cuentaSeleccionados()>0){
 		var item="";
 		var cantidad="";
 		var stock="";
@@ -486,6 +486,11 @@ function validar(f, ventaDebajoCosto){
 				}
 			}
 		}
+          
+		}else{
+		  alert("Debe cambiar al menos 1 item.");
+		  return(false);	
+		}
 	}else{
 		alert("El ingreso debe tener al menos 1 item.");
 		return(false);
@@ -520,6 +525,15 @@ function calcularMontoCambiar() {
        }
     });
   document.getElementById("total_precio_sin_descuento_vendido").innerHTML="<b>"+montoCambiar+"</b>";
+}
+function cuentaSeleccionados(){
+	var cantidadSel=0;
+	$(".codigo_producto").each(function (index) {  
+       if($(this).is(':checked')){
+       	cantidadSel++;
+       }
+    });
+    return cantidadSel;
 }
 
 </script>
