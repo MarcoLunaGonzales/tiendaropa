@@ -35,8 +35,14 @@ while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
 			$codClienteVenta=$datDatosVenta[11];
 }
 
-$numeroFacturaVenta="123123";
-$proveedorVenta="123123";
+$sql = "select valor_configuracion from configuraciones where id_configuracion=-1;";
+$resp = mysql_query($sql);
+$numeroFacturaVenta=mysql_result($resp,0,0);
+
+$sql = "select valor_configuracion from configuraciones where id_configuracion=-2;";
+$resp = mysql_query($sql);
+$proveedorVenta=mysql_result($resp,0,0);
+
 if(!empty($_POST['codigo_producto'])) {
 	$cantidad_material=count($_POST['codigo_producto']);
 }
