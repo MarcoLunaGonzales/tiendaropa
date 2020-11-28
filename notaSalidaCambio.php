@@ -65,10 +65,10 @@ class PDF extends FPDF
 		
 		$this->Line(5, 30, 210,30);
 		
-		$this->SetXY(10,33);		$this->Cell(0,0,"Cant.",0,0);
-		$this->SetXY(40,33);		$this->Cell(0,0,"Item",0,0);
-		$this->SetXY(135,33);		$this->Cell(0,0,"PrecioUnitario",0,0);
-		$this->SetXY(165,33);		$this->Cell(0,0,"Desc.",0,0);
+		$this->SetXY(10,33);		$this->Cell(0,0,"Codigo",0,0);
+		$this->SetXY(40,33);		$this->Cell(0,0,"Producto",0,0);
+		$this->SetXY(135,33);		$this->Cell(0,0,"Color/Talla",0,0);
+		$this->SetXY(165,33);		$this->Cell(0,0,"Cantidad",0,0);
 		$this->SetXY(190,33);		$this->Cell(0,0,"Monto",0,0);
 		
 		$this->Line(5, 35, 210,35);
@@ -80,27 +80,31 @@ class PDF extends FPDF
 	
 	function Footer()
 	{
-		global $montoTotal;
-		global $descuentoFinal;
-		global $pesoTotal;
-		global $pesoTotalqq;
+		global $montoTotalProductos;
+		global $montoDevueltos;
+		global $montoCambiados;
+		global $montoAumento;
 		
 		$this->Line(5, 115, 210,115);
 		
 		$this->SetY(-20);
 		$this->SetX(150);		$this->Cell(0,0,"Monto Total",0,0);
-		$this->SetX(190);		$this->Cell(15,0,$montoTotal,0,0,"R");
+		$this->SetX(190);		$this->Cell(15,0,$montoTotalProductos,0,0,"R");
 				
 		
 		$this->SetY(-15);
 
-		$this->SetX(150);		$this->Cell(0,0,"Descuento Final",0,0);
-		$this->SetX(190);		$this->Cell(15,0,$descuentoFinal,0,0,"R");
+		$this->SetX(150);		$this->Cell(0,0,"Monto Devueltos",0,0);
+		$this->SetX(190);		$this->Cell(15,0,$montoDevueltos,0,0,"R");
 		
 		$this->SetY(-10);
-		$this->SetX(150);		$this->Cell(0,0,"Monto Final",0,0);
-		$this->SetX(190);		$this->Cell(15,0,$montoTotal-$descuentoFinal,0,0,"R");
+		$this->SetX(150);		$this->Cell(0,0,"Monto Cambiados",0,0);
+		$this->SetX(190);		$this->Cell(15,0,$montoCambiados,0,0,"R");
 		
+		$this->SetY(-5);
+		$this->SetX(150);		$this->Cell(0,0,"Monto Aumento",0,0);
+		$this->SetX(190);		$this->Cell(15,0,$montoAumento,0,0,"R");
+
 		$this->SetY(-10);
 		// Arial italic 8
 		$this->SetFont('Arial','',10);
@@ -121,105 +125,119 @@ $pdf->SetFont('Arial','',10);
 //AQUI EMPEZAMOS CON EL DETALLE
 $codigoVenta=$_GET['codVenta'];
 
-$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento,
-	sum(s.cantidad_unitaria), s.precio_unitario, sum(s.`descuento_unitario`), sum(s.`monto_unitario`), sum(ss.`descuento`),ss.cod_cambio
-	from salida_detalle_almacenes s, material_apoyo m, `salida_almacenes` ss
-	where s.cod_salida_almacen='$codigoVenta' and s.cod_material=m.codigo_material and ss.`cod_salida_almacenes`=s.`cod_salida_almacen` 
-	group by s.cod_material
-		order by s.orden_detalle";
+$sql_detalle="select m.codigo_barras, m.`descripcion_material`, 
+	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla,m.codigo_material
+	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
+	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` 
+	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and 
+	s.cod_salida_almacenes='$codigoVenta'
+	group by m.`codigo_material` order by 2 desc;";
 	
 $resp_detalle=mysql_query($sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
-$codCambio=0;
+$montoUnitarioTotal=0;
 while($dat_detalle=mysql_fetch_array($resp_detalle))
-{	$codCambio=$dat_detalle[9];
-	$cod_material=$dat_detalle[0];
-	$nombre_material=$dat_detalle[1];
-	$codigoInterno=$dat_detalle[2];
-	$peso=$dat_detalle[3];
-	$peso=redondear2($peso);
-	$cantidad_unitaria=$dat_detalle[4];
-	$cantidad_unitaria=redondear2($cantidad_unitaria);
-	$precioUnitario=$dat_detalle[5];
-	$precioUnitario=redondear2($precioUnitario);
-	$descuentoUnitarioAF=$dat_detalle[6];
-	$descuentoUnitario=redondear2($descuentoUnitarioAF);
-	$montoUnitario=$dat_detalle[7];
-	$montoUnitario=$montoUnitario-$descuentoUnitarioAF;
-	$descuentoFinal=$dat_detalle[8];
-	$descuentoFinal=redondear2($descuentoFinal);
-	$montoUnitario=redondear2($montoUnitario);
-	$pesoItem=$peso*$cantidad_unitaria;
-	$pesoItem=redondear2($pesoItem);
-	$pesoTotal=$pesoTotal+$pesoItem;
-	$pesoTotal=redondear2($pesoTotal);
-	
-	
-	$montoTotal=$montoTotal+$montoUnitario;
-	$montoTotal=redondear2($montoTotal);
-	
-	$pdf->Cell(0,0,$cantidad_unitaria,0,0);
+{	$codItem=$dat_detalle[0];
+		$nombreItem=$dat_detalle[1];
+		$montoVenta=$dat_detalle[2];
+		$cantidad=$dat_detalle[3];
+		
+		$descuentoVenta=$dat_detalle[4];
+		$montoNota=$dat_detalle[5];
+		
+		$colorItem=$dat_detalle[6];
+		$tallaItem=$dat_detalle[7];
+		$cod_material=$dat_detalle[8];
+		if($descuentoVenta>0){
+			$porcentajeVentaProd=($montoVenta/$montoNota);
+			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
+		}
+		
+		$montoPtr=number_format($montoVenta,2,".",",");
+		$cantidadFormat=number_format($cantidad,0,".",",");
+
+	$montoTotalProductos+=$montoPtr;
+
+	$pdf->Cell(0,0,$codItem,0,0);
 	$pdf->SetX(25);
-	$pdf->Cell(0,0,$nombre_material,0,0);
+	$pdf->Cell(0,0,$nombreItem,0,0);
 	$pdf->SetX(140);
-	$pdf->Cell(15,0,$precioUnitario,0,0,"R");
+	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
 	$pdf->SetX(165);
-	$pdf->Cell(15,0,$descuentoUnitario,0,0,"R");
+	$pdf->Cell(15,0,$cantidadFormat,0,0,"R");
 	$pdf->SetX(190);
-	$pdf->Cell(15,0,$montoUnitario,0,0,"R");
+	$pdf->Cell(15,0,$montoPtr,0,0,"R");
 	
 	$pdf->ln(4);
 	
 }
  $pdf->ln(5);
  $pdf->SetFont('Arial','B',11);
- $pdf->SetX(79);		$pdf->Cell(0,0,"PRODUCTOS CAMBIADOS",0,0);
+ $pdf->SetX(79);		$pdf->Cell(0,0,"PRODUCTOS DEVUELTOS",0,0);
  $pdf->SetFont('Arial','',10);
 
 $pdf->ln(5);		
  $pdf->SetX(10);
- $pdf->SetX(10);		$pdf->Cell(0,0,"Cant.",0,0);
- $pdf->SetX(40);		$pdf->Cell(0,0,"Item",0,0);
- $pdf->SetX(135);		$pdf->Cell(0,0,"PrecioUnitario",0,0);
- $pdf->SetX(165);		$pdf->Cell(0,0,"Desc.",0,0);
+ $pdf->SetX(10);		$pdf->Cell(0,0,"Codigo",0,0);
+ $pdf->SetX(40);		$pdf->Cell(0,0,"Producto",0,0);
+ $pdf->SetX(135);		$pdf->Cell(0,0,"Color/Talla",0,0);
+ $pdf->SetX(165);		$pdf->Cell(0,0,"Cantidad",0,0);
  $pdf->SetX(190);		$pdf->Cell(0,0,"Monto",0,0);
  $pdf->ln(5);
  $codIngreso=$_GET['codVenta'];
- $sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras from ingreso_detalle_almacenes i join ingreso_almacenes ii on ii.cod_ingreso_almacen=i.cod_ingreso_almacen, material_apoyo m
-	where ii.cod_cambio='$codIngreso' and m.codigo_material=i.cod_material order by m.descripcion_material";
+ $sql_detalle="select m.codigo_barras, m.`descripcion_material`, 
+	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla,m.codigo_material
+	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
+	join ingreso_detalle_almacenes i on i.cod_material=m.codigo_material
+	join ingreso_almacenes ii on ii.cod_ingreso_almacen=i.cod_ingreso_almacen
+	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` 
+	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and 
+	s.cod_salida_almacenes='$codigoVenta'
+	and ii.cod_cambio='$codigoVenta'
+	group by m.`codigo_material` order by 2 desc;";
 	
 $resp_detalle=mysql_query($sql_detalle);
 $indice=1;
+$montoTotal=0;
+$pesoTotal=0;
+$pesoTotalqq=0;
+$montoUnitarioTotal=0;
 	while($dat_detalle=mysql_fetch_array($resp_detalle))
-	{	$cod_material=$dat_detalle[0];
-		$cantidad_unitaria=$dat_detalle[1];
-		$precioNeto=redondear2($dat_detalle[2]);
-		$loteProducto=$dat_detalle[3];
-		$fechaVenc=$dat_detalle[4];
-		$color=$dat_detalle[5];
-		$talla=$dat_detalle[6];
-		$barCode=$dat_detalle[7];
+	{	$codItem=$dat_detalle[0];
+		$nombreItem=$dat_detalle[1];
+		$montoVenta=$dat_detalle[2];
+		$cantidad=$dat_detalle[3];
 		
+		$descuentoVenta=$dat_detalle[4];
+		$montoNota=$dat_detalle[5];
 		
-		$totalValorItem=$cantidad_unitaria*$precioNeto;
+		$colorItem=$dat_detalle[6];
+		$tallaItem=$dat_detalle[7];
+		$cod_material=$dat_detalle[8];
+		if($descuentoVenta>0){
+			$porcentajeVentaProd=($montoVenta/$montoNota);
+			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
+		}
 		
-		$cantidad_unitaria=redondear2($cantidad_unitaria);
-		$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
-		$resp_nombre_material=mysql_query($sql_nombre_material);
-		$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
-		$nombre_material=$dat_nombre_material[0];
+		$montoPtr=number_format($montoVenta,2,".",",");
+		$cantidadFormat=number_format($cantidad,0,".",",");
+		
+	
+	$montoDevueltos+=$montoPtr;
 
-		$pdf->Cell(0,0,$cantidad_unitaria,0,0);
-	    $pdf->SetX(25);
-	    $pdf->Cell(0,0,$nombre_material,0,0);
-	    $pdf->SetX(140);
-	    $pdf->Cell(15,0,$precioNeto,0,0,"R");
-	    $pdf->SetX(165);
-	    $pdf->Cell(15,0,0,0,0,"R");
-	    $pdf->SetX(190);
-	    $pdf->Cell(15,0,$totalValorItem,0,0,"R");
+		$pdf->Cell(0,0,$codItem,0,0);
+	$pdf->SetX(25);
+	$pdf->Cell(0,0,$nombreItem,0,0);
+	$pdf->SetX(140);
+	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
+	$pdf->SetX(165);
+	$pdf->Cell(15,0,$cantidadFormat,0,0,"R");
+	$pdf->SetX(190);
+	$pdf->Cell(15,0,$montoPtr,0,0,"R");
 	
 	    $pdf->ln(4);
 		$indice++;
@@ -227,64 +245,66 @@ $indice=1;
 	}
 $pdf->ln(5);
  $pdf->SetFont('Arial','B',11);
- $pdf->SetX(79);		$pdf->Cell(0,0,"PRODUCTOS VENDIDOS",0,0);
+ $pdf->SetX(79);		$pdf->Cell(0,0,"PRODUCTOS CAMBIADOS",0,0);
  $pdf->SetFont('Arial','',10);
 $pdf->ln(5);		
  $pdf->SetX(10);
- $pdf->SetX(10);		$pdf->Cell(0,0,"Cant.",0,0);
- $pdf->SetX(40);		$pdf->Cell(0,0,"Item",0,0);
- $pdf->SetX(135);		$pdf->Cell(0,0,"PrecioUnitario",0,0);
- $pdf->SetX(165);		$pdf->Cell(0,0,"Desc.",0,0);
+ $pdf->SetX(10);		$pdf->Cell(0,0,"Codigo",0,0);
+ $pdf->SetX(40);		$pdf->Cell(0,0,"Producto",0,0);
+ $pdf->SetX(135);		$pdf->Cell(0,0,"Color/Talla",0,0);
+ $pdf->SetX(165);		$pdf->Cell(0,0,"Cantidad",0,0);
  $pdf->SetX(190);		$pdf->Cell(0,0,"Monto",0,0);
  $pdf->ln(5);
  
 $codigoVenta=$_GET['codVenta'];
- $sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento,
-	sum(s.cantidad_unitaria), s.precio_unitario, sum(s.`descuento_unitario`), sum(s.`monto_unitario`), sum(ss.`descuento`),ss.cod_cambio
-	from salida_detalle_almacenes s, material_apoyo m, `salida_almacenes` ss
-	where ss.cod_cambio='$codigoVenta' and s.cod_material=m.codigo_material and ss.`cod_salida_almacenes`=s.`cod_salida_almacen` 
-	group by s.cod_material
-		order by s.orden_detalle";
+ $sql_detalle="select m.codigo_barras, m.`descripcion_material`, 
+	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla,m.codigo_material
+	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
+	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` 
+	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and 
+	s.cod_cambio='$codigoVenta'
+	group by m.`codigo_material` order by 2 desc;";
 	
 $resp_detalle=mysql_query($sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
+$montoUnitarioTotal=0;
 while($dat_detalle=mysql_fetch_array($resp_detalle))
-{	$cod_material=$dat_detalle[0];
-	$nombre_material=$dat_detalle[1];
-	$codigoInterno=$dat_detalle[2];
-	$peso=$dat_detalle[3];
-	$peso=redondear2($peso);
-	$cantidad_unitaria=$dat_detalle[4];
-	$cantidad_unitaria=redondear2($cantidad_unitaria);
-	$precioUnitario=$dat_detalle[5];
-	$precioUnitario=redondear2($precioUnitario);
-	$descuentoUnitarioAF=$dat_detalle[6];
-	$descuentoUnitario=redondear2($descuentoUnitarioAF);
-	$montoUnitario=$dat_detalle[7];
-	$montoUnitario=$montoUnitario-$descuentoUnitarioAF;
-	$descuentoFinal=$dat_detalle[8];
-	$codCambio=$dat_detalle[9];
-	$descuentoFinal=redondear2($descuentoFinal);
-	$montoUnitario=redondear2($montoUnitario);
-	$pesoItem=$peso*$cantidad_unitaria;
-	$pesoItem=redondear2($pesoItem);
-	$pesoTotal=$pesoTotal+$pesoItem;
-	$pesoTotal=redondear2($pesoTotal);
+{	$codItem=$dat_detalle[0];
+		$nombreItem=$dat_detalle[1];
+		$montoVenta=$dat_detalle[2];
+		$cantidad=$dat_detalle[3];
+		
+		$descuentoVenta=$dat_detalle[4];
+		$montoNota=$dat_detalle[5];
+		
+		$colorItem=$dat_detalle[6];
+		$tallaItem=$dat_detalle[7];
+		$cod_material=$dat_detalle[8];
+		if($descuentoVenta>0){
+			$porcentajeVentaProd=($montoVenta/$montoNota);
+			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
+		}
+		
+		$montoPtr=number_format($montoVenta,2,".",",");
+		$cantidadFormat=number_format($cantidad,0,".",",");
+	if($codItem==-100){
+	  $montoAumento+=$montoPtr;	
+	}else{
+	  $montoCambiados+=$montoPtr;
+	}	
 	
-	
-	$montoTotal=$montoTotal+$montoUnitario;
-	$montoTotal=redondear2($montoTotal);
-      $pdf->Cell(0,0,$cantidad_unitaria,0,0);
-	  $pdf->SetX(25);
-	  $pdf->Cell(0,0,$nombre_material,0,0);
-	  $pdf->SetX(140);
-	  $pdf->Cell(15,0,$precioUnitario,0,0,"R");
-	  $pdf->SetX(165);
-	  $pdf->Cell(15,0,$descuentoUnitario,0,0,"R");
-	  $pdf->SetX(190);
-	  $pdf->Cell(15,0,$montoUnitario,0,0,"R");
+	$pdf->Cell(0,0,$codItem,0,0);
+	$pdf->SetX(25);
+	$pdf->Cell(0,0,$nombreItem,0,0);
+	$pdf->SetX(140);
+	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
+	$pdf->SetX(165);
+	$pdf->Cell(15,0,$cantidadFormat,0,0,"R");
+	$pdf->SetX(190);
+	$pdf->Cell(15,0,$montoPtr,0,0,"R");
 	
 	$pdf->ln(4);  	
 }
