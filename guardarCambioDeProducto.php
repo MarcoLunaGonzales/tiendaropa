@@ -11,6 +11,7 @@ $sql = "select nro_factura from facturas_venta where cod_venta=$codigoVenta";
 $resp = mysql_query($sql);
 $numeroFacturaAnteriorVenta=mysql_result($resp,0,0);
 $cantidad_material=0;
+$observacionesCambio="POR CAMBIO DE ITEM FACTURA :".$numeroFacturaAnteriorVenta;
 //datos documento				
 $sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
 			(select cl.nombre_cliente from clientes cl where s.cod_cliente=cl.cod_cliente) as nombre_cliente,
@@ -67,7 +68,7 @@ $hora_sistema = date("H:i:s");
 $tipo_ingreso=1001; //POR CAMBIO DE ITEM
 $nota_entrega=0;
 $nro_factura=$numeroFacturaVenta;  //
-$observaciones="";
+$observaciones=$observacionesCambio;
 $proveedor=$proveedorVenta;  //
 
 $createdBy=$_COOKIE['global_usuario'];
@@ -143,7 +144,7 @@ $tipoVenta=$_POST['tipoVenta'];
 $razonSocial=$_POST['razonSocial'];
 $nitCliente=$_POST['nitCliente'];
 
-$observaciones=$_POST["observaciones"];
+$observaciones=$_POST["observaciones"]." ".$observacionesCambio;
 $almacenOrigen=$global_almacen;
 
 $totalVenta=$_POST["totalVenta"];
