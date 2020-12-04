@@ -16,7 +16,7 @@ $fechaFinBusqueda=formateaFechaVista($fechaFinBusqueda);
 
 echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th></tr>";
+	<th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th><th>CP</th></tr>";
 	
 //
 $consulta = "
@@ -109,6 +109,18 @@ while ($dat = mysql_fetch_array($resp)) {
 		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
 	
+	$codigoVentaCambio=0;
+    $sqlCambio="select c.cod_cambio from salida_almacenes c where c.cod_cambio=$codigo";
+    $respCambio=mysql_query($sqlCambio);
+    while($datCambio=mysql_fetch_array($respCambio)){
+        $codigoVentaCambio=$datCambio[0];        
+    }
+    if($codigoVentaCambio==0){
+      echo "<td  bgcolor='$color_fondo'><a href='cambiarProductoVenta.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/change.png' width='30' border='0' title='Cambio de Producto'></a></td>";
+    }else{
+        echo "<td  bgcolor='$color_fondo'><a href='notaSalidaCambio.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/icon_detail.png' width='30' border='0' title='Ver Detalle del Cambio'></a></td>";
+    }
+    
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
 	
 	echo "</tr>";
