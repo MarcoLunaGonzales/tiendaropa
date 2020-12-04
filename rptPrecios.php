@@ -108,7 +108,7 @@ function ajaxBuscarItems(f){
 	<th>Producto</th>
 	<th>Color</th>
 	<th>Talla</th>
-	<th>Existencias</th>
+	<!--th>Existencias</th-->
 	<th>Costo</th>
 	<th>Precio Normal</th>
 	<th>Precio Descuento1</th>
@@ -148,7 +148,7 @@ function ajaxBuscarItems(f){
 		<td>$nombreMaterial </td>
 		<td>$color</td>
 		<td>$talla</td>";
-		echo "<td align='center'>$stock2</td>";
+		echo "<!--td align='center'>$stock2</td-->";
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
