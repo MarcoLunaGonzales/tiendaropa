@@ -66,7 +66,7 @@ class PDF extends FPDF
 		$this->Line(5, 30, 210,30);
 		
 		$this->SetXY(10,33);		$this->Cell(0,0,"Codigo",0,0);
-		$this->SetXY(40,33);		$this->Cell(0,0,"Producto",0,0);
+		$this->SetXY(50,33);		$this->Cell(0,0,"Producto",0,0);
 		$this->SetXY(135,33);		$this->Cell(0,0,"Color/Talla",0,0);
 		$this->SetXY(165,33);		$this->Cell(0,0,"Cantidad",0,0);
 		$this->SetXY(190,33);		$this->Cell(0,0,"Monto",0,0);
@@ -88,17 +88,17 @@ class PDF extends FPDF
 		$this->Line(5, 115, 210,115);
 		
 		$this->SetY(-20);
-		$this->SetX(150);		$this->Cell(0,0,"Monto Total",0,0);
+		$this->SetX(150);		$this->Cell(0,0,"Monto Nota",0,0);
 		$this->SetX(190);		$this->Cell(15,0,$montoTotalProductos,0,0,"R");
 				
 		
 		$this->SetY(-15);
 
-		$this->SetX(150);		$this->Cell(0,0,"Monto Devueltos",0,0);
+		$this->SetX(150);		$this->Cell(0,0,"Monto Devuelto",0,0);
 		$this->SetX(190);		$this->Cell(15,0,$montoDevueltos,0,0,"R");
 		
 		$this->SetY(-10);
-		$this->SetX(150);		$this->Cell(0,0,"Monto Cambiados",0,0);
+		$this->SetX(150);		$this->Cell(0,0,"Monto Cambiado",0,0);
 		$this->SetX(190);		$this->Cell(15,0,$montoCambiados,0,0,"R");
 		
 		$this->SetY(-5);
@@ -162,7 +162,7 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 	$montoTotalProductos+=$montoPtr;
 
 	$pdf->Cell(0,0,$codItem,0,0);
-	$pdf->SetX(25);
+	$pdf->SetX(40);
 	$pdf->Cell(0,0,$nombreItem,0,0);
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
@@ -182,7 +182,7 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 $pdf->ln(5);		
  $pdf->SetX(10);
  $pdf->SetX(10);		$pdf->Cell(0,0,"Codigo",0,0);
- $pdf->SetX(40);		$pdf->Cell(0,0,"Producto",0,0);
+ $pdf->SetX(50);		$pdf->Cell(0,0,"Producto",0,0);
  $pdf->SetX(135);		$pdf->Cell(0,0,"Color/Talla",0,0);
  $pdf->SetX(165);		$pdf->Cell(0,0,"Cantidad",0,0);
  $pdf->SetX(190);		$pdf->Cell(0,0,"Monto",0,0);
@@ -230,7 +230,7 @@ $montoUnitarioTotal=0;
 	$montoDevueltos+=$montoPtr;
 
 		$pdf->Cell(0,0,$codItem,0,0);
-	$pdf->SetX(25);
+	$pdf->SetX(40);
 	$pdf->Cell(0,0,$nombreItem,0,0);
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
@@ -250,7 +250,7 @@ $pdf->ln(5);
 $pdf->ln(5);		
  $pdf->SetX(10);
  $pdf->SetX(10);		$pdf->Cell(0,0,"Codigo",0,0);
- $pdf->SetX(40);		$pdf->Cell(0,0,"Producto",0,0);
+ $pdf->SetX(50);		$pdf->Cell(0,0,"Producto",0,0);
  $pdf->SetX(135);		$pdf->Cell(0,0,"Color/Talla",0,0);
  $pdf->SetX(165);		$pdf->Cell(0,0,"Cantidad",0,0);
  $pdf->SetX(190);		$pdf->Cell(0,0,"Monto",0,0);
@@ -297,7 +297,7 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 	}	
 	
 	$pdf->Cell(0,0,$codItem,0,0);
-	$pdf->SetX(25);
+	$pdf->SetX(40);
 	$pdf->Cell(0,0,$nombreItem,0,0);
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
