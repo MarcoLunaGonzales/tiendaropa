@@ -190,7 +190,7 @@ echo "<script language='Javascript'>
 	
 
 	
-	//echo $sql;
+	echo $sql;
 	$resp=mysql_query($sql);
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Productos:
