@@ -89,7 +89,7 @@ $sqlInserts=[];  $lista_documento=[];
                     $color=$Row[4];
                 }
                 if(isset($Row[5])) {
-                    $talla=$Row[5];
+                    $talla=$Row[5]."";
                 }
                 if(isset($Row[6])) {
                     $cantidad=$Row[6];
