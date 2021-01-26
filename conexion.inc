@@ -10,9 +10,11 @@ if(!function_exists('register_globals')){
 //$bd=mysql_select_db("tuadmintecniplast");
 
 
-$conexion=mysql_connect("localhost","root","");
-$bd=mysql_select_db("tienda2000");
+$conexion=mysql_connect("localhost","root","4868422Marco");
+$bd=mysql_select_db("kidsplace2");
 
 $sqlUTF=mysql_query("SET NAMES utf8");
+
+date_default_timezone_set('America/La_Paz');
 
 ?>

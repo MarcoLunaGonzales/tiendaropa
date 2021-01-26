@@ -152,14 +152,14 @@ function calculaMontoMaterial(indice){
 function totales(){
 	var subtotal=0;
     for(var ii=1;ii<=num;ii++){
-	 	if(document.getElementById('materiales'+ii)!=null){
+	 	if(document.getElementById('materiales'+ii)!=null&&document.getElementById('materiales'+ii).value!=-100){
 			var monto=document.getElementById("montoMaterial"+ii).value;
 			subtotal=subtotal+parseFloat(monto);
 		}
     }
     var subtotalPrecio=0;
     for(var ii=1;ii<=num;ii++){
-	 	if(document.getElementById('materiales'+ii)!=null){
+	 	if(document.getElementById('materiales'+ii)!=null&&document.getElementById('materiales'+ii).value!=-100){
 			var precio=document.getElementById("precio_unitario"+ii).value;
 			var cantidad=document.getElementById("cantidad_unitaria"+ii).value;
 			subtotalPrecio=subtotalPrecio+parseFloat(precio*cantidad);
@@ -184,6 +184,7 @@ function totales(){
 	document.getElementById("descuentoVentaUSD").value=0;
 	aplicarCambioEfectivo();
 	minimoEfectivo();
+	//calcularMontoCambiar();
 }
 
 function aplicarDescuento(f){
@@ -271,7 +272,8 @@ function minimoEfectivo(){
 	var minimoEfectivoUSD=$("#totalFinalUSD").val();
 	//asignar el minimo al atributo min
 	//$("#efectivoRecibidoUnido").attr("min",minimoEfectivo);
-	//$("#efectivoRecibidoUnidoUSD").attr("min",minimoEfectivoUSD);		
+	//$("#efectivoRecibidoUnidoUSD").attr("min",minimoEfectivoUSD);	
+	calcularMontoCambiar();	
 }
 function aplicarCambioEfectivo(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
@@ -439,7 +441,29 @@ function validar(f, ventaDebajoCosto){
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
-		if(cuentaSeleccionados()>0){
+	  if(cuentaSeleccionados()>0){
+	  	var itemAumentoValidacion=0;
+	  	var montoAumentoEfectivoItem=parseFloat($("#total_aumento_efectivo").html());
+		 if(montoAumentoEfectivoItem>0){
+           if(buscarItemAumento()==0){
+           	 alert("Debe registrar en la venta el item AUMENTO DE EFECTIVO POR CAMBIO DE PRODUCTO, "+montoAumentoEfectivoItem+" Bs.");
+           	 itemAumentoValidacion=1;
+		     return(false);
+           }else{
+           	if(buscarItemAumentoMonto()!=montoAumentoEfectivoItem){
+           		alert("Los Montos de Aumento no igualan ");
+           	    itemAumentoValidacion=1;
+		        return(false);
+           	}
+           }
+		 }else{
+		 	if(buscarItemAumento()>0){
+             alert("No debe existir en la venta el item AUMENTO DE EFECTIVO POR CAMBIO DE PRODUCTO");
+             itemAumentoValidacion=1;
+		     return(false);
+		 	}
+		} 
+		if(itemAumentoValidacion==0){	
 		var item="";
 		var cantidad="";
 		var stock="";
@@ -485,8 +509,8 @@ function validar(f, ventaDebajoCosto){
 					return(false);
 				}
 			}
-		}
-          
+	       }
+	     }//fin de validacion item aumento
 		}else{
 		  alert("Debe cambiar al menos 1 item.");
 		  return(false);	
@@ -524,7 +548,14 @@ function calcularMontoCambiar() {
        	montoCambiar+=parseFloat($("#monto_producto"+$(this).val()).val());
        }
     });
+  montoCambiar=Math.round((montoCambiar)*100)/100;  
+  var montoAumentoEfectivo=parseFloat(document.getElementById("totalFinal").value)-montoCambiar;  
+  montoAumentoEfectivo=Math.round((montoAumentoEfectivo)*100)/100;  
+  if(montoAumentoEfectivo<0){
+  	montoAumentoEfectivo=0;
+  }
   document.getElementById("total_precio_sin_descuento_vendido").innerHTML="<b>"+montoCambiar+"</b>";
+  document.getElementById("total_aumento_efectivo").innerHTML=""+montoAumentoEfectivo+"";
 }
 function cuentaSeleccionados(){
 	var cantidadSel=0;
@@ -536,6 +567,26 @@ function cuentaSeleccionados(){
     return cantidadSel;
 }
 
+function buscarItemAumento(){
+	var itemAumento=0;
+    for(var ii=1;ii<=num;ii++){
+	 	if(document.getElementById('materiales'+ii)!=null&&document.getElementById('materiales'+ii).value==-100){
+			itemAumento++;
+		}
+    }
+    return itemAumento;
+}
+function buscarItemAumentoMonto(){
+	var subtotalPrecio=0;
+    for(var ii=1;ii<=num;ii++){
+	 	if(document.getElementById('materiales'+ii)!=null&&document.getElementById('materiales'+ii).value==-100){
+			var precio=document.getElementById("precio_unitario"+ii).value;
+			var cantidad=document.getElementById("cantidad_unitaria"+ii).value;
+			subtotalPrecio=parseFloat(precio*cantidad);
+		}
+    }
+    return subtotalPrecio;
+}
 </script>
 
 		
@@ -752,10 +803,10 @@ if($tipoDocDefault==2){
 	<table class='texto'>
        <tr>
        	 <th style="background:#248CE7;color:white;">&nbsp;</th>
-       	 <th style="background:#248CE7;color:white;">Cantidad</th>
-       	 <th style="background:#248CE7;color:white;">Item</th>
-       	 <th style="background:#248CE7;color:white;">Precio Unitario</th>
-	     <th style="background:#248CE7;color:white;">Desc.</th>
+       	 <th style="background:#248CE7;color:white;">Codigo</th>
+       	 <th style="background:#248CE7;color:white;">Producto</th>
+       	 <th style="background:#248CE7;color:white;">Color/Talla</th>
+	     <th style="background:#248CE7;color:white;">Cantidad</th>
 	     <th style="background:#248CE7;color:white;">Monto</th>
       </tr>
 
@@ -763,56 +814,55 @@ if($tipoDocDefault==2){
 //AQUI EMPEZAMOS CON EL DETALLE
 $codigoVenta=$_GET['codVenta'];
 
-$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento,
-	sum(s.cantidad_unitaria), s.precio_unitario, sum(s.`descuento_unitario`), sum(s.`monto_unitario`), sum(ss.`descuento`)
-	from salida_detalle_almacenes s, material_apoyo m, `salida_almacenes` ss
-	where s.cod_salida_almacen='$codigoVenta' and s.cod_material=m.codigo_material and ss.`cod_salida_almacenes`=s.`cod_salida_almacen` 
-	group by s.cod_material
-		order by s.orden_detalle";
+$sql_detalle="select m.codigo_barras, m.`descripcion_material`, 
+	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla,m.codigo_material
+	from `salida_almacenes` s, `salida_detalle_almacenes` sd, `material_apoyo` m 
+	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` 
+	and s.`salida_anulada`=0 and sd.`cod_material`=m.`codigo_material` and 
+	s.cod_salida_almacenes='$codigoVenta'
+	group by m.`codigo_material` order by 2 desc;";
 	
 $resp_detalle=mysql_query($sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
 $montoUnitarioTotal=0;
-while($dat_detalle=mysql_fetch_array($resp_detalle))
-{	$cod_material=$dat_detalle[0];
-	$nombre_material=$dat_detalle[1];
-	$codigoInterno=$dat_detalle[2];
-	$peso=$dat_detalle[3];
-	$peso=redondear2($peso);
-	$cantidad_unitaria=$dat_detalle[4];
-	$cantidad_unitaria=redondear2($cantidad_unitaria);
-	$precioUnitario=$dat_detalle[5];
-	$precioUnitario=redondear2($precioUnitario);
-	$descuentoUnitarioAF=$dat_detalle[6];
-	$descuentoUnitario=redondear2($descuentoUnitarioAF);
-	$montoUnitario=$dat_detalle[7];
-	$montoUnitario=$montoUnitario-$descuentoUnitarioAF;
-	$descuentoFinal=$dat_detalle[8];
-	$descuentoFinal=redondear2($descuentoFinal);
-	$montoUnitario=redondear2($montoUnitario);
-	$pesoItem=$peso*$cantidad_unitaria;
-	$pesoItem=redondear2($pesoItem);
-	$pesoTotal=$pesoTotal+$pesoItem;
-	$pesoTotal=redondear2($pesoTotal);
-	
-	
-	$montoTotal=$montoTotal+$montoUnitario;
+while($datosX=mysql_fetch_array($resp_detalle))
+{	$codItem=$datosX[0];
+		$nombreItem=$datosX[1];
+		$montoVenta=$datosX[2];
+		$cantidad=$datosX[3];
+		
+		$descuentoVenta=$datosX[4];
+		$montoNota=$datosX[5];
+		
+		$colorItem=$datosX[6];
+		$tallaItem=$datosX[7];
+		$cod_material=$datosX[8];
+		if($descuentoVenta>0){
+			$porcentajeVentaProd=($montoVenta/$montoNota);
+			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
+		}
+		
+		$montoPtr=number_format($montoVenta,2,".",",");
+		$cantidadFormat=number_format($cantidad,0,".",",");
+		
+	$montoTotal=$montoTotal+$montoVenta;
 	$montoTotal=redondear2($montoTotal);
 
-	$chk = "<input type='checkbox' checked class='codigo_producto' name='codigo_producto[]' value='$cod_material' onclick='calcularMontoCambiar();'><input type='hidden' value='".$montoUnitario."' id='monto_producto".$cod_material."'>";
+	$chk = "<input type='checkbox' checked class='codigo_producto' name='codigo_producto[]' value='$cod_material' onclick='calcularMontoCambiar();'><input type='hidden' value='".$montoPtr."' id='monto_producto".$cod_material."'>";
 	?>
      <tr>
        	 <td>&nbsp;<?=$chk?></td>
-       	 <td><?=$cantidad_unitaria?></td>
-       	 <td><?=$nombre_material?></td>
-       	 <td><?=$precioUnitario?></td>
-	     <td><?=$descuentoUnitario?></td>
-	     <td><?=$montoUnitario?></td>
+       	 <td><?=$codItem?></td>
+       	 <td><?=$nombreItem?></td>
+       	 <td><?=$colorItem."/".$tallaItem?></td>
+	     <td><?=$cantidadFormat?></td>
+	     <td><?=$montoPtr?></td>
       </tr> 
 	<?php
-	$montoUnitarioTotal+=$montoUnitario;
+	$montoUnitarioTotal+=$montoPtr;
 }
 ?>
       <tr>
@@ -918,10 +968,10 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
 		</tr>
-		<tr>
+		<tr style="display:none">
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
 		</tr>
-		<tr>
+		<tr style="display:none">
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
 		</tr>
 	</table>
@@ -944,10 +994,10 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:27px;font-size:22px;width:100%;color:#fff;"> </td>
 		</tr>
-		<tr>
+		<tr style="display:none">
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
 		</tr>
-		<tr>
+		<tr style="display:none">
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
 		</tr>
 	</table>
@@ -962,17 +1012,17 @@ if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
 	        <input type='submit' class='boton' value='Cambiar Productos' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
 			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
-            <h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style=''> ".$tipoCambio." Bs.</b></h2>
+            <label style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style=''> ".$tipoCambio." Bs.</b></label>
             
-            <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
+            <table style='width:400px;padding:0 !important;margin:0 !important;bottom:10px;position:fixed;left:100px;'>
             <tr>
-               <td style='font-size:14px;color:#262C2E;font-weight:bold;' colspan='2'>Total monto a cambiar = <label id='total_precio_sin_descuento_vendido'>".number_format($montoUnitarioTotal,2,'.','')."</label> Bs.</td>
+               <td style='font-size:12px;color:#262C2E;font-weight:bold;' colspan='2'>Total devolución:<label id='total_precio_sin_descuento_vendido'>".number_format($montoUnitarioTotal,2,'.','')."</label> Bs., Aum. Efectivo : (<label style='color:red' id='total_aumento_efectivo'>".number_format($montoUnitarioTotal-0,2,'.','')."</label>) Bs. </td>
              </tr>
             <tr>
                <td style='font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
              </tr>
              <tr>
-               <td style='font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
+               <td style='font-size:12px;color:#0691CD;' colspan='2'></td>
              </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>

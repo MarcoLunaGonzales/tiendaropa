@@ -41,7 +41,7 @@ values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$obs
 
 $sql_inserta = mysql_query($consulta);
 
-echo "aaaa:$consulta";
+//echo "aaaa:$consulta";
 
 if($sql_inserta==1){
    $valorExcel=0;

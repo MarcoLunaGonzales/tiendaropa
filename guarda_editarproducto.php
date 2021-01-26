@@ -13,14 +13,17 @@ $codGrupo=$_POST['cod_grupo'];
 $codTipo=$_POST['cod_tipo'];
 $observaciones=$_POST['observaciones'];
 $codUnidad=$_POST['cod_unidad'];
-$costoProducto=$_POST['costo_producto'];
 $precioProducto=$_POST['precio_producto'];
+$costoProducto=$_POST['costo_producto'];
 
-
+$codigoBarras=$_POST['codigo_barras'];
+$color=$_POST['color'];
+$codMarca=$_POST['cod_marca'];
+$codSubGrupo=$_POST['cod_subgrupo'];
 
 $sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', cod_linea_proveedor='$codLinea', 
-cod_grupo='$codGrupo', cod_tipomaterial='$codTipo', observaciones='$observaciones', 
-cod_unidad='$codUnidad'  where codigo_material='$codProducto'";
+cod_grupo='$codGrupo', observaciones='$observaciones', cod_unidad='$codUnidad', codigo_barras='$codigoBarras', color='$color',
+talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo' where codigo_material='$codProducto'";
 $resp_inserta=mysql_query($sql_inserta);
 
 //insertamos los precios

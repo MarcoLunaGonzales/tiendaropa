@@ -140,8 +140,8 @@ function numeroCorrelativo($tipoDoc){
 			$codigoDosificacion=mysql_result($respCodDosi,0,0);
 		
 			if($tipoDoc==1){//validamos la factura para que trabaje con la dosificacion
-				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
-				and cod_dosificacion='$codigoDosificacion' and cod_almacen='$globalAlmacen'";	
+				$sql="select IFNULL(max(f.nro_factura)+1,1) from facturas_venta f where 
+				cod_dosificacion='$codigoDosificacion'";	
 			}else{
 				$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' and cod_almacen='$globalAlmacen'";
 			}
@@ -263,7 +263,37 @@ function obtieneMarcaProducto($idMarca){
 	return($nombreMarca);	
 }
 function fechaInicioSistema(){
-	return("2020-11-20");
+	//6 FECHA DE INICIO DE OPERACIONES
+	$sqlConf="select valor_configuracion from configuraciones where id_configuracion=6";
+	$respConf=mysql_query($sqlConf);
+	$fechaInicioOperaciones=mysql_result($respConf,0,0);	
+	return($fechaInicioOperaciones);
+}
+
+function montoVentaDocumento($codVenta){
+	$sql="select (sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total
+	from `salida_almacenes` s, `salida_detalle_almacenes` sd 
+	where s.`cod_salida_almacenes`=sd.`cod_salida_almacen` and s.cod_salida_almacenes=$codVenta";
+	//echo $sql;
+	$resp=mysql_query($sql);
+
+	$totalVenta=0;
+	while($datos=mysql_fetch_array($resp)){	
+		
+		$montoVenta=$datos[0];
+		$cantidad=$datos[1];
+
+		$descuentoVenta=$datos[2];
+		$montoNota=$datos[3];
+		
+		if($descuentoVenta>0){
+			$porcentajeVentaProd=($montoVenta/$montoNota);
+			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
+		}
+		$totalVenta=$totalVenta+$montoVenta;
+	}
+	return($totalVenta);	
 }
 
 ?>

@@ -71,6 +71,7 @@ $sqlInserts=[];  $lista_documento=[];
                 $material="";   
                 $field2="";    
                 $saldo="";  
+				$imagen="";
 
 
                 if(isset($Row[0])) {
@@ -80,47 +81,41 @@ $sqlInserts=[];  $lista_documento=[];
                     $cod_subgrupo=$Row[1];
                 }
                 if(isset($Row[2])) {
-                    $articulo=$Row[2];
+                    $articulo=$Row[2]."";
                 }
                 if(isset($Row[3])) {
-                    $descripcion=$Row[3];
+                    $descripcion=$Row[3]."";
                 }
                 if(isset($Row[4])) {
-                    $color=$Row[4];
+                    $color=$Row[4]."";
                 }
                 if(isset($Row[5])) {
-                    $talla=$Row[5];
+                    $talla=$Row[5]."";
                 }
                 if(isset($Row[6])) {
                     $cantidad=$Row[6];
                 }
                 if(isset($Row[7])) {
-                    $code=$Row[7];
+                    $code=$Row[7]."";
+					$barcode=$Row[7]."";
                 }
                 if(isset($Row[8])) {
-                    $barcode=$Row[8];
+                    $precioCosto=$Row[8];
                 }
                 if(isset($Row[9])) {
-                    $precioCosto=$Row[9];
+                    $precio=$Row[9];
                 }
                 if(isset($Row[10])) {
-                    $precio=$Row[10];
+                    $saldo=$Row[10];
                 }
-                if(isset($Row[11])) {
-                    $field1=$Row[11];
-                }
-                if(isset($Row[12])) {
-                    $material=$Row[12];
-                }
-                if(isset($Row[13])) {
-                    $field2=$Row[13];
-                }
-                if(isset($Row[14])) {
-                    $saldo=$Row[14];
+				if(isset($Row[11])) {
+                    $imagen=$Row[11]."";
                 }
                 
-                $cod_material=devuelveIdProducto($barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto);
-                $fechaVencimiento='1900-01-01';
+                $cod_material=devuelveIdProducto($barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio);
+                //CODIGO DEVUELTO
+				//echo "codigo devuelto.$cod_material<br>";	
+				$fechaVencimiento='1900-01-01';
                 $precioUnitario=$precioCosto;     
                 $costo=$precioCosto;
                 $lote=0;
@@ -134,8 +129,8 @@ $sqlInserts=[];  $lista_documento=[];
                       $lista_documento[$index]=$index;
                       $totalFilasCorrectas++; 
                 	    $sql="INSERT INTO ingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-                    	VALUES('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
-                    $sqlInserts[$index]=$sql;                      
+                    	VALUES('$codigo','$cod_material','$saldo','$saldo','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
+						$sqlInserts[$index]=$sql;                      
                     }
                 }else{
                   if($cod_subgrupo=="" && $marca==""){
@@ -186,8 +181,11 @@ if($filasErroneas>0){
        $mensaje='Filas Repetidas';
        borrarIngresoAlmacen($codigo);  
     }else{
-      for ($ins=0; $ins<count($sqlInserts) ; $ins++) { 
+		$banderaInsercionDetalle=0;
+      for ($ins=0; $ins<count($sqlInserts)+1 ; $ins++) { 
+		//echo $sqlInserts[$ins]."<br>";
         $sql_inserta2 = mysql_query($sqlInserts[$ins]);
+		
       }
       if($sql_inserta2==1){
         $mensaje='Los datos fueron insertados correctamente.';

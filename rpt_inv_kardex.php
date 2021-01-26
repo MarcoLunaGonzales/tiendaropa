@@ -25,19 +25,22 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	<strong>$nombre_territorio</strong> Almacen: <strong>$nombre_almacen</strong> Fecha inicio: <strong>$fecha_ini</strong> Fecha final: 
 	<strong>$fecha_fin</strong>Item: <strong>$nombre_item</strong><br>$txt_reporte</th></tr></table>";
 
+	//SACAMOS LA VARIABLE DE INICIO DE OPERACIONES
+	$fechaInicioOperaciones=fechaInicioSistema();
+	
 	//desde esta parte viene el reporte en si
 	$fecha_iniconsulta=$fecha_ini;
 	$fecha_finconsulta=$fecha_fin;
 	//aqui sacamos las existencias a una fecha
 	$sql="select sum(id.cantidad_unitaria) FROM ingreso_almacenes i, ingreso_detalle_almacenes id
 	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$rpt_almacen' and
-	i.ingreso_anulado=0 and id.cod_material='$rpt_item' and i.fecha<'$fecha_iniconsulta'";
+	i.ingreso_anulado=0 and id.cod_material='$rpt_item' and i.fecha>='$fechaInicioOperaciones' and i.fecha<'$fecha_iniconsulta'";
 	$resp=mysql_query($sql);
 	$dat_existencias_afecha=mysql_fetch_array($resp);
 	$cantidad_ingresada_afecha=$dat_existencias_afecha[0];
 	$sql_salidas_afecha="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
 	where s.cod_salida_almacenes=sd.cod_salida_almacen and s.cod_almacen='$rpt_almacen' and
-	s.salida_anulada=0 and sd.cod_material='$rpt_item' and s.fecha<'$fecha_iniconsulta'";
+	s.salida_anulada=0 and sd.cod_material='$rpt_item' and s.fecha>='$fechaInicioOperaciones' and s.fecha<'$fecha_iniconsulta'";
 	$resp_salidas_afecha=mysql_query($sql_salidas_afecha);
 	$dat_salidas_afecha=mysql_fetch_array($resp_salidas_afecha);
 	$cantidad_sacada_afecha=$dat_salidas_afecha[0];
@@ -46,7 +49,12 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	
 	
 	echo "<center><br><table class='texto' cellspacing='0' width='100%'>";
-	echo "<tr class='textomini'><th>Fecha</th><th>Tipo</th><th>Nro. Ingreso/Salida</th><th>Entrada</th><th>Salida</th><th>Saldo</th><th>Tipo Ingreso/Salida</th><th>Destino Salida</th><th>Observaciones</th></tr>";
+	
+	echo "<tr class='textomini'><th>Fecha</th><th>Tipo</th>
+	<th>Tipo Ingreso/Salida</th>
+	<th>Nro. Ingreso/Salida</th>
+	<th>Entrada</th><th>Salida</th><th>Saldo</th><th>Destino Salida</th><th>Observaciones</th></tr>";
+	
 	$sql_fechas_ingresos="select distinct(i.fecha) from ingreso_almacenes i, ingreso_detalle_almacenes id
 	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$rpt_almacen' and
 	i.ingreso_anulado=0 and id.cod_material='$rpt_item' and i.fecha>='$fecha_iniconsulta' and i.fecha<='$fecha_finconsulta' order by i.fecha";
@@ -129,7 +137,10 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$suma_ingresos=$suma_ingresos+$cantidad_ingreso;
 			$cantidad_kardex=$cantidad_kardex+$cantidad_ingreso;
 			$cantidad_kardexFormato=formatonumeroDec($cantidad_kardex);
-			echo "<tr><td align='center'>$fecha_consulta</td><td>Ingreso</td><td align='center'>$nro_ingreso</td><td align='right'>$cantidad_ingresoFormato</td><td align='right'>0</td><td align='right'>$cantidad_kardexFormato</td><td align='left'>$nombre_ingreso</td><td>&nbsp;</td><td>&nbsp;$obs_ingreso</td></tr>";
+			
+			echo "<tr><td align='center'>$fecha_consulta</td><td>Ingreso</td>
+			<td align='left'>$nombre_ingreso</td>
+			<td align='center'>$nro_ingreso</td><td align='right'>$cantidad_ingresoFormato</td><td align='right'>0</td><td align='right'>$cantidad_kardexFormato</td><td>&nbsp;</td><td>&nbsp;$obs_ingreso</td></tr>";
 		}
 		//hacemos la consulta para salidas
 		$sql_salidas="select s.nro_correlativo, sum(sd.cantidad_unitaria), ts.nombre_tiposalida, s.observaciones, s.territorio_destino, s.cod_salida_almacenes
@@ -164,14 +175,21 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 				$suma_salidas=$suma_salidas+$cantidad_salida;
 				
 				if($cantidad_salida>0){
-					echo "<tr><td align='center'>$fecha_consulta</td><td>Salida</td><td align='center'>$nro_salida</td><td align='right'>0</td><td align='right'>$cantidad_salidaFormato</td><td align='right'>$cantidad_kardexFormato</td><td align='left'>$nombre_salida</td><td align='left'>&nbsp;$nombre_territorio_destino</td><td>&nbsp;$obs_salida</td></tr>";
+					echo "<tr><td align='center'>$fecha_consulta</td>
+					<td>Salida</td>
+					<td align='left'>$nombre_salida</td>
+					<td align='center'>$nro_salida</td>
+					<td align='right'>0</td><td align='right'>$cantidad_salidaFormato</td><td align='right'>$cantidad_kardexFormato</td><td align='left'>&nbsp;$nombre_territorio_destino</td><td>&nbsp;$obs_salida</td></tr>";
 				}
 			}
 		}
 	}
 	$suma_saldo_final=$suma_ingresos-$suma_salidas+$cantidad_inicial_kardex;
 	$suma_saldo_final=formatonumeroDec($suma_saldo_final);
-	echo "<tr><td align='center'>&nbsp;</td><td>&nbsp;</td><td align='center'>&nbsp;</td><td align='right'>$suma_ingresos</td><td align='right'>$suma_salidas</td><td align='right'>$suma_saldo_final</td><td align='left'>&nbsp;</td><td>&nbsp;</td></tr>";
+	$suma_ingresos=formatonumeroDec($suma_ingresos);
+	$suma_salidas=formatonumeroDec($suma_salidas);
+	echo "<tr><td align='center'>&nbsp;</td>
+	<td>&nbsp;</td><td align='center'>Totales:</td><td>&nbsp;</td><td align='right'>$suma_ingresos</td><td align='right'>$suma_salidas</td><td align='right'>$suma_saldo_final</td><td align='left'>&nbsp;</td><td>&nbsp;</td></tr>";
 	echo "</table></center><br>";
 	
 	include("imprimirInc.php");

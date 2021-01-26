@@ -12,7 +12,7 @@ $sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_a
 $respNro=mysql_query($sqlNro);
 $nroItems=mysql_result($respNro,0,0);
 
-$tamanoLargo=210+($nroItems*3)-3;
+$tamanoLargo=230+($nroItems*5)-5;
 
 $pdf=new FPDF('P','mm',array(76,$tamanoLargo));
 
@@ -64,7 +64,7 @@ $sqlConf="select id, valor from configuracion_facturas where id=9";
 $respConf=mysql_query($sqlConf);
 $nitTxt=mysql_result($respConf,0,1);
 
-$sqlDatosFactura="select d.nro_autorizacion, DATE_FORMAT(d.fecha_limite_emision, '%d/%m/%Y'), f.codigo_control, f.nit, f.razon_social from facturas_venta f, dosificaciones d
+$sqlDatosFactura="select d.nro_autorizacion, DATE_FORMAT(d.fecha_limite_emision, '%d/%m/%Y'), f.codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.fecha, '%d/%m/%Y') from facturas_venta f, dosificaciones d
 	where f.cod_dosificacion=d.cod_dosificacion and f.cod_venta=$codigoVenta";
 //echo $sqlDatosFactura;
 $respDatosFactura=mysql_query($sqlDatosFactura);
@@ -74,9 +74,11 @@ $codigoControl=mysql_result($respDatosFactura,0,2);
 $nitCliente=mysql_result($respDatosFactura,0,3);
 $razonSocialCliente=mysql_result($respDatosFactura,0,4);
 $razonSocialCliente=strtoupper($razonSocialCliente);
+$fechaFactura=mysql_result($respDatosFactura,0,5);
+
 
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -88,6 +90,7 @@ while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
 	$nroDocVenta=$datDatosVenta[3];
 	$descuentoVenta=$datDatosVenta[4];
 	$descuentoVenta=redondear2($descuentoVenta);
+	$horaFactura=$datDatosVenta[5];
 }
 
 $y=5;
@@ -112,8 +115,8 @@ $pdf->SetXY(0,$y+32);		$pdf->MultiCell(0,3,utf8_decode($txt1),0,"C");
 $pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"-------------------------------------------------------------------------------", 0,0,"C");
 
 $y=$y+7;
-$pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"FECHA: $fechaVenta",0,0,"C");
-$pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"Sr(es): $razonSocialCliente",0,0,"C");
+$pdf->SetXY(0,$y+36);		$pdf->Cell(0,0,"FECHA: $fechaFactura $horaFactura",0,0,"C");
+$pdf->SetXY(0,$y+39);		$pdf->Cell(0,0,"Sr(es): ".utf8_decode($razonSocialCliente)."",0,0,"C");
 $pdf->SetXY(0,$y+42);		$pdf->Cell(0,0,"NIT/CI:	$nitCliente",0,0,"C");
 
 $y=$y+3;
@@ -128,7 +131,7 @@ $sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcio
 		sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
 		m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoVenta 
 		group by s.cod_material
-		order by 3";
+		order by s.orden_detalle";
 $respDetalle=mysql_query($sqlDetalle);
 
 $yyy=55;
@@ -153,7 +156,7 @@ while($datDetalle=mysql_fetch_array($respDetalle)){
 	$precioUnitFactura=redondear2($precioUnitFactura);
 	
 	
-	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,"$nombreMat","C");
+	$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(50,3,utf8_decode($nombreMat),"C");
 	$pdf->SetXY(20,$y+$yyy+4);		$pdf->Cell(0,0,"$cantUnit");
 	$pdf->SetXY(40,$y+$yyy+4);		$pdf->Cell(0,0,"$precioUnitFactura");
 	$pdf->SetXY(61,$y+$yyy+4);		$pdf->Cell(0,0,"$montoUnit");

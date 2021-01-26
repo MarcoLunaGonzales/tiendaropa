@@ -24,7 +24,7 @@ include("datosUsuario.php");
 <div id="page">
 	<div class="header">
 		<a href="#menu"><span></span></a>
-		TuAdmin - KidsPlace
+		TuAdmin - Test
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
 			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
             <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
@@ -90,7 +90,7 @@ include("datosUsuario.php");
 			</li>
 			<li><span>Salidas</span>
 				<ul>
-					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos</a></li>
+					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos & Salidas</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>
 				</ul>	
 			</li>

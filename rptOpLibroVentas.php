@@ -7,6 +7,14 @@ function envia_formulario(f)
 	window.open('rptLibroVentas.php?codAnio='+codAnio+'&codMes='+codMes,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 	return(true);
 }
+function envia_formularioTXT(f)
+{	var codAnio,codMes;
+	codAnio=f.cod_anio.value;
+	codMes=f.cod_mes.value;
+	
+	window.open('rptLibroVentastxt.php?codAnio='+codAnio+'&codMes='+codMes,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+	return(true);
+}
 </script>
 <?php
 	
@@ -24,7 +32,7 @@ echo "<tr><th>Año</th><th>Mes</th></tr>";
 echo "<tr>
 
 <td align='center'><select name='cod_anio' id='cod_anio' class='textograndenegro'>";
-for($i=2018; $i<=2030; $i++){
+for($i=2020; $i<=2030; $i++){
 	echo "<option value='$i'>$i</option>";
 }
 echo "</select></td>";
@@ -49,7 +57,8 @@ echo "</select></td>";
 echo "</table></center>";
 
 echo "<div class='divBotones'>
-<input type='button' class='boton' value='Ver Reporte' onClick='envia_formulario(this.form)'>";
+<input type='button' class='boton' value='Reporte HTML' onClick='envia_formulario(this.form)'>
+<input type='button' class='boton' value='Reporte txt' onClick='envia_formularioTXT(this.form)'>";
 
 echo "</form>";
 ?>

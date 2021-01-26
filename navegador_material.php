@@ -261,6 +261,10 @@ echo "<script language='Javascript'>
 		$precioVenta=precioVenta($codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
 		
+		if($imagen==""){
+			$imagen="default.png";
+		}
+		
 		if($imagen=='default.png'){
 			$tamanioImagen=80;
 		}else{

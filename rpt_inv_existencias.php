@@ -9,6 +9,8 @@ $rptOrdenar=$_GET["rpt_ordenar"];
 $rptGrupo=$_GET["rpt_grupo"];
 $rptFormato=$_GET["rpt_formato"];
 
+$rptBarCode=$_GET["rpt_barcode"];
+
 $rptFechaInicio="2020-11-20";
 
 //$rpt_fecha=cambia_formatofecha($rpt_fecha);
@@ -32,14 +34,22 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			(select g.nombre from grupos g where g.codigo=ma.cod_grupo)as nombregrupo, ma.peso, ma.color, ma.talla, ma.codigo_barras,
 			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
 			from material_apoyo ma
-			where ma.codigo_material<>0 and ma.estado='1' and ma.cod_grupo in ($rptGrupo) order by ma.descripcion_material";
+			where ma.codigo_material<>0 and ma.estado='1' and ma.cod_grupo in ($rptGrupo) ";
+			if($rptBarCode!=""){
+				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
+			}
+			$sql_item.=" order by ma.descripcion_material";
 		}else{
 			$sql_item="select m.codigo_material,
 			m.descripcion_material, cantidad_presentacion, g.nombre, m.peso, ma.color, ma.talla, ma.codigo_barras,			
 			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
 			from grupos g, 
 			material_apoyo m where g.codigo=m.cod_grupo and m.estado='1' 
-			and m.cod_grupo in ($rptGrupo) order by 4,2";
+			and m.cod_grupo in ($rptGrupo) ";
+			if($rptBarCode!=""){
+				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
+			}
+			$sql_item.=" order by 4,2";
 		}
 		
 		//echo $sql_item;

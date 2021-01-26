@@ -7,7 +7,11 @@ require("funciones_inventarios.php");
 $flagSuccessIngresos=0;
 $flagSuccessSalidas=0;
 $codigoVenta=$_POST["codVenta"];
+$sql = "select nro_factura from facturas_venta where cod_venta=$codigoVenta";
+$resp = mysql_query($sql);
+$numeroFacturaAnteriorVenta=mysql_result($resp,0,0);
 $cantidad_material=0;
+$observacionesCambio="POR CAMBIO DE ITEM FACTURA :".$numeroFacturaAnteriorVenta;
 //datos documento				
 $sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
 			(select cl.nombre_cliente from clientes cl where s.cod_cliente=cl.cod_cliente) as nombre_cliente,
@@ -64,7 +68,7 @@ $hora_sistema = date("H:i:s");
 $tipo_ingreso=1001; //POR CAMBIO DE ITEM
 $nota_entrega=0;
 $nro_factura=$numeroFacturaVenta;  //
-$observaciones="";
+$observaciones=$observacionesCambio;
 $proveedor=$proveedorVenta;  //
 
 $createdBy=$_COOKIE['global_usuario'];
@@ -101,12 +105,15 @@ if($sql_inserta==1){
 			$lote="";
         }
 		
-		if($cod_material!=0){
-			
+		if($cod_material!=0){			
 			$fechaVencimiento='1900-01-01';		
 			$precioUnitario=$precioBruto;			
-			$costo=$precioUnitario;
-			
+			$costo=$precioUnitario;			
+			$sql_costos="SELECT precio FROM precios where cod_precio=0 and codigo_material=$cod_material limit 1";
+            $resp_costos=mysql_query($sql_costos);
+            while($dat_costos=mysql_fetch_array($resp_costos)){	
+            	$costo=$dat_costos[0];
+            }	
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
 			values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
@@ -129,7 +136,7 @@ $usuarioVendedor=$_POST['cod_vendedor'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
 $tipoSalida=$_POST['tipoSalida'];
-$tipoDoc=1;//$_POST['tipoDoc'];
+$tipoDoc=3;//$_POST['tipoDoc'];
 $almacenDestino=0;
 $codCliente=$codClienteVenta;
 
@@ -137,7 +144,7 @@ $tipoVenta=$_POST['tipoVenta'];
 $razonSocial=$_POST['razonSocial'];
 $nitCliente=$_POST['nitCliente'];
 
-$observaciones=$_POST["observaciones"];
+$observaciones=$_POST["observaciones"]." ".$observacionesCambio;
 $almacenOrigen=$global_almacen;
 
 $totalVenta=$_POST["totalVenta"];
@@ -218,20 +225,20 @@ $sql_inserta=mysql_query($sql_inserta);
 
 if($sql_inserta==1){
 	
-	if($facturacionActivada==1){
+	/*if($facturacionActivada==1){
 		//insertamos la factura
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 
 		codigo_control, cod_venta) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
 		'$code','$codigo')";
 		//echo $sqlInsertFactura;
 		$respInsertFactura=mysql_query($sqlInsertFactura);	
-	}
+	}*/
 
 	$montoTotalVentaDetalle=0;
 	for($i=1;$i<=$cantidad_material;$i++)
 	{   	
 		$codMaterial=$_POST["materiales$i"];
-		if($codMaterial!=0){
+		if($codMaterial!=0&&$codMaterial!=-100){
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
@@ -273,6 +280,8 @@ if($sql_inserta==1){
 	
 if($montoTotalConDescuento>$montoTotalCambio){	   
 	//insertar NOTA DE REMISION
+	$tipoSalida=1001; //VENTA
+    $tipoDoc=2;//$_POST['tipoDoc'];
     $totalVenta=$montoTotalConDescuento-$montoTotalCambio;       	
 $sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
 $resp=mysql_query($sql);
@@ -283,6 +292,7 @@ $vectorNroCorrelativo=numeroCorrelativo($tipoDoc);
 $nro_correlativo=$vectorNroCorrelativo[0];
 $cod_dosificacion=$vectorNroCorrelativo[2];
 
+$observaciones="POR CAMBIO DE ITEM FACTURA :".$numeroFacturaAnteriorVenta;
 $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
@@ -293,20 +303,35 @@ $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almace
 $sql_inserta=mysql_query($sql_inserta);
 
   if($sql_inserta==1){
-	$codMaterial=-100;
-	$cantidadUnitaria=1;
-	$precioUnitario=$totalVenta;
-	$descuentoProducto=0;
+  	for($i=1;$i<=$cantidad_material;$i++)
+	{   	
+		$codMaterial=$_POST["materiales$i"];
+		if($codMaterial!=0&&$codMaterial==-100){
+			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
+			$precioUnitario=$_POST["precio_unitario$i"];
+			$descuentoProducto=$_POST["descuentoProducto$i"];
 			
-	//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
-	$montoMaterial=$precioUnitario*$cantidadUnitaria;
-	$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;			
-	  if($banderaValidacionStock==1){
-		//echo "descontando aca";
-	 	$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
-	  }else{
-		$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i+1);
+			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
+			$montoMaterial=$precioUnitario*$cantidadUnitaria;
+			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
+			
+			
+			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
+			if($banderaValidacionStock==1){
+				//echo "descontando aca";
+				$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+			}else{
+				$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
+			}
+	
+			if($respuesta!=1){
+				echo "<script>
+					alert('Existio un error en el detalle. Contacte con el administrador del sistema.');
+				</script>";
+			}
+		}			
 	  }
+			
 	 }			
 	 $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoVenta where cod_salida_almacenes=$codigoSalidaGeneralNota";
      $sql_inserta = mysql_query($consulta);

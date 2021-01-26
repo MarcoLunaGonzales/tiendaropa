@@ -1,12 +1,22 @@
 <?php
 echo "<script language='JavaScript'>
+		function pressEnter(e, f){
+			tecla = (document.all) ? e.keyCode : e.which;
+			if (tecla==13){
+				//document.getElementById('itemNombreMaterial').focus();
+				//listaMateriales(f);
+				return false;
+			}
+		}
+
 		function envia_formulario(f)
-		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar, rpt_grupo, rpt_formato;
+		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar, rpt_grupo, rpt_formato, rpt_barcode;
 			rpt_territorio=f.rpt_territorio.value;
 			rpt_almacen=f.rpt_almacen.value;
 			rpt_ver=f.rpt_ver.value;
 			rpt_fecha=f.rpt_fecha.value;
 			rpt_ordenar=f.rpt_ordenar.value;
+			rpt_barcode=f.barcode.value;
 			
 			var rpt_grupo=new Array();	
 			
@@ -18,8 +28,8 @@ echo "<script language='JavaScript'>
 				{	rpt_grupo[j]=f.rpt_grupo.options[i].value;
 					j++;
 				}
-			}			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_formato='+rpt_formato,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
-
+			}			
+			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_formato='+rpt_formato+'&rpt_barcode='+rpt_barcode,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
 			return(true);
 		}
 
@@ -29,8 +39,16 @@ echo "<script language='JavaScript'>
 		}
 		</script>";
 require("conexion.inc");
-	require("estilos_almacenes.inc");
-$fecha_rptdefault=date("d/m/Y");
+require("estilos_almacenes.inc");
+
+$fecha_rptdefault=date("Y-m-d");
+$globalCiudad=$_COOKIE['global_agencia'];
+$globalAlmacen=$_COOKIE['global_almacen'];
+
+
+if($rpt_territorio==""){
+	$rpt_territorio=$globalCiudad;
+}
 echo "<h1>Reporte Existencias Almacen</h1>";
 
 echo"<form method='post' action=''>";
@@ -53,13 +71,15 @@ echo"<form method='post' action=''>";
 		}
 	}
 	echo "</select></td></tr>";
+	
+	
 	echo "<tr><th align='left'>Almacen</th><td><select name='rpt_almacen' class='texto'>";
 	$sql="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$rpt_territorio'";
 	$resp=mysql_query($sql);
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo_almacen=$dat[0];
 		$nombre_almacen=$dat[1];
-		if($rpt_almacen==$codigo_almacen)
+		if($rpt_almacen==$codigo_almacen || $codigo_almacen==$globalAlmacen)
 		{	echo "<option value='$codigo_almacen' selected>$nombre_almacen</option>";
 		}
 		else
@@ -81,10 +101,10 @@ echo"<form method='post' action=''>";
 	echo "<tr><th align='left'>Ver:</th>";
 	echo "<td><select name='rpt_ver' class='texto'>";
 	echo "<option value='1'>Todo</option>";
-	echo "<option value='2'>Con Existencia</option>";
+	echo "<option value='2' selected>Con Existencia</option>";
 	echo "<option value='3'>Sin existencia</option>";
 	echo "</tr>";
-	$fecha_rptdefault=date("d/m/Y");
+
 	echo "<tr><th align='left'>Existencias a fecha:</th>";
 			echo" <TD bgcolor='#ffffff'>
 			<INPUT  type='date' class='text' value='$fecha_rptdefault' id='rpt_fecha' name='rpt_fecha'>
@@ -102,6 +122,12 @@ echo"<form method='post' action=''>";
 	echo "<option value='1'>Normal</option>";
 	echo "<option value='2'>Para Inventario</option>";
 	echo "</tr>";
+	
+	
+	echo "<tr><th align='left'>Buscar BarCode:</th>";
+	echo "<td>";
+	echo "<input type='text' class='form-codigo-barras' id='barcode' name='barcode' placeholder='Ingrese el código de barras.' onkeypress='return pressEnter(event, this.form);' >";
+	echo "</td></tr>";
 	
 	echo"\n </table><br>";
 	echo "<center><input type='button' name='reporte' value='Ver Reporte' onClick='envia_formulario(this.form)' class='boton'>

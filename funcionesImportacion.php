@@ -76,7 +76,7 @@ function devuelveIdGrupo($idSubGrupo){
 	return($codigoDevolver);
 }
 
-function devuelveIdProducto($barCode, $nombreItem, $codMarca, $codSubGrupo, $color, $talla, $descripcionItem, $precioItem){
+function devuelveIdProducto($barCode, $nombreItem, $codMarca, $codSubGrupo, $color, $talla, $descripcionItem, $precioItem, $imagen, $precio){
 	$sql="select count(*), m.codigo_material from material_apoyo m where m.codigo_barras='$barCode'";
 	$resp=mysql_query($sql);
 	$contador=mysql_result($resp,0,0);
@@ -86,12 +86,12 @@ function devuelveIdProducto($barCode, $nombreItem, $codMarca, $codSubGrupo, $col
 	}
 	if($contador==0){
 		$codGrupo=devuelveIdGrupo($codSubGrupo);
-		$codigoDevolver=crearProducto(0, $barCode, $nombreItem, $codMarca, $codGrupo, $codSubGrupo, $talla, $color, $descripcionItem, 0, $precioItem);
+		$codigoDevolver=crearProducto(0, $barCode, $nombreItem, $codMarca, $codGrupo, $codSubGrupo, $talla, $color, $descripcionItem, 0, $precioItem, $imagen, $precio);
 	}
 	return ($codigoDevolver);
 }
 
-function crearProducto($idNuevo, $barCode, $nombreItem, $codMarca, $codGrupo, $codSubGrupo, $tallaItem, $colorItem, $descripcionItem, $idAnterior, $precioItem){
+function crearProducto($idNuevo, $barCode, $nombreItem, $codMarca, $codGrupo, $codSubGrupo, $tallaItem, $colorItem, $descripcionItem, $idAnterior, $precioItem, $imagen, $precio){
 	$estadoItem=1;
 	$lineaProveedorItem=1;
 	$codTipoMaterial=1;
@@ -115,17 +115,20 @@ function crearProducto($idNuevo, $barCode, $nombreItem, $codMarca, $codGrupo, $c
 	}
 	
 	$sqlInsertItem="insert into material_apoyo (codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial, cantidad_presentacion, observaciones, imagen, cod_unidad, cod_subgrupo, cod_marca, codigo_barras, talla, color, codigo_anterior) values 
-	('$idNuevo','$nombreItem','$estadoItem','$lineaProveedorItem','$codGrupo','$codTipoMaterial','$cantidadPresentacion','','','$codUnidad','$codSubGrupo','$codMarca','$barCode','$tallaItem','$colorItem','$idAnterior')";
+	('$idNuevo','$nombreItem','$estadoItem','$lineaProveedorItem','$codGrupo','$codTipoMaterial','$cantidadPresentacion','','$imagen','$codUnidad','$codSubGrupo','$codMarca','$barCode','$tallaItem','$colorItem','$idAnterior')";
 	$respInsertItem=mysql_query($sqlInsertItem);
 	
 	
 	$sqlDelPrecio="delete from precios where codigo_material='$idNuevo'";
 	$respDelPrecio=mysql_query($sqlDelPrecio);
 	
-	$sqlInsertPrecio="insert into precios (codigo_material, cod_precio, precio, cod_ciudad) values ('$idNuevo','1','$precioItem','1')";
+	$sqlInsertPrecio="insert into precios (codigo_material, cod_precio, precio, cod_ciudad) values ('$idNuevo','0','$precioItem','1')";
 	$respInsertPrecio=mysql_query($sqlInsertPrecio);
 	
-	return($codigoDevolver);
+	$sqlInsertPrecio="insert into precios (codigo_material, cod_precio, precio, cod_ciudad) values ('$idNuevo','1','$precio','1')";
+	$respInsertPrecio=mysql_query($sqlInsertPrecio);
+
+	return($idNuevo);
 	
 }
 
