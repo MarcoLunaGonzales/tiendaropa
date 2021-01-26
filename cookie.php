@@ -42,6 +42,11 @@ if ($num_filas != 0) {
 		header("location:indexAlmacenVentas.php");
 	}
 	
+	if($cod_cargo==1000||$cod_cargo==1001){
+		setcookie("global_admin_cargo", 1);
+	}else{
+		setcookie("global_admin_cargo", 0);
+	}
 
 } else {
     echo "<link href='stilos.css' rel='stylesheet' type='text/css'>

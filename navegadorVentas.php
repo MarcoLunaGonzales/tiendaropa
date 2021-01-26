@@ -323,7 +323,7 @@ require("estilos_almacenes.inc");
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
-
+//$global_admin_cargo
 echo "<h1>Listado de Ventas</h1>";
 echo "<table class='texto' cellspacing='0' width='90%'>
 <tr><th>Leyenda:</th>
