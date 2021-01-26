@@ -22,7 +22,7 @@ echo "<table align='center' class='textotit' width='70%'><tr><td align='center'>
 	<br>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
 	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 
-$sql="select s.`fecha`,  
+$sql="select concat(s.`fecha`,' ',s.hora_salida)as fecha,  
 	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, 
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
@@ -31,7 +31,7 @@ $sql="select s.`fecha`,
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
 	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
 
-$sql.=" order by s.fecha, s.nro_correlativo";
+$sql.=" order by s.fecha, s.hora_salida, s.nro_correlativo";
 
 $resp=mysql_query($sql);
 
@@ -64,6 +64,7 @@ while($datos=mysql_fetch_array($resp)){
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
 	$codSalida=$datos[7];
+	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
 	$totalVenta=$totalVenta+$montoVenta;

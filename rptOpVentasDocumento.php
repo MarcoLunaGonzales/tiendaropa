@@ -3,7 +3,9 @@
 require("conexion.inc");
 require("estilos_almacenes.inc");
 
-//$fecha_rptdefault=date("d/m/Y");
+$fecha_rptdefault=date("Y-m-d");
+$globalCiudad=$_COOKIE['global_agencia'];
+
 echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Documento</th></tr></table><br>";
 echo"<form method='post' action='rptVentasDocumento.php' target='_blank'>";
 
@@ -15,14 +17,18 @@ echo"<form method='post' action='rptVentasDocumento.php' target='_blank'>";
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
-		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		if($globalCiudad==$codigo_ciudad){
+			echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";			
+		}else{
+			echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		}
 	}
 	echo "</select></td></tr>";
 
 	echo "<tr><th align='left'>Tipo de Documento:</th>
 	<td><select name='rpt_tipodoc[]' class='texto' multiple required>";
-	echo "<option value='1'>FACTURA</option>";
-	echo "<option value='2'>NOTA DE REMISION</option>";
+	echo "<option value='1' selected>FACTURA</option>";
+	echo "<option value='2' selected>NOTA DE REMISION</option>";
 	echo "</select></td></tr>";
 	
 	/*echo "<tr><th align='left'>Ver:</th>
@@ -33,12 +39,12 @@ echo"<form method='post' action='rptVentasDocumento.php' target='_blank'>";
 	
 	echo "<tr><th align='left'>Fecha inicio:</th>";
 			echo" <TD bgcolor='#ffffff'>
-			<INPUT  type='date' class='texto' id='exafinicial' name='exafinicial' required>";
+			<INPUT  type='date' class='texto' id='exafinicial' name='exafinicial' value='$fecha_rptdefault' required>";
     		echo" </TD>";
 	echo "</tr>";
 	echo "<tr><th align='left'>Fecha final:</th>";
 			echo" <TD bgcolor='#ffffff'>
-			<INPUT  type='date' class='texto' id='exaffinal' name='exaffinal' required>";
+			<INPUT  type='date' class='texto' id='exaffinal' name='exaffinal' value='$fecha_rptdefault' required>";
     		echo" </TD>";
 	echo "</tr>";
 	

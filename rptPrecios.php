@@ -96,13 +96,14 @@ function ajaxBuscarItems(f){
 	
 	echo "<div id='divCuerpo'>";
 	$sql="select codigo_material, descripcion_material, (select g.nombre from grupos g where g.codigo=ma.cod_grupo)grupo, color, talla,
-	(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
+	(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca, ma.codigo_barras
 	from material_apoyo ma
 			where ma.estado=1 and ma.cod_grupo in ($rpt_grupo) order by 3,2";
 	$resp=mysql_query($sql);
 	
 	echo "<center><table class='texto'>";
 	echo "<tr>
+	<th>CodBarras</th>
 	<th>Grupo</th>
 	<th>Marca</th>
 	<th>Producto</th>
@@ -111,9 +112,9 @@ function ajaxBuscarItems(f){
 	<!--th>Existencias</th-->
 	<th>Costo</th>
 	<th>Precio Normal</th>
-	<th>Precio Descuento1</th>
+	<!--th>Precio Descuento1</th>
 	<th>Precio Descuento2</th>
-	<th>Precio Descuento3</th>
+	<th>Precio Descuento3</th-->
 	</tr>";
 	$indice=1;
 	while($dat=mysql_fetch_array($resp))
@@ -124,6 +125,7 @@ function ajaxBuscarItems(f){
 		$color=$dat[3];
 		$talla=$dat[4];
 		$nombreMarca=$dat[5];
+		$codigoBarras=$dat[6];
 		
 		//sacamos existencias
 		$rpt_fecha=date("Y-m-d");
@@ -143,12 +145,27 @@ function ajaxBuscarItems(f){
 
 		
 		echo "<tr>
+		<td>$codigoBarras</td>
 		<td>$nombreGrupo</td>
 		<td>$nombreMarca</td>
 		<td>$nombreMaterial </td>
 		<td>$color</td>
 		<td>$talla</td>";
 		echo "<!--td align='center'>$stock2</td-->";
+<<<<<<< HEAD
+
+		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
+		$respPrecio=mysql_query($sqlPrecio);
+		$numFilas=mysql_num_rows($respPrecio);
+		if($numFilas==1){
+			$costo=mysql_result($respPrecio,0,0);
+			$costo=redondear2($costo);
+		}else{
+			$costo=0;
+			$costo=redondear2($costo);
+		}
+=======
+>>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
@@ -214,11 +231,12 @@ function ajaxBuscarItems(f){
 
 
 		$indice++;
+		echo "<td align='center'>$costo</td>";
 		echo "<td align='center'>$precio0</td>";
-		echo "<td align='center'><div id='1$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio1, 1)';>$precio1</div></td>";
-		echo "<td align='center'><div id='2$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio2, 2)';>$precio2</div></td>";
-		echo "<td align='center'><div id='3$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio3, 3)';>$precio3</div></td>";
-		echo "<td align='center'><div id='4$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio4, 4)';>$precio4</div></td>";
+		//echo "<td align='center'><div id='1$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio1, 1)';>$precio1</div></td>";
+		//echo "<td align='center'><div id='2$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio2, 2)';>$precio2</div></td>";
+		//echo "<td align='center'><div id='3$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio3, 3)';>$precio3</div></td>";
+		//echo "<td align='center'><div id='4$codigo' onDblClick='cambiaPrecio(this.form, this.id, $codigo, $precio4, 4)';>$precio4</div></td>";
 		echo "</tr>";
 	}
 	echo "</table></center><br>";

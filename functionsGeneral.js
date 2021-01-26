@@ -77,8 +77,8 @@ function cambiarDatosProductosTable(valor){
  }		
 
 function soloMasVentas(obj){
-	if(num>=15){
-		alert("No puede registrar mas de 15 items en una nota.");
+	if(num>=1000){
+		alert("No puede registrar mas de 1000 items en una nota.");
 	}else{
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
@@ -141,8 +141,8 @@ function soloMas(obj) {
 		
 	}
 function soloMasSalida(obj) {
-	if(num>=15){
-		alert("No puede registrar mas de 15 items en una nota.");
+	if(num>=1000){
+		alert("No puede registrar mas de 1000 items en una nota.");
 	}else{
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
@@ -328,6 +328,8 @@ function cambiarNotaRemision(){
               $("#boton_nota_remision").removeClass("boton-plomo");  
 			}
 		}
+		$("#nitCliente").val(0);
+		$("#razonSocial").val(0);
 		ajaxNroDoc(form1);
 	}
 }

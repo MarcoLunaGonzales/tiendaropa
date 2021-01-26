@@ -28,7 +28,7 @@
 	$resp_detalle=mysql_query($sql_detalle);
 
 	echo "<br><table border=0 class='texto' align='center'>";
-	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Precio(Bs.)</th><th>Total(Bs.)</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
 	$indice=1;
 	while($dat_detalle=mysql_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
@@ -36,9 +36,9 @@
 		$precioNeto=redondear2($dat_detalle[2]);
 		$loteProducto=$dat_detalle[3];
 		$fechaVenc=$dat_detalle[4];
-		$color=$dat_detalle[5];
-		$talla=$dat_detalle[6];
-		$barCode=$dat_detalle[7];
+		$color=$dat_detalle[6];
+		$talla=$dat_detalle[7];
+		$barCode=$dat_detalle[8];
 		
 		
 		$totalValorItem=$cantidad_unitaria*$precioNeto;

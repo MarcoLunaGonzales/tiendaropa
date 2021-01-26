@@ -14,7 +14,7 @@ if($variableAdmin!=1){
 }
 
 //desde esta parte viene el reporte en si
-$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
+$fecha_iniconsulta=$fecha_ini;
 
 $fecha_reporte=date("d/m/Y");
 
@@ -46,7 +46,8 @@ $sql="select s.`fecha`,
 	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, 
 	s.`razon_social`, s.`observaciones`, 
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
-	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago)
+	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
+	s.hora_salida
 	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
 	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_iniconsulta'";
@@ -56,7 +57,7 @@ if($variableAdmin==1){
 }else{
 	$sql.=" and s.cod_tipo_doc in (1)";
 }
-$sql.=" order by s.nro_correlativo";
+$sql.=" order by s.fecha, s.hora_salida";
 	
 $resp=mysql_query($sql);
 
@@ -85,6 +86,7 @@ while($datos=mysql_fetch_array($resp)){
 	$totalVenta=$totalVenta+$montoVenta;
 	$codTipoPago=$datos[7];
 	$nombreTipoPago=$datos[8];
+	$horaVenta=$datos[9];
 	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
@@ -97,7 +99,7 @@ while($datos=mysql_fetch_array($resp)){
 	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
 	
 	echo "<tr>
-	<td>$fechaVenta</td>
+	<td>$fechaVenta $horaVenta</td>
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
 	<td>$obsVenta</td>

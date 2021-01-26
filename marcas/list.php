@@ -83,7 +83,7 @@ echo "<script language='Javascript'>
 	
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Nombre</th><th>Abreviatura</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Nombre</th><th>Abreviatura</th></tr>";
 	while($dat=mysql_fetch_array($resp))
 	{
 		$codigo=$dat[0];
@@ -91,6 +91,7 @@ echo "<script language='Javascript'>
 		$abreviatura=$dat[2];
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
+		<td>$codigo</td>
 		<td>$nombre</td>
 		<td>$abreviatura</td
 		</tr>";

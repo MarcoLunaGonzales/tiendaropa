@@ -20,7 +20,9 @@ function envia_formulario(f)
 require("conexion.inc");
 require("estilos_almacenes.inc");
 
-$fecha_rptdefault=date("d/m/Y");
+$fecha_rptdefault=date("Y-m-d");
+$globalCiudad=$_COOKIE['global_agencia'];
+
 echo "<table align='center' class='textotit'><tr><th>Reporte Ventas x Documento e Item</th></tr></table><br>";
 echo"<form method='post' action=''>";
 
@@ -33,7 +35,11 @@ echo"<form method='post' action=''>";
 	while($dat=mysql_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
-		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		if($globalCiudad==$codigo_ciudad){
+			echo "<option value='$codigo_ciudad' selected>$nombre_ciudad</option>";			
+		}else{
+			echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
+		}
 	}
 	echo "</select></td></tr>";
 	

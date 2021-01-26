@@ -1,5 +1,8 @@
 <?php
-require('estilos_reportes.php');
+header('Content-Type: application/octet-stream');
+header("Content-Transfer-Encoding: Binary"); 
+header("Content-disposition: attachment; filename=\"archivofacilito.txt\""); 
+
 require('function_formatofecha.php');
 require('conexion.inc');
 require('funcion_nombres.php');
@@ -9,7 +12,9 @@ $codMes=$_GET['codMes'];
 
 $fecha_reporte=date("d/m/Y");
 
-echo "<h1>Libro de Ventas</h1>";
+
+
+//echo "<h1>Libro de Ventas</h1>";
 
 $sqlConf="select id, valor from configuracion_facturas where id=1";
 $respConf=mysql_query($sqlConf);
@@ -19,8 +24,8 @@ $sqlConf="select id, valor from configuracion_facturas where id=9";
 $respConf=mysql_query($sqlConf);
 $nitTxt=mysql_result($respConf,0,1);
 
-echo "<h3>Periodo Año: $codAnio  Mes: $codMes</h3>";
-echo "<h3>Nombre o Razon Social: $nombreTxt  NIT: $nitTxt</h3>";
+//echo "<h3>Periodo Año: $codAnio  Mes: $codMes</h3>";
+//echo "<h3>Nombre o Razon Social: $nombreTxt  NIT: $nitTxt</h3>";
 
 
 $sql="select f.nro_factura, DATE_FORMAT(f.fecha, '%d/%m/%Y'), f.importe, f.razon_social, f.nit, d.nro_autorizacion, e.abreviatura, f.codigo_control
@@ -28,11 +33,9 @@ $sql="select f.nro_factura, DATE_FORMAT(f.fecha, '%d/%m/%Y'), f.importe, f.razon
 	where f.cod_dosificacion=d.cod_dosificacion and e.cod_estado=f.cod_estado
 	and YEAR(f.fecha)=$codAnio and MONTH(f.fecha)=$codMes order by f.fecha, f.nro_factura";
 	
-//echo $sql;
-
 $resp=mysql_query($sql);
 
-echo "<br><table align='center' class='texto' width='70%'>
+/*echo "<br><table align='center' class='texto' width='70%'>
 <tr>
 <th>ESP.</th>
 <th>NRO.</th>
@@ -51,10 +54,8 @@ echo "<br><table align='center' class='texto' width='70%'>
 <th>IMPORTE BASE PARA DEBITO FISCAL <br> G = E - F </th>
 <th>DEBITO FISCAL <br> H = G * 13%</th>
 <th>CODIGO DE CONTROL</th>
-
-
 </tr>";
-
+*/
 $indice=1;
 while($datos=mysql_fetch_array($resp)){	
 	$nroFactura=$datos[0];
@@ -72,33 +73,14 @@ while($datos=mysql_fetch_array($resp)){
 		$montoIVA=0;
 		$codigoControl=0;
 	}
-	
-	$montoVentaFormat=number_format($importe,2,".",",");
+
+	$montoVentaFormat=number_format($importe,2,".","");
 	$montoIVA=$importe*0.13;
-	$montoIVAFormat=number_format($montoIVA,2,".",",");
+	$montoIVAFormat=number_format($montoIVA,2,".","");
 	
-	
-	
-	echo "<tr>
-	<td>3</td>
-	<td>$indice</td>
-	<td>$fecha</td>
-	<td>$nroFactura</td>
-	<td>$nroAutorizacion</td>
-	<td>$nombreEstado</td>
-	<td>$nit</td>
-	<td>$razonSocial</td>
-	<td>$montoVentaFormat</td>
-	<td>0</td>
-	<td>0</td>
-	<td>0</td>
-	<td>$montoVentaFormat</td>
-	<td>0</td>
-	<td>$montoVentaFormat</td>
-	<td>$montoIVAFormat</td>
-	<td>$codigoControl</td>
-	</tr>";
+	echo "3|$indice|$fecha|$nroFactura|$nroAutorizacion|$nombreEstado|$nit|$razonSocial|$montoVentaFormat|0|0|0|$montoVentaFormat|0|$montoVentaFormat|$montoIVAFormat|$codigoControl";
+	echo "\r\n";
 	$indice++;
 }
-echo "</table></br>";
+//echo "</table></br>";
 ?>

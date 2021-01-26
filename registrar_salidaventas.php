@@ -368,7 +368,7 @@ num=0;
 cantidad_items=0;
 
 function mas(obj) {
-	if(num>=15){
+	if(num>=1000){
 		alert("No puede registrar mas de 15 items en una nota.");
 	}else{
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos

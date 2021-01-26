@@ -16,9 +16,8 @@ $fechaFinBusqueda=formateaFechaVista($fechaFinBusqueda);
 
 echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th><th>CP</th></tr>";
-	
-//
+	<th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th><th>Cambio</th><th>Convertir</th></tr>";	
+
 $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
@@ -71,6 +70,7 @@ while ($dat = mysql_fetch_array($resp)) {
 	$codTipoDoc=$dat[11];
 	$nombreTipoDoc=nombreTipoDoc($codTipoDoc);
 	$razonSocial=$dat[12];
+	$razonSocial=strtoupper($razonSocial);
 	$nitCli=$dat[13];
 	$tipoPago=$dat[14];
 	
@@ -96,7 +96,12 @@ while ($dat = mysql_fetch_array($resp)) {
     echo "<td>$nombre_tiposalida</td>";
     echo "<td>$tipoPago</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
+	
+	$urlConversionFactura="convertNRToFactura.php?codVenta=$codigo";    
     
+	$NRparaMostrar=$nombreTipoDoc."-".$nro_correlativo;
+	$fechaParaMostrar=fecha_salida_mostrar;
+	
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
 	*/
@@ -120,9 +125,18 @@ while ($dat = mysql_fetch_array($resp)) {
     }else{
         echo "<td  bgcolor='$color_fondo'><a href='notaSalidaCambio.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/icon_detail.png' width='30' border='0' title='Ver Detalle del Cambio'></a></td>";
     }
-    
+	if($codTipoDoc==2){
+		echo "<td bgcolor='$color_fondo'>
+		<a href='#' onClick='ShowFacturar($codigo,$nro_correlativo);'>
+		<img src='imagenes/icon_detail.png' width='30' border='0' title='Convertir en Factura'></a></td>";	
+	}elseif($codTipoDoc==1){
+		echo "<td align='center'>
+		<a href='#' onClick='convertirNR($codigo);'>
+		<img src='imagenes/restaurar2.png' width='20' border='0' title='Convertir en NR y Anular Factura'></a>
+		</td>";
+	}
+	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/	
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
-	
 	echo "</tr>";
 }
 echo "</table></center><br>";
