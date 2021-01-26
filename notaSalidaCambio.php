@@ -163,7 +163,11 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 
 	$pdf->Cell(0,0,$codItem,0,0);
 	$pdf->SetX(40);
+<<<<<<< HEAD
 	$pdf->Cell(0,0,utf8_decode($nombreItem),0,0);
+=======
+	$pdf->Cell(0,0,$nombreItem,0,0);
+>>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
 	$pdf->SetX(165);
@@ -231,7 +235,11 @@ $montoUnitarioTotal=0;
 
 		$pdf->Cell(0,0,$codItem,0,0);
 	$pdf->SetX(40);
+<<<<<<< HEAD
 	$pdf->Cell(0,0,utf8_decode($nombreItem),0,0);
+=======
+	$pdf->Cell(0,0,$nombreItem,0,0);
+>>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
 	$pdf->SetX(165);

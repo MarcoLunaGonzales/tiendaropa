@@ -115,7 +115,6 @@ while ($dat = mysql_fetch_array($resp)) {
 	}
 	
 	$codigoVentaCambio=0;
-
     $sqlCambio="select c.cod_cambio from salida_almacenes c where c.cod_cambio=$codigo";
     $respCambio=mysql_query($sqlCambio);
     while($datCambio=mysql_fetch_array($respCambio)){
@@ -136,7 +135,7 @@ while ($dat = mysql_fetch_array($resp)) {
 		<img src='imagenes/restaurar2.png' width='20' border='0' title='Convertir en NR y Anular Factura'></a>
 		</td>";
 	}
-	
+	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/	
 	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
 	echo "</tr>";
 }

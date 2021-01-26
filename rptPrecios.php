@@ -152,6 +152,7 @@ function ajaxBuscarItems(f){
 		<td>$color</td>
 		<td>$talla</td>";
 		echo "<!--td align='center'>$stock2</td-->";
+<<<<<<< HEAD
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
@@ -163,6 +164,8 @@ function ajaxBuscarItems(f){
 			$costo=0;
 			$costo=redondear2($costo);
 		}
+=======
+>>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
