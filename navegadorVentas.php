@@ -360,7 +360,7 @@ echo "<div class='divBotones'>
     </div>";
 		
 echo "<div id='divCuerpo'><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>FP</th><th>FG</th>";
+echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>FG</th>";
 if($global_admin_cargo==1){
     echo "<th>Cambio</th><th>Convertir</th>";
 }
