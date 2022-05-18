@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];
@@ -9,7 +9,7 @@ $fecha_fin=$_GET['fecha_fin'];
 $rpt_territorio=$_GET['rpt_territorio'];
 $rpt_persona=$_GET['rpt_persona'];
 $rpt_grupo=$_GET['rpt_grupo'];
-$nombreGrupos=nombreGrupo($rpt_grupo);
+$nombreGrupos=nombreGrupo($enlaceCon,$rpt_grupo);
 //$arrayRptGrupo=implode(',',$rpt_grupo);
 
 //echo $rpt_grupo;
@@ -20,7 +20,7 @@ $fecha_finconsulta=$fecha_fin;
 
 $fecha_reporte=date("d/m/Y");
 
-$nombre_territorio=nombreTerritorio($rpt_territorio);
+$nombre_territorio=nombreTerritorio($enlaceCon,$rpt_territorio);
 
 echo "<h1>Reporte Ventas x Vendedor Detallado</h1>
 	<h2>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
@@ -40,7 +40,7 @@ m.`codigo_material`, m.`descripcion_material`,
 	order by 1,3,7 desc";
 	
 //echo $sql;
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<center><table class='texto'>
 <tr>
@@ -61,7 +61,7 @@ echo "<center><table class='texto'>
 
 $totalVenta=0;
 $totalCosto=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$fecha=$datos[0];
 	$nroNota=$datos[1]."-".$datos[2];
 	$nombreCliente=$datos[3];

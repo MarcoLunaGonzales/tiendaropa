@@ -8,7 +8,7 @@
 	}
 </script>
 <?php
-require("../../conexionmysqli.inc");
+require("../../conexionmysqli.php");
 
 require("../../estilos_almacenes.inc");
 
@@ -16,7 +16,7 @@ require("../../funcion_nombres.php");
 echo "<link rel='stylesheet' type='text/css' href='../../stilos.css'/>";
 
 $codProveedor=$_GET['codProveedor'];
-$nombreProveedor=nombreProveedor($codProveedor);
+$nombreProveedor=nombreProveedor($enlaceCon,$codProveedor);
 
 ?>
 <form action="guardaLineaDistribuidor.php" method="post">
@@ -43,7 +43,8 @@ $nombreProveedor=nombreProveedor($codProveedor);
 		<?php
 			$sqlProc="select cod_procedencia, nombre_procedencia from  tipos_procedencia";
 			$respProc=mysqli_query($enlaceCon, $sqlProc);
-			while($datProc=mysqli_fetch_array($respProc,MYSQLI_NUM)){
+			while($datProc=mysqli_fetch_array($respProc)){
+			//while($datProc=mysqli_fetch_array($respProc,MYSQLI_NUM)){
 				$codProcedencia=$datProc[0];
 				$nombreProcedencia=$datProc[1];
 				echo "<option value='$codProcedencia'>$nombreProcedencia</option>";

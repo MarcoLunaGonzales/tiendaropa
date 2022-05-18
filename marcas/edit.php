@@ -1,11 +1,11 @@
 <?php
 
-require("../conexion.inc");
+require("../conexionmysqli.php");
 require("../estilos2.inc");
 require("configModule.php");
 
-$sql=mysql_query("select nombre, abreviatura from $table where codigo=$codigo_registro");
-$dat=mysql_fetch_array($sql);
+$sql=mysqli_query($enlaceCon,"select nombre, abreviatura from $table where codigo=$codigo_registro");
+$dat=mysqli_fetch_array($sql);
 
 $nombre=$dat[0];
 $abreviatura=$dat[1];

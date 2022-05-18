@@ -1,11 +1,11 @@
 <?php
-	require_once("../conexion.inc");
+	require_once("../conexionmysqli.php");
 	require_once("../estilos2.inc");
 	require_once("configModule.php");
 	require_once("../funcion_nombres.php");
 	
 	$codMaestro=$_GET['codigo'];
-	$nameMaestro=obtenerNombreMaestro($table,$codMaestro);
+	$nameMaestro=obtenerNombreMaestro($enlaceCon,$table,$codMaestro);
 
 
 echo "<script language='Javascript'>
@@ -77,7 +77,7 @@ echo "<script language='Javascript'>
 	echo "<form method='post' action=''>";
 	$sql="select codigo, nombre, abreviatura, estado from $tableDetalle where estado=1 and $campoForaneo=$codMaestro order by 2";
 	//echo $sql;
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleDetNamePlural</h1>";
 	
 	echo "<h1>$moduleNameSingular $nameMaestro</h1>";
@@ -97,7 +97,7 @@ echo "<script language='Javascript'>
 	<th>Nombre</th>
 	<th>Abreviatura</th>
 	</tr>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombre=$dat[1];

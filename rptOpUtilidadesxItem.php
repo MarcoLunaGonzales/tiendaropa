@@ -11,7 +11,7 @@
 </script>
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("Y-m-d");
@@ -21,9 +21,9 @@ echo"<form method='post' action='rptUtilidadesxItem.php' target='_blank'>";
 	echo"<center><table class='texto'>\n";
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto' required>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";
@@ -31,9 +31,9 @@ echo"<form method='post' action='rptUtilidadesxItem.php' target='_blank'>";
 	echo "</select></td></tr>";
 	
 	echo "<tr><th align='left'>Grupo</th><td><select name='rpt_grupo[]' id='rpt_grupo' class='texto' size='5' onChange='ajaxReporteItems(this.form);' multiple>";
-	$sql="select cod_grupo, nombre_grupo from grupos where estado=1 order by 2";
-	$resp=mysql_query($sql);
-	while($dat=mysql_fetch_array($resp))
+	$sql="select codigo, nombre from grupos where estado=1 order by 2";
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo=$dat[0];
 		$nombre=$dat[1];
 		echo "<option value='$codigo' selected>$nombre</option>";

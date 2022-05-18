@@ -253,7 +253,7 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
     <body>
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require('function_formatofecha.php');
 
 $txtnroingreso = $_GET["txtnroingreso"];
@@ -303,9 +303,9 @@ if($fecha1!="" && $fecha2!="")
    {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
    }
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 50 ";
-$resp = mysql_query($consulta);
+$resp = mysqli_query($enlaceCon,$consulta);
 
-while ($dat = mysql_fetch_array($resp)) {
+while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_salida = $dat[1];
     $fecha_salida_mostrar = "$fecha_salida[8]$fecha_salida[9]-$fecha_salida[5]$fecha_salida[6]-$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]";

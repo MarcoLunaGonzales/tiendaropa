@@ -1,6 +1,6 @@
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
@@ -18,12 +18,12 @@ $fecha_real=date("Y-m-d");
 //$consulta="insert into ingreso_almacenes values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones',0,'$nota_entrega','$nro_correlativo',0,0,0,$nro_factura)";
 $consulta="update ingreso_almacenes set cod_tipoingreso='$tipo_ingreso', nro_factura_proveedor='$nro_factura', 
 		observaciones='$observaciones' where cod_ingreso_almacen='$codIngreso'";
-$sql_inserta = mysql_query($consulta);
+$sql_inserta = mysqli_query($enlaceCon,$consulta);
 
 //echo "aaaa:$consulta";
 
 $sqlDel="delete from ingreso_detalle_almacenes where cod_ingreso_almacen=$codIngreso";
-$respDel=mysql_query($sqlDel);
+$respDel=mysqli_query($enlaceCon,$sqlDel);
 
 for ($i = 1; $i <= $cantidad_material; $i++) {
 	$cod_material = $_POST["material$i"];
@@ -39,7 +39,7 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 		values($codIngreso,'$cod_material',$cantidad,$cantidad,'$lote','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto')";
 		
 		//echo "bbb:$consulta";
-		$sql_inserta2 = mysql_query($consulta);
+		$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
 	}
 
 }

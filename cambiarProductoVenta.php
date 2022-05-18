@@ -298,6 +298,7 @@ function aplicarCambioEfectivoUSD(f){
 	minimoEfectivo();
 }
 function aplicarMontoCombinadoEfectivo(f){
+	alert("paso1");
    var efectivo=$("#efectivoRecibidoUnido").val();	
    var efectivoUSD=$("#efectivoRecibidoUnidoUSD").val();	
   if(efectivo==""){
@@ -312,6 +313,8 @@ function aplicarMontoCombinadoEfectivo(f){
   var monto_total_bolivianos=monto_dolares_bolivianos+parseFloat(efectivo);
   document.getElementById("efectivoRecibido").value=Math.round((monto_total_bolivianos)*100)/100;
   document.getElementById("efectivoRecibidoUSD").value=Math.round((monto_total_bolivianos/tipo_cambio)*100)/100;
+  alert("paso1"+document.getElementById("efectivoRecibido").value);
+  alert("paso1"+document.getElementById("efectivoRecibidoUSD").value);
   aplicarCambioEfectivo(f);
 }
 function buscarMaterial(f, numMaterial){
@@ -592,7 +595,7 @@ function buscarItemAumentoMonto(){
 		
 <?php
 echo "</head><body onLoad='funcionInicio();'>";
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
 if($fecha==""){   
@@ -600,9 +603,9 @@ if($fecha==""){
 }
 
 	$sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
-	$respUsd=mysql_query($sqlCambioUsd);
+	$respUsd=mysqli_query($enlaceCon,$sqlCambioUsd);
 	$tipoCambio=1;
-	while($filaUSD=mysql_fetch_array($respUsd)){
+	while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 	}
 ?><input type="hidden" id="tipo_cambio_dolar" value="<?=$tipoCambio?>"><?php
@@ -612,35 +615,50 @@ $globalAlmacen=$_COOKIE['global_almacen'];
 
 //SACAMOS LA CONFIGURACION PARA EL DOCUMENTO POR DEFECTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=1";
-$respConf=mysql_query($sqlConf);
-$tipoDocDefault=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$tipoDocDefault=$datConf[0];
+//$tipoDocDefault=mysql_result($respConf,0,0);
 
 //SACAMOS LA CONFIGURACION PARA EL CLIENTE POR DEFECTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=2";
-$respConf=mysql_query($sqlConf);
-$clienteDefault=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$clienteDefault=$datConf[0];
+//$clienteDefault=mysql_result($respConf,0,0);
 
 //SACAMOS LA CONFIGURACION PARA CONOCER SI LA FACTURACION ESTA ACTIVADA
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=3";
-$respConf=mysql_query($sqlConf);
-$facturacionActivada=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$facturacionActivada=$datConf[0];
+//$facturacionActivada=mysql_result($respConf,0,0);
 
 //SACAMOS LA CONFIGURACION PARA CONOCER SI PERMITIMOS VENDER POR DEBAJO DEL COSTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=5";
-$respConf=mysql_query($sqlConf);
-$ventaDebajoCosto=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$ventaDebajoCosto=$datConf[0];
+//$ventaDebajoCosto=mysql_result($respConf,0,0);
 
 
 
 //datos de la venta
 $codigoVenta=$_GET['codVenta'];
 		$sqlEmp="select cod_empresa, nombre, nit, direccion, ciudad from datos_empresa";
-		$respEmp=mysql_query($sqlEmp);
-
-		$nombreEmpresa=mysql_result($respEmp,0,1);
+		$respEmp=mysqli_query($enlaceCon,$sqlEmp);
+		$datEmp=mysqli_fetch_array($respEmp);
+		
+		$nombreEmpresa=$datEmp[1];//mysql_result($respEmp,0,1);
+		$nitEmpresa=$datEmp[2];//mysql_result($respEmp,0,2);
+		$direccionEmpresa=$datEmp[3];//mysql_result($respEmp,0,3);
+		$ciudadEmpresa=$datEmp[4];//mysql_result($respEmp,0,4);
+		
+		
+		/*$nombreEmpresa=mysql_result($respEmp,0,1);
 		$nitEmpresa=mysql_result($respEmp,0,2);
 		$direccionEmpresa=mysql_result($respEmp,0,3);
-		$ciudadEmpresa=mysql_result($respEmp,0,4);
+		$ciudadEmpresa=mysql_result($respEmp,0,4);*/
 	
 		//datos documento				
 		$sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
@@ -652,8 +670,8 @@ $codigoVenta=$_GET['codVenta'];
 			(select v.placa from vehiculos v where v.codigo=s.cod_vehiculo) as placa
 			from `salida_almacenes` s, `tipos_docs` t
 				where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_tipo_doc`=t.`codigo`";
-		$respDatosVenta=mysql_query($sqlDatosVenta);
-		while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
+		$respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+		while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 			$fechaVenta=$datDatosVenta[0];
 			$nombreTipoDoc=$datDatosVenta[1];
 			$nombreCliente=$datDatosVenta[2];
@@ -741,9 +759,9 @@ if($tipoDocDefault==2){
 	<div id='divTipoPrecio'>
 		<?php
 			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
-			$resp1=mysql_query($sql1);
+			$resp1=mysqli_query($enlaceCon,$sql1);
 			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio'>";
-			while($dat=mysql_fetch_array($resp1)){
+			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
 				$abreviatura=$dat[2];
@@ -758,9 +776,9 @@ if($tipoDocDefault==2){
 	<div id='divTipoVenta'>
 		<?php
 			$sql1="select cod_tipopago, nombre_tipopago from tipos_pago order by 1";
-			$resp1=mysql_query($sql1);
+			$resp1=mysqli_query($enlaceCon,$sql1);
 			echo "<select name='tipoVenta' class='texto' id='tipoVenta'>";
-			while($dat=mysql_fetch_array($resp1)){
+			while($dat=mysqli_fetch_array($resp1)){
 				$codigo=$dat[0];
 				$nombre=$dat[1];
 				echo "<option value='$codigo'>$nombre</option>";
@@ -777,9 +795,9 @@ if($tipoDocDefault==2){
 			$sql2="select f.`codigo_funcionario`,
 				concat(f.`paterno`,' ', f.`nombres`) as nombre from `funcionarios` f where 
 				f.`cod_ciudad`='$globalAgencia' and estado=1 order by 2";
-			$resp2=mysql_query($sql2);
+			$resp2=mysqli_query($enlaceCon,$sql2);
 
-			while($dat2=mysql_fetch_array($resp2)){
+			while($dat2=mysqli_fetch_array($resp2)){
 				$codVendedor=$dat2[0];
 				$nombreVendedor=$dat2[1];
 			?>		
@@ -822,12 +840,12 @@ $sql_detalle="select m.codigo_barras, m.`descripcion_material`,
 	s.cod_salida_almacenes='$codigoVenta'
 	group by m.`codigo_material` order by 2 desc;";
 	
-$resp_detalle=mysql_query($sql_detalle);
+$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
 $montoUnitarioTotal=0;
-while($datosX=mysql_fetch_array($resp_detalle))
+while($datosX=mysqli_fetch_array($resp_detalle))
 {	$codItem=$datosX[0];
 		$nombreItem=$datosX[1];
 		$montoVenta=$datosX[2];
@@ -919,9 +937,9 @@ while($datosX=mysql_fetch_array($resp_detalle))
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";
-			$respTipo=mysql_query($sqlTipo);
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
-			while($datTipo=mysql_fetch_array($respTipo)){
+			while($datTipo=mysqli_fetch_array($respTipo)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";

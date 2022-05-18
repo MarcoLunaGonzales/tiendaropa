@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos.inc");
 
 //recogemos variables
@@ -13,7 +13,7 @@ if ($_FILES['archivo']["error"] > 0){
 move_uploaded_file($_FILES['archivo']['tmp_name'], "imagenesprod/".$archivoName);	
 
 $sqlUpd="update material_apoyo set imagen='$archivoName' where codigo_material='$codProducto'";
-$respUpd=mysql_query($sqlUpd);
+$respUpd=mysqli_query($enlaceCon,$sqlUpd);
 
 if($respUpd){
 		echo "<script language='Javascript'>

@@ -1,5 +1,5 @@
 <?php
-	require("conexion.inc");
+	require("conexionmysqli.php");
 	require("estilos_almacenes.inc");
 
 echo "<script language='Javascript'>
@@ -38,7 +38,7 @@ echo "<script language='Javascript'>
 	FROM salida_almacenes s, tipos_salida ts, almacenes a 
 	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and s.salida_anulada <> 1";
 	//echo $sql;
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Ingreso en Transito</h1>";
 
 	echo "<center><table class='texto'>";
@@ -47,13 +47,13 @@ echo "<script language='Javascript'>
 
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Fecha Despacho</th><th>Tipo de Salida<br>(Origen)</th><th>Territorio<br>Origen</th><th>Nota de Remision<br>(Origen)</th><th>Observaciones</th><th>Detalle</th></tr>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$cod_almacen_origen=$dat[1];
-		$sql_almacen_origen=mysql_query("select a.nombre_almacen, c.descripcion from almacenes a, ciudades c 
+		$sql_almacen_origen=mysqli_query($enlaceCon,"select a.nombre_almacen, c.descripcion from almacenes a, ciudades c 
 		where a.cod_almacen=$cod_almacen_origen and a.cod_ciudad=c.cod_ciudad");
-		$dat_almacen_origen=mysql_fetch_array($sql_almacen_origen);
+		$dat_almacen_origen=mysqli_fetch_array($sql_almacen_origen);
 		$nombre_almacen_origen=$dat_almacen_origen[0];
 		$ciudad_almacen_origen=$dat_almacen_origen[1];
 		$fecha_salida=$dat[2];

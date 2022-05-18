@@ -16,7 +16,7 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("d/m/Y");
@@ -31,9 +31,9 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	else
 	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
 	}
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		if($rpt_territorio==$codigo_ciudad)
@@ -46,8 +46,8 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Almacen</th><td><select name='rpt_almacen' class='texto'>";
 	$sql="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$rpt_territorio'";
-	$resp=mysql_query($sql);
-	while($dat=mysql_fetch_array($resp))
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_almacen=$dat[0];
 		$nombre_almacen=$dat[1];
 		if($rpt_almacen==$codigo_almacen)
@@ -68,9 +68,9 @@ echo"<form method='post' action='rptOpKardexCostos.php'>";
 	
 	$sql_item="select codigo_material, descripcion_material from material_apoyo where codigo_material<>0 order by descripcion_material";
 	
-	$resp=mysql_query($sql_item);
+	$resp=mysqli_query($enlaceCon,$sql_item);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_item=$dat[0];
 		if($tipo_item==1)
 		{	$nombre_item="$dat[1] $dat[2]";

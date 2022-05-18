@@ -32,7 +32,7 @@ function ajaxSubGrupo(combo){
 
 </script>
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require('estilos.inc');
 
 echo "<form enctype='multipart/form-data' action='guarda_material_apoyo.php' method='post' name='form1'>";
@@ -55,11 +55,11 @@ echo "<td align='left'>
 echo "<th align='left'>Proveedor</th>";
 $sql1="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
 where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 		<select name='codLinea' id='codLinea' required>
 		<option value=''></option>";
-		while($dat1=mysql_fetch_array($resp1))
+		while($dat1=mysqli_fetch_array($resp1))
 		{	$codLinea=$dat1[0];
 		$nombreLinea=$dat1[1];
 		echo "<option value='$codLinea'>$nombreLinea</option>";
@@ -70,10 +70,10 @@ echo "</tr>";
 
 echo "<tr><th>Tipo</th>";
 $sql1="select f.cod_tipomaterial, f.nombre_tipomaterial from tipos_material f where f.cod_tipomaterial in (1,2) order by 2;";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_tipo' id='cod_tipo' required>";
-			while($dat1=mysql_fetch_array($resp1))
+			while($dat1=mysqli_fetch_array($resp1))
 			{	$codTipo=$dat1[0];
 				$nombreTipo=$dat1[1];
 				echo "<option value='$codTipo'>$nombreTipo</option>";
@@ -85,11 +85,11 @@ echo "<td>
 echo "<th>Marca</th>";
 $sql1="select m.codigo, m.nombre from marcas m 
 where m.estado=1 order by 2;";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_marca' id='cod_marca' required>
 			<option value=''></option>";
-			while($dat1=mysql_fetch_array($resp1))
+			while($dat1=mysqli_fetch_array($resp1))
 			{	$codigoX=$dat1[0];
 				$nombreX=$dat1[1];
 				echo "<option value='$codigoX'>$nombreX</option>";
@@ -101,11 +101,11 @@ echo "</tr>";
 echo "<tr><th>Grupo</th>";
 $sql1="select f.codigo, f.nombre from grupos f 
 where f.estado=1 order by 2;";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_grupo' id='cod_grupo' required onChange='ajaxSubGrupo(this);'>
 			<option value=''></option>";
-			while($dat1=mysql_fetch_array($resp1))
+			while($dat1=mysqli_fetch_array($resp1))
 			{	$codGrupo=$dat1[0];
 				$nombreGrupo=$dat1[1];
 				echo "<option value='$codGrupo'>$nombreGrupo</option>";
@@ -138,11 +138,11 @@ echo "<td align='left' colspan='3'>
 
 echo "<tr><th>Unidad de Manejo</th>";
 $sql1="select u.codigo, u.nombre, u.abreviatura from unidades_medida u order by 1;";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_unidad' id='cod_unidad' required>
 			<option value=''></option>";
-			while($dat1=mysql_fetch_array($resp1))
+			while($dat1=mysqli_fetch_array($resp1))
 			{	$codUnidad=$dat1[0];
 				$nombreUnidad=$dat1[1];
 				$abreviatura=$dat1[2];

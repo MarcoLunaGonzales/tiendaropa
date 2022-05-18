@@ -1,8 +1,8 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 
 $sql="update ingreso_almacenes set ingreso_anulado=1 where cod_ingreso_almacen='$codigo_registro'";
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<script language='Javascript'>
 			alert('El registro fue anulado.');

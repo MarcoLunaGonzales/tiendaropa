@@ -1,5 +1,5 @@
 <?php
-require("../conexion.inc");
+require("../conexionmysqli.php");
 require("../estilos2.inc");
 require("configModule.php");
 
@@ -8,7 +8,7 @@ $nombre=$_POST['nombre'];
 $abreviatura=$_POST['abreviatura'];
 $codMaestro=$_POST['cod_maestro'];
 
-$sql_upd=mysql_query("update $tableDetalle set nombre='$nombre', abreviatura='$abreviatura' where codigo='$codigo'");
+$sql_upd=mysqli_query($enlaceCon,"update $tableDetalle set nombre='$nombre', abreviatura='$abreviatura' where codigo='$codigo'");
 
 echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');

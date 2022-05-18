@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require('estilos.inc');
 
 $codProducto=$_GET['codigo'];

@@ -9,9 +9,10 @@ function cambiarDatosProductosTable(valor){
         success:  function (respuesta) {
         	var resp=respuesta.split('#####');
         	if(resp[0].trim()=="0"){
-               $("#mensaje_input_codigo_barras").html("No se encontró el código de barras: "+ valor);
+               $("#mensaje_input_codigo_barras").html("<label style='color:#EC3002'>No se encontró el COD: </label> "+valor);
                $("#input_codigo_barras").val("");
         	}else{
+        		/*alert(resp[0]);*/
         	  if($("#divItemReporte").length>0){ //para el reporte 
         	  	$('select[name=rpt_grupo]').val(resp[5]);
         	  	//ajaxReporteItems();
@@ -38,6 +39,7 @@ function cambiarDatosProductosTable(valor){
 	            	 }	
 	            	}
 	            };
+	            //alert(existeCodigo);
 	            if(existeCodigo==0){
 	              if($("#ventas_codigo").length>0){
                     soloMasVentas(resp);	//para Ventas
@@ -49,7 +51,7 @@ function cambiarDatosProductosTable(valor){
 	              	}
 	                
 	              }	
-	              $("#mensaje_input_codigo_barras").html("Encontrado "+resp[2]+", código de barras: "+ valor);	 
+	              $("#mensaje_input_codigo_barras").html("<label style='color:#0FBD68'>SE AGREGÓ AL LISTADO: </label>"+resp[2]+", COD: "+valor+"");	 
 	            }else{
 	            	var cantidadAnterior=parseInt($("#cantidad_unitaria"+filaEncontrado).val());
 	            	if($("#cantidad_unitaria"+filaEncontrado).val()==""){
@@ -66,7 +68,7 @@ function cambiarDatosProductosTable(valor){
 	            		}	            	  
 	            	}
 	            	
-	            	$("#mensaje_input_codigo_barras").html(resp[2]+" + 1 :"+ valor);	 
+	            	$("#mensaje_input_codigo_barras").html("<label style='color:#02C5EC'>CANTIDAD + 1: </label>"+resp[2]+", COD: "+valor);	 
 	            }
 	           }//fin else para registro kardex
 	          }//fin de para salidas ingresos o ventas 
@@ -111,7 +113,7 @@ function soloMasVentas(obj){
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
-					setMaterialesSoloVentas(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)");
+					setMaterialesSoloVentas(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)",obj[3],obj[9]);
 				}
 			}		
 			ajax.send(null);
@@ -210,11 +212,18 @@ function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){
 
 }
 
-function setMaterialesSoloVentas(cod, nombreMat){
+function setMaterialesSoloVentas(cod, nombreMat,cantPre,divi){
 	var numRegistro=$('input[name=materialActivo]').val();
+	$("#cantidad_presentacionboton"+numRegistro).css("color","#EC341B");
+	if(divi==1){
+      $("#cantidad_presentacionboton"+numRegistro).css("color","#969393");
+	}
 	console.log("fila:"+numRegistro);
 	$('#materiales'+numRegistro).val(cod);
 	$('#cod_material'+numRegistro).html(nombreMat);
+	$('#cantidad_presentacion'+numRegistro).val(cantPre);
+	$('#divi'+numRegistro).val(divi);
+	$('#cantidad_presentacionboton'+numRegistro).html(cantPre);
 	$("#input_codigo_barras").focus();
 	actStock(numRegistro);
 	$("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);

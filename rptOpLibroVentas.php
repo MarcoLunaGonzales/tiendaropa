@@ -18,7 +18,7 @@ function envia_formularioTXT(f)
 </script>
 <?php
 	
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_administracion.inc");
 
 echo "<form action='rptLibroVentas.php' method='post'>";

@@ -6,13 +6,13 @@
 <script type='text/javascript' language='javascript'>
 <?php
 
-	require("conexion.inc");
+	require("conexionmysqli.php");
 	
 	$codIngresoEditar=$_GET["codIngreso"];
 	$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$codIngresoEditar;	
 	$num_materiales=0;
-	$resp= mysql_query($sql);				
-	while($dat=mysql_fetch_array($resp)){	
+	$resp= mysqli_query($enlaceCon,$sql);				
+	while($dat=mysqli_fetch_array($resp)){	
 		$num_materiales=$dat[0];
 	}
 ?>
@@ -187,7 +187,7 @@ function validar(f){
 	</script>
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 
 $globalAlmacen=$_COOKIE['global_almacen'];
@@ -206,8 +206,8 @@ if($fecha=="")
 
 $sqlIngreso="select i.`nro_correlativo`, i.`fecha`, i.`cod_tipoingreso`, i.`nota_entrega`, i.`nro_factura_proveedor`, 
 		i.`observaciones` from `ingreso_almacenes` i where i.`cod_ingreso_almacen` = $codIngresoEditar" ;
-$respIngreso=mysql_query($sqlIngreso);
-while($datIngreso=mysql_fetch_array($respIngreso)){
+$respIngreso=mysqli_query($enlaceCon,$sqlIngreso);
+while($datIngreso=mysqli_fetch_array($respIngreso)){
 	$nroCorrelativo=$datIngreso[0];
 	$fechaIngreso=$datIngreso[1];
 	$codTipoIngreso=$datIngreso[2];
@@ -228,14 +228,14 @@ while($datIngreso=mysql_fetch_array($respIngreso)){
 	
 <?php
 $sql1="select cod_tipoingreso, nombre_tipoingreso from tipos_ingreso order by nombre_tipoingreso";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 ?>
 
 <td align='center'><select name='tipo_ingreso' id='tipo_ingreso' class='texto'>
 
 <?php
 
-while($dat1=mysql_fetch_array($resp1))
+while($dat1=mysqli_fetch_array($resp1))
 {   $cod_tipoingreso=$dat1[0];
     $nombre_tipoingreso=$dat1[1];
 ?>
@@ -278,9 +278,9 @@ while($dat1=mysql_fetch_array($resp1))
 				lote, fecha_vencimiento
 				from `ingreso_detalle_almacenes` id, `material_apoyo` m where
 				id.`cod_material`=m.`codigo_material` and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
-			$respDetalle=mysql_query($sqlDetalle);
+			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;
-			while($datDetalle=mysql_fetch_array($respDetalle)){
+			while($datDetalle=mysqli_fetch_array($respDetalle)){
 				$codMaterial=$datDetalle[0];
 				$nombreMaterial=$datDetalle[1];
 				$cantidadMaterial=$datDetalle[2];
@@ -294,19 +294,23 @@ while($dat1=mysql_fetch_array($resp1))
 				$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
 				where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.ingreso_anulado=0 and 
 				id.cod_material='$codMaterial' and i.cod_almacen='$globalAlmacen' ORDER BY i.cod_ingreso_almacen desc limit 0,1";
-				$respUltimoCosto=mysql_query($sqlUltimoCosto);
-				$numFilas=mysql_num_rows($respUltimoCosto);
+				$respUltimoCosto=mysqli_query($enlaceCon,$sqlUltimoCosto);
+				$numFilas=mysqli_num_rows($respUltimoCosto);
 				$costoItem=0;
 				if($numFilas>0){
-					$costoItem=mysql_result($respUltimoCosto,0,0);
+					$datUltimoCosto=mysqli_fetch_array($respUltimoCosto);
+					$costoItem=$datUltimoCosto[0];
+					//$costoItem=mysql_result($respUltimoCosto,0,0);
 				}else{
 					//SACAMOS EL COSTO REGISTRADO EN LA TABLA DE PRECIOS
 					$sqlCosto="select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.`cod_precio`='0' 
 					and cod_ciudad='$globalAgencia'";
-					$respCosto=mysql_query($sqlCosto);
-					$numFilas2=mysql_num_rows($respCosto);
+					$respCosto=mysqli_query($enlaceCon,$sqlCosto);
+					$numFilas2=mysqli_num_rows($respCosto);
 					if($numFilas2>0){
-						$costoItem=mysql_result($respCosto,0,0);
+						$datCosto=mysqli_fetch_array($respCosto);
+					    $costoItem=$datCosto[0];
+						//$costoItem=mysql_result($respCosto,0,0);
 					}
 				}
 			?>
@@ -385,9 +389,9 @@ echo "<div class='divBotones'>
 			<?php
 			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
 			where g.estado=1 order by 2;";
-			$respTipo=mysql_query($sqlTipo);
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
-			while($datTipo=mysql_fetch_array($respTipo)){
+			while($datTipo=mysqli_fetch_array($respTipo)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";

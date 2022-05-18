@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];
@@ -19,7 +19,7 @@ $rpt_territorio=$_GET['rpt_territorio'];
 
 $fecha_reporte=date("d/m/Y");
 
-$nombre_territorio=nombreTerritorio($rpt_territorio);
+$nombre_territorio=nombreTerritorio($enlaceCon,$rpt_territorio);
 
 echo "<h1>Reporte Utilidades x Documento</h1>
 	<h2>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
@@ -42,7 +42,7 @@ if($rpt_ver==1){
 
 $sql.=" order by s.fecha, s.nro_correlativo";
 	
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<center><table class='texto'>
 <tr>
@@ -58,7 +58,7 @@ echo "<center><table class='texto'>
 
 $totalVenta=0;
 $totalCosto=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
 	$razonSocial=$datos[2];

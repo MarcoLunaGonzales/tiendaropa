@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];
@@ -17,7 +17,7 @@ $rpt_territorio=$_GET['rpt_territorio'];
 
 $fecha_reporte=date("d/m/Y");
 
-$nombre_territorio=nombreTerritorio($rpt_territorio);
+$nombre_territorio=nombreTerritorio($enlaceCon,$rpt_territorio);
 
 echo "<table align='center' class='textotit' width='100%'><tr><td align='center'>Reporte Ventas x Vendedor
 	<br>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
@@ -38,7 +38,7 @@ where s.`cod_salida_almacenes` = sd.`cod_salida_almacen` and
                            where a.`cod_ciudad` = '$rpt_territorio'
       ) and 
       s.`cod_chofer`=f.`codigo_funcionario` group by f.`codigo_funcionario`";	
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='texto' width='100%'>
 <tr>
@@ -48,7 +48,7 @@ echo "<br><table align='center' class='texto' width='100%'>
 </tr>";
 
 $totalVenta=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$codItem=$datos[0];
 	$nombrePersona=$datos[1];
 	$montoVenta=$datos[2];

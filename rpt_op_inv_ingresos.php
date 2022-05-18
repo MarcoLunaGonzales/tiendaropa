@@ -32,7 +32,7 @@ function ajaxAlmacen(){
 	ajax.send(null)
 }
 		</script>";
-require("conexion.inc");
+require("conexionmysqli.php");
 if($global_tipoalmacen==1)
 {	require("estilos_almacenes_central.inc");
 }
@@ -50,9 +50,9 @@ echo"<form method='post' action='rpt_inv_ingresos.php' target='_blank'>";
 	else
 	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
 	}
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		if($rpt_territorio==$codigo_ciudad)
@@ -70,9 +70,9 @@ echo"<form method='post' action='rpt_inv_ingresos.php' target='_blank'>";
 	echo "<tr><th align='left'>Tipo de Ingreso</th>";
 	$sql_tipoingreso="select cod_tipoingreso, nombre_tipoingreso from tipos_ingreso order by nombre_tipoingreso";
 	//echo $sql_tipoingreso;
-	$resp_tipoingreso=mysql_query($sql_tipoingreso);
+	$resp_tipoingreso=mysqli_query($enlaceCon,$sql_tipoingreso);
 	echo "<td><select name='tipo_ingreso[]' class='texto' size='5' multiple required>";
-	while($datos_tipoingreso=mysql_fetch_array($resp_tipoingreso))
+	while($datos_tipoingreso=mysqli_fetch_array($resp_tipoingreso))
 	{	$codigo_tipoingreso=$datos_tipoingreso[0];
 		$nombre_tipoingreso=$datos_tipoingreso[1];
 		echo "<option value='$codigo_tipoingreso' selected>$nombre_tipoingreso</option>";
@@ -82,9 +82,9 @@ echo"<form method='post' action='rpt_inv_ingresos.php' target='_blank'>";
 	echo "<tr><th align='left'>Proveedor</th>";
 	$sqlProveedor="select cod_proveedor, nombre_proveedor from proveedores order by 2";
 	//echo $sql_tipoingreso;
-	$respProveedor=mysql_query($sqlProveedor);
+	$respProveedor=mysqli_query($enlaceCon,$sqlProveedor);
 	echo "<td><select name='proveedor[]' class='texto' size='5' multiple required>";
-	while($datosProveedor=mysql_fetch_array($respProveedor))
+	while($datosProveedor=mysqli_fetch_array($respProveedor))
 	{	$codigo=$datosProveedor[0];
 		$nombre=$datosProveedor[1];
 		echo "<option value='$codigo' selected>$nombre</option>";

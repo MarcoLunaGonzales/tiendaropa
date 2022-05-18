@@ -1,11 +1,11 @@
 <?php
 
-require("../conexion.inc");
+require("../conexionmysqli.php");
 require("../estilos2.inc");
 require("configModule.php");
 
-$sql=mysql_query("select nombre, abreviatura from $table where codigo=$codigo_registro");
-$dat=mysql_fetch_array($sql);
+$sql=mysqli_query($enlaceCon,"select nombre, abreviatura from $table where codigo=$codigo_registro");
+$dat=mysqli_fetch_array($sql);
 
 $nombre=$dat[0];
 $abreviatura=$dat[1];
@@ -28,7 +28,7 @@ echo "</table>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_grupos.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"list.php\"'>
 </div>";
 
 echo "</form>";

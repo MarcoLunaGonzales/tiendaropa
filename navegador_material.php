@@ -111,7 +111,7 @@ echo "<script language='Javascript'>
 		
 		</script>";
 		
-	require("conexion.inc");
+	require("conexionmysqli.php");
 	require('estilos.inc');
 	require("funciones.php");
 	?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
@@ -190,8 +190,8 @@ echo "<script language='Javascript'>
 	
 
 	
-	echo $sql;
-	$resp=mysql_query($sql);
+	//echo $sql;
+	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Productos:
 	<select name='vista' class='texto' onChange='cambiar_vista(this.form)'>";
@@ -204,8 +204,8 @@ echo "<script language='Javascript'>
 	<select name='grupo' class='texto' onChange='cambiar_vista(this.form)'>";
 	echo "<option value='0'>-</option>";
 	$sqlGrupo="select codigo, nombre from grupos where estado=1 order by 2";
-	$respGrupo=mysql_query($sqlGrupo);
-	while($datGrupo=mysql_fetch_array($respGrupo)){
+	$respGrupo=mysqli_query($enlaceCon,$sqlGrupo);
+	while($datGrupo=mysqli_fetch_array($respGrupo)){
 		$codGrupoX=$datGrupo[0];
 		$nombreGrupoX=$datGrupo[1];
 		if($codGrupoX==$grupo){
@@ -244,7 +244,7 @@ echo "<script language='Javascript'>
 		<th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
 	$indice_tabla=1;
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombreProd=$dat[1];
@@ -258,7 +258,7 @@ echo "<script language='Javascript'>
 		$talla=$dat[9];
 		$codigoBarras=$dat[10];
 		
-		$precioVenta=precioVenta($codigo,$globalAgencia);
+		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
 		
 		if($imagen==""){
@@ -334,9 +334,9 @@ function Hidden(){
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";
-			$respTipo=mysql_query($sqlTipo);
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
-			while($datTipo=mysql_fetch_array($respTipo)){
+			while($datTipo=mysqli_fetch_array($respTipo)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				if($codTipoMat==$gr){
@@ -353,9 +353,9 @@ function Hidden(){
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from marcas g
 			where g.estado=1 order by 2;";
-			$respTipo=mysql_query($sqlTipo);
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
-			while($datTipo=mysql_fetch_array($respTipo)){
+			while($datTipo=mysqli_fetch_array($respTipo)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				if($codTipoMat==$ma){

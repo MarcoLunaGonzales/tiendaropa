@@ -16,7 +16,7 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
-require("conexion.inc");
+require("conexionmysqli.php");
 
 require("estilos_almacenes.inc");
 
@@ -32,9 +32,9 @@ echo"<form method='post' action=''>";
 	else
 	{	$sql="select cod_ciudad, descripcion from ciudades where cod_ciudad='$global_agencia' order by descripcion";
 	}
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		if($rpt_territorio==$codigo_ciudad)
@@ -47,8 +47,8 @@ echo"<form method='post' action=''>";
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Almacen</th><td><select name='rpt_almacen' class='texto'>";
 	$sql="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$rpt_territorio'";
-	$resp=mysql_query($sql);
-	while($dat=mysql_fetch_array($resp))
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_almacen=$dat[0];
 		$nombre_almacen=$dat[1];
 		if($rpt_almacen==$codigo_almacen)
@@ -63,10 +63,10 @@ echo"<form method='post' action=''>";
 	echo "<tr><th align='left'>Tipo de Salida</th>";
 	$sql_tiposalida="select cod_tiposalida, nombre_tiposalida from tipos_salida 
 	 order by nombre_tiposalida";
-	$resp_tiposalida=mysql_query($sql_tiposalida);
+	$resp_tiposalida=mysqli_query($enlaceCon,$sql_tiposalida);
 	echo "<td><select name='tipo_salida' class='texto'>";
 	echo "<option value=''>Todos los tipos</option>";
-	while($datos_tiposalida=mysql_fetch_array($resp_tiposalida))
+	while($datos_tiposalida=mysqli_fetch_array($resp_tiposalida))
 	{	$codigo_tiposalida=$datos_tiposalida[0];
 		$nombre_tiposalida=$datos_tiposalida[1];
 		if($tipo_salida==$codigo_tiposalida)

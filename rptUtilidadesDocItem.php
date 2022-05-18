@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 
 $fecha_ini=$_POST['exafinicial'];
@@ -17,8 +17,8 @@ $fecha_reporte=date("d/m/Y");
 $rpt_grupo=$_POST['rpt_grupo'];
 $arrayRptGrupo=implode(',',$rpt_grupo);
 
-$nombre_territorio=nombreTerritorio($rpt_territorio);
-$nombreGrupos=nombreGrupo($arrayRptGrupo);
+$nombre_territorio=nombreTerritorio($enlaceCon,$rpt_territorio);
+$nombreGrupos=nombreGrupo($enlaceCon,$arrayRptGrupo);
 
 
 echo "<h1>Reporte Utilidades x Documento e Item</h1>
@@ -41,7 +41,7 @@ m.`codigo_material`, m.`descripcion_material`,
 
 //echo $sql;	
 
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<center><table class='textomediano'>
 <thead>
@@ -66,7 +66,7 @@ echo "<center><table class='textomediano'>
 $totalVenta=0;
 $totalCosto=0;
 echo "<tbody>";
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$fecha=$datos[0];
 	$nroNota=$datos[1]."-".$datos[2];
 	$nombreCliente=$datos[3];

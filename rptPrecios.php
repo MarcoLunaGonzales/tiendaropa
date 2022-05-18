@@ -78,7 +78,7 @@ function ajaxBuscarItems(f){
 </script>
 <?php
 
-	require("conexion.inc");
+	require("conexionmysqli.php");
 	require("estilos_reportes_almacencentral.php");
 	require("funciones.php");
 	require("funcion_nombres.php");
@@ -88,7 +88,7 @@ function ajaxBuscarItems(f){
 	$global_agencia=$_GET['rpt_territorio'];
 	$rpt_grupo=$_GET['rpt_grupo'];
 	
-	$nombreAgencia=nombreTerritorio($global_agencia);
+	$nombreAgencia=nombreTerritorio($enlaceCon,$global_agencia);
 
 	echo "<h1>Reporte de Precios</h1>";
 	echo "<h2>Agencia: $nombreAgencia</h2>";
@@ -99,7 +99,7 @@ function ajaxBuscarItems(f){
 	(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca, ma.codigo_barras
 	from material_apoyo ma
 			where ma.estado=1 and ma.cod_grupo in ($rpt_grupo) order by 3,2";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<center><table class='texto'>";
 	echo "<tr>
@@ -117,7 +117,7 @@ function ajaxBuscarItems(f){
 	<th>Precio Descuento3</th-->
 	</tr>";
 	$indice=1;
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombreMaterial=$dat[1];
@@ -132,14 +132,14 @@ function ajaxBuscarItems(f){
 		$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
 		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha<='$rpt_fecha' and i.cod_almacen='$global_almacen'
 		and id.cod_material='$codigo' and i.ingreso_anulado=0";
-		$resp_ingresos=mysql_query($sql_ingresos);
-		$dat_ingresos=mysql_fetch_array($resp_ingresos);
+		$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+		$dat_ingresos=mysqli_fetch_array($resp_ingresos);
 		$cant_ingresos=$dat_ingresos[0];
 		$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
 		where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha<='$rpt_fecha' and s.cod_almacen='$global_almacen'
 		and sd.cod_material='$codigo' and s.salida_anulada=0";
-		$resp_salidas=mysql_query($sql_salidas);
-		$dat_salidas=mysql_fetch_array($resp_salidas);
+		$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+		$dat_salidas=mysqli_fetch_array($resp_salidas);
 		$cant_salidas=$dat_salidas[0];
 		$stock2=$cant_ingresos-$cant_salidas;
 
@@ -152,9 +152,9 @@ function ajaxBuscarItems(f){
 		<td>$color</td>
 		<td>$talla</td>";
 		echo "<!--td align='center'>$stock2</td-->";
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
-		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
+		/*$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
 		$respPrecio=mysql_query($sqlPrecio);
 		$numFilas=mysql_num_rows($respPrecio);
 		if($numFilas==1){
@@ -163,15 +163,17 @@ function ajaxBuscarItems(f){
 		}else{
 			$costo=0;
 			$costo=redondear2($costo);
-		}
-=======
->>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
+		}*/
+//=======
+// fa73857d749ed2032248cb8f08cdb257652af16c
 
 		$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='$global_agencia'";
-		$respPrecio=mysql_query($sqlPrecio);
-		$numFilas=mysql_num_rows($respPrecio);
+		$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
+		$numFilas=mysqli_num_rows($respPrecio);
 		if($numFilas==1){
-			$precio0=mysql_result($respPrecio,0,0);
+			$datPrecio=mysqli_fetch_array($respPrecio);
+			$precio0=$datPrecio[0];
+			//$precio0=mysql_result($respPrecio,0,0);
 			$precio0=redondear2($precio0);
 		}else{
 			$precio0=0;
@@ -180,8 +182,8 @@ function ajaxBuscarItems(f){
 		
 		$precio1=$precio0;
 		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='1'";
-		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
-		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
+		$datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 		$descuentoPrecio=$datTipoPrecio[0];
 		$indiceConversion=0;
 		if($descuentoPrecio>0){
@@ -192,8 +194,8 @@ function ajaxBuscarItems(f){
 
 		$precio2=$precio0;
 		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='2'";
-		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
-		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
+		$datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 		$descuentoPrecio=$datTipoPrecio[0];
 		$indiceConversion=0;
 		if($descuentoPrecio>0){
@@ -204,8 +206,8 @@ function ajaxBuscarItems(f){
 
 		$precio3=$precio0;
 		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='3'";
-		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
-		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
+		$datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 		$descuentoPrecio=$datTipoPrecio[0];
 		$indiceConversion=0;
 		if($descuentoPrecio>0){
@@ -217,8 +219,8 @@ function ajaxBuscarItems(f){
 
 		$precio4=$precio0;
 		$sqlTipoPrecio="select abreviatura from tipos_precio where codigo='4'";
-		$rsTipoPrecio=mysql_query($sqlTipoPrecio);
-		$datTipoPrecio=mysql_fetch_array($rsTipoPrecio);
+		$rsTipoPrecio=mysqli_query($enlaceCon,$sqlTipoPrecio);
+		$datTipoPrecio=mysqli_fetch_array($rsTipoPrecio);
 		$descuentoPrecio=$datTipoPrecio[0];
 		$indiceConversion=0;
 		if($descuentoPrecio>0){

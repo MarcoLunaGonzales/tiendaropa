@@ -1,33 +1,34 @@
 <?php
 
-	require("conexion.inc");
+	require("conexionmysqli.php");
 	require('estilos.inc');
 	require("funciones.php");
 	require("funcion_nombres.php");
 	
 	$globalAgencia=$_GET['rpt_territorio'];
 	$rpt_grupo=$_GET['rpt_grupo'];
-	$nombreAgencia=nombreTerritorio($globalAgencia);
+	$nombreAgencia=nombreTerritorio($enlaceCon,$globalAgencia);
 	
 	echo "<h1>Reporte de Productos</h1>";
 	echo "<h2>Agencia: $nombreAgencia</h2>";
 
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		(select e.nombre_grupo from grupos e where e.cod_grupo=m.cod_grupo), 
+		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre_tipomaterial from tipos_material t where t.cod_tipomaterial=m.cod_tipomaterial), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen
 		from material_apoyo m
 		where m.estado='1' and m.cod_tipomaterial in (1,2) and m.cod_grupo in ($rpt_grupo) order by 4,2";
 	
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 			
 	echo "<center><table class='texto'>";
 	echo "<tr><th>Indice</th><th>Nombre Producto</th><th>Unidad</th>
 		<th>Grupo</th><th>Proveedor</th><th>Costo[Bs]</th><th>PrecioVenta[Bs]</th><th>&nbsp;</th></tr>";
+		
 	
 	$indice_tabla=1;
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombreProd=$dat[1];
@@ -37,12 +38,12 @@
 		$nombreLinea=$dat[5];
 		$observaciones=$dat[6];
 		$imagen=$dat[7];
-		$precioVenta=precioVenta($codigo,$globalAgencia);
+		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
 		
-		$unidadMedida=unidadMedida($codigo);
+		$unidadMedida=unidadMedida($enlaceCon,$codigo);
 		
-		$costoVenta=costoVenta($codigo, $globalAgencia);
+		$costoVenta=costoVenta($enlaceCon,$codigo, $globalAgencia);
 		
 		if($imagen=='default.png'){
 			$tamanioImagen=80;

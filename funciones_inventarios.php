@@ -1,8 +1,8 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("funcionRecalculoCostos.php");
 
-function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $orden){
+function descontar_inventarios($enlaceCon,$cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $orden){
 	
 	//echo $cod_salida." ".$cod_almacen." ".$cod_material." ".$cantidad;
 	$cantidadPivote=$cantidad;
@@ -17,8 +17,8 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	//AQUI SE DEBE CORREGIR EL DATO DE CANTIDAD RESTANTE >0 OJO
 	
 	//echo $sqlExistencias."<br>";
-	$respExistencias=mysql_query($sqlExistencias);
-	while($datExistencias=mysql_fetch_array($respExistencias)){
+	$respExistencias=mysqli_query($enlaceCon,$sqlExistencias);
+	while($datExistencias=mysqli_fetch_array($respExistencias)){
 		if($cantidadPivote>0){
 			$codMaterial=$datExistencias[0];
 			$cantidadRestante=$datExistencias[1];
@@ -42,7 +42,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 			'$precio','$descuento','$montoparcial','$codIngreso','$orden')";
 			
 			//echo $sqlInsert;
-			$respInsert=mysql_query($sqlInsert);
+			$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 			
 			//AQUI DAMOS DE BAJA EL DESCUENTO POR SI HUBIERAN DOS REGISTROS O MAS
 			$descuento=0;
@@ -54,7 +54,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 			
 			$sqlUpd="update ingreso_detalle_almacenes set cantidad_restante=cantidad_restante-$cantidadInsert where 
 			cod_ingreso_almacen='$codIngreso' and lote='$loteProducto' and cod_material='$codMaterial'";
-			$respUpd=mysql_query($sqlUpd);
+			$respUpd=mysqli_query($enlaceCon,$sqlUpd);
 			
 			if($respUpd!=1){
 				$banderaError=3;
@@ -66,7 +66,7 @@ function descontar_inventarios($cod_salida, $cod_almacen, $cod_material, $cantid
 	return($banderaError);
 }
 
-function insertar_detalleSalidaVenta($cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaStock, $orden){
+function insertar_detalleSalidaVenta($enlaceCon,$cod_salida, $cod_almacen, $cod_material, $cantidad, $precio, $descuento, $montoparcial, $banderaStock, $orden){
 	
 	//la $banderaStock es 1 cuando se validan stocks y 0 cuando no se validan los stocks
 	//echo $cod_salida." ".$cod_almacen." ".$cod_material." ".$cantidad;
@@ -78,7 +78,7 @@ function insertar_detalleSalidaVenta($cod_salida, $cod_almacen, $cod_material, $
 	descuento_unitario, monto_unitario, orden_detalle) values ('$cod_salida', '$cod_material', '$cantidad', '0', '0000-00-00',
 	'$precio','$descuento','$montoparcial','$orden')";
 	
-	$respInsert=mysql_query($sqlInsert);
+	$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 	if($respInsert!=1){
 		$banderaError=2;
 	}

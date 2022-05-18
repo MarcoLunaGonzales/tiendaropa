@@ -4,7 +4,7 @@
 <tr>
 <th>Producto</th><th>Marca</th><th>Color</th><th>Talla</th><th>Stock</th><th>Precio</th></tr>
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
@@ -26,23 +26,24 @@ $globalAgencia=$_COOKIE["global_agencia"];
 	}
 	$sql=$sql." order by 2";
 	//echo $sql;
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 
-	$numFilas=mysql_num_rows($resp);
+	$numFilas=mysqli_num_rows($resp);
+	//echo $numFilas;
 	if($numFilas>0){
-		while($dat=mysql_fetch_array($resp)){
+		while($dat=mysqli_fetch_array($resp)){
 			$codigo=$dat[0];
 			$nombre=$dat[1];
 			$nombre=addslashes($nombre);
 			$linea=$dat[2];
 			
-			$stockProducto=stockProducto($globalAlmacen, $codigo);
-			$marcaProducto=obtieneMarcaProducto($dat[3]);
+			$stockProducto=stockProducto($enlaceCon,$globalAlmacen, $codigo);
+			$marcaProducto=obtieneMarcaProducto($enlaceCon,$dat[3]);
 			$tallaProducto=$dat[4];
 			$colorProducto=$dat[5];
 			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$globalAgencia'";
-			$rs=mysql_query($consulta);
-			$registro=mysql_fetch_array($rs);
+			$rs=mysqli_query($enlaceCon,$consulta);
+			$registro=mysqli_fetch_array($rs);
 			$precioProducto=$registro[0];
 			if($precioProducto=="")
 			{   $precioProducto=0;

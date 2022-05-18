@@ -1,114 +1,152 @@
 <?php
-function saca_nombre_muestra($codigo)
-{	$sql="select descripcion from muestras_medicas where codigo='$codigo'";
-	$resp=mysql_query($sql);
-	$dat=mysql_fetch_array($resp);
+function saca_nombre_muestra($enlaceCon,$codigo)
+{	
+	$sql="select descripcion from muestras_medicas where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
 	$nombre_muestra=$dat[0];
 	return($nombre_muestra);
 }
-function nombreProducto($codigo)
-{	$sql="select concat(descripcion, ' ',presentacion) from muestras_medicas where codigo='$codigo'";
-	$resp=mysql_query($sql);
-	$dat=mysql_fetch_array($resp);
+function nombreProducto($enlaceCon,$codigo)
+{	
+	$sql="select concat(descripcion, ' ',presentacion) from muestras_medicas where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
 	$nombre_muestra=$dat[0];
 	return($nombre_muestra);
 }
 
-function nombreGestion($codigo)
-{	$sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$codigo'";
-	$resp=mysql_query($sql);
+function nombreGestion($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select g.`nombre_gestion` from `gestiones` g where g.`codigo_gestion`='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreLinea($codigo)
-{	$sql="select nombre_linea from lineas where codigo_linea='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreLinea($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select nombre_linea from lineas where codigo_linea='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreVisitador($codigo)
-{	$sql="select concat(paterno,' ',nombres) from funcionarios where codigo_funcionario='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreVisitador($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select concat(paterno,' ',nombres) from funcionarios where codigo_funcionario='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysqli_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreTerritorio($codigo)
-{	$sql="select descripcion from ciudades where cod_ciudad='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreTerritorio($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select descripcion from ciudades where cod_ciudad='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreMedico($codigo)
-{	$sql="select concat(ap_pat_med,' ', nom_med) from Clientes where cod_med='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreMedico($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select concat(ap_pat_med,' ', nom_med) from Clientes where cod_med='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreDia($codigo)
-{	$sql="select dia_contacto from orden_dias where id='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreDia($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select dia_contacto from orden_dias where id='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
 
-function nombreRutero($codigo)
-{	$sql="select nombre_rutero from rutero_maestro_cab where cod_rutero='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreRutero($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select nombre_rutero from rutero_maestro_cab where cod_rutero='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreZona($codigo)
-{	$sql="select zona from zonas where cod_zona='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+function nombreZona($enlaceCon,$codigo)
+{	//require("conexionmysqli.php");
+	$sql="select zona from zonas where cod_zona='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
-
-function nombreCategoria($codigo, $link)
+/*function nombreCategoria($codigo, $link)
 {	$sql="select nombre_categoria from categorias_producto where cod_categoria='$codigo'";
 	$resp=mysql_query($sql, $link);
 	$nombre=mysql_result($resp,0,0);
 	return($nombre);
+}*/
+
+function nombreCategoria($enlaceCon,$codigo)
+{	$sql="select nombre_categoria from categorias_producto where cod_categoria='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
+	return($nombre);
 }
 
-function nombreCliente($codigo)
+function nombreCliente($enlaceCon,$codigo)
 {	$sql="select nombre_cliente from clientes where cod_cliente='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreProveedor($codigo){
+function nombreProveedor($enlaceCon,$codigo){
 	$sql="select nombre_proveedor from proveedores where cod_proveedor='$codigo'";
-	$resp=mysql_query($sql);
-	$nombre=mysql_result($resp,0,0);
+	$resp=mysqli_query($enlaceCon,$sql);
+	$dat=mysqli_fetch_array($resp);
+	$nombre=$dat[0];
+	//$nombre=mysql_result($resp,0,0);
 	return($nombre);
 }
 
-function nombreAlmacen($codigo){
+function nombreAlmacen($enlaceCon,$codigo){
 	$sql="select nombre_almacen from almacenes where cod_almacen='$codigo'";
-	$resp=mysql_query($sql);
-	$numFilas=mysql_num_rows($resp);
+	$resp=mysqli_query($enlaceCon,$sql);
+	$numFilas=mysqli_num_rows($resp);
 	if($numFilas>0){
-		$nombre=mysql_result($resp,0,0);		
+		$dat=mysqli_fetch_array($resp);
+		$nombre=$dat[0];
+		//$nombre=mysql_result($resp,0,0);		
 	}else{
 		$nombre="-";
 	}
 	return($nombre);
 }
 
-function nombreGrupo($codigo){
+function nombreGrupo($enlaceCon,$codigo){
 	$sql="select nombre from grupos where codigo in ($codigo)";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	$nombre="";
-	while($dat=mysql_fetch_array($resp)){
+	while($dat=mysqli_fetch_array($resp)){
 		$nombre.=$dat[0]."-";
 	}
 	$nombre=substr($nombre,0,100);
@@ -116,11 +154,20 @@ function nombreGrupo($codigo){
 	return($nombre);
 }
 
-function obtenerNombreMaestro($tabla, $codigo){
+/*function obtenerNombreMaestro($tabla, $codigo){
 	$sql="select nombre from $tabla where codigo='$codigo'";
 	$resp=mysql_query($sql);
 	$nombre="";
 	while($dat=mysql_fetch_array($resp)){
+		$nombre.=$dat[0]."-";
+	}
+	return($nombre);
+}*/
+function obtenerNombreMaestro($enlaceCon, $tabla,$codigo){
+	$sql="select nombre from $tabla where codigo='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre="";
+	while($dat=mysqli_fetch_array($resp)){
 		$nombre.=$dat[0]."-";
 	}
 	return($nombre);

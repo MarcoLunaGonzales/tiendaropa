@@ -1,6 +1,6 @@
 <?php
 require("fpdf.php");
-require("conexion.inc");
+require("conexionmysqli.php");
 require("funciones.php");
 
 date_default_timezone_set('America/La_Paz');
@@ -10,15 +10,21 @@ class PDF extends FPDF
 { 	
 	
 	function Header()
-	{
+	{ 	require("conexionmysqli.php");
 		$codigoVenta=$_GET['codVenta'];
 		$sqlEmp="select cod_empresa, nombre, nit, direccion, ciudad from datos_empresa";
-		$respEmp=mysql_query($sqlEmp);
+		$respEmp=mysqli_query($enlaceCon,$sqlEmp);
+		$datEmp = mysqli_fetch_array($respEmp);
+		$nombreEmpresa=$datEmp[1];
+		$nitEmpresa=$datEmp[2];
+		$direccionEmpresa=$datEmp[3];
+		$ciudadEmpresa=$datEmp[4];
+	
 
-		$nombreEmpresa=mysql_result($respEmp,0,1);
+		/*$nombreEmpresa=mysql_result($respEmp,0,1);
 		$nitEmpresa=mysql_result($respEmp,0,2);
 		$direccionEmpresa=mysql_result($respEmp,0,3);
-		$ciudadEmpresa=mysql_result($respEmp,0,4);
+		$ciudadEmpresa=mysql_result($respEmp,0,4);*/
 	
 		//datos documento				
 		$sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
@@ -30,8 +36,8 @@ class PDF extends FPDF
 			(select v.placa from vehiculos v where v.codigo=s.cod_vehiculo) as placa
 			from `salida_almacenes` s, `tipos_docs` t
 				where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_tipo_doc`=t.`codigo`";
-		$respDatosVenta=mysql_query($sqlDatosVenta);
-		while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
+		$respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+		while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 			$fechaVenta=$datDatosVenta[0];
 			$nombreTipoDoc=$datDatosVenta[1];
 			$nombreCliente=$datDatosVenta[2];
@@ -128,11 +134,11 @@ $sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_ven
 	group by s.cod_material
 		order by s.orden_detalle";
 	
-$resp_detalle=mysql_query($sql_detalle);
+$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
-while($dat_detalle=mysql_fetch_array($resp_detalle))
+while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {	$cod_material=$dat_detalle[0];
 	$nombre_material=$dat_detalle[1];
 	$codigoInterno=$dat_detalle[2];

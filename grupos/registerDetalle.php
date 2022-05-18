@@ -1,12 +1,12 @@
 <?php
 
-require("../conexion.inc");
+require("../conexionmysqli.php");
 require("../estilos2.inc");
 require("configModule.php");
 require_once("../funcion_nombres.php");
 
 	$codMaestro=$_GET['cod_maestro'];
-	$nameMaestro=obtenerNombreMaestro($table,$codMaestro);
+	$nameMaestro=obtenerNombreMaestro($enlaceCon,$table,$codMaestro);
 	
 echo "<form action='$urlSaveDet' method='post'>";
 

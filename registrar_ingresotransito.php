@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos.inc");
 
 $fecha=date("Y-m-d");
@@ -7,8 +7,8 @@ $hora=date("H:i");
 
 $sql_datos_salidaorigen="select s.nro_correlativo, s.cod_tiposalida, a.nombre_almacen from salida_almacenes s, almacenes a
 where a.cod_almacen=s.cod_almacen and s.cod_salida_almacenes='$codigo_registro'";
-$resp_datos_salidaorigen=mysql_query($sql_datos_salidaorigen);
-$datos_salidaorigen=mysql_fetch_array($resp_datos_salidaorigen);
+$resp_datos_salidaorigen=mysqli_query($enlaceCon,$sql_datos_salidaorigen);
+$datos_salidaorigen=mysqli_fetch_array($resp_datos_salidaorigen);
 $correlativo_salidaorigen=$datos_salidaorigen[0];
 $tipo_salidaorigen=$datos_salidaorigen[1];
 $nombre_almacen_origen=$datos_salidaorigen[2];
@@ -36,8 +36,8 @@ echo "<table class='texto'>";
 $sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen
 from salida_detalle_almacenes where cod_salida_almacen='$codigo_registro' and cantidad_unitaria>0 
 group by cod_salida_almacen, cod_material";
-$resp_detalle_salida=mysql_query($sql_detalle_salida);
-$cantidad_materiales=mysql_num_rows($resp_detalle_salida);
+$resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
+$cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
 
 echo "<input type='hidden' name='codigo_salida' value='$codigo_registro'>";
 echo "<input type='hidden' name='cantidad_material' value='$cantidad_materiales'>";
@@ -45,7 +45,7 @@ echo "<tr><th width='5%'>&nbsp;</th><th width='45%'>Material</th><th width='25%'
 
 $indice_detalle=1;
 
-while($dat_detalle_salida=mysql_fetch_array($resp_detalle_salida))
+while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 {	$cod_material=$dat_detalle_salida[1];
 	$cantidad_unitaria=$dat_detalle_salida[2];
 	$costo_almacen=$dat_detalle_salida[3];
@@ -53,8 +53,8 @@ while($dat_detalle_salida=mysql_fetch_array($resp_detalle_salida))
 	echo "<tr><td align='center'>$indice_detalle</td>";
 	$sql_materiales="select codigo_material, descripcion_material from material_apoyo where 
 	codigo_material='$cod_material' and codigo_material<>0 order by descripcion_material";
-	$resp_materiales=mysql_query($sql_materiales);
-	$dat_materiales=mysql_fetch_array($resp_materiales);
+	$resp_materiales=mysqli_query($enlaceCon,$sql_materiales);
+	$dat_materiales=mysqli_fetch_array($resp_materiales);
 	$nombre_material="$dat_materiales[1]";
 
 	echo "<td>$nombre_material</td>";

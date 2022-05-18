@@ -1,6 +1,6 @@
 <?php
 
-require("../conexion.inc");
+require("../conexionmysqli.php");
 require("../estilos2.inc");
 require("configModule.php");
 

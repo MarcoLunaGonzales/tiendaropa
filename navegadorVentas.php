@@ -330,7 +330,7 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
     <body>
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require('funciones.php');
 require('function_formatofecha.php');
 
@@ -390,10 +390,10 @@ $consulta = $consulta."ORDER BY s.fecha desc, s.hora_salida desc limit 0, 70 ";
 
 //echo $consulta;
 //
-$resp = mysql_query($consulta);
+$resp = mysqli_query($enlaceCon,$consulta);
 	
 	
-while ($dat = mysql_fetch_array($resp)) {
+while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_salida = $dat[1];
     $fecha_salida_mostrar = "$fecha_salida[8]$fecha_salida[9]-$fecha_salida[5]$fecha_salida[6]-$fecha_salida[0]$fecha_salida[1]$fecha_salida[2]$fecha_salida[3]";
@@ -407,7 +407,7 @@ while ($dat = mysql_fetch_array($resp)) {
     $cod_almacen_destino = $dat[9];
 	$nombreCliente=$dat[10];
 	$codTipoDoc=$dat[11];
-	$nombreTipoDoc=nombreTipoDoc($codTipoDoc);
+	$nombreTipoDoc=nombreTipoDoc($enlaceCon,$codTipoDoc);
 	$razonSocial=$dat[12];
 	$razonSocial=strtoupper($razonSocial);
 	$nitCli=$dat[13];
@@ -416,10 +416,13 @@ while ($dat = mysql_fetch_array($resp)) {
     echo "<input type='hidden' name='fecha_salida$nro_correlativo' value='$fecha_salida_mostrar'>";
 	
 	$sqlEstadoColor="select color from estados_salida where cod_estado='$estado_almacen'";
-	$respEstadoColor=mysql_query($sqlEstadoColor);
-	$numFilasEstado=mysql_num_rows($respEstadoColor);
+	$respEstadoColor=mysqli_query($enlaceCon,$sqlEstadoColor);
+	$numFilasEstado=mysqli_num_rows($respEstadoColor);
 	if($numFilasEstado>0){
-		$color_fondo=mysql_result($respEstadoColor,0,0);
+		$datEstadoColor = mysqli_fetch_array($respEstadoColor);
+		$color_fondo = $datEstadoColor[0];
+		//$color_fondo=mysql_result($respEstadoColor,0,0);
+		
 	}else{
 		$color_fondo="#ffffff";
 	}
@@ -455,9 +458,9 @@ while ($dat = mysql_fetch_array($resp)) {
 	
     $codigoVentaCambio=0;
     $sqlCambio="select c.cod_cambio from salida_almacenes c where c.cod_cambio=$codigo";
-    $respCambio=mysql_query($sqlCambio);
+    $respCambio=mysqli_query($enlaceCon,$sqlCambio);
     if($global_admin_cargo==1){
-     while($datCambio=mysql_fetch_array($respCambio)){
+     while($datCambio=mysqli_fetch_array($respCambio)){
         $codigoVentaCambio=$datCambio[0];        
      }
      if($codigoVentaCambio==0){
@@ -525,8 +528,8 @@ echo "</form>";
 						<option value="0">Todos</option>
 					<?php
 						$sqlClientes="select c.`cod_cliente`, c.`nombre_cliente` from clientes c order by 2";
-						$respClientes=mysql_query($sqlClientes);
-						while($datClientes=mysql_fetch_array($respClientes)){
+						$respClientes=mysqli_query($enlaceCon,$sqlClientes);
+						while($datClientes=mysqli_fetch_array($respClientes)){
 							$codCliBusqueda=$datClientes[0];
 							$nombreCliBusqueda=$datClientes[1];
 					?>
@@ -545,8 +548,8 @@ echo "</form>";
                         <option value="0">Todos</option>
                     <?php
                         $sqlClientes="SELECT DISTINCT c.codigo_funcionario,CONCAT(c.paterno,' ',c.materno,' ',c.nombres) as personal from salida_almacenes s join funcionarios c on c.codigo_funcionario=s.cod_chofer order by 2;";
-                        $respClientes=mysql_query($sqlClientes);
-                        while($datClientes=mysql_fetch_array($respClientes)){
+                        $respClientes=mysqli_query($enlaceCon,$sqlClientes);
+                        while($datClientes=mysqli_fetch_array($respClientes)){
                             $codCliBusqueda=$datClientes[0];
                             $nombreCliBusqueda=$datClientes[1];
                     ?>
@@ -565,7 +568,7 @@ echo "</form>";
                         <option value="0">Todos</option>
                     <?php
                         $sqlClientes="select c.`cod_tipopago`, c.`nombre_tipopago` from tipos_pago c order by 2";
-                        $respClientes=mysql_query($sqlClientes);
+                        $respClientes=mysqli_query($enlaceCon,$sqlClientes);
                         while($datClientes=mysql_fetch_array($respClientes)){
                             $codCliBusqueda=$datClientes[0];
                             $nombreCliBusqueda=$datClientes[1];

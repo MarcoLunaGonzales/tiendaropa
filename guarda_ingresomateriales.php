@@ -1,18 +1,22 @@
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
 
 
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order by cod_ingreso_almacen desc";
-$resp = mysql_query($sql);
-$codigo=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon,$sql);
+$dat=mysqli_fetch_array($resp);
+$codigo=$dat[0];
+//$codigo=mysql_result($resp,0,0);
 
 $sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
-$resp = mysql_query($sql);
-$nro_correlativo=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon,$sql);
+$dat=mysqli_fetch_array($resp);
+$nro_correlativo=$dat[0];
+//$nro_correlativo=mysql_result($resp,0,0);
 
 $hora_sistema = date("H:i:s");
 
@@ -31,7 +35,7 @@ if($tipo_ingreso==1002){
 	$codSalida=$_POST['cod_salida'];
 	$estadoSalida=4;//recepcionado
 	$sqlCambiaEstado="update salida_almacenes set estado_salida='$estadoSalida' where cod_salida_almacenes=$codSalida";
-	$respCambiaEstado=mysql_query($sqlCambiaEstado);
+	$respCambiaEstado=mysqli_query($enlaceCon,$sqlCambiaEstado);
 }
 
 $consulta="insert into ingreso_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,cod_salida_almacen,
@@ -39,7 +43,7 @@ nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nr
 cod_proveedor,created_by,modified_by,created_date,modified_date) 
 values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$codSalida','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
 
-$sql_inserta = mysql_query($consulta);
+$sql_inserta = mysqli_query($enlaceCon,$consulta);
 
 //echo "aaaa:$consulta";
 
@@ -78,15 +82,17 @@ if($sql_inserta==1){
 			
 			//echo "det:$consulta";
 			
-			$sql_inserta2 = mysql_query($consulta);
+			$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
 			
 			$sqlMargen="select p.margen_precio from material_apoyo m, proveedores_lineas p
 				where m.cod_linea_proveedor=p.cod_linea_proveedor and m.codigo_material='$cod_material'";
-			$respMargen=mysql_query($sqlMargen);
-			$numFilasMargen=mysql_num_rows($respMargen);
+			$respMargen=mysqli_query($enlaceCon,$sqlMargen);
+			$numFilasMargen=mysqli_num_rows($respMargen);
 			$porcentajeMargen=0;
 			if($numFilasMargen>0){
-				$porcentajeMargen=mysql_result($respMargen,0,0);			
+				$datMargen=mysqli_fetch_array($respMargen);
+				$porcentajeMargen=$datMargen[0];
+				//$porcentajeMargen=mysql_result($respMargen,0,0);			
 			}		
 			$precioItem=$costo+($costo*($porcentajeMargen/100));
 		
@@ -112,7 +118,8 @@ if($sql_inserta==1){
 				}
 			}
 			*/
-			$aa=recalculaCostos($cod_material, $global_almacen);
+			
+			$aa=recalculaCostos($enlaceCon,$cod_material,$global_almacen);
 			
 		}
 	  }

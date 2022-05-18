@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 require('funciones.php');
 
@@ -28,8 +28,9 @@ echo "<tr><th colspan='2'>Saldo Inicial Caja Chica</th></tr>
 <tr><th>Fecha</th><th>Monto Apertura de Caja Chica [Bs]</th></tr>";
 $consulta = "select DATE_FORMAT(c.fecha_cajachica, '%d/%m/%Y'), c.monto, c.fecha_cajachica from cajachica_inicio c where 
 c.fecha_cajachica='$fecha_iniconsulta'";
-$resp = mysql_query($consulta);
-while ($dat = mysql_fetch_array($resp)) {
+echo $consulta;
+$resp = mysqli_query($enlaceCon,$consulta);
+while ($dat = mysqli_fetch_array($resp)) {
 	$fechaCajaChica = $dat[0];
 	$montoCajaChica = $dat[1];
 	$montoCajaChicaF=number_format($montoCajaChica,2,".",",");
@@ -59,7 +60,7 @@ if($variableAdmin==1){
 }
 $sql.=" order by s.fecha, s.hora_salida";
 	
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='textomediano' width='70%'>
 <tr><th colspan='7'>Detalle de Ingresos</th></tr>
@@ -76,7 +77,7 @@ echo "<br><table align='center' class='textomediano' width='70%'>
 $totalVenta=0;
 $totalEfectivo=0;
 $totalTarjeta=0;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
 	$razonSocial=$datos[2];
@@ -151,9 +152,9 @@ $consulta = "select g.cod_gasto, g.descripcion_gasto,
 	DATE_FORMAT(g.fecha_gasto, '%d/%m/%Y'), monto, estado from gastos g where fecha_gasto='$fecha_iniconsulta' 
 	and g.estado=1 order by g.cod_gasto";
 	
-$resp = mysql_query($consulta);
+$resp = mysqli_query($enlaceCon,$consulta);
 $totalGastos=0;
-while ($dat = mysql_fetch_array($resp)) {
+while ($dat = mysqli_fetch_array($resp)) {
 	$codGasto = $dat[0];
 	$descripcionGasto= $dat[1];
 	$tipoGasto=$dat[2];

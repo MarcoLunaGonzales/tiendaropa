@@ -6,8 +6,8 @@ require('conexion.inc');
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 $sql_tipo_salida="select nombre_tiposalida from tipos_salida where cod_tiposalida='$tipo_salida'";
-$resp_tipo_salida=mysql_query($sql_tipo_salida);
-$datos_tipo_salida=mysql_fetch_array($resp_tipo_salida);
+$resp_tipo_salida=mysqli_query($enlaceCon,$sql_tipo_salida);
+$datos_tipo_salida=mysqli_fetch_array($resp_tipo_salida);
 $nombre_tiposalida=$datos_tipo_salida[0];
 
 	if($tipo_salida!="")
@@ -50,10 +50,10 @@ if($tipo_reporte==0)
 		s.fecha>='$fecha_iniconsulta' and s.fecha<='$fecha_finconsulta' 
 		order by s.nro_correlativo";
 	}
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<center><br><table class='texto'>";
 	echo "<tr><th>Nro.</th><th>Fecha</th><th>Tipo de Salida</th><th>Territorio<br>Destino</th><th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>Estado</th><th>Detalle</th></tr>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$fecha_salida=$dat[1];
@@ -87,10 +87,10 @@ if($tipo_reporte==0)
 		$detalle_salida.="<tr><th>&nbsp;</th><th width='80%'>Material</th><th width='20%'>Cantidad</th></tr>";
 		$sql_detalle="select s.cod_material, s.cantidad_unitaria from salida_detalle_almacenes s
 		where s.cod_salida_almacen='$codigo'";
-		$resp_detalle=mysql_query($sql_detalle);
+		$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 		$indice=1;
 		$bandera=0;
-		while($dat_detalle=mysql_fetch_array($resp_detalle))
+		while($dat_detalle=mysqli_fetch_array($resp_detalle))
 		{	$cod_material=$dat_detalle[0];
 			$cantidad_unitaria=$dat_detalle[1];
 			$cantidad_unitaria=redondear2($cantidad_unitaria);
@@ -100,8 +100,8 @@ if($tipo_reporte==0)
 			else
 			{	$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
 			}
-			$resp_nombre_material=mysql_query($sql_nombre_material);
-			$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
+			$resp_nombre_material=mysqli_query($enlaceCon,$sql_nombre_material);
+			$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 			$nombre_material=$dat_nombre_material[0];
 			$presentacion_material=$dat_nombre_material[1];
 			if($rpt_linea!=0 and $num_filas!=0)
@@ -128,26 +128,26 @@ if($tipo_reporte==1)
 {	
 	$sql_producto="select codigo_material, descripcion_material from material_apoyo order by descripcion_material";
 
-	$resp_producto=mysql_query($sql_producto);
+	$resp_producto=mysqli_query($enlaceCon,$sql_producto);
 	echo "<table class='texto' width='70%' align='center'>";
 
 	echo "<tr><th>Material</th><th>Salidas</th></tr>";
 	
-	while($dat_producto=mysql_fetch_array($resp_producto))
+	while($dat_producto=mysqli_fetch_array($resp_producto))
 	{	$codigo_producto=$dat_producto[0];
 		$nombre_producto="$dat_producto[1] $dat_producto[2]";
 		$sql="select * from ciudades order by descripcion";
-		$resp=mysql_query($sql);
+		$resp=mysqli_query($enlaceCon,$sql);
 		$cadena_ciudades="<table cellspacing='0' class='textomini' width='100%'>
 		<tr><th>Territorio Destino</th><th>Cantidad</th></tr>";
 		$bandera_producto=0;
 		$suma_salida_producto=0;
-		while($dat=mysql_fetch_array($resp))
+		while($dat=mysqli_fetch_array($resp))
 		{	$cod_ciudad=$dat[0];
 			$nombre_ciudad=$dat[1];
 			$sql_almacen="select cod_almacen from almacenes where cod_ciudad='$cod_ciudad'";
-			$resp_almacen=mysql_query($sql_almacen);
-			$dat_almacen=mysql_fetch_array($resp_almacen);
+			$resp_almacen=mysqli_query($enlaceCon,$sql_almacen);
+			$dat_almacen=mysqli_fetch_array($resp_almacen);
 			$cod_almacen=$dat_almacen[0];
 
 			$fecha_iniconsulta=cambia_formatofecha($fecha_ini);
@@ -161,10 +161,10 @@ if($tipo_reporte==1)
 				and s.almacen_destino='$cod_almacen' and s.fecha>='$fecha_iniconsulta' and s.fecha<='$fecha_finconsulta'
 				group by (sd.lote)";
 			//echo $sql_salidas;
-			$resp_salidas=mysql_query($sql_salidas);
+			$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
 			$cantidad_salida=0;
 			$cadena_lotes="<table border='1' cellspacing='0' width='100%' class='textomini'><tr><th>Cantidad</th></tr>";
-			while($dat_salidas=mysql_fetch_array($resp_salidas))
+			while($dat_salidas=mysqli_fetch_array($resp_salidas))
 			{	$cant_salida=$dat_salidas[0];
 				$cod_salida_almacen=$dat_salidas[1];
 				$nro_lote=$dat_salidas[2];

@@ -1,12 +1,12 @@
 <?php
 
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos.inc");
 
     $sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
-	$respUsd=mysql_query($sqlCambioUsd);
+	$respUsd=mysqli_query($enlaceCon,$sqlCambioUsd);
 	$tipoCambio=1;
-	while($filaUSD=mysql_fetch_array($respUsd)){
+	while($filaUSD=mysqli_fetch_array($respUsd)){
 		$tipoCambio=$filaUSD[0];	
 	}
 

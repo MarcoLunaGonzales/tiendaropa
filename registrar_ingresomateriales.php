@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos.inc");
 ?>
 
@@ -207,9 +207,9 @@ echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%'
 echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura</th></tr>";
 echo "<tr>";
 $sql="select nro_correlativo from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
-$resp=mysql_query($sql);
-$dat=mysql_fetch_array($resp);
-$num_filas=mysql_num_rows($resp);
+$resp=mysqli_query($enlaceCon,$sql);
+$dat=mysqli_fetch_array($resp);
+$num_filas=mysqli_num_rows($resp);
 if($num_filas==0)
 {   $nro_correlativo=1;
 }
@@ -225,9 +225,9 @@ echo "<img id='imagenFecha' src='imagenes/fecha.bmp'>";
 echo "</td>";
 
 $sql1="select cod_tipoingreso, nombre_tipoingreso from tipos_ingreso order by nombre_tipoingreso";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td align='center'><select name='tipo_ingreso' id='tipo_ingreso' class='texto'>";
-while($dat1=mysql_fetch_array($resp1))
+while($dat1=mysqli_fetch_array($resp1))
 {   $cod_tipoingreso=$dat1[0];
     $nombre_tipoingreso=$dat1[1];
     echo "<option value='$cod_tipoingreso'>$nombre_tipoingreso</option>";
@@ -238,9 +238,9 @@ echo "<td align='center'><input type='number' class='texto' name='nro_factura' v
 echo "<tr><th>Proveedor</th>";
 echo "<th colspan='3'>Observaciones</th></tr>";
 $sql1="select cod_proveedor, nombre_proveedor from proveedores order by 2";
-$resp1=mysql_query($sql1);
+$resp1=mysqli_query($enlaceCon,$sql1);
 echo "<tr><td align='center'><select name='proveedor' id='proveedor' class='texto'>";
-while($dat1=mysql_fetch_array($resp1))
+while($dat1=mysqli_fetch_array($resp1))
 {   $codigo=$dat1[0];
     $nombre=$dat1[1];
     echo "<option value='$codigo'>$nombre</option>";
@@ -325,9 +325,9 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			<?php
 			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
 			where g.estado=1 order by 2;";
-			$respTipo=mysql_query($sqlTipo);
+			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
-			while($datTipo=mysql_fetch_array($respTipo)){
+			while($datTipo=mysqli_fetch_array($respTipo)){
 				$codTipoMat=$datTipo[0];
 				$nombreTipoMat=$datTipo[1];
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";

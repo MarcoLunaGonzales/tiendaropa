@@ -1,5 +1,5 @@
 <?php
-	require_once("../conexion.inc");
+	require_once("../conexionmysqli.php");
 	require_once("../estilos2.inc");
 	require_once("configModule.php");
 
@@ -72,7 +72,7 @@ echo "<script language='Javascript'>
 	
 	echo "<form method='post' action=''>";
 	$sql="select codigo, nombre, abreviatura, estado from $table where estado=1 order by 2";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
 	echo "<div class='divBotones'>
@@ -84,7 +84,7 @@ echo "<script language='Javascript'>
 	
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Nombre</th><th>Abreviatura</th></tr>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombre=$dat[1];

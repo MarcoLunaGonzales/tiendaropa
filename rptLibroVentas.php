@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes.php');
 require('function_formatofecha.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('funcion_nombres.php');
 
 $codAnio=$_GET['codAnio'];
@@ -12,12 +12,16 @@ $fecha_reporte=date("d/m/Y");
 echo "<h1>Libro de Ventas</h1>";
 
 $sqlConf="select id, valor from configuracion_facturas where id=1";
-$respConf=mysql_query($sqlConf);
-$nombreTxt=mysql_result($respConf,0,1);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$nombreTxt=$datConf[0];
+//$nombreTxt=mysql_result($respConf,0,1);
 
 $sqlConf="select id, valor from configuracion_facturas where id=9";
-$respConf=mysql_query($sqlConf);
-$nitTxt=mysql_result($respConf,0,1);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$nitTxt=$datConf[0];
+//$nitTxt=mysql_result($respConf,0,1);
 
 echo "<h3>Periodo Año: $codAnio  Mes: $codMes</h3>";
 echo "<h3>Nombre o Razon Social: $nombreTxt  NIT: $nitTxt</h3>";
@@ -30,7 +34,7 @@ $sql="select f.nro_factura, DATE_FORMAT(f.fecha, '%d/%m/%Y'), f.importe, f.razon
 	
 //echo $sql;
 
-$resp=mysql_query($sql);
+$resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='texto' width='70%'>
 <tr>
@@ -56,7 +60,7 @@ echo "<br><table align='center' class='texto' width='70%'>
 </tr>";
 
 $indice=1;
-while($datos=mysql_fetch_array($resp)){	
+while($datos=mysqli_fetch_array($resp)){	
 	$nroFactura=$datos[0];
 	$fecha=$datos[1];
 	$importe=$datos[2];

@@ -1,5 +1,5 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli.php");
 require("estilos.inc");
 
 //recogemos variables
@@ -24,17 +24,18 @@ $codSubGrupo=$_POST['cod_subgrupo'];
 $sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', cod_linea_proveedor='$codLinea', 
 cod_grupo='$codGrupo', observaciones='$observaciones', cod_unidad='$codUnidad', codigo_barras='$codigoBarras', color='$color',
 talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo' where codigo_material='$codProducto'";
-$resp_inserta=mysql_query($sql_inserta);
+//echo $sql_inserta;
+$resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 //insertamos los precios
 $sqlDel="delete from precios where codigo_material=$codProducto";
-$respDel=mysql_query($sqlDel);
+$respDel=mysqli_query($enlaceCon,$sqlDel);
 
 $sqlInsertPrecio="insert into precios values($codProducto, 0,$costoProducto,'$globalAgencia')";
-$respInsertPrecio=mysql_query($sqlInsertPrecio);
+$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 
 $sqlInsertPrecio="insert into precios values($codProducto, 1,$precioProducto,'$globalAgencia')";
-$respInsertPrecio=mysql_query($sqlInsertPrecio);
+$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 
 if($resp_inserta){
 		echo "<script language='Javascript'>

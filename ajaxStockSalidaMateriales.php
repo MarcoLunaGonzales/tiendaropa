@@ -6,13 +6,15 @@ $codAlmacen = $_GET["codalm"];
 $indice = $_GET["indice"];
 
 //
-require("conexion.inc");
+require("conexionmysqli.php");
 //SACAMOS LA CONFIGURACION PARA LA  VALIDACION DE STOCKS
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=4";
-$respConf=mysql_query($sqlConf);
-$banderaValidacionStock=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$banderaValidacionStock=$datConf[0];
+//$banderaValidacionStock=mysqli_result($respConf,0,0);
 
-$stockProducto=stockProducto($codAlmacen, $codMaterial);
+$stockProducto=stockProducto($enlaceCon,$codAlmacen, $codMaterial);
 
 if($banderaValidacionStock!=1){
 	echo "<input type='text' id='stock$indice' name='stock$indice' value='-' readonly size='4'>

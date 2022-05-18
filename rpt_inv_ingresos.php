@@ -1,6 +1,6 @@
 <?php
 require('estilos_reportes_almacencentral.php');
-require('conexion.inc');
+require('conexionmysqli.php');
 require('function_formatofecha.php');
 require('funciones.php');
 
@@ -19,9 +19,9 @@ $fecha_fin=$_POST['exaffinal'];
 $fecha_reporte=date("d/m/Y");
 $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 $sql_tipo_ingreso="select nombre_tipoingreso from tipos_ingreso where cod_tipoingreso in ($tipoIngresoString)";
-$resp_tipo_ingreso=mysql_query($sql_tipo_ingreso);
+$resp_tipo_ingreso=mysqli_query($enlaceCon,$sql_tipo_ingreso);
 $nombre_tipoingreso="";
-while($datos_tipo_ingreso=mysql_fetch_array($resp_tipo_ingreso)){
+while($datos_tipo_ingreso=mysqli_fetch_array($resp_tipo_ingreso)){
 	$nombre_tipoingreso=$nombre_tipoingreso."-".$datos_tipo_ingreso[0];
 }
 
@@ -39,7 +39,7 @@ echo "<h1>Reporte Ingresos Almacen</h1>
 	where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen='$rpt_almacen' and i.fecha>='$fecha_ini' and i.fecha<='$fecha_fin' and i.cod_tipoingreso in ($tipoIngresoString) and i.cod_proveedor in ($proveedorString) and i.ingreso_anulado=0 order by i.nro_correlativo";
 	
 	//echo $sql;
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<center><br><table class='texto' width='100%'>";
 	echo "<tr class='textomini'><th>Nro.</th><th>Nota de Entrega</th><th>Fecha</th><th>Tipo de Ingreso</th>
 	<th>Proveedor</th><th>Observaciones</th><th>Estado</th><th>
@@ -48,7 +48,7 @@ echo "<h1>Reporte Ingresos Almacen</h1>
 		</table>
 	</th></tr>";
 	$costoTotal=0;
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$fecha_ingreso=$dat[1];
@@ -63,8 +63,8 @@ echo "<h1>Reporte Ingresos Almacen</h1>
 		$bandera=0;
 		$sql_verifica_movimiento="select s.cod_salida_almacenes from salida_almacenes s, salida_detalle_ingreso sdi
 		where s.cod_salida_almacenes=sdi.cod_salida_almacen and s.salida_anulada=0 and sdi.cod_ingreso_almacen='$codigo'";
-		$resp_verifica_movimiento=mysql_query($sql_verifica_movimiento);
-		$num_filas_movimiento=mysql_num_rows($resp_verifica_movimiento);
+		$resp_verifica_movimiento=mysqli_query($enlaceCon,$sql_verifica_movimiento);
+		$num_filas_movimiento=mysqli_num_rows($resp_verifica_movimiento);
 		if($num_filas_movimiento!=0)
 		{	$estado_ingreso="Con Movimiento";
 		}
@@ -77,13 +77,13 @@ echo "<h1>Reporte Ingresos Almacen</h1>
 		//desde esta parte sacamos el detalle del ingreso
 		$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.costo_almacen from ingreso_detalle_almacenes i
 		where i.cod_ingreso_almacen='$codigo'";
-		$resp_detalle=mysql_query($sql_detalle);
+		$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 		$bandera=0;
 		$detalle_ingreso="";
 		$detalle_ingreso.="<table border=0 cellspacing='0' align='center' class='textomini' width='100%'>";
-		$numFilas=mysql_num_rows($resp_detalle);
+		$numFilas=mysqli_num_rows($resp_detalle);
 		if($numFilas>0){
-			while($dat_detalle=mysql_fetch_array($resp_detalle))
+			while($dat_detalle=mysqli_fetch_array($resp_detalle))
 			{	$cod_material=$dat_detalle[0];
 				$cantidad_unitaria=$dat_detalle[1];
 				$cantidad_unitariaF=redondear2($cantidad_unitaria);
@@ -99,8 +99,8 @@ echo "<h1>Reporte Ingresos Almacen</h1>
 				else
 				{	$sql_nombre_material="select descripcion_material from material_apoyo where codigo_material='$cod_material'";
 				}
-				$resp_nombre_material=mysql_query($sql_nombre_material);
-				$dat_nombre_material=mysql_fetch_array($resp_nombre_material);
+				$resp_nombre_material=mysqli_query($enlaceCon,$sql_nombre_material);
+				$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
 				$nombre_material=$dat_nombre_material[0];
 				$presentacion=$dat_nombre_material[1];
 				$detalle_ingreso.="<tr><td width='40%'>$nombre_material $presentacion</td>
