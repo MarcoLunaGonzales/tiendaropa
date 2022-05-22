@@ -3,7 +3,7 @@ set_time_limit(0);
 
 error_reporting(0);
 
- $enlaceCon=mysqli_connect("p:127.0.0.1","root","4879531gabriela","kidsplace");
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplace1905");
 
 if (mysqli_connect_errno())
 {

@@ -48,16 +48,19 @@
 	$datNombreEmpresa=mysqli_fetch_array($respNombreEmpresa);
 	$nombreEmpresa=$datNombreEmpresa[0];
 
+	/*
 	$sql_tipo_almacen="select codigo, abreviatura from tipos_almacenes where codigo='$global_tipo_almacen'";
 	$resp_tipo_almacen=mysqli_query($enlaceCon,$sql_tipo_almacen);
 	$dat_tipo_almacen=mysqli_fetch_array($resp_tipo_almacen);
 	$nombreTipoAlmacen=$dat_tipo_almacen[1];
+	*/
 
 	date_default_timezone_set('America/La_Paz');
 	$fechaSistemaSesion = date( "d-m-Y" );
 	$horaSistemaSesion = date( "H:i" );
 
 
+	/*
 	$sqlImagen = "select imagen from usuarios_sistema where codigo_funcionario=$global_usuario";
 	$respImagen = mysqli_query($enlaceCon,$sqlImagen);
 	$datImagen = mysqli_fetch_array( $respImagen );
@@ -65,4 +68,6 @@
 	if($imagenLogin==""){
         $imagenLogin="imagenes/user.png";
 	}
+	*/
+
 ?>

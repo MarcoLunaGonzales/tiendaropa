@@ -1,3 +1,8 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+require("funciones.php");
+?>
 
 <html>
     <head>
@@ -1114,9 +1119,6 @@ function editarDatosCliente() {
 		
 </head><body onLoad="funcionInicio();">
 <?php
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
-require("funciones.php");
 
 $cadComboGenero="";
 $consult="select t.`cod_genero`, t.`descripcion` from `generos` t where cod_estadoreferencial=1";
