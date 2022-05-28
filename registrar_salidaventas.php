@@ -2,6 +2,11 @@
 require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
+
+$fecha="";
+$fechaSistemaSesion="";
+$horaSistemaSesion="";
+
 ?>
 
 <html>
@@ -1124,12 +1129,13 @@ $cadComboGenero="";
 $consult="select t.`cod_genero`, t.`descripcion` from `generos` t where cod_estadoreferencial=1";
 
 $rs1=mysqli_query($enlaceCon,$consult);
-while($reg1=mysqli_fetch_array($rs1))
-   {$codTipo = $reg1["cod_genero"];
+while($reg1=mysqli_fetch_array($rs1)){
+		$codTipo = $reg1["cod_genero"];
     $nomTipo = $reg1["descripcion"];
     $cadComboGenero=$cadComboGenero."<option value='$codTipo'>$nomTipo</option>";
-   }
-   $cadComboEdad = "";
+}
+  
+  $cadComboEdad = "";
 $consultaEdad="SELECT c.codigo,c.nombre, c.abreviatura FROM tipos_edades AS c WHERE c.estado = 1 ORDER BY 1";
 $rs=mysqli_query($enlaceCon,$consultaEdad);
 while($reg=mysqli_fetch_array($rs))
