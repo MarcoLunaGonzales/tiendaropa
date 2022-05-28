@@ -19,7 +19,7 @@ if(!function_exists('register_globals')){
 }
 
 //$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
-$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplace1905");
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
 
 if (mysqli_connect_errno())
 {
