@@ -27,7 +27,7 @@ class PuntoVentaTest
 			'tipo' 			=> $siat_tipo,
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
-			'modalidad'     => ServicioSiat::MOD_ELECTRONICA_ENLINEA,
+			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
 			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,
@@ -51,8 +51,9 @@ class PuntoVentaTest
 
 
 			$resCuis = $servCodigos->cuis($codigoPuntoVenta, $codigoSucursal);
-			print_r($resCuis);
+			// print_r($resCuis);
 			$cuis=$resCuis->RespuestaCuis->codigo;
+			// echo "**".$cuis."**";
 
 			$service = new ServicioOperaciones($cuis, null, $config->tokenDelegado);
 			$service->setConfig((array)$config);

@@ -53,20 +53,20 @@ class SiatConfig extends SiatObject
 	}
 	public function validate()
 	{
-		list($class, ) = explode('::', __METHOD__);
+		// list($class, ) = explode('::', __METHOD__);
 		
-		if( !isset($this->tokenDelegado) )
-			throw new Exception("$class ERROR: Nombre de sistema invalido");
-		if( !isset($this->nombreSistema) )
-			throw new Exception("$class ERROR: Nombre de sistema invalido");
-		if( !isset($this->codigoSistema) )
-			throw new Exception("$class ERROR: Codigo de sistema invalido");
-		if( !in_array((int)$this->ambiente, [1, 2]) )
-			throw new Exception("$class ERROR: Codigo de ambiente invalido");
-		if( (int)$this->nit <= 0 )
-			throw new Exception("$class ERROR: NIT invalido");
-		if( !in_array((int)$this->modalidad, [1, 2]) )
-			throw new Exception("$class ERROR: Modalidad invalida");
+		// if( !isset($this->tokenDelegado) )
+		// 	throw new Exception("$class ERROR: Nombre de sistema invalido");
+		// if( !isset($this->nombreSistema) )
+		// 	throw new Exception("$class ERROR: Nombre de sistema invalido");
+		// if( !isset($this->codigoSistema) )
+		// 	throw new Exception("$class ERROR: Codigo de sistema invalido");
+		// if( !in_array((int)$this->ambiente, [1, 2]) )
+		// 	throw new Exception("$class ERROR: Codigo de ambiente invalido");
+		// if( (int)$this->nit <= 0 )
+		// 	throw new Exception("$class ERROR: NIT invalido");
+		// if( !in_array((int)$this->modalidad, [1, 2]) )
+		// 	throw new Exception("$class ERROR: Modalidad invalida");
 		
 	}
 	public function validateExpirations()
