@@ -1,11 +1,10 @@
 <?php
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
-require("funciones.php");
+// require("conexionmysqli.php");
+// require("estilos_almacenes.inc");
+// require("funciones.php");
 
-$fecha="";
-$fechaSistemaSesion="";
-$horaSistemaSesion="";
+require "conexionmysqli.inc";
+
 
 ?>
 
@@ -636,6 +635,16 @@ function buscarMaterial(f, numMaterial){
 	document.getElementById('itemNombreMaterial').focus();	
 	
 }
+
+</script>
+<?php 
+$rpt_territorio=$_COOKIE['global_agencia'];
+$rpt_almacen=$_COOKIE['global_almacen'];
+$fecha_inicio="01/".date("m/Y");
+$fecha_actual=date("d/m/Y");
+?>
+<script>
+
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -773,6 +782,17 @@ function alterna_modo_de_pantalla() {
     }
   }
 }
+
+
+</script>
+<?php
+echo "</head><body onLoad='funcionInicio();'>";
+require("conexionmysqli.inc");
+require("estilos_almacenes.inc");
+require("funciones.php");
+?>
+<script>
+
 
 function validar(f, ventaDebajoCosto){
 	
@@ -1146,8 +1166,8 @@ while($reg=mysqli_fetch_array($rs))
    }
 
 
-if($fecha==""){   
-	$fecha=date("Y-m-d");
+if(!isset($fecha)||$fecha==""){   
+	$fecha=date("d/m/Y");
 }
 
 	$sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
@@ -1188,6 +1208,7 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $datConf=mysqli_fetch_array($respConf);
 $ventaDebajoCosto=$datConf[0];
 //$ventaDebajoCosto=mysql_result($respConf,0,0);
+include("datosUsuario.php");
 
 ?>
 <nav class="mb-4 navbar navbar-expand-lg" style='background:#00ccb6 !important;color:white !important;'>
@@ -1210,17 +1231,20 @@ $ventaDebajoCosto=$datConf[0];
                     </ul>
                 </div>
             </nav>
-
+<?php
+echo "aqui";
+?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" ><!--onsubmit='return checkSubmit();'-->
 <input type="hidden" id="siat_error_valor" name="siat_error_valor">
 	<input type="hidden" id="confirmacion_guardado" value="0">
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
-	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion(11)?>">
+	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
 
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
 <tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#00ccb6 !important; font-size: 16px;">
 <?php
+
 if($tipoDocDefault==2){
 	$razonSocialDefault="-";
 	$nitDefault="0";
@@ -1228,6 +1252,8 @@ if($tipoDocDefault==2){
 	$razonSocialDefault="";
 	$nitDefault="";
 }
+
+
 ?>
 <th>Tipo de Doc</th>
 <th>Nro.Factura</th>
