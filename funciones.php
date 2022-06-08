@@ -44,7 +44,7 @@ function numeroCorrelativoCUFD($enlaceCon,$tipoDoc){
        $bandera=0;
     }
   }
-  return array($nro_correlativo,$bandera);  
+  return array($nro_correlativo,$bandera,'');  
 }
 
 function numeroCorrelativoCUFD2($tipoDoc){
