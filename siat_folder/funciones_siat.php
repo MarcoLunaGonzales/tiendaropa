@@ -180,6 +180,20 @@ function obtenerCantidadPuntosVenta($codTipo){
     }
 }
 
+function deshabilitarCufd($cod_ciudad,$cuis,$fecha_x){
+
+  $valor=0;
+  $sql="UPDATE siat_cufd set estado=0 where cod_ciudad='$cod_ciudad' and fecha ='$fecha_x' and cuis='$cuis' and estado=1";
+  //echo $sql;
+    $fecha="";
+    require dirname(__DIR__)."/conexionmysqli2.inc";    
+    $resp=mysqli_query($enlaceCon,$sql);
+    while($row=mysqli_fetch_array($resp)){ 
+      $fecha=date("d/m/Y H:i:s",strtotime($row[0]));
+    }
+    return $fecha;
+}
+
 function generarCuis($ciudad,$codigoSucursal,$codigoPuntoVenta){
    require_once "Siat/siat_cobofar/siat_cuis.php";  
    $test= new CuisTest();

@@ -36,7 +36,7 @@ class ServicioFacturacion extends ServicioSiat
 		$factura->validate();
 
 		$facturaXml = $this->buildInvoiceXml($factura);
-		var_dump($facturaXml);
+		// var_dump($facturaXml);
 		//$facturaXml = file_get_contents('factura.xml');
 		//print_r($facturaXml);
 		$this->debug($facturaXml, 1);

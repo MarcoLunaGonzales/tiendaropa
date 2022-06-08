@@ -108,7 +108,9 @@ if(isset($_POST['fecha_emision'])){
 
 $tipoVenta=$_POST['tipoVenta'];
 
-$observaciones=$_POST["observaciones"];
+// $observaciones=$_POST["observaciones"];
+$observaciones="-";
+$cuf="";
 
 
 $totalVenta=$_POST["totalVenta"];

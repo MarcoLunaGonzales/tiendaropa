@@ -9,7 +9,8 @@ $resp=mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $cod_impuestos=$dat[0];
 $codigoPuntoVenta=$dat[1];
-
+$cuis=obtenerCuis_vigente_BD($ciudad);
+deshabilitarCufd($ciudad,$cuis,date('Y-m-d'));
 generarCufd($ciudad,$cod_impuestos,$codigoPuntoVenta);
 if(isset($_GET['l'])){
 	?><script type="text/javascript">window.location.href='../../form_ventas.php';</script><?php	
