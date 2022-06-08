@@ -431,9 +431,9 @@ if($sql_inserta==1){
 
 
 				// AGREGAR UN TEMP DEL XML
-    			$archivo = fopen("temp_xml/$cuf.xml","w+b");
-    			fwrite($archivo, $facturaImpuestos[3]);
-    			fclose($archivo);
+    			// $archivo = fopen("temp_xml/$cuf.xml","w+b");
+    			// fwrite($archivo, $facturaImpuestos[3]);
+    			// fclose($archivo);
 			}else{
 				// if(!isset(explode("T",$facturaImpuestos[1])[1])){
 				// 	$fechaEmision=date('Y-m-d\TH:i:s.v'); 
