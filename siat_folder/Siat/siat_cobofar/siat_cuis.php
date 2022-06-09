@@ -26,7 +26,7 @@ class CuisTest
 			'tipo' 			=> $siat_tipo,
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
-			'modalidad'     => ServicioSiat::MOD_ELECTRONICA_ENLINEA,
+			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
 			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,

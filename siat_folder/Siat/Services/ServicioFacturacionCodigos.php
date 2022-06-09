@@ -20,9 +20,9 @@ class ServicioFacturacionCodigos extends ServicioSiat
 				]
 			]
 		];
+
 		list(,$action) = explode('::', __METHOD__);
-		$res = $this->callAction($action, $data);
-		
+		$res = $this->callAction($action, $data);		
 		return $res;
 	}
 	public function cufd($codigoPuntoVenta = 0, $codigoSucursal = 0)

@@ -1,6 +1,4 @@
 <?php
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
-
 header('Content-Type: text/html; charset=UTF-8'); 
 date_default_timezone_set('America/La_Paz');
 
@@ -21,6 +19,9 @@ if(!function_exists('register_globals')){
 }
 
 //$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+
+>>>>>>> 2a73d425331b59b7c7533b74b05f5a02bf7fc4bb
 
 if (mysqli_connect_errno())
 {

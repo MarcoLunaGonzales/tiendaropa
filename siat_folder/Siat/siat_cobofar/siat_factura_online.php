@@ -15,15 +15,15 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFac
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Invoices\InvoiceDetail;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioOperaciones;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionSincronizacion;
-use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionElectronica;
-use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Invoices\ElectronicaCompraVenta;
+// use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionElectronica;
+// use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Invoices\ElectronicaCompraVenta;
 
 
 class FacturaOnline
 {
+
 	protected $endpoint = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
 	protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
-	
 	/**
 	 * 
 	 * @return SiatConfig
@@ -39,7 +39,7 @@ class FacturaOnline
 			'tipo' 			=> $siat_tipo,
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
-			'modalidad'     => ServicioSiat::MOD_ELECTRONICA_ENLINEA,
+			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
 			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,
@@ -50,16 +50,19 @@ class FacturaOnline
 	public static function buildInvoice($codigoPuntoVenta = 0, $codigoSucursal = 0, $modalidad = 0,$dataFact,$fechaemision)
 	{
 		$subTotal = 0;
-		$factura = $modalidad == ServicioSiat::MOD_ELECTRONICA_ENLINEA ? new ElectronicaCompraVenta() : new CompraVenta();
+		// $factura = $modalidad == ServicioSiat::MOD_COMPUTARIZADA_ENLINEA ? new ElectronicaCompraVenta() : new CompraVenta();
+		$factura = new CompraVenta();
 		
 		$codigoSalida=$dataFact['cod_salida_almacenes'];
 		$descuentoVenta=$dataFact['descuento'];
 		require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";
 		$sqlDetalle="select m.codigo_material, sum(s.`cantidad_unitaria`), m.`descripcion_material`, s.`precio_unitario`, 
-        sum(s.`descuento_unitario`), sum(s.`monto_unitario`),m.dir_imagen from `salida_detalle_almacenes` s, `material_apoyo` m where 
+        sum(s.`descuento_unitario`), sum(s.`monto_unitario`) from `salida_detalle_almacenes` s, `material_apoyo` m where 
         m.`codigo_material`=s.`cod_material` and s.`cod_salida_almacen`=$codigoSalida 
         group by s.cod_material
         order by s.orden_detalle";
+
+        // y
         //print_r($enlaceCon);
 		$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 		$montoTotal=0;$descuentoVentaProd=0;$filaIndice=0;
@@ -89,9 +92,9 @@ class FacturaOnline
 
 		    $detalle = new InvoiceDetail();
 			$detalle->cantidad				= $cantUnit;
-			$detalle->actividadEconomica	= '471110';
+			$detalle->actividadEconomica	= '475100';
 			$detalle->codigoProducto		= $codInterno;
-			$detalle->codigoProductoSin		= 621739; //SERVICIOS DE DISEÑO Y DESARROLLO DE TI PARA APLICACIONES
+			$detalle->codigoProductoSin		= 62131; //SERVICIOS DE COMERCIO AL POR MENOR DE HILADOS Y TELAS EN TIENDAS NO ESPECIALIZADAS
 			$detalle->descripcion			= $nombreMat;
 			$detalle->precioUnitario		= $precioUnitFactura;
 			$detalle->montoDescuento		= $descUnit;
@@ -153,46 +156,47 @@ class FacturaOnline
 
 	public function testRecepcionFacturaElectronica($codSalidaFactura,$tipoEmision=1,$ex=false,$online_siat=1)
 	{
+
 		try
 		{
+
 			//datosCompletosFactura
 			require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";
 			//(SELECT codigoPuntoVenta from siat_puntoventa where cod_ciudad=c.cod_ciudad) as codigoPuntoVenta,
 			//(SELECT codigo_control from siat_cufd where cod_ciudad=c.cod_ciudad and fecha=s.fecha and estado=1)codigoControl,
 			//(SELECT cufd from siat_cufd where cod_ciudad=c.cod_ciudad and fecha=s.fecha and estado=1)cufd,
-			$consulta="SELECT s.cod_salida_almacenes,c.cod_ciudad,
+			$consulta="select s.cod_salida_almacenes,c.cod_ciudad,
 			s.siat_codigoPuntoVenta as codigoPuntoVenta,			
 			
-			(SELECT cufd from siat_cufd where codigo=s.siat_codigocufd)cufd_generado,
-			(SELECT codigo_control from siat_cufd where codigo=s.siat_codigocufd)codigoControl_generado,
-			(SELECT cuis from siat_cuis where cod_ciudad=c.cod_ciudad and cod_gestion=YEAR(s.fecha) and estado=1)cuis,
-			(SELECT valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=5 limit 1)municipio,
-			(SELECT valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=4 limit 1)telefono,
+			(select cufd from siat_cufd where codigo=s.siat_codigocufd)cufd_generado,
+			(select codigo_control from siat_cufd where codigo=s.siat_codigocufd)codigoControl_generado,
+			(select cuis from siat_cuis where cod_ciudad=c.cod_ciudad and cod_gestion=YEAR(s.fecha) and estado=1)cuis,
+			(select valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=5 limit 1)municipio,
+			(select valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=4 limit 1)telefono,
 			s.nro_correlativo,
 			c.cod_impuestos,
-			(SELECT valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=3 limit 1)direccion,
+			(select valor from configuracion_facturas where cod_ciudad=c.cod_ciudad and id=3 limit 1)direccion,
 			s.fecha,
 			s.hora_salida,
 			s.razon_social,
 			IFNULL(s.siat_codigotipodocumentoidentidad,1) AS siat_codigotipodocumentoidentidad,
 			s.nit,
 			s.cod_cliente,s.siat_excepcion,s.cod_tipo_doc,s.siat_codigotipoemision,
-			(SELECT codigoClasificador from siat_tipos_pago where cod_tipopago=s.cod_tipopago)codigoMetodoPago,
+			(select codigoClasificador from siat_tipos_pago where cod_tipopago=s.cod_tipopago)codigoMetodoPago,
 			s.monto_total as monto_referencial,
 			s.descuento,
-			(SELECT  CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') FROM funcionarios where codigo_funcionario=s.cod_chofer)as usuario,s.siat_fechaemision,s.siat_complemento,s.siat_codigoRecepcion,s.siat_cuf,(select nro_tarjeta from tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1)as nro_tarjeta,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+			(select  CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') FROM funcionarios where codigo_funcionario=s.cod_chofer)as usuario,s.siat_fechaemision,s.siat_complemento,s.siat_codigoRecepcion,s.siat_cuf,(select nro_tarjeta from tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1)as nro_tarjeta,(select descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
 
-			 FROM salida_almacenes s join almacenes a on a.cod_almacen=s.cod_almacen
+			 from salida_almacenes s join almacenes a on a.cod_almacen=s.cod_almacen
 			join ciudades c on c.cod_ciudad=a.cod_ciudad
 			where s.cod_salida_almacenes=$codSalidaFactura;";
-			
+			 // echo $consulta;
 			$respFactura = mysqli_query($enlaceCon,$consulta);	
-
 			$dataFact = $respFactura->fetch_array(MYSQLI_ASSOC);
 			//echo $consulta;
 			//print_r($dataFact);
-			$privCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'privatekey.pem';
-			$pubCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'CORPORACION_BOLIVIANA_DE_FARMACIAS_SA_CER.pem';		
+			// $privCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'privatekey.pem';
+			// $pubCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'CORPORACION_BOLIVIANA_DE_FARMACIAS_SA_CER.pem';		
 			$config = self::buildConfig();
 			$config->validate();
 
@@ -204,12 +208,11 @@ class FacturaOnline
 
 
 			//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
-			$sqlConf="SELECT descripcionLeyenda FROM siat_sincronizarlistaleyendasfactura where codigoActividad=471110 ORDER BY rand() LIMIT 1;";
-			$respConf=mysqli_query($enlaceCon,$sqlConf);
-			$sqlConf="SELECT descripcionLeyenda FROM siat_sincronizarlistaleyendasfactura where codigoActividad=471110 ORDER BY rand() LIMIT 1;";
-			$respConf=mysqli_query($enlaceCon,$sqlConf);
-			$leyenda=mysqli_result($respConf,0,0);
-
+			// $sqlConf="SELECT descripcionLeyenda FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 ORDER BY rand() LIMIT 1;";
+			// $respConf=mysqli_query($enlaceCon,$sqlConf);
+			// $sqlConf="SELECT descripcionLeyenda FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 ORDER BY rand() LIMIT 1;";
+			// $respConf=mysqli_query($enlaceCon,$sqlConf);
+			// $leyenda=mysqli_result($respConf,0,0);
 
 			if($tipoEmision==2){//tipo emision OFFLINE
 				$tipoFactura=SiatInvoice::FACTURA_DERECHO_CREDITO_FISCAL;
@@ -264,22 +267,36 @@ class FacturaOnline
 				$service = new ServicioFacturacionElectronica($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
 				$service->setConfig((array)$config);
 				$service->codigoControl = $dataFact['codigoControl_generado'];
-				$service->setPrivateCertificateFile($privCert);
-				$service->setPublicCertificateFile($pubCert);
+				//$service->setPrivateCertificateFile($privCert);
+				// $service->setPublicCertificateFile($pubCert);
 				$service->debug = true;
 
 
 				$facturaXml = $service->buildInvoiceXml($factura);
 				return $facturaXml;
 				
-			}else{			
-				$service = new ServicioFacturacionElectronica($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
-				$service->setConfig((array)$config);				
-				$service->codigoControl = $dataFact['codigoControl_generado'];
-				$service->setPrivateCertificateFile($privCert);
-				$service->setPublicCertificateFile($pubCert);
-				$service->debug = true;
-				
+			}else{
+
+			$service = new ServicioFacturacionComputarizada($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
+
+			$service->setConfig((array)$config);			
+			$service->codigoControl = $dataFact['codigoControl_generado'];
+			$service->debug = true;
+
+			// $factura = self::buildInvoice($codigoPuntoVenta, $codigoSucursal);
+			// $factura->cabecera->razonSocialEmisor	= $service->razonSocial;
+			// $factura->cabecera->nitEmisor 	= $service->nit;
+			// $factura->cabecera->cufd		= $service->cufd;
+			// $factura->buildCuf(0, $service->modalidad, $tipoEmision, $tipoFactura, $service->codigoControl);
+			// $cuf=$factura->cabecera->cuf;
+
+
+				// $service = new ServicioFacturacionElectronica($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
+				// $service->setConfig((array)$config);				
+				// $service->codigoControl = $dataFact['codigoControl_generado'];
+				//$service->setPrivateCertificateFile($privCert);
+				// $service->setPublicCertificateFile($pubCert);
+				// $service->debug = true;
 				if($dataFact['cod_tipo_doc']==4){
 					$fechaemision=$dataFact['siat_fechaemision'];
 					$factura = self::buildInvoice($codigoPuntoVenta, $codigoSucursal, $config->modalidad,$dataFact,$fechaemision);
@@ -287,9 +304,6 @@ class FacturaOnline
 					$fechaemision=date('Y-m-d\TH:i:s.v'); 
 					$factura = self::buildInvoice($codigoPuntoVenta, $codigoSucursal, $config->modalidad,$dataFact,$fechaemision);
 				}
-				
-
-
 
 				$factura->cabecera->codigoExcepcion=$dataFact['siat_excepcion'];				
 
@@ -338,8 +352,8 @@ class FacturaOnline
 		// print_r($config);
 		$service->setConfig((array)$config);
 		// $service->codigoControl = $codigoControl;
-		// $service->setPrivateCertificateFile($privCert);
-		// $service->setPublicCertificateFile($pubCert);
+		//// $service->setPrivateCertificateFile($privCert);
+		//$service->setPublicCertificateFile($pubCert);
 		$service->debug = true;
 		// print_r($service);
 

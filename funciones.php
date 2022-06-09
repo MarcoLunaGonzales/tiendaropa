@@ -44,6 +44,38 @@ function numeroCorrelativoCUFD($enlaceCon,$tipoDoc){
        $bandera=0;
     }
   }
+  return array($nro_correlativo,$bandera,'');  
+}
+
+function numeroCorrelativoCUFD2($tipoDoc){
+	require("conexionmysqli2.inc");
+	$globalCiudad=$_COOKIE['global_agencia'];
+	$globalAlmacen=$_COOKIE['global_almacen'];	 
+
+  $fechaActual=date("Y-m-d");
+  $sqlCufd="select cufd FROM siat_cufd where cod_ciudad='$globalCiudad' and estado=1 and fecha='$fechaActual'";
+	// echo $sqlCufd;
+  $respCufd=mysqli_query($enlaceCon,$sqlCufd);
+  $cufd=mysqli_result($respCufd,0,0);
+  $nro_correlativo="CUFD INCORRECTO / VENCIDO";$bandera=1;
+
+  $anioActual=date("Y");
+	$sqlCuis="select cuis FROM siat_cuis where cod_ciudad='$globalCiudad' and estado=1 and cod_gestion='$anioActual'";
+  $respCuis=mysqli_query($enlaceCon,$sqlCuis);
+  $cuis=mysqli_result($respCuis,0,0);
+  if($cuis==""){
+  		$nro_correlativo="CUIS INCORRECTO / VENCIDO";$bandera=1;	
+  } 
+  //$nro_correlativo.=" CUIS".$cufd; 
+  if($cufd!=""&&$cuis!=""){
+    $sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
+				and siat_cuis='$cuis' and cod_almacen='$globalAlmacen' ";				
+				$resp=mysqli_query($enlaceCon,$sql);
+    while($row=mysqli_fetch_array($resp)){  
+       $nro_correlativo=$row[0];   
+       $bandera=0;
+    }
+  }
   return array($nro_correlativo,$bandera);  
 }
 

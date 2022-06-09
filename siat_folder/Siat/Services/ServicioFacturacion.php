@@ -23,6 +23,8 @@ class ServicioFacturacion extends ServicioSiat
 	public function recepcionFactura(SiatInvoice $factura, $tipoEmision = SiatInvoice::TIPO_EMISION_ONLINE, $tipoFactura = SiatInvoice::FACTURA_DERECHO_CREDITO_FISCAL)
 	{
 		//echo "jajaja";
+		error_reporting(E_ALL);
+		ini_set('display_errors', '1');
 		$factura->cabecera->razonSocialEmisor	= $this->razonSocial;
 		$factura->cabecera->nitEmisor 	= $this->nit;
 		$factura->cabecera->cufd		= $this->cufd;
@@ -34,6 +36,7 @@ class ServicioFacturacion extends ServicioSiat
 		$factura->validate();
 
 		$facturaXml = $this->buildInvoiceXml($factura);
+		// var_dump($facturaXml);
 		//$facturaXml = file_get_contents('factura.xml');
 		//print_r($facturaXml);
 		$this->debug($facturaXml, 1);
