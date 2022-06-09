@@ -72,7 +72,7 @@ require("../../funcion_nombres.php");
 echo "<link rel='stylesheet' type='text/css' href='../../stilos.css'/>";
 
 $codProveedor=$_GET['codProveedor'];
-$nombreProveedor=nombreProveedor($codProveedor);
+$nombreProveedor=nombreProveedor($enlaceCon,$codProveedor);
 
 echo "<center>";
 echo "<h1>Lineas de Distribuidor <br> $nombreProveedor</h1>";

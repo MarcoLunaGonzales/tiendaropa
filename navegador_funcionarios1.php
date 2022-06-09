@@ -2,6 +2,7 @@
 
 	require("conexionmysqli.php");
 	require("estilos_almacenes.inc");
+	
 	$sql="select cod_ciudad,descripcion from ciudades order by descripcion";
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Registro General de Funcionarios</h1>";

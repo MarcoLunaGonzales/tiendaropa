@@ -1,11 +1,14 @@
+
+
 .div-center{
         margin: 0 auto !important; /* Added */
         float: none !important; /* Added */
         margin-bottom: 10px !important; /* Added */
 }
 .codigo-barras{
-    width: 400px;
-    height:65px;
+    padding-left: 20px;
+    width: 50%;
+    height:50px;
 }
 .codigo-barras-sm{
     width: 200px;
@@ -27,14 +30,21 @@
 }
 
 .mensaje-codigo-barras{
-    padding-top: 12px;
-    color: #2583C2;
-    font-size: 12px;
+    position: absolute;
+    right:0;
+    top:150px;
+    font: bold 90% monospace;
+    padding-top: 0px;
+    padding-right: 20px;
+    background:#fff;
+    color: #616463;
+    font-size: 16px;
     text-align: center;
     font-weight: bold;
 }
 .form-codigo-barras{
-   width: 390px;
+   float: left;
+   width: 400px;
    height: 40px;
    font-size: 18px;
    text-align: center;
@@ -77,8 +87,8 @@ h1 {
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
     font-family: Verdana;
-	color: #585858;
-	text-align: center;
+    color: #585858;
+    text-align: center;
 }
 
 h2 {
@@ -89,16 +99,16 @@ h2 {
     -webkit-margin-start: 0px;
     -webkit-margin-end: 0px;
     font-family: Verdana;
-	color: #585858;
-	text-align: center;
+    color: #585858;
+    text-align: center;
 }
 
 table {
     *border-collapse: collapse; /* IE7 and lower */
     border-spacing: 0;
     width: 85%;    
-	font-family: Verdana, sans-serif, Arial;
-	font-size:9pt;
+    font-family: Verdana, sans-serif, Arial;
+    font-size:9pt;
 }
 
 .zebra td, .zebra th {
@@ -170,21 +180,21 @@ table {
 
 /*.texto {
 font-family: sans-serif, Arial;
-	font-size: 8pt;
-	color:#000000;
+    font-size: 8pt;
+    color:#000000;
 
 }*/
 .textoMsj {
-	font-family: sans-serif, Arial;
-	font-size: 13pt;
-	color:#5F7BA9;
+    font-family: sans-serif, Arial;
+    font-size: 13pt;
+    color:#5F7BA9;
 
 }
 /*.textotabla{
-	font-family: sans-serif, Arial;
-	font-size: 10pt;
-	color: #5F7BA9;
-	background: #EAF7FD
+    font-family: sans-serif, Arial;
+    font-size: 10pt;
+    color: #5F7BA9;
+    background: #EAF7FD
 }*/
 .texto td, .texto th {
     padding: 10px;
@@ -256,64 +266,64 @@ font-family: sans-serif, Arial;
 
 
 a:link {
-	font-family: Verdana, Arial;
-	font-size: 12pt;
-	color:#BF360C;
-	text-decoration: none;
+    font-family: Verdana, Arial;
+    font-size: 12pt;
+    color:#BF360C;
+    text-decoration: none;
 }
 
 a:visited {
-	font-family: Verdana, Arial;
-	font-size: 12pt;
-	color:#BF360C;
-	text-decoration: none;
+    font-family: Verdana, Arial;
+    font-size: 12pt;
+    color:#BF360C;
+    text-decoration: none;
 }
 a:hover {
-	font-family: Verdana, Arial;
-	font-size: 12pt;
-	color:#004D40;
-	text-decoration: underline;
+    font-family: Verdana, Arial;
+    font-size: 12pt;
+    color:#004D40;
+    text-decoration: underline;
 }
 a:active {
-	font-family: Verdana, Arial;
-	font-size: 12pt;
-	color:#b71c1c;
-	text-decoration: none;
+    font-family: Verdana, Arial;
+    font-size: 12pt;
+    color:#b71c1c;
+    text-decoration: none;
 }
 .textotit {
-	font-family: Verdana;
-	font-size: 14pt;
-	color: #585858;
+    font-family: Verdana;
+    font-size: 14pt;
+    color: #585858;
 }
 .textomediano{
-	font-family: sans-serif, Arial;
-	font-size: 8pt;
-	color: #000000;
+    font-family: sans-serif, Arial;
+    font-size: 8pt;
+    color: #000000;
 }
 .textomediano td, .textomediano th {
     padding: 2px;
     border-bottom: 1px solid #000000;    
-	border-right: 1px solid #000000;    
+    border-right: 1px solid #000000;    
 }
 .textomini {
-	font-family: sans-serif, Arial;
-	font-size: 7pt;
-	color: #000000;
+    font-family: sans-serif, Arial;
+    font-size: 7pt;
+    color: #000000;
 }
 .textosupermini {
-	font-family: sans-serif, Arial;
-	font-size: 6pt;
-	color: #000000;
+    font-family: sans-serif, Arial;
+    font-size: 6pt;
+    color: #000000;
 }
 .textograndenegro {
-	font-family: Verdana;
-	font-size: 12pt;
-	color: #585858;
+    font-family: Verdana;
+    font-size: 12pt;
+    color: #585858;
 }
 .textomedianonegro {
-	font-family: Verdana;
-	font-size: 12pt;
-	color: #585858;
+    font-family: Verdana;
+    font-size: 12pt;
+    color: #585858;
 }
 .textosmallnegro {
     font-family: Verdana;
@@ -321,26 +331,26 @@ a:active {
     color: #585858;
 }
 .textogranderojo {
-	font-family: Verdana;
-	font-size: 17pt;
-	color: #CD5C5C;
+    font-family: Verdana;
+    font-size: 17pt;
+    color: #CD5C5C;
 }
 
 .textomedianorojo {
-	font-family: Verdana;
-	font-size: 14pt;
-	color: #CD5C5C;
+    font-family: Verdana;
+    font-size: 14pt;
+    color: #CD5C5C;
 }
 .boton
 {
-	text-decoration: none;
+    text-decoration: none;
     padding: 10px;
     font-weight: 600;
     font-size: 12px;
     color: #ffffff;
-    background-color: #0097A7;
+    background-color: #E7A802;
     border-radius: 3px;
-    border: 2px solid #0097A7;
+    border: 2px solid #E7A802;
 }
 .boton:hover{
     color: #000000;
@@ -348,7 +358,7 @@ a:active {
   }
 .boton2
 {
-	text-decoration: none;
+    text-decoration: none;
     padding: 10px;
     font-weight: 600;
     font-size: 12px;
@@ -472,7 +482,7 @@ a:active {
 }
 .boton2peque
 {
-	text-decoration: none;
+    text-decoration: none;
     padding: 5px;
     font-weight: 600;
     font-size: 12px;
@@ -501,41 +511,41 @@ a:active {
     background-repeat:  no-repeat;
 }
 .subtotal {
-	font-family: Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	color: #000000;
-	line-height: 15px;
-	background-color: #dddddd;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    color: #000000;
+    line-height: 15px;
+    background-color: #dddddd;
 }
 .total {
-	font-family: Verdana, Helvetica, sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-	color: #000000;
-	line-height: 15px;
-	background-color: #99ccff;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    color: #000000;
+    line-height: 15px;
+    background-color: #99ccff;
 }
 .divBotones{
-	width: 600px;
-	height: 40px;
-	align: left;
-	border: 2px;
-	margin-left: 150px;
-	padding: 20px;
+    width: 600px;
+    height: 40px;
+    align: left;
+    border: 2px;
+    margin-left: 150px;
+    padding: 20px;
 }
 
 #i_div0_0 a, #i_txt0_0 {
-	color: #000;
-	font: "Times New Roman";
-	text-decoration: none
+    color: #000;
+    font: "Times New Roman";
+    text-decoration: none
 }
 #i_div0_0 a:hover {
-	color: #999495;
+    color: #999495;
 }
 #i_txt0_0 {
-	font-weight: bold;
-	font-size: 11px;
+    font-weight: bold;
+    font-size: 11px;
 }
 .inputnumber{
   width: 6em;

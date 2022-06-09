@@ -38,6 +38,7 @@
 		$email=$dat[9];
 		$agencia=$dat[10];
 		$estado=$dat[11];
+		$tipofuncionario=$dat[12];
 		$exafinicial="$fecha_nac[8]$fecha_nac[9]/$fecha_nac[5]$fecha_nac[6]/$fecha_nac[0]$fecha_nac[1]$fecha_nac[2]$fecha_nac[3]";
 	}
 	echo "<h1>Editar Datos de Funcionario</h1>";
@@ -78,7 +79,7 @@
 			}
 	echo "</select></td>";
 	echo "</tr>";
-	echo "<tr><th>Email</th><th>Agencia (*)</th><th>Estado</th><th></th></tr>";
+	echo "<tr><th>Email</th><th>Agencia (*)</th><th>Tipo</th><th>Estado</th><th></th></tr>";
 	echo "<tr>";
 	echo "<td align='center'><input type='text' name='email' class='texto' value='$email'></td>";
 	echo "<td align='center'><select name='agencia' class='texto'>";
@@ -91,6 +92,24 @@
 				}
 				else
 				{	echo "<option value='$cod_ciudad'>$descripcion</option>";
+				}
+
+			}
+	echo "</select></td>";
+	echo "<td align='center'><select name='tipoFuncionario' id='tipoFuncionario'  class='texto'>";
+			$sql_tipofuncio=mysqli_query($enlaceCon,"select cod_tipofuncionario,nombre_tipofuncionario,abrev_tipofuncionario,
+			estado from tipos_funcionarios where estado=1 order by cod_tipofuncionario asc");
+			while($dat_tipofuncio=mysqli_fetch_array($sql_tipofuncio))
+			{	$cod_tipofuncionario=$dat_tipofuncio[0];
+				$nombre_tipofuncionario=$dat_tipofuncio[1];
+				$abrev_tipofuncionario=$dat_tipofuncio[2];
+				
+				
+				if($tipofuncionario==$cod_tipofuncionario)
+				{	echo "<option value='$cod_tipofuncionario' selected>$abrev_tipofuncionario - $nombre_tipofuncionario</option>";
+				}
+				else
+				{	echo "<option value='$cod_tipofuncionario'>$abrev_tipofuncionario - $nombre_tipofuncionario</option>";
 				}
 
 			}

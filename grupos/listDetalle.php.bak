@@ -5,7 +5,7 @@
 	require_once("../funcion_nombres.php");
 	
 	$codMaestro=$_GET['codigo'];
-	$nameMaestro=obtenerNombreMaestro($table,$codMaestro);
+	$nameMaestro=obtenerNombreMaestro($enlaceCon,$table,$codMaestro);
 
 
 echo "<script language='Javascript'>

@@ -1,9 +1,8 @@
 <?php
-
 /**
- * Desarrollado por Datanet-Bolivia.
+ * Desarrollado por Minka Software-Bolivia.
  * @autor: Marco Antonio Luna Gonzales
- * Sistema de Visita Médica
+ * Sistema de TuAdmin
  * * @copyright 2006
 */
 	echo "<script language='Javascript'>
@@ -58,8 +57,18 @@
 			}
 	echo "</select></td>";
 	echo "</tr>";
-	echo "<tr><th>Email</th><th>Agencia (*)</th><th></th><th></th></tr>";
+	echo "<tr><th>Tipo Funcionario</th><th>Email</th><th>Agencia (*)</th><th></th><th></th></tr>";
 	echo "<tr>";
+	echo "<td align='center'><select name='tipoFuncionario' id='tipoFuncionario' class='texto'>";
+			$sql_tipofuncio=mysqli_query($enlaceCon,"select cod_tipofuncionario,nombre_tipofuncionario, abrev_tipofuncionario,estado 
+			from tipos_funcionarios where estado=1 order by cod_tipofuncionario asc");
+			while($dat_funcio=mysqli_fetch_array($sql_tipofuncio))
+			{	$cod_tipofuncionario=$dat_funcio[0];
+				$tipofuncionario=$dat_funcio[1];
+				$abrev_tipofuncionario=$dat_funcio[2];
+				echo "<option value='$cod_tipofuncionario'>$abrev_tipofuncionario - $tipofuncionario</option>";
+			}
+	echo "</select></td>";
 	echo "<td align='center'><input type='text' name='email' class='texto'></td>";
 	echo "<td align='center'><select name='agencia' class='texto'>";
 			$sql_agencia=mysqli_query($enlaceCon,"select cod_ciudad,descripcion from ciudades order by descripcion asc");

@@ -202,7 +202,7 @@ $consulta = "
    $consulta = $consulta."ORDER BY i.nro_correlativo DESC limit 0, 50 ";
 //echo "MAT:$sql";
 $resp = mysqli_query($enlaceCon,$consulta);
-echo "<h1>Ingreso de Materiales</h1>";
+echo "<h1>Ingreso de Productos</h1>";
 
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 

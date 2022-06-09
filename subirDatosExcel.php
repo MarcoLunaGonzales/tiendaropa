@@ -4,11 +4,11 @@ require_once('lib/importar_excel/SpreadsheetReader.php');
 require("funcionesImportacion.php");
 
 
-function borrarIngresoAlmacen($codigo){
+function borrarIngresoAlmacen($enlaceCon,$codigo){
   $consulta="DELETE FROM ingreso_ingreso_almacenes where cod_ingreso_almacen=$codigo";
-  $sql_inserta = mysql_query($consulta);
+  $sql_inserta = mysqli_query($enlaceCon,$consulta);
   $consulta="DELETE FROM ingreso_detalle_almacenes where cod_ingreso_almacen=$codigo";
-  $sql_inserta = mysql_query($consulta);
+  $sql_inserta = mysqli_query($enlaceCon,$consulta);
 }
 
 function verificarFecha($x) {
@@ -112,7 +112,7 @@ $sqlInserts=[];  $lista_documento=[];
                     $imagen=$Row[11]."";
                 }
                 
-                $cod_material=devuelveIdProducto($barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio);
+                $cod_material=devuelveIdProducto($enlaceCon,$barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio);
                 //CODIGO DEVUELTO
 				//echo "codigo devuelto.$cod_material<br>";	
 				$fechaVencimiento='1900-01-01';
@@ -171,7 +171,7 @@ if($filasErroneas>0){
   showAlertSuccessErrorFilasLibreta("../".$urlOficial,$htmlInforme);  */
 
   $mensaje='Se encontraron algunos errores';
-  borrarIngresoAlmacen($codigo);
+  borrarIngresoAlmacen($enlaceCon,$codigo);
 }else{
   if($index>0){ // para registrar solo si hay filas en el archivo
     if(count($lista_documento) > count(array_unique($lista_documento))){
@@ -179,12 +179,12 @@ if($filasErroneas>0){
        //$htmlInforme='<b>Filas repetidas: El numero de Referencia / Documento se repite en algunas filas</b>';
        //showAlertSuccessErrorFilasLibreta("../".$urlOficial,$htmlInforme);
        $mensaje='Filas Repetidas';
-       borrarIngresoAlmacen($codigo);  
+       borrarIngresoAlmacen($enlaceCon,$codigo);  
     }else{
 		$banderaInsercionDetalle=0;
       for ($ins=0; $ins<count($sqlInserts)+1 ; $ins++) { 
-		//echo $sqlInserts[$ins]."<br>";
-        $sql_inserta2 = mysql_query($sqlInserts[$ins]);
+		echo $sqlInserts[$ins]."<br>";
+        $sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
 		
       }
       if($sql_inserta2==1){
@@ -192,13 +192,13 @@ if($filasErroneas>0){
       	//showAlertSuccessError(true,"../".$urlOficial);	
       }else{
         $mensaje='EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.';
-        borrarIngresoAlmacen($codigo);
+        borrarIngresoAlmacen($enlaceCon,$codigo);
 	     //showAlertSuccessError(false,"../".$urlOficial);
       }
     }
   }else{
     $mensaje='El archivo está vacío';
-    borrarIngresoAlmacen($codigo);
+    borrarIngresoAlmacen($enlaceCon,$codigo);
   }
 }
 

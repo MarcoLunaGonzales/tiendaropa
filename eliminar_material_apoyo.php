@@ -1,6 +1,7 @@
 <?php
 
 	require("conexionmysqli.php");
+	require("estilos.inc");
 	//require('estilos_inicio_adm.inc');
 	$vector=explode(",",$datos);
 	$n=sizeof($vector);

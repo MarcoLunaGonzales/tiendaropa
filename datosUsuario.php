@@ -47,6 +47,17 @@
 	$respNombreEmpresa=mysqli_query($enlaceCon,$sqlNombreEmpresa);
 	$datNombreEmpresa=mysqli_fetch_array($respNombreEmpresa);
 	$nombreEmpresa=$datNombreEmpresa[0];
+	
+	$sqlNombreTiendaRopa="select valor_configuracion from configuraciones where id_configuracion=12";
+	
+	$respNombreTiendaRopa=mysqli_query($enlaceCon,$sqlNombreTiendaRopa);
+	$datNombreTiendaRopa=mysqli_fetch_array($respNombreTiendaRopa);
+	$nombreTiendaRopa=$datNombreTiendaRopa[0];
+	
+	$sqlLogoTiendaRopa="select valor_configuracion from configuraciones where id_configuracion=13";	
+	$respLogoTiendaRopa=mysqli_query($enlaceCon,$sqlLogoTiendaRopa);
+	$datLogoTiendaRopa=mysqli_fetch_array($respLogoTiendaRopa);
+	$logoTiendaRopa=$datLogoTiendaRopa[0];
 
 	/*
 	$sql_tipo_almacen="select codigo, abreviatura from tipos_almacenes where codigo='$global_tipo_almacen'";

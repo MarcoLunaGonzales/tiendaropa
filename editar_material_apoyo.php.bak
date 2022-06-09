@@ -44,12 +44,21 @@ $codProducto=$_GET['cod_material'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
 $sqlEdit="select m.codigo_material, m.descripcion_material, m.estado, m.cod_linea_proveedor, m.cod_grupo, m.cod_tipomaterial, 
-	m.observaciones, m.cod_unidad, m.codigo_barras, m.color, m.talla, m.cod_marca, m.cod_subgrupo from material_apoyo m where m.codigo_material='$codProducto'";
+	m.observaciones, m.cod_unidad, m.codigo_barras, m.color, m.talla, m.cod_marca, m.cod_subgrupo,
+	m.codigo2
+	from material_apoyo m where m.codigo_material='$codProducto'";
 $respEdit=mysqli_query($enlaceCon,$sqlEdit);
 while($datEdit=mysqli_fetch_array($respEdit)){
-	$nombreProductoX=$datEdit[0];
-	$descripcionMaterialX=$datEdit[1];
+	$nombreProductoX=$datEdit[1];
+	$estadoMaterialX=$datEdit[2];
 	$codLineaX=$datEdit[3];
+	/// obteniendo Codigo Proveedor
+	$sqlAux="select cod_proveedor from proveedores_lineas where cod_linea_proveedor=$codLineaX";
+	$respAux=mysqli_query($enlaceCon,$sqlAux);
+	$datAux=mysqli_fetch_array($respAux);
+	$proveedor=$datAux[0];
+	/// Fin obteniendo Codigo Proveedor
+	
 	$codGrupoX=$datEdit[4];
 	$codTipoX=$datEdit[5];
 	$observacionesX=$datEdit[6];
@@ -59,6 +68,7 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 	$tallaX=$datEdit[10];
 	$codMarcaX=$datEdit[11];
 	$codSubGrupoX=$datEdit[12];
+	$codigo2X=$datEdit[13];
 }
 
 $sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`='$codProducto'";
@@ -98,7 +108,12 @@ echo "<center><table class='texto'>";
 echo "<tr><th align='left'>Nombre</th>";
 echo "<td align='left'>
 	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' value='$nombreProductoX' required>
-	</td></tr>";
+	</td>
+	<th align='left'>Codigo Externo</th>
+	<td align='left'>
+	<input type='text' class='texto' name='codigo2' size='40' style='text-transform:uppercase;' value='$codigo2X' required>
+	</td>
+	</tr>";
 
 echo "<tr><th align='left'>Código de Barras</th>";
 echo "<td align='left'>
@@ -110,7 +125,7 @@ $sql1="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_
 where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
-		<select name='codLinea' id='codLinea' required>
+		<select name='codLinea' id='codLinea' required onChange='ajaxMarca(this);'>
 		<option value=''></option>";
 		while($dat1=mysqli_fetch_array($resp1))
 		{	$codLinea=$dat1[0];
@@ -140,15 +155,20 @@ echo "<td>
 //echo "</tr>";
 
 echo "<th>Marca</th>";
-$sql1="select m.codigo, m.nombre from marcas m 
-where m.estado=1 order by 2;";
-$resp1=mysqli_query($enlaceCon,$sql1);
-echo "<td>
+$sqlMarca="select codigo, nombre from marcas where estado=1 and codigo in( select codigo from proveedores_marcas where cod_proveedor=$proveedor)
+ order by nombre asc";
+ $respMarca=mysqli_query($enlaceCon,$sqlMarca);
+ if(mysqli_num_rows($respMarca)<=0){
+	 $sqlMarca="select codigo, nombre from marcas where estado=1 order by nombre asc";
+	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+}
+
+echo "<td><div id='divMarca'>
 			<select name='cod_marca' id='cod_marca' required>
 			<option value=''></option>";
-			while($dat1=mysqli_fetch_array($resp1))
-			{	$codigoX=$dat1[0];
-				$nombreX=$dat1[1];
+			while($datMarca=mysqli_fetch_array($respMarca))
+			{	$codigoX=$datMarca[0];
+				$nombreX=$datMarca[1];
 				if($codMarcaX==$codigoX){
 					echo "<option value='$codigoX' selected>$nombreX</option>";					
 				}else{
@@ -156,7 +176,7 @@ echo "<td>
 				}
 			}
 			echo "</select>
-</td>";
+</div></td>";
 echo "</tr>";
 
 echo "<tr><th>Grupo</th>";
@@ -215,7 +235,7 @@ echo "<td align='left'>
 
 echo "<tr><th align='left'>Descripcion</th>";
 echo "<td align='left' colspan='3'>
-	<input type='text' class='texto' name='observaciones' id='observaciones' value='$descripcionMaterialX' size='100' style='text-transform:uppercase;'>
+	<input type='text' class='texto' name='observaciones' id='observaciones' value='$observacionesX' size='100' style='text-transform:uppercase;'>
 	</td>";
 
 echo "<tr><th>Unidad de Manejo</th>";

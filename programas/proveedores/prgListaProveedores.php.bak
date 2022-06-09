@@ -3,12 +3,13 @@
 require("../../conexionmysqli.php");
 require("../../estilos_almacenes.inc");
 
+
 echo "<center>";
 
-echo "<h1>Distribuidores</h1>";
+echo "<h1>Proveedores</h1>";
 echo "<table class='texto'>";
 echo "<tr>";
-echo "<th>&nbsp;</th><th>Nombre</th><th>Direccion</th><th>Telefono 1</th><th>Telefono 2</th><th>Contacto</th><th>Lineas</th>";
+echo "<th>&nbsp;</th><th>Nombre</th><th>Direccion</th><th>Telefono 1</th><th>Telefono 2</th><th>Contacto</th><th>Marcas</th>";
 echo "</tr>";
 $consulta="
     SELECT p.cod_proveedor, p.nombre_proveedor, p.direccion, p.telefono1, p.telefono2, p.contacto
@@ -17,7 +18,7 @@ $consulta="
 ";
 $rs=mysqli_query($enlaceCon,$consulta);
 $cont=0;
-while($reg=mysql_fetch_array($rs))
+while($reg=mysqli_fetch_array($rs))
    {$cont++;
     $codProv = $reg["cod_proveedor"];
     $nomProv = $reg["nombre_proveedor"];
@@ -28,7 +29,21 @@ while($reg=mysql_fetch_array($rs))
     echo "<tr>";
     echo "<td><input type='checkbox' id='idchk$cont' value='$codProv' ></td><td>$nomProv</td><td>$direccion</td><td>$telefono1</td>
 	<td>$telefono2</td><td>$contacto</td>";
-    echo "<td><a href='navegadorLineasDistribuidores.php?codProveedor=$codProv'><img src='../../imagenes/detalle.png' width='40' title='Ver Lineas'></a></td>";
+    echo "<td><table class='texto'><tr><td><a href='proveedorMarcas.php?codProveedor=$codProv'><img src='../../imagenes/etiqueta3.png' width='20'></a></td>";
+
+				echo "<td><table class='texto'>";
+		$sqlProvMarcas=" select pm.codigo, m.nombre, m.abreviatura from proveedores_marcas pm			
+							inner join marcas m on(pm.codigo=m.codigo) where pm.cod_proveedor='".$codProv."' order by m.nombre asc";
+
+			    $respProvMarcas=mysqli_query($enlaceCon,$sqlProvMarcas);
+				while($datProvMarcas=mysqli_fetch_array($respProvMarcas)){
+						$cod_marca=$datProvMarcas['codigo'];
+						$nombre_marca=$datProvMarcas['nombre'];
+						$abrev_marca=$datProvMarcas['abreviatura'];
+					echo "<tr><td>$cod_marca - $abrev_marca - $nombre_marca.</td></tr>";	
+				}	
+			echo"</table></td></tr></table>";
+			echo "</td>";
 	echo "</tr>";
    }
 echo "</table>";
