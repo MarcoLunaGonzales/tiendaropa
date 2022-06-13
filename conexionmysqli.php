@@ -18,8 +18,8 @@ if(!function_exists('register_globals')){
 }else{
 }
 
-//$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+//$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplace_gabriela");
 
 
 if (mysqli_connect_errno())
