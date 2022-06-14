@@ -44,15 +44,17 @@
 <?php
 include("datosUsuario.php");
 ?>
+
 <div id="page">
+
 	<div class="header">
 		<a href="#menu"><span></span></a>
-		TuAdmin - Test
-		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
+		TuAdmin <?php echo $nombreTiendaRopa;?>
+		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
 			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
             <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
 		</div>
-		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 9px; font-weight: bold; color: #fff;">
+		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
 			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]
 		</div>
 	</div>	
@@ -112,8 +114,8 @@ include("datosUsuario.php");
 			</li-->
 			<li><span>Ingresos</span>
 				<ul>
-					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Materiales</a></li>
-					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Materiales en Transito</a></li>
+					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
+					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>

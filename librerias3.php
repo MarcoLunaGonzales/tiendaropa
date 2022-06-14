@@ -38,5 +38,3 @@
   <script src="../../assets/alerts/alerts.js"></script>
 
   <script src="../../assets/alerts/functionsGeneral.js"></script>
-
-      

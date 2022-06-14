@@ -79,7 +79,7 @@ function funModif(codReg,funOkConfirm)
             var cad2=$("select[id=comboproveedor]").val();
             if(cad1!="" && cad2!="") {
                 dlgEsp.setVisible(true);
-				alert ("combotipoingreso="+cad1+"&comboproveedor="+cad2+"&codigo="+codReg);
+				//alert ("combotipoingreso="+cad1+"&comboproveedor="+cad2+"&codigo="+codReg);
                 $.get("programas/ingresos/guardarModifTipoProveIngreso.php","combotipoingreso="+cad1+"&comboproveedor="+cad2+"&codigo="+codReg, function(inf2) {
                     dlgEsp.setVisible(false);
                     funOkConfirm();

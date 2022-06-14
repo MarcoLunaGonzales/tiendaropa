@@ -1,4 +1,7 @@
 <?php
+	require("conexionmysqli.php");
+	require('estilos.inc');
+	require("funciones.php");
 
 echo "<script language='Javascript'>
 		function enviar_nav()
@@ -111,9 +114,7 @@ echo "<script language='Javascript'>
 		
 		</script>";
 		
-	require("conexionmysqli.php");
-	require('estilos.inc');
-	require("funciones.php");
+
 	?><script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="functionsGeneral.js">
 
@@ -132,7 +133,7 @@ echo "<script language='Javascript'>
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen, m.color, m.talla, m.codigo_barras
+		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2
 		from material_apoyo m
 		where m.estado='1' and m.cod_tipomaterial in (1,2)";
 	if($vista==1)
@@ -236,10 +237,10 @@ echo "<script language='Javascript'>
 		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 		<input type='button' value='Duplicar' name='Duplicar' class='boton' onclick='duplicar(this.form)'>
 		<a href='#' class='boton-verde' onclick='mostrarBusqueda()'><i class='fa fa-search'></i></a>
-		</div>";
+		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>Indice</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th>
+	echo "<tr><th>Nro</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th><th>Codigo<br>Externo</th>
 		<th>Marca</th><th>Grupo/SubGrupo</th><th>Color</th><th>Talla</th>
 		<th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
@@ -257,6 +258,7 @@ echo "<script language='Javascript'>
 		$color=$dat[8];
 		$talla=$dat[9];
 		$codigoBarras=$dat[10];
+		$codigo2=$dat[11];
 		
 		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
@@ -273,6 +275,7 @@ echo "<script language='Javascript'>
 		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
 		<input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombreProd</td><td>($codigoBarras) $observaciones</td>
+		<td>$codigo2</td>
 		<td>$tipoMaterial</td>
 		<td>$grupo</td>
 		<td>$color</td>

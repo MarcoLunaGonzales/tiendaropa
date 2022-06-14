@@ -18,8 +18,8 @@ else
 	$codigo_funcionario++;
 }
 //estado=1 es activo, 0 es retirado
-$sql="insert into funcionarios values($codigo_funcionario,'$cargo','$paterno','$materno','$nombres','$fecha_real',
-'$direccion','$telefono','$celular','$email','$agencia',1)";
+$sql="insert into funcionarios values($codigo_funcionario,'".$_GET['cargo']."','".$_GET['paterno']."','".$_GET['materno']."','".$_GET['nombres']."',
+'$fecha_real','".$_GET['direccion']."','".$_GET['telefono']."','".$_GET['celular']."','".$_GET['email']."','".$_GET['agencia']."',1,'".$_GET['tipoFuncionario']."')";
 $resp=mysqli_query($enlaceCon,$sql);
 echo "<script language='Javascript'>
 			alert('Los datos se registraron satisfactoriamente');

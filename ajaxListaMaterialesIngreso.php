@@ -9,11 +9,21 @@ $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
+$global_usuario=$_COOKIE['global_usuario'];
+$codProveedor=$_GET['codProveedor'];
 //$itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $itemsNoUtilizar="0";
+$sqlAux1="select codigo from proveedores_marcas where cod_proveedor=$codProveedor ";
+$respAux1=mysqli_query($enlaceCon,$sqlAux1);
 
-	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion from material_apoyo m where estado=1 
-		and m.codigo_material not in ($itemsNoUtilizar)";
+
+	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion 
+	    from material_apoyo m where estado=1 
+		and m.codigo_material ";
+	if(mysqli_num_rows($respAux1)>=0){
+		$sql.="and m.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
+	}
+	$sql.="and m.cod_marca not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}
@@ -21,6 +31,7 @@ $itemsNoUtilizar="0";
 		$sql=$sql. " and cod_grupo = '$codTipo' ";
 	}
 	$sql=$sql." order by 2";
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);

@@ -87,7 +87,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-	</div>";
+	</div> <br> <br>";
 	
 	
 	echo "<center><table class='texto'>";

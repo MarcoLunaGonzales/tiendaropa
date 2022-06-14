@@ -1,4 +1,6 @@
 <?php
+        require("conexionmysqli.php");
+		require("estilos_almacenes.inc");
 /**
  * Desarrollado por Datanet-Bolivia.
  * @autor: Marco Antonio Luna Gonzales
@@ -74,8 +76,7 @@ echo "<script language='Javascript'>
                         location.href='navegador_funcionarios.php?cod_ciudad=$cod_ciudad&vista='+modo_vista+'';
                 }
                 </script>";
-        require("conexionmysqli.php");
-		require("estilos_almacenes.inc");
+
 		
 		$cod_ciudad=$_GET['cod_ciudad'];
 		
@@ -86,9 +87,10 @@ echo "<script language='Javascript'>
         echo "<form method='post' action=''>";
         //esta parte saca el ciclo activo
         $sql="select f.codigo_funcionario,c.cargo,f.paterno,f.materno,f.nombres,f.fecha_nac,f.direccion,f.telefono, f.celular,f.email,
-		ci.descripcion,f.estado
-        from funcionarios f, cargos c, ciudades ci
-        where f.cod_cargo=c.cod_cargo and f.cod_ciudad=ci.cod_ciudad and f.cod_ciudad='$cod_ciudad' and f.estado='1' order by c.cargo,f.paterno";
+		ci.descripcion,f.estado, f.cod_tipofuncionario,tf.nombre_tipofuncionario
+        from funcionarios f, cargos c, ciudades ci, tipos_funcionarios tf
+        where f.cod_cargo=c.cod_cargo and f.cod_ciudad=ci.cod_ciudad and f.cod_ciudad='$cod_ciudad' and f.estado='1' 
+		and f.cod_tipofuncionario=tf.cod_tipofuncionario order by c.cargo,f.paterno";
 
 		$resp=mysqli_query($enlaceCon,$sql);
         echo "<h1>Registro de Funcionarios<br>Territorio $nombre_ciudad</h1>";
@@ -96,9 +98,9 @@ echo "<script language='Javascript'>
 		echo "<center><table border='0' class='textomini'><tr><th>Leyenda:</th><th>Funcionarios Retirados</th><td bgcolor='#ff6666' width='30%'></td></tr></table></center><br>";
 
         echo "<center><table class='texto'>";
-		echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th>Cargo</th><th>Nombre</th>
+		echo "<tr><th>&nbsp;</th><th>&nbsp;</th><th>Tipo</th><th>Cargo</th><th>Nombre</th>
 				<th>E-mail</th><th>Celular</th><th>Alta en sistema</th>
-				<th>Dar Alta</th><th>Restablecer Clave</th></tr>";
+				<th>Dar Alta</th><th>Restablecer<br> Clave</th><th>Proveedor</th></tr>";
         $indice_tabla=1;
 	while($dat=mysqli_fetch_array($resp))
     {
@@ -115,6 +117,8 @@ echo "<script language='Javascript'>
 		$email=$dat[9];
 		$ciudad=$dat[10];
 		$estado=$dat[11];
+		$cod_tipofuncionario=$dat[12];
+		$nombre_tipofuncionario=$dat[13];
 
 		$sql_alta_sistema="select * from usuarios_sistema where codigo_funcionario='$codigo'";
 		$resp_alta_sistema=mysqli_query($enlaceCon,$sql_alta_sistema);
@@ -128,28 +132,73 @@ echo "<script language='Javascript'>
 		if($estado==1)
 		{	if($filas_alta==0)
 				{
-						$alta_sistema="<img src='imagenes/no.png' width='40'>";  
+						//$alta_sistema="<img src='imagenes/no.png' width='40'>";  
+						$alta_sistema="NO";  
 						$dar_alta="<a href='alta_funcionario_sistema.php?codigo_funcionario=$codigo&cod_territorio=$cod_ciudad'>
-						<img src='imagenes/go2.png' width='40'></a>";
+						<img src='imagenes/accesoSistema4.png'  width='35'></a>";
 				}
 				else
 				{
-						$alta_sistema="<img src='imagenes/si.png' width='40'>";
+						//$alta_sistema="<img src='imagenes/si.png' width='40'>";
+						$alta_sistema="SI";  
 						$dar_alta="-";
 						$restablecer="<a href='restablecer_contrasena.php?codigo_funcionario=$codigo&cod_territorio=$cod_ciudad'>
-						<img src='imagenes/go2.png' width='40'></a>";
+						<img src='imagenes/reestablecerPass.png' width='35'></a>";
 				}
 		}
 
 	   
 
 		echo "<tr bgcolor='$fondo_fila'><td align='center'>$indice_tabla</td>
-			<td align='center'><input type='checkbox' name='cod_contacto' value='$codigo'></td>
-				<td>&nbsp;$cargo</td><td>$nombre_f</td>
+			<td align='center'>
+			<input type='checkbox' name='cod_contacto' value='$codigo'></td>
+			<td>&nbsp;$nombre_tipofuncionario</td><td>&nbsp;$cargo</td><td>$nombre_f</td>
 			<td align='left'>&nbsp;$email</td><td align='left'>&nbsp;$cel</td>
 			<td align='center'>$alta_sistema</td>
 			<td align='center'>$dar_alta</td>
-			<td align='center'>$restablecer</td></tr>";
+			<td align='center'>$restablecer</td>";
+			if ($cod_tipofuncionario<>1){
+				
+			echo "<td align='center'>
+			<center><a href='vincular_proveedor.php?codigo_funcionario=$codigo&cod_territorio=$cod_ciudad'>
+			<img src='imagenes/proveedor8.png' width='30'></a></center>";			
+			echo "<table border='0'  >";
+			
+				$sqlFunProv=" select fp.cod_proveedor, p.nombre_proveedor from funcionarios_proveedores  fp 
+							inner join proveedores p on (fp.cod_proveedor=p.cod_proveedor)
+							where codigo_funcionario='".$codigo."'";
+			    $respFunProv=mysqli_query($enlaceCon,$sqlFunProv);
+				while($dat=mysqli_fetch_array($respFunProv)){
+						$cod_proveedor=$dat['cod_proveedor'];
+						$nombre_proveedor=$dat['nombre_proveedor'];
+					echo "<tr><td>".$nombre_proveedor."</td>";
+					///////////
+					echo "<td>
+					<table class='texto'>
+					<tr>
+					<td><img src='imagenes/etiqueta3.png' width='20'></td>";
+
+				echo "<td>";
+		$sqlProvMarcas=" select pm.codigo, m.nombre, m.abreviatura from proveedores_marcas pm			
+							inner join marcas m on(pm.codigo=m.codigo) where pm.cod_proveedor='".$cod_proveedor."' order by m.nombre asc";
+
+			    $respProvMarcas=mysqli_query($enlaceCon,$sqlProvMarcas);
+				while($datProvMarcas=mysqli_fetch_array($respProvMarcas)){
+						$cod_marca=$datProvMarcas['codigo'];
+						$nombre_marca=$datProvMarcas['nombre'];
+						$abrev_marca=$datProvMarcas['abreviatura'];
+					echo "$cod_marca - $abrev_marca - $nombre_marca<br>";	
+				}	
+			echo"</td></tr></table>";
+			echo "</td>";
+					////////
+					echo "</tr>";	
+				}	
+			echo"</table>";
+			}else{
+				echo "<td align='center'>&nbsp;</td>";
+			}
+		echo "</tr>";
 		$indice_tabla++;
 	}
 		

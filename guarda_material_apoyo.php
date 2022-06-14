@@ -6,6 +6,7 @@ require("estilos.inc");
 $globalAgencia=$_COOKIE['global_agencia'];
 
 $nombreProducto=$_POST['material'];
+$codigo2=$_POST['codigo2'];
 $nombreProducto = strtoupper($nombreProducto);
 $codLinea=$_POST['codLinea'];
 $codGrupo=$_POST['cod_grupo'];
@@ -38,8 +39,10 @@ $codigo=$dat[0];
 //$codigo=mysql_result($resp,0,0);
 
 $sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial,
-cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla) values ($codigo,'$nombreProducto','1','$codLinea','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras','$codSubGrupo','$codMarca','$color','$talla')";
-echo $sql_inserta;
+cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2
+) values ($codigo,'$nombreProducto','1','$codLinea','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
+'$codSubGrupo','$codMarca','$color','$talla','$codigo2')";
+//echo $sql_inserta;
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
 //insertamos los precios
@@ -50,8 +53,7 @@ $respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 $sqlInsertPrecio="insert into precios values($codigo, 1,$precioProducto,'$globalAgencia')";
 $respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 
-
-/*if($resp_inserta){
+if($resp_inserta){
 		echo "<script language='Javascript'>
 			alert('Los datos fueron insertados correctamente.');
 			location.href='navegador_material.php';
@@ -61,7 +63,7 @@ $respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 			alert('ERROR EN LA TRANSACCION. COMUNIQUESE CON EL ADMIN.');
 			history.back();
 			</script>";
-}*/
+}
 	
 
 ?>

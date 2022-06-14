@@ -41,5 +41,5 @@ echo "<div class='divBotones'>
 </div>";
 
 echo "</form>";
-echo "<center><table border='0' width='40%'><tr><th>Nota: La contraseña debe tener al menos 6 caracteres.</th></tr></table></center>";
+echo "<br/><center><table border='0' width='40%'><tr><th>Nota: La contraseña debe tener al menos 6 caracteres.</th></tr></table></center>";
 ?>

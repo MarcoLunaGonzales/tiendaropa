@@ -88,7 +88,7 @@ echo "<script language='Javascript'>
 	<th>Nombre</th>
 	<th>Descuento</th>
 	</tr>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{
 		$codigo=$dat[0];
 		$nombre=$dat[1];

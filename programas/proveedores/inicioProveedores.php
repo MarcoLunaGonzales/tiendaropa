@@ -19,14 +19,18 @@ function listadoProveedores() {
 }
 //procesos
 function frmAdicionar() {
+	
     cargarPnl("#pnl00","frmProveedorAdicionar.php","");
 }
+
 function frmModificar() {
+	alert("idtotal"+$("#idtotal").val());
     var total=$("#idtotal").val();
     var tag,sel,cod,c=0;
     for(var i=1;i<=total;i++) {
         tag=$("#idchk"+i);
         sel=tag.attr("checked");
+		
         if(sel==true) {
             cod=tag.val(); c++;
         }
@@ -39,6 +43,7 @@ function frmModificar() {
         alert("Seleccione un elememnto para editar.");
     }
 }
+
 function frmEliminar() {
     var total=$("#idtotal").val();
     var tag,sel,cods="0",c=0;

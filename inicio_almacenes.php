@@ -1,28 +1,28 @@
 <style>
-	/*.centrarimagen
+	.centrarimagen
 	{
 		position: absolute;
-		top:50%;
+		top:30%;
 		left:50%;
 		width:560px;
 		margin-left:-280px;
 		height:370px;
 		margin-top:-185px;
 		padding:5px;
-	}*/
+	}
 	.centrarimagen
-	{
+	/*{
 		position: absolute;
 		top:-20px;
-		width:100%;
+		width:80%;
 		/*margin-left:-280px;*/
 		height:100vh;
 		/*margin-top:-185px;*/
 		margin:0px;
-		height:100%;
+		height:80%;
 		/*background-image: url("imagenes/login.jpg");*/
 		background-repeat: repeat-y !important;
-	}
+	}*/
 	.fondo_comu
 	{
 		background-image: url("imagenes/sf.jpg");
@@ -71,7 +71,8 @@
 
 </style>
 <?php
-	echo "<div class='centrarimagen'>
-		<img src='imagenes/team4.jpg' width='560px' heigth='370px'>
+include("datosUsuario.php");
+	echo " <div class='centrarimagen'>
+		<center><img src='imagenes/".$logoTiendaRopa."'  width='80%' heigth='80%'></center>
 	</div>";
 ?>

@@ -1,7 +1,8 @@
 <?php
 require("conexionmysqli.php");
 require("estilos.inc");
-$sql_inserta=mysqli_query($enlaceCon,"insert into usuarios_sistema values($codigo_funcionario,'$contrasena')");
+
+$sql_inserta=mysqli_query($enlaceCon,"insert into usuarios_sistema (codigo_funcionario,contrasena)values($codigo_funcionario,'$contrasena')");
 //esta parte saca el nombre del funcionario
 $sql_nombre_fun="select paterno, materno, nombres from funcionarios where codigo_funcionario='$codigo_funcionario'";
 $resp_nombre_fun=mysqli_query($enlaceCon,$sql_nombre_fun);
