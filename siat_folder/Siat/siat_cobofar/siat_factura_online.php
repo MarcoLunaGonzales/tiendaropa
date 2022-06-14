@@ -18,12 +18,16 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFac
 // use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionElectronica;
 // use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Invoices\ElectronicaCompraVenta;
 
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
+
 
 class FacturaOnline
 {
 
-	protected $endpoint = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
-	protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
+	// protected $endpoint = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
+	// protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
+	public $endpoint = conexionSiatUrl::endpoint;
+	public $wsdl = conexionSiatUrl::wsdl;
 	/**
 	 * 
 	 * @return SiatConfig
@@ -40,7 +44,8 @@ class FacturaOnline
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
 			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
-			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			// 'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			'ambiente'      => conexionSiatUrl::AMBIENTE_ACTUAL,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,
 			'cufd'			=> null,
@@ -264,7 +269,7 @@ class FacturaOnline
 				$factura->cabecera->cuf=$dataFact['siat_cuf'];
 				$factura->cabecera->leyenda=$dataFact['leyenda'];
 				$factura->validate();
-				$service = new ServicioFacturacionElectronica($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
+				$service = new ServicioFacturacionComputarizada($dataFact['cuis'], $dataFact['cufd_generado'], $config->tokenDelegado);
 				$service->setConfig((array)$config);
 				$service->codigoControl = $dataFact['codigoControl_generado'];
 				//$service->setPrivateCertificateFile($privCert);
@@ -348,7 +353,7 @@ class FacturaOnline
 		$config = self::buildConfig();
 		$config->validate();	
 		// echo $cuis."->>>>".$cufd;
-		$service = new ServicioFacturacionElectronica($cuis, $cufd, $config->tokenDelegado);
+		$service = new ServicioFacturacionComputarizada($cuis, $cufd, $config->tokenDelegado);
 		// print_r($config);
 		$service->setConfig((array)$config);
 		// $service->codigoControl = $codigoControl;
@@ -434,7 +439,7 @@ class FacturaOnline
 
 		$config = self::buildConfig();
 		$config->validate();			
-		$service = new ServicioFacturacionElectronica($cuis, $cufd, $config->tokenDelegado);		
+		$service = new ServicioFacturacionComputarizada($cuis, $cufd, $config->tokenDelegado);		
 		$service->setConfig((array)$config);
 		$service->debug = true;
 

@@ -6,6 +6,7 @@ use SimpleXMLElement;
 use Exception;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioSiat;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\DocumentTypes;
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
 abstract class SiatInvoice extends Message
 {
@@ -78,11 +79,11 @@ abstract class SiatInvoice extends Message
 			}
 			if ($dig == 10) 
 			{
-				$cadena += "1";
+				$cadena .= "1";
 			}
 			if ($dig == 11) 
 			{
-				$cadena += "0";
+				$cadena .= "0";
 			}
 			if ($dig < 10) {
 				
@@ -247,20 +248,20 @@ abstract class SiatInvoice extends Message
 		$obj = simplexml_load_file($filename, static::class);
 		return $obj;
 	}
-	public function getEndpoint( $modalidad, $ambiente )
-	{
-		if( $this->cabecera->codigoDocumentoSector == DocumentTypes::FACTURA_SERV_BASICOS )
-			return $ambiente == 1 ? "" : "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionServicioBasico?wsdl";
-		if( $this->cabecera->codigoDocumentoSector == DocumentTypes::FACTURA_COMPRA_VENTA )
-			return $ambiente == 1 ? "" : "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
+	// public function getEndpoint( $modalidad, $ambiente )
+	// {
+	// 	if( $this->cabecera->codigoDocumentoSector == DocumentTypes::FACTURA_SERV_BASICOS )
+	// 		return $ambiente == 1 ? "" : "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionServicioBasico?wsdl";
+	// 	if( $this->cabecera->codigoDocumentoSector == DocumentTypes::FACTURA_COMPRA_VENTA )
+	// 		return $ambiente == 1 ? "" : "https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionCompraVenta?wsdl";
 		
-		if( ServicioSiat::MOD_ELECTRONICA_ENLINEA == $modalidad )
-		{
-			return $ambiente == 1 ? '' : 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionElectronica?wsdl';
-		}
+	// 	if( ServicioSiat::MOD_ELECTRONICA_ENLINEA == $modalidad )
+	// 	{
+	// 		return $ambiente == 1 ? '' : 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionElectronica?wsdl';
+	// 	}
 		
-		return $ambiente == 1 ? '' : 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
-	}
+	// 	return $ambiente == 1 ? '' : 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
+	// }
 	public function toXml($rootTagName = null, $isRoot = false, $standalone = false)
 	{
 		return parent::toXml($rootTagName, true, true);

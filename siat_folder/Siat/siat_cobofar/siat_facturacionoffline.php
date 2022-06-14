@@ -15,10 +15,12 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioOpe
 // use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\siat_cobofar\siat_factura_online;
 
 
-use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionElectronica;
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionComputarizada;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioRecepcionFactura;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioRecepcionPaquete;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioValidacionRecepcionPaquete;
+
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
 class FacturacionOffLine
 {
@@ -36,8 +38,9 @@ class FacturacionOffLine
 			'tipo' 			=> $siat_tipo,
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
-			'modalidad'     => ServicioSiat::MOD_ELECTRONICA_ENLINEA,
-			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
+			// 'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			'ambiente'      => conexionSiatUrl::AMBIENTE_ACTUAL,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,
 			'cufd'			=> null,
@@ -52,6 +55,7 @@ class FacturacionOffLine
 		$config->validate();
 		
 		$servCodigos = new ServicioFacturacionCodigos(null, null, $config->tokenDelegado);
+		$serviceCodigos->wsdl = conexionSiatUrl::wsdlCodigo;
 		$servCodigos->setConfig((array)$config);
 		$resCuis = $servCodigos->cuis($codigoPuntoVenta, $codigoSucursal);
 
@@ -65,6 +69,8 @@ class FacturacionOffLine
 		$config->validate();
 	
 		$serviceOps = new ServicioOperaciones($cuis, $cufd);
+		$serviceOps->wsdl = conexionSiatUrl::wsdlOperaciones;
+		
 		$serviceOps->setConfig((array)$config);	
 		$serviceOps->codigoPuntoVenta=$codigoPuntoVenta;
 		$serviceOps->codigoSucursal=$codigoSucursal;
@@ -98,23 +104,23 @@ class FacturacionOffLine
 			$tipoFactura = 1;
 
 			require_once "siat_factura_online.php";
-			$privCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'privatekey.pem';
-			$pubCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'CORPORACION_BOLIVIANA_DE_FARMACIAS_SA_CER.pem';
-
+			// $privCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'privatekey.pem';
+			// $pubCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'CORPORACION_BOLIVIANA_DE_FARMACIAS_SA_CER.pem';
 			$config = self::buildConfig();
 			$config->validate();
 			
-			$service = new ServicioFacturacionElectronica($cuis, $cufd, $config->tokenDelegado);
+			$service = new ServicioFacturacionComputarizada($cuis, $cufd, $config->tokenDelegado);
+			$service->wsdl=conexionSiatUrl::wsdlFacturacionElectronica;
 			$service->setConfig((array)$config);
 			
-			$service->setPrivateCertificateFile($privCert);
-			$service->setPublicCertificateFile($pubCert);
+			// $service->setPrivateCertificateFile($privCert);
+			// $service->setPublicCertificateFile($pubCert);
 			$service->debug = true;
 			$service->fechaEnvio = date("Y-m-d\TH:i:s.000");
 			$facturas = [];
 			$ii = 0;
 			$sqlUpdateFacturas="";
-			$sql="SELECT s.cod_salida_almacenes,(select siat_cafc from dosificaciones d where d.cod_dosificacion=s.cod_dosificacion and d.tipo_dosificacion=2 and d.tipo_descargo=2)as cafc
+			$sql="SELECT s.cod_salida_almacenes,(select siat_cafc from dosificaciones d where d.cod_dosificacion=s.cod_dosificacion and d.tipo_dosificacion=2 and d.tipo_descargo=2)as cafc,s.cod_tipo_doc
 			    FROM salida_almacenes s 
 			    WHERE s.cod_salida_almacenes in ($string_codigos) and s.cod_almacen=$cod_almacen and DATE_FORMAT(s.siat_fechaemision,'%Y-%m-%d') = '$fecha'";
 			    //echo  $sql;
@@ -124,6 +130,9 @@ class FacturacionOffLine
 		    // echo $sql;
 		    $resp=mysqli_query($enlaceCon,$sql);
 		    $facturax= new FacturaOnline();
+		    $facturax->endpoint=conexionSiatUrl::endpoint;
+		    $facturax->wsdl=conexionSiatUrl::wsdl;
+
 		    $cafc=null;
 		    while($row=mysqli_fetch_array($resp)){ 
 		      	$cod_salida_almacenes=$row['cod_salida_almacenes'];
@@ -131,7 +140,7 @@ class FacturacionOffLine
 				$factura=$facturax::testRecepcionFacturaElectronica($cod_salida_almacenes,2);   
 				// $facturax::testRecepcionFacturaElectronica($cod_salida_almacenes,2);      
 				// echo "+++";
-				if($cafc<>null){
+				if($cafc<>null&&$row['cod_tipo_doc']==4){
 					$factura->cabecera->cafc=$cafc;
 				}
 				$codigo_cuf=$factura->cabecera->cuf;
@@ -140,7 +149,7 @@ class FacturacionOffLine
 				$codigoExcepcion=$factura->cabecera->codigoExcepcion;
 
 				$facturas[$ii] = $factura;
-				$sqlUpdateFacturas.="UPDATE salida_almacenes set siat_cuf='$codigo_cuf',siat_codigoRecepcion='$codigoEvento',siat_estado_facturacion='1',siat_codigotipodocumentoidentidad='$codigoTipoDocumentoIdentidad',siat_excepcion='$codigoExcepcion' where cod_salida_almacenes=$cod_salida_almacenes;";
+				$sqlUpdateFacturas.="UPDATE salida_almacenes set siat_cuf='$codigo_cuf',siat_codigoRecepcion='$codigoEvento',siat_estado_facturacion='1' where cod_salida_almacenes=$cod_salida_almacenes;";
 				$ii++;
 		    }
 		     // print_r($factura);
@@ -163,6 +172,8 @@ class FacturacionOffLine
 						//validamos cada factura en el siat
 						$datos_udpate=explode(';', $sqlUpdateFacturas);
 						$facturaVerif= new FacturaOnline();
+						$facturaVerif->endpoint=conexionSiatUrl::endpoint;
+		    			$facturaVerif->wsdl=conexionSiatUrl::wsdl;
 						for ($ix=0; $ix <count($datos_udpate); $ix++) {
 							$sql_up=$datos_udpate[$ix];
 							if($sql_up<>'' and $sql_up<>' '){
@@ -175,7 +186,7 @@ class FacturacionOffLine
 								if(isset($respFac->RespuestaServicioFacturacion->codigoEstado)){
 									if($respFac->RespuestaServicioFacturacion->codigoEstado<>690){
 										$sw_estado=false;
-								       $slq_error="UPDATE salida_almacenes set siat_codigoRecepcion=null,siat_estado_facturacion='3' where cod_salida_almacenes=$cod_venta";
+								       $slq_error="UPDATE salida_almacenes set siat_codigoRecepcion=null,siat_estado_facturacion='3' where cod_salida_almacenes=$cod_venta";//volvemos al estado anterior
 								       $resperr=mysqli_query($enlaceCon,$slq_error);
 								    }
 								}else{
