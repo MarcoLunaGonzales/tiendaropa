@@ -5,10 +5,12 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Invoices\SiatInvoice
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use Exception;
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
 class ServicioFacturacionElectronica extends ServicioFacturacion
 {
-	protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionElectronica?wsdl';
+	// protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionElectronica?wsdl';
+	public $wsdl=conexionSiatUrl::wsdlFacturacionElectronica;
 	
 	protected	$privateCertFile;
 	protected	$publicCertFile;

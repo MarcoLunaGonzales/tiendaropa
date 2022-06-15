@@ -1,10 +1,11 @@
 <?php
 namespace SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services;
-
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
 class ServicioFacturacionCodigos extends ServicioSiat
 {
-	protected $wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl';
+	// public $wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionCodigos?wsdl';
+	public $wsdl=conexionSiatUrl::wsdlCodigo;
 	
 	public function cuis($codigoPuntoVenta = 0, $codigoSucursal = 0)
 	{
@@ -20,9 +21,9 @@ class ServicioFacturacionCodigos extends ServicioSiat
 				]
 			]
 		];
-
 		list(,$action) = explode('::', __METHOD__);
-		$res = $this->callAction($action, $data);		
+		$res = $this->callAction($action, $data);
+		// print_r($data);
 		return $res;
 	}
 	public function cufd($codigoPuntoVenta = 0, $codigoSucursal = 0)
