@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=0; //para no ejecutar las librerias js css
 
 require("conexionmysqli.php");
 $usuario = $_POST["usuario"];

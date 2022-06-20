@@ -1,3 +1,10 @@
+<?php
+
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+require('function_formatofecha.php');
+
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -253,14 +260,19 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
     <body>
 <?php
 
-require("conexionmysqli.php");
-require('function_formatofecha.php');
 
-$txtnroingreso = $_GET["txtnroingreso"];
-$fecha1 = $_GET["fecha1"];
-$fecha2 = $_GET["fecha2"];
 
-require("estilos_almacenes.inc");
+if(isset($txtnroingreso)){
+    $txtnroingreso = $_GET["txtnroingreso"];
+}
+if(isset($fecha1)){
+    $fecha1 = $_GET["fecha1"];
+}
+if(isset($fecha2)){
+    $fecha2 = $_GET["fecha2"];
+}
+
+$fecha_sistema=date("Y-m-d");
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
