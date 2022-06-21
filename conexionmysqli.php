@@ -19,7 +19,7 @@ if(!function_exists('register_globals')){
 }
 
 //$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+$enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
 
 
 if (mysqli_connect_errno())

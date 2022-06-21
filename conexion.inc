@@ -9,8 +9,8 @@ if(!function_exists('register_globals')){
 // $conexion=mysql_connect("localhost","root","4868422Marco");
 // $bd=mysql_select_db("kidsplace3");
 
-$conexion=mysql_connect("localhost","root","123456");
-$bd=mysql_select_db("tiendaropa");
+$conexion=mysql_connect("localhost","root","12345678");
+$bd=mysql_select_db("tiendaropa1000");
 
 
 $sqlUTF=mysql_query("SET NAMES utf8");
