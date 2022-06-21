@@ -48,7 +48,7 @@ $sqlInserts=[];  $lista_documento=[];
         
         $Reader = new SpreadsheetReader($targetPath);       
         $sheetCount = count($Reader->sheets());
-		echo "numero de filas".$sheetCount;
+		//echo "numero de filas".$sheetCount;
         for($i=0;$i<$sheetCount;$i++){         
         $Reader->ChangeSheet($i);
         $validacionFila=1;
@@ -123,10 +123,10 @@ $sqlInserts=[];  $lista_documento=[];
 
                     }else{
 						//////////////////////
-						echo "articulo<br>".$articulo." -";								 
+						//echo "articulo<br>".$articulo." -";								 
 						$cod_material=devuelveIdProducto($enlaceCon,$barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio,$codigoExterno);
 						//CODIGO DEVUELTO
-						echo "codigo devuelto.$cod_material<br>";	
+						//echo "codigo devuelto.$cod_material<br>";	
 						$fechaVencimiento='1900-01-01';
 						$precioUnitario=$precioCosto;     
 						$costo=$precioCosto;
@@ -187,16 +187,20 @@ if($filasErroneas>0){
        $mensaje='Filas Repetidas';
        borrarIngresoAlmacen($enlaceCon,$codigo);  
     }else{
+		$sql_inserta2=0;
 		$banderaInsercionDetalle=0;
       for ($ins=0; $ins<count($sqlInserts)+1 ; $ins++) { 
-		echo $sqlInserts[$ins]."<br>";
-        $sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
-		
+		//echo $sqlInserts[$ins]."<br>";
+		if(!empty($sqlInserts[$ins])){ 
+			$sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
+		}
       }
       if($sql_inserta2==1){
+		  echo "";
         $mensaje='Los datos fueron insertados correctamente.';
       	//showAlertSuccessError(true,"../".$urlOficial);	
       }else{
+		   echo "";
         $mensaje='EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.';
         borrarIngresoAlmacen($enlaceCon,$codigo);
 	     //showAlertSuccessError(false,"../".$urlOficial);

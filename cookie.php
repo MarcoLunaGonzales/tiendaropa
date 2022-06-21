@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=0; //para no ejecutar las librerias js css
 
 require("conexionmysqli.php");
 $usuario = $_POST["usuario"];
@@ -9,15 +10,17 @@ $sql = "
     SELECT f.cod_cargo, f.cod_ciudad,f.cod_tipofuncionario
     FROM funcionarios f, usuarios_sistema u
     WHERE u.codigo_funcionario=f.codigo_funcionario AND u.codigo_funcionario='$usuario' AND u.contrasena='$contrasena' ";
+echo $sql;
 $resp = mysqli_query($enlaceCon,$sql);
 $num_filas = mysqli_num_rows ($resp);
 //$num_filas = i($resp);
+//echo "numfilas ".$num_filas ;
 if ($num_filas != 0) {
     $dat = mysqli_fetch_array($resp);
     $cod_cargo = $dat[0];
     $cod_ciudad = $dat[1];
 	$cod_tipofuncionario= $dat[2];
-	 echo $cod_tipofuncionario;
+	 //echo $cod_tipofuncionario;
 
     setcookie("global_usuario", $usuario);
     setcookie("global_agencia", $cod_ciudad);
@@ -39,7 +42,9 @@ if ($num_filas != 0) {
 
 	setcookie("global_almacen",$global_almacen);
 	setcookie("globalGestion", $globalGestion);
+	setcookie("globalTipoFuncionario", $cod_tipofuncionario);
 	if($cod_tipofuncionario==1){
+		// funcionario Interno
 		if($cod_cargo==1000 || $cod_cargo==1001 || $cod_cargo==1002){
 			header("location:indexAlmacenReg.php");
 		}
@@ -55,18 +60,18 @@ if ($num_filas != 0) {
 		
     }
 	if($cod_tipofuncionario==2){
-		   // Verificamos si el el Funcionario esta vinculados con algunos proveeedore
+		   // funcionario Externo
 		$sqlFunProv="select cod_proveedor from funcionarios_proveedores where codigo_funcionario=".$usuario;
-		
+		//echo $sqlFunProv;
 		$respFunProv=mysqli_query($enlaceCon,$sqlFunProv);
 		$numProv=mysqli_num_rows($respFunProv);
-		echo $numProv;
+		//echo $numProv;
 		if($numProv>0){
 			header("location:indexProveedor.php");
 		}else{
 			 echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
         <form action='problemas_ingreso.php' method='post' name='formulario'>
-        <h1>Sus datos de acceso son de un Usuario Externo, que no tiene vinculado ningun Proveedor.</h1>
+        <h1>Usted es un Usuario de Tipo Externo y debe estar vinculado a un Proveedor, por favor consulte con el Administrador.</h1>
         </form>";
 		}
 	}

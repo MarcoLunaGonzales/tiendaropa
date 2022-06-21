@@ -309,7 +309,7 @@ echo "</table><br>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'></center>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"'></center>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_preingreso.php\"'></center>
 </div>";
 
 echo "</div>";

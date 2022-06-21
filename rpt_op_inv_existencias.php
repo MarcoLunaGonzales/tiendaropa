@@ -1,4 +1,6 @@
 <?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
 echo "<script language='JavaScript'>
 		function pressEnter(e, f){
 			tecla = (document.all) ? e.keyCode : e.which;
@@ -19,6 +21,7 @@ echo "<script language='JavaScript'>
 			rpt_barcode=f.barcode.value;
 			
 			var rpt_grupo=new Array();	
+			var rpt_marca=new Array();	
 			
 			var rpt_formato=f.rpt_formato.value;
 			
@@ -28,8 +31,17 @@ echo "<script language='JavaScript'>
 				{	rpt_grupo[j]=f.rpt_grupo.options[i].value;
 					j++;
 				}
-			}			
-			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_formato='+rpt_formato+'&rpt_barcode='+rpt_barcode,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
+			}	
+			
+			var k=0;
+			for(m=0;m<=f.rpt_marca.options.length-1;m++)
+			{	if(f.rpt_marca.options[m].selected)
+				{	rpt_marca[k]=f.rpt_marca.options[m].value;
+					k++;
+				}
+			}
+			
+			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_marca='+rpt_marca+'&rpt_formato='+rpt_formato+'&rpt_barcode='+rpt_barcode,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
 			return(true);
 		}
 
@@ -38,8 +50,7 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
+
 
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
@@ -97,6 +108,16 @@ echo"<form method='post' action=''>";
 		echo "<option value='$codigo' selected>$nombre</option>";
 	}
 	echo "</select></td></tr>";
+	echo "<tr><th align='left'>Marcas</th><td><select name='rpt_marca' class='texto' size='10' multiple>";
+	$sqlMarca="select codigo, nombre from marcas where estado=1 order by 2";
+	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+	while($datMarca=mysqli_fetch_array($respMarca))
+	{	$codigoMarca=$datMarca[0];
+		$nombreMarca=$datMarca[1];
+		echo "<option value='$codigoMarca' selected>$nombreMarca</option>";
+	}
+	echo "</select></td></tr>";
+	
 	
 	echo "<tr><th align='left'>Ver:</th>";
 	echo "<td><select name='rpt_ver' class='texto'>";

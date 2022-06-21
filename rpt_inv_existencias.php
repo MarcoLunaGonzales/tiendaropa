@@ -7,6 +7,7 @@ require('conexionmysqli.php');
 
 $rptOrdenar=$_GET["rpt_ordenar"];
 $rptGrupo=$_GET["rpt_grupo"];
+$rptMarca=$_GET["rpt_marca"];
 $rptFormato=$_GET["rpt_formato"];
 
 $rptBarCode=$_GET["rpt_barcode"];
@@ -34,7 +35,8 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			(select g.nombre from grupos g where g.codigo=ma.cod_grupo)as nombregrupo, ma.peso, ma.color, ma.talla, ma.codigo_barras,
 			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
 			from material_apoyo ma
-			where ma.codigo_material<>0 and ma.estado='1' and ma.cod_grupo in ($rptGrupo) ";
+			where ma.codigo_material<>0 and ma.estado='1' and ma.cod_grupo in ($rptGrupo) 
+			 and ma.cod_marca in ($rptMarca) ";
 			if($rptBarCode!=""){
 				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
 			}
@@ -45,7 +47,8 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca
 			from grupos g, 
 			material_apoyo m where g.codigo=m.cod_grupo and m.estado='1' 
-			and m.cod_grupo in ($rptGrupo) ";
+			and m.cod_grupo in ($rptGrupo) 
+			and m.cod_marca in ($rptMarca) ";
 			if($rptBarCode!=""){
 				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
 			}

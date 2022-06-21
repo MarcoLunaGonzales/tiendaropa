@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8'); 
+
 date_default_timezone_set('America/La_Paz');
 
 if(!function_exists('register_globals')){
@@ -18,10 +19,13 @@ if(!function_exists('register_globals')){
 }else{
 }
 
-//$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+<<<<<<< HEAD
+//$enlaceCon=mysqli_connect("www.minkasoftware.com","mysql_imprenta2","4879531Gabriela","altar");
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
+=======
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+>>>>>>> b6ed6e2ae358d70a70279f50864b29e0c03abe7e
 
->>>>>>> 2a73d425331b59b7c7533b74b05f5a02bf7fc4bb
 
 if (mysqli_connect_errno())
 {

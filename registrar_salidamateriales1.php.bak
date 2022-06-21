@@ -1,3 +1,11 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+<<<<<<< HEAD
+$global_almacen=$_COOKIE['global_almacen'];
+=======
+>>>>>>> b6ed6e2ae358d70a70279f50864b29e0c03abe7e
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -257,10 +265,16 @@ function validar(f){
 		
 <?php
 echo "<body>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
 
-$global_almacen=$_COOKIE['global_almacen'];
+
+
+
+if(isset($fecha)){
+	$fecha=$fecha;
+}else{
+	$fecha="";
+}
+
 
 if($fecha=="")
 {   $fecha=date("Y-m-d");
@@ -290,8 +304,8 @@ else
 		<option value="">--------</option>
 <?php
 	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
-	$respTipo=mysql_query($sqlTipo);
-	while($datTipo=mysql_fetch_array($respTipo)){
+	$respTipo=mysqli_query($enlaceCon,$sqlTipo);
+	while($datTipo=mysqli_fetch_array($respTipo)){
 		$codigo=$datTipo[0];
 		$nombre=$datTipo[1];
 ?>
@@ -420,6 +434,8 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">
+
+<input type='hidden' name='no_venta' value="1">
 
 </form>
 </body>

@@ -1,3 +1,8 @@
+<?php
+require("conexionmysqli.php");
+require('function_formatofecha.php');
+require("estilos_almacenes.inc");
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -253,26 +258,32 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
     <body>
 <?php
 
-require("conexionmysqli.php");
-require('function_formatofecha.php');
+if(isset($txtnroingreso)){
+    $txtnroingreso = $_GET["txtnroingreso"];
+}else{
+    $txtnroingreso="";
+}
+if(isset($fecha1)){
+    $fecha1 = $_GET["fecha1"];
+}else{
+    $fecha1="";
+}
+if(isset($fecha2)){
+    $fecha2 = $_GET["fecha2"];
+}
 
-$txtnroingreso = $_GET["txtnroingreso"];
-$fecha1 = $_GET["fecha1"];
-$fecha2 = $_GET["fecha2"];
-
-require("estilos_almacenes.inc");
+$fecha_sistema=date("Y-m-d");
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 
-//
 
 echo "<h1>Listado de Traspasos</h1>";
-echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>Leyenda:</th>
-<th>Salidas Despachadas a otras agencias</th><td bgcolor='#bbbbbb' width='5%'></td>
-<th>Salidas recepcionadas</th><td bgcolor='#33ccff' width='5%'></td>
-<th>Salidas Anuladas</th><td bgcolor='#ff8080' width='5%'></td>
-<th>Salidas locales</th><td bgcolor='#66ff99' width='5%'></td>
+echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>LEYENDA:</th>
+<th>SALIDAS DESPACHADAS A OTRAS AGENCIAS</th><td bgcolor='#bbbbbb' width='5%'></td>
+<th>SALIDAS RECEPCIONADAS</th><td bgcolor='#33ccff' width='5%'></td>
+<th>SALIDAS ANULADAS</th><td bgcolor='#ff8080' width='5%'></td>
+<th>SALIDAS LOCALES</th><td bgcolor='#66ff99' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
 echo "<div class='divBotones'>
@@ -281,7 +292,7 @@ echo "<div class='divBotones'>
 		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
 </div>";
 
-echo "<div id='divCuerpo'>";
+echo "<br><br><div id='divCuerpo'>";
 echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
 	<th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";

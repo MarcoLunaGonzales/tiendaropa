@@ -1,13 +1,14 @@
-<html>
-    <head>
-        
-<script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="dlcalendar.js"></script>
-<script type='text/javascript' language='javascript'>
 <?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
 
-	require("conexionmysqli.php");
-	
+$globalAlmacen=$_COOKIE['global_almacen'];
+$globalAgencia=$_COOKIE['global_agencia'];
+
+if($fecha=="")
+{   $fecha=date("d/m/Y");
+}
+	require("conexionmysqli.php");	
 	$codIngresoEditar=$_GET["codIngreso"];
 	$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$codIngresoEditar;	
 	$num_materiales=0;
@@ -16,6 +17,13 @@
 		$num_materiales=$dat[0];
 	}
 ?>
+<html>
+    <head>
+        
+<script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="dlcalendar.js"></script>
+<script type='text/javascript' language='javascript'>
+
 num=<?php echo $num_materiales;?>;
 function nuevoAjax()
 {	var xmlhttp=false;
@@ -185,19 +193,7 @@ function validar(f){
 
 
 	</script>
-<?php
 
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
-
-$globalAlmacen=$_COOKIE['global_almacen'];
-$globalAgencia=$_COOKIE['global_agencia'];
-
-if($fecha=="")
-{   $fecha=date("d/m/Y");
-}
-
-?>
 <form action='guarda_editaringresomateriales.php' method='post' name='form1'>
 <input type="hidden" name="codIngreso" value="<?php echo $codIngresoEditar;?>" id="codIngreso">
 <table border='0' class='textotit' align='center'><tr><th>Editar Ingreso de Materiales</th></tr></table><br>

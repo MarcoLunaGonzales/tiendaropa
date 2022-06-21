@@ -1,3 +1,11 @@
+<?php
+
+require("conexionmysqli.php");
+require('funciones.php');
+require('function_formatofecha.php');
+require("estilos_almacenes.inc");
+
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -330,17 +338,29 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
     <body>
 <?php
 
-require("conexionmysqli.php");
-require('funciones.php');
-require('function_formatofecha.php');
 
-$txtnroingreso = $_GET["txtnroingreso"];
-$fecha1 = $_GET["fecha1"];
-$fecha2 = $_GET["fecha2"];
+$txtnroingreso="";
+$fecha1="";
+$fecha2="";
+$view="";
+$fecha_sistema="";
+$estado_preparado="";
 
-$view=$_GET["view"];
+if(!isset($txtnroingreso)){
+    $txtnroingreso = $_GET["txtnroingreso"];    
+}
+if(!isset($fecha1)){
+    $fecha1 = $_GET["fecha1"];
+}
+if(!isset($fecha2)){
+    $fecha2 = $_GET["fecha2"];
+}
+if(!isset($view)){
+    $view=$_GET["view"];
+}
+if(!isset($fecha_sistema)){
 
-require("estilos_almacenes.inc");
+}
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
@@ -442,7 +462,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$urlConversionFactura="convertNRToFactura.php?codVenta=$codigo";    
     
 	$NRparaMostrar=$nombreTipoDoc."-".$nro_correlativo;
-	$fechaParaMostrar=fecha_salida_mostrar;
+	$fechaParaMostrar=$fecha_salida_mostrar;
 	
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";

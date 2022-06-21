@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8'); 
+
 date_default_timezone_set('America/La_Paz');
 
 if(!function_exists('register_globals')){
@@ -18,9 +19,9 @@ if(!function_exists('register_globals')){
 }else{
 }
 
+
 //$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
 $enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
-
 
 if (mysqli_connect_errno())
 {
