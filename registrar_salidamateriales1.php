@@ -1,3 +1,7 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -257,10 +261,15 @@ function validar(f){
 		
 <?php
 echo "<body>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
 
 $global_almacen=$_COOKIE['global_almacen'];
+
+if(isset($fecha)){
+	$fecha=$fecha;
+}else{
+	$fecha="";
+}
+
 
 if($fecha=="")
 {   $fecha=date("Y-m-d");
@@ -420,6 +429,8 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">
+
+<input type='hidden' name='no_venta' value="1">
 
 </form>
 </body>

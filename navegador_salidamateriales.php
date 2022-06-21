@@ -264,9 +264,13 @@ function llamar_preparado(f, estado_preparado, codigo_salida)
 
 if(isset($txtnroingreso)){
     $txtnroingreso = $_GET["txtnroingreso"];
+}else{
+    $txtnroingreso="";
 }
 if(isset($fecha1)){
     $fecha1 = $_GET["fecha1"];
+}else{
+    $fecha1="";
 }
 if(isset($fecha2)){
     $fecha2 = $_GET["fecha2"];
