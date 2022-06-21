@@ -93,12 +93,19 @@ function funModif(codReg,funOkConfirm)
 
 
 function ajaxBuscarIngresos(f){
+	
 	var fechaIniBusqueda, fechaFinBusqueda, notaIngreso, verBusqueda, global_almacen, provBusqueda;
+	
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
+	
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
+	
 	notaIngreso=document.getElementById("notaIngreso").value;
+	
 	global_almacen=document.getElementById("global_almacen").value;
+	
 	provBusqueda=document.getElementById("provBusqueda").value;
+	
 	var contenedor;
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
@@ -189,9 +196,11 @@ function anular_ingreso(f)
     <body>
 
 <?php
- 
+  $global_usuario=$_COOKIE['global_usuario'];
+$globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 echo "<form method='post' action='navegador_ingresomateriales.php'>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
+echo "<input type='hidden' name='global_almacen' id='global_almacen' value='$global_almacen'>";
 
 $consulta = "
     SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,
@@ -202,20 +211,20 @@ $consulta = "
    $consulta = $consulta."ORDER BY i.nro_correlativo DESC limit 0, 50 ";
 //echo "MAT:$sql";
 $resp = mysqli_query($enlaceCon,$consulta);
-echo "<h1>Ingreso de Materiales</h1>";
+echo "<h1>Ingreso de Productos</h1>";
 
-echo "<table border='1' cellspacing='0' class='textomini'><tr><th>Leyenda:</th><th>Ingresos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>Ingresos con movimiento</th><td bgcolor='#ffff99' width='10%'></td><th>Ingresos sin movimiento</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
+echo "<table border='1' cellspacing='0' class='textomini'><tr><th>LEYENDA:</th><th>INGRESOS ANULADOS</th><td bgcolor='#ff8080' width='10%'></td><th>INGRESOS CON MOVIMIENTO</th><td bgcolor='#ffff99' width='10%'></td><th>INGRESOS SIN MOVIMIENTO</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
 echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()'>
 <input type='button' value='Editar Ingreso' class='boton' onclick='editar_ingreso(this.form)'>
 <input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
 
-echo "<div id='divCuerpo'>";
+echo "<br><div id='divCuerpo'>";
 echo "<br><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Nro.Factura</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
-<th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+<th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th><th>Nro PreIngreso</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_ingreso = $dat[1];
@@ -228,6 +237,10 @@ while ($dat = mysqli_fetch_array($resp)) {
     $anulado = $dat[7];
 	$proveedor=$dat[8];
 	$nroFacturaProveedor=$dat[9];
+	$sqlAux=" select IFNULL(codigo_ingreso,0),nro_correlativo from  preingreso_almacenes  where codigo_ingreso=$codigo";
+	$respAux= mysqli_query($enlaceCon,$sqlAux);
+	$datAux=mysqli_fetch_array($respAux);
+
 
     echo "<input type='hidden' name='fecha_ingreso$nro_correlativo' value='$fecha_ingreso_mostrar'>";
     $sql_verifica_movimiento = "select * from salida_almacenes s, salida_detalle_almacenes sd, ingreso_almacenes i
@@ -258,8 +271,13 @@ while ($dat = mysqli_fetch_array($resp)) {
 		<a href='#' onclick='javascript:editarIngresoTipoProv($codigo)' > 
 			<img src='imagenes/edit.png' border='0' width='30' heigth='30' title='Editar Tipo & Proveedor'>
 		</a>
-	</td>
-	</tr>";
+	</td>";
+	if($datAux[0]>0){
+		echo"<td align='center'>$datAux[1]</td>";
+	}else{
+		echo"<td align='center'></td>";
+	}
+	echo"</tr>";
 }
 echo "</table></center><br>";
 echo "</div>";

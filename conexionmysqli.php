@@ -18,8 +18,8 @@ if(!function_exists('register_globals')){
 }else{
 }
 
-//$enlaceCon=mysqli_connect("localhost","root","","kidsplace1000");
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+//$enlaceCon=mysqli_connect("www.minkasoftware.com","mysql_imprenta2","4879531Gabriela","altar");
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
 
 
 if (mysqli_connect_errno())

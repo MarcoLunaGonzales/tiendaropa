@@ -1,3 +1,8 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+require("funciones.php");
+  ?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -15,7 +20,8 @@
 			rpt_item=f.rpt_item.value;
 			
 			var forms = f;
-			if(forms.checkValidity()){										window.open('rpt_inv_kardex.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&rpt_item='+rpt_item+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+			if(forms.checkValidity()){										
+			window.open('rpt_inv_kardex.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'&rpt_item='+rpt_item+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 				return(true);    
 			} else{
 				alert('Debe seleccionar todos los campos del reporte.');
@@ -57,10 +63,9 @@
 			return(true);
 		}
 		</script>
-       </head><body><?php
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
-require("funciones.php");
+       </head><body>
+	   <?php
+
 
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Kardex de Existencia Fisica</th></tr></table><br>";

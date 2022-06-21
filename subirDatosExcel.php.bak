@@ -111,21 +111,21 @@ $sqlInserts=[];  $lista_documento=[];
 				if(isset($Row[11])) {
                     $imagen=$Row[11]."";
                 }
-                
-                $cod_material=devuelveIdProducto($enlaceCon,$barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio);
-                //CODIGO DEVUELTO
-				//echo "codigo devuelto.$cod_material<br>";	
-				$fechaVencimiento='1900-01-01';
-                $precioUnitario=$precioCosto;     
-                $costo=$precioCosto;
-                $lote=0;
-      
-
-                              
+				if(isset($Row[12])) {
+                    $codigoExterno=$Row[12]."";
+                }
+                                                             
                 if (!empty($cod_subgrupo) || !empty($marca)) {
                     if($cod_subgrupo=="" && $marca==""){
 
                     }else{
+					$cod_material=devuelveIdProducto($enlaceCon,$barcode, $articulo, $marca, $cod_subgrupo, $color, $talla, $descripcion, $precioCosto, $imagen, $precio,$codigoExterno);
+					//CODIGO DEVUELTO
+					//echo "codigo devuelto.$cod_material<br>";	
+					$fechaVencimiento='1900-01-01';
+					$precioUnitario=$precioCosto;     
+					$costo=$precioCosto;
+					$lote=0;
                       $lista_documento[$index]=$index;
                       $totalFilasCorrectas++; 
                 	    $sql="INSERT INTO ingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
@@ -183,8 +183,10 @@ if($filasErroneas>0){
     }else{
 		$banderaInsercionDetalle=0;
       for ($ins=0; $ins<count($sqlInserts)+1 ; $ins++) { 
-		//echo $sqlInserts[$ins]."<br>";
-        $sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
+		echo $sqlInserts[$ins]."<br>";
+        		if(!empty($sqlInserts[$ins])){ 
+			$sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
+		}
 		
       }
       if($sql_inserta2==1){

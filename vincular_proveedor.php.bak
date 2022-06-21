@@ -61,7 +61,7 @@ while($reg=mysqli_fetch_array($rs))
     $telefono2 = $reg["telefono2"];
     $contacto  = $reg["contacto"];
 	$sqlFuncProv="select cod_proveedor from funcionarios_proveedores where codigo_funcionario=".$_GET['codigo_funcionario']." and cod_proveedor=".$codProv;
-	echo $sqlFuncProv;
+
 	$rsFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);	
 	$cod_proveedor="";
 	while($datFuncProv=mysqli_fetch_array($rsFuncProv)){

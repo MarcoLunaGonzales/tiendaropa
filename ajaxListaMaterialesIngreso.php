@@ -10,20 +10,26 @@ $nombreItem=$_GET['nombreItem'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $global_usuario=$_COOKIE['global_usuario'];
+$globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $codProveedor=$_GET['codProveedor'];
 //$itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $itemsNoUtilizar="0";
-$sqlAux1="select codigo from proveedores_marcas where cod_proveedor=$codProveedor ";
+$cantAux1=0;
+if($globalTipoFuncionario==2){
+	$sqlAux1="select count(*) from proveedores_marcas 
+where cod_proveedor in (select cod_proveedor from funcoionarios_proveedores where codigo_funcionario=".$global_usuario.") ";
 $respAux1=mysqli_query($enlaceCon,$sqlAux1);
+$cantAux1=mysqli_num_rows($respAux1);
+}	
 
 
 	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion 
 	    from material_apoyo m where estado=1 
 		and m.codigo_material ";
-	if(mysqli_num_rows($respAux1)>=0){
-		$sql.="and m.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
+	if($globalTipoFuncionario==2 && $cantAux1>0){
+		$sql=$sql." and m.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
 	}
-	$sql.="and m.cod_marca not in ($itemsNoUtilizar)";
+	$sql=$sql." and m.cod_marca not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
 		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
 	}

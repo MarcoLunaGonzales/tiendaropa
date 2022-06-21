@@ -141,20 +141,34 @@ function crearProducto($enlaceCon,$idNuevo, $barCode, $nombreItem, $codMarca, $c
 	$tallaItem=ucwords($tallaItem);
 	
 	if($idNuevo==0){
-		$sqlMax="select max(codigo_material)+1 from material_apoyo";
-		echo $sqlMax;
-		$respMax=mysqli_query($enlaceCon,$sqlMax);
-		$datMax=mysqli_fetch_array($respMax);
-		$idNuevo=$datMax[0];
+		$sqlAuxMax="select count(*) from material_apoyo";
+		$respAuxMax=mysqli_query($enlaceCon,$sqlAuxMax);
+		$datAuxMax=mysqli_fetch_array($respAuxMax);
+		if($datAuxMax[0]==0){
+			$idNuevo=1;
+		}else {
+			$sqlMax="select max(codigo_material)+1 from material_apoyo";
+			//echo $sqlMax;
+			$respMax=mysqli_query($enlaceCon,$sqlMax);
+			$datMax=mysqli_fetch_array($respMax);
+			$idNuevo=$datMax[0];
+		}
 		//$idNuevo=mysql_result($respMax,0,0);
 	}
 	
 	if($idAnterior==0){
-		$sqlMax="select max(codigo_anterior)+1 from material_apoyo";
-		echo $sqlMax;
+		$sqlAuxMax="select count(*) from material_apoyo";
+		$respAuxMax=mysqli_query($enlaceCon,$sqlAuxMax);
+		$datAuxMax=mysqli_fetch_array($respAuxMax);
+		if($datAuxMax[0]==0){
+			$idAnterior=1;
+		}else {
+			$sqlMax="select max(codigo_anterior)+1 from material_apoyo";
+			//echo $sqlMax;
 			$respMax=mysqli_query($enlaceCon, $sqlMax);
-		$datMax=mysqli_fetch_array($respMax);
-		$idAnterior=$datMax[0];
+			$datMax=mysqli_fetch_array($respMax);
+			$idAnterior=$datMax[0];
+		}
 		//$idAnterior=mysql_result($respMax,0,0);
 	}
 	

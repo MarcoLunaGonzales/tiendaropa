@@ -238,8 +238,15 @@ echo "<td align='center'><input type='number' class='texto' name='nro_factura' v
 
 echo "<tr><th>Proveedor</th>";
 echo "<th colspan='3'>Observaciones</th></tr>";
+$sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
+$respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
+$cantFuncProv=mysqli_num_rows($respFuncProv);
+
 $sql1="select p.cod_proveedor, p.nombre_proveedor from proveedores  p ";
+
+if($cantFuncProv>0){
 $sql1.="where p.cod_proveedor in(select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario)";
+}
 $sql1.=" order by p.nombre_proveedor";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<tr><td align='center'><select name='proveedor' id='proveedor' class='texto'>";

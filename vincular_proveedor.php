@@ -17,11 +17,11 @@ require("estilos_administracion.inc");
                                         }
                                 }
                         }						
-                        if(j==0)
-                        {       alert('Debe seleccionar al menos un Proveedor.');
-                        }
-                        else
-                        {	
+                        //if(j==0)
+                        //{       alert('Debe seleccionar al menos un Proveedor.');
+                        //}
+                        //else
+                        //{	
                                 if(confirm('El Funcionario externo podra ver Informacion del Proveedor o Proveedores seleccionados.'))
                                 { 	f.datos_prov.value=datos;                                        
                                 }
@@ -30,7 +30,7 @@ require("estilos_administracion.inc");
                                         return(false);
                                 }
 								f.submit();
-                        }
+                       // }
 						
                 }
 	</script>

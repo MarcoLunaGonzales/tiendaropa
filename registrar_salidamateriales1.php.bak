@@ -1,3 +1,8 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -257,8 +262,7 @@ function validar(f){
 		
 <?php
 echo "<body>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
+
 
 $global_almacen=$_COOKIE['global_almacen'];
 
@@ -290,8 +294,8 @@ else
 		<option value="">--------</option>
 <?php
 	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
-	$respTipo=mysql_query($sqlTipo);
-	while($datTipo=mysql_fetch_array($respTipo)){
+	$respTipo=mysqli_query($enlaceCon,$sqlTipo);
+	while($datTipo=mysqli_fetch_array($respTipo)){
 		$codigo=$datTipo[0];
 		$nombre=$datTipo[1];
 ?>

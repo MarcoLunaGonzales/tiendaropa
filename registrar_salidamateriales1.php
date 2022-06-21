@@ -1,3 +1,8 @@
+<?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+$global_almacen=$_COOKIE['global_almacen'];
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -257,10 +262,9 @@ function validar(f){
 		
 <?php
 echo "<body>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
 
-$global_almacen=$_COOKIE['global_almacen'];
+
+
 
 if($fecha=="")
 {   $fecha=date("Y-m-d");

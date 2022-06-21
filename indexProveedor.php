@@ -110,16 +110,9 @@ include("datosUsuario.php");
 					<li><a href="navegador_pagos.php" target="contenedorPrincipal">Registro de Pagos</a></li>
 				</ul>	
 			</li-->
-			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a>
-				
-			</li>
-			<li><span>Ingresos</span>
-				<ul>
-					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
-					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
-					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
-				</ul>	
-			</li>
+			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>
+			<li><a href="navegador_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>
+
 			<li><span>Salidas</span>
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos & Salidas</a></li>

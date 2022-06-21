@@ -57,8 +57,9 @@ if($sql_inserta==1){
       //fin de if
 	echo "<script language='Javascript'>
 		alert('".$mensaje."');
-		location.href='navegador_ingresomateriales.php';
+	location.href='navegador_ingresomateriales.php';
 		</script>";	
+
     }else{
       for ($i = 1; $i <= $cantidad_material; $i++) {
 		$cod_material = $_POST["material$i"];
