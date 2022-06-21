@@ -1,37 +1,28 @@
 <?php
-// require("conexionmysqli.php");
-// require("estilos_almacenes.inc");
-// require("funciones.php");
-
+$indexGerencia=1;
 require "conexionmysqli.inc";
-
-
 ?>
 
 <html>
     <head>
-        <!--title>Venta</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
-		<script type="text/javascript" src="functionsGeneral.js"></script-->
 		<title>VENTA</title>
         <link  rel="icon"   href="imagenes/card.png" type="image/png" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        <link href="assets/style.css" rel="stylesheet" />
+		    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <!--script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
-		<script type="text/javascript" src="functionsGeneral.js"></script>
+				<script type="text/javascript" src="functionsGeneral.js"></script>
         <link rel="stylesheet" type="text/css" href="dist/bootstrap/bootstrap.css"/>
         <link rel="stylesheet" type="text/css" href="dist/bootstrap/dataTables.bootstrap4.min.css"/>
         <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
         <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <!--<script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>-->
         <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
         <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
         <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
         <link rel="stylesheet" type="text/css" href="assets/css/demo.css"/>
-        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.css" /-->
         <style type="text/css">
         	body{
               zoom: 86%;
@@ -474,7 +465,7 @@ function totales(){
 			subtotalPrecio=subtotalPrecio+parseFloat(precio*cantidad);
 		}
     }
-    document.getElementById("total_precio_sin_descuento").innerHTML=subtotalPrecio;
+    //document.getElementById("total_precio_sin_descuento").innerHTML=subtotalPrecio;
 
     subtotalPrecio=Math.round(subtotalPrecio*100)/100;
 
@@ -605,9 +596,10 @@ function aplicarCambioEfectivoUSD(f){
 	minimoEfectivo();
 }
 function aplicarMontoCombinadoEfectivo(f){
-   var efectivo=$("#efectivoRecibidoUnido").val();	
-   alert ('efectivo='+efectivo);
-   var efectivoUSD=$("#efectivoRecibidoUnidoUSD").val();	
+  var efectivo=$("#efectivoRecibidoUnido").val();	
+  //alert ('efectivo='+efectivo);
+  var efectivoUSD=$("#efectivoRecibidoUnidoUSD").val();	
+  
   if(efectivo==""){
    efectivo=0;
   }
@@ -616,7 +608,7 @@ function aplicarMontoCombinadoEfectivo(f){
   }	
 
   var tipo_cambio=$("#tipo_cambio_dolar").val();
-   alert ('tipo_cambio='+tipo_cambio);
+  //alert ('tipo_cambio='+tipo_cambio);
   var monto_dolares_bolivianos=parseFloat(efectivoUSD)*parseFloat(tipo_cambio);
   var monto_total_bolivianos=monto_dolares_bolivianos+parseFloat(efectivo);
   document.getElementById("efectivoRecibido").value=Math.round((monto_total_bolivianos)*100)/100;
@@ -717,7 +709,7 @@ function mas(obj) {
 			var div_material;
 			div_material=document.getElementById("div"+num);			
 			ajax=nuevoAjax();
-			var cod_precio=document.getElementById("tipoPrecio").value;			
+			var cod_precio=0;
 			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
@@ -787,7 +779,6 @@ function alterna_modo_de_pantalla() {
 </script>
 <?php
 echo "</head><body onLoad='funcionInicio();'>";
-require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funciones.php");
 ?>
@@ -1167,7 +1158,7 @@ while($reg=mysqli_fetch_array($rs))
 
 
 if(!isset($fecha)||$fecha==""){   
-	$fecha=date("d/m/Y");
+	$fecha=date("Y-m-d");
 }
 
 	$sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
@@ -1231,10 +1222,9 @@ include("datosUsuario.php");
                     </ul>
                 </div>
             </nav>
-<?php
-echo "aqui";
-?>
+
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" ><!--onsubmit='return checkSubmit();'-->
+
 <input type="hidden" id="siat_error_valor" name="siat_error_valor">
 	<input type="hidden" id="confirmacion_guardado" value="0">
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
@@ -1256,7 +1246,7 @@ if($tipoDocDefault==2){
 
 ?>
 <th>Tipo de Doc</th>
-<th>Nro.Factura</th>
+<th>Nro.Doc</th>
 <th>Fecha</th>
 <th class='d-none'>Precio</th>
 <th>Tipo Pago</th>
@@ -1310,7 +1300,7 @@ if($tipoDocDefault==2){
 </td>
 
 <td align='center'>
-	<input type='date' class='texto' value='<?php echo $fecha?>' id='fecha' size='10' name='fecha' readonly>
+	<input type='date' class='texto' value='<?php echo $fecha;?>' id='fecha' size='10' name='fecha' readonly>
 </td>
 
 <td class='d-none' align='center'>
@@ -1393,12 +1383,12 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 
 	<th>Vendedor</th>
-	<th>Tipo Precio</th>
+	<!--th>Tipo Precio</th-->
 
 </tr>
 <tr>
 	<td>
-		<select name='cod_vendedor' class='texto' id='cod_vendedor' required>
+		<select name='cod_vendedor' class='selectpicker form-control' id='cod_vendedor' data-style="btn btn-rose" required>
 			<option value=''>----</option>
 			<?php
 			$sql2="select f.`codigo_funcionario`,
@@ -1416,20 +1406,21 @@ while($dat2=mysqli_fetch_array($resp2)){
 			?>
 		</select>
 	</td>
-<td >
+<!--td>
 	<div id='divTipoPrecio'>
 		<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
-			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='texto' id='tipoPrecio'>";
-			while($dat=mysqli_fetch_array($resp1)){
-				$codigo=$dat[0];
-				$nombre=$dat[1];
-				$abreviatura=$dat[2];
-				echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";
-			}
-			echo "</select>";
-			?>
+			//$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
+			//$resp1=mysqli_query($enlaceCon,$sql1);
+			//echo "<select name='tipoPrecio' class='texto' id='tipoPrecio'>";
+			//while($dat=mysqli_fetch_array($resp1)){
+				//$codigo=$dat[0];
+				//$nombre=$dat[1];
+				//$abreviatura=$dat[2];
+				//echo "<option value='$codigo'>$nombre ($abreviatura %)</option>";
+			//}
+			//echo "</select>";
+			
+		?>
 
 	</div>
 </td>
@@ -1442,16 +1433,17 @@ while($dat2=mysqli_fetch_array($resp2)){
 <br>
 <input type="hidden" id="ventas_codigo"><!--para validar la funcion mas desde ventas-->
 <div class="codigo-barras div-center">
-               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
+	<input class="boton" type="button" value="Add Item(+)" onclick="mas(this)" accesskey="a"/>&nbsp;&nbsp;&nbsp;
+  <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
 </div>
 
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="100%" id="data0">
-	<tr>
+	<!--tr>
 		<td align="center" colspan="9">
-			<b>Detalle de la Venta    </b><input class="boton" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/>
+			<b>Detalle de la Venta</b>
 		</td>
-	</tr>
+	</tr-->
 
 	<tr align="center">
 		<td width="5%">&nbsp;</td>
@@ -1511,32 +1503,30 @@ while($dat2=mysqli_fetch_array($resp2)){
 <div style="height:200px;"></div>
 
 <div class="pie-div">
-	<div class='float-right' style="padding-right:15px;"><a href='#' class='boton-plomo' style="width:10px !important;height:10px !important;font-size:10px !important;" id="boton_nota_remision" onclick="cambiarNotaRemision()">NR</a></div>
+	<div class='float-right' style="padding-right:15px;"><a href='#' class='boton-plomo' style="width:10px !important;height:10px !important;font-size:10px !important;" id="boton_nota_remision" onclick="cambiarNotaRemision()">F</a></div>
 	<table class="pie-montos">
       <tr>
         <td>
 	<table id='' width='100%' border="0">
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#0691CD;">Bs.</b></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center' colspan="2"><b style="font-size:20px;color:#0691CD;">Bs.</b></td>
 		</tr>
 
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3;width:120px;"></td>
+			<td align='center' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#0691CD;">Efectivo Recibido</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:27px;font-size:22px;width:100%;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" step='0.01' required></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVenta' id='descuentoVenta' onChange='aplicarDescuento(form1);' style="height:20px;font-size:19px;width:120px;color:red;" onkeyup='aplicarDescuento(form1);' onkeydown='aplicarDescuento(form1);' value="0" step='0.01' required></td>
+			<td><input type='number' style="background:#B0B4B3; width:120px;" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>		
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaPorcentaje' id='descuentoVentaPorcentaje' style="height:20px;font-size:19px;width:120px;color:red;" onChange='aplicarDescuentoPorcentaje(form1);' onkeyup='aplicarDescuentoPorcentaje(form1);' onkeydown='aplicarDescuentoPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='center' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#0691CD;">Cambio</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:27px;font-size:22px;width:100%;color:#fff;"></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' style="background:#B0B4B3" name='efectivoRecibido' id='efectivoRecibido' readonly step="any" onChange='aplicarCambioEfectivo(form1);' onkeyup='aplicarCambioEfectivo(form1);' onkeydown='aplicarCambioEfectivo(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:25px;font-size:18px;width:100%;"></td>
+			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:20px;font-size:19px;width:120px;;color:#fff;"></td>
+			<td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:20px;font-size:18px;width:120px;"></td>
 		</tr>
 	</table>
       
@@ -1544,25 +1534,27 @@ while($dat2=mysqli_fetch_array($resp2)){
         <td>
 	<table id='' width='100%' border="0">
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center'><b style="font-size:35px;color:#189B22;">$ USD</b></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center' colspan="2"><b style="font-size:20px;color:#189B22;">$ USD</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td>
+			<td><input type='number' name='totalVentaUSD' id='totalVentaUSD' readonly style="background:#B0B4B3; width:120px;"></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#189B22;">Efectivo Recibido</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td><td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='0.01' required></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento</td>
+			<td><input type='number' name='descuentoVentaUSD' id='descuentoVentaUSD' style="height:20px;font-size:19px;width:120px;color:red;" onChange='aplicarDescuentoUSD(form1);' onkeyup='aplicarDescuentoUSD(form1);' onkeydown='aplicarDescuentoUSD(form1);' value="0" step='0.01' required></td>
+			<td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3; width:120px;" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td><td><input type='number' name='descuentoVentaUSDPorcentaje' id='descuentoVentaUSDPorcentaje' style="height:27px;font-size:22px;width:100%;color:red;" onChange='aplicarDescuentoUSDPorcentaje(form1);' onkeyup='aplicarDescuentoUSDPorcentaje(form1);' onkeydown='aplicarDescuentoUSDPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento %</td>
+			<td><input type='number' name='descuentoVentaUSDPorcentaje' id='descuentoVentaUSDPorcentaje' style="height:20px;font-size:19px;width:120px;color:red;" onChange='aplicarDescuentoUSDPorcentaje(form1);' onkeyup='aplicarDescuentoUSDPorcentaje(form1);' onkeydown='aplicarDescuentoUSDPorcentaje(form1);' value="0" step='0.01'></td>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#189B22;">Cambio</b></td>
 		</tr>
 		<tr>
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td><td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:27px;font-size:22px;width:100%;color:#fff;"> </td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Efectivo Recibido</td><td><input type='number' name='efectivoRecibidoUSD' id='efectivoRecibidoUSD' style="background:#B0B4B3" step="any" readonly onChange='aplicarCambioEfectivoUSD(form1);' onkeyup='aplicarCambioEfectivoUSD(form1);' onkeydown='aplicarCambioEfectivoUSD(form1);'></td>
-		</tr>
-		<tr>
-			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Cambio</td><td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:25px;font-size:18px;width:100%;"></td>
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td>
+			<td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:20px;font-size:19px;width:120px;color:#fff;"> </td>
+			<td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:20px;font-size:19px;width:120px;"></td>
 		</tr>
 	</table>
         </td>
@@ -1575,16 +1567,10 @@ while($dat2=mysqli_fetch_array($resp2)){
 if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
 	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
-			<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
-            <h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2>
+					<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+            <!--h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2-->
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
-            <tr>
-               <td style='font-size:12px;color:#456860;' colspan='2'>Total precio sin descuento = <label id='total_precio_sin_descuento'>0.00</label> Bs.</td>
-             </tr>
-             <tr>
-               <td style='font-size:12px;color:#0691CD;' colspan='2'><p>&nbsp;</p></td>
-             </tr>
             <tr>
                <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
                <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
@@ -1734,7 +1720,6 @@ if($banderaErrorFacturacion==0){
                 <div  class="card-footer">
                    <div class="">
                       <input class="btn btn-warning" id="boton_guardado_cliente" type="button" value="Guardar" onclick="javascript:adicionarCliente();" />
-                       <input class="btn btn-danger" type="button" value="Cancelar" data-dismiss="modal" aria-hidden="true" />
                    </div>
                  </div> 
     </div>
@@ -1774,17 +1759,6 @@ if($banderaErrorFacturacion==0){
 
  	?>  
  </div>
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/61b377b680b2296cfdd119d2/1fmign8ns';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
+
 </body>
 </html>

@@ -14,10 +14,13 @@ if(!function_exists('log_querys')){
 $dirNoti="";
 if(!function_exists('register_globals')){
 include('register_globals.php');
+
 	register_globals();
 	if(!isset($estilosVenta)){
         //verificar niveles en url para insertar librerias
-        $niv_url=substr_count($_SERVER["REQUEST_URI"], '/'); 
+        $niv_url=substr_count($_SERVER["REQUEST_URI"], '/');
+        //echo "NIVURL:  ".$niv_url;
+        
         switch ($niv_url) {
           case 2:include("librerias.php");$dirNoti="";break;
           case 3:include("librerias2.php");$dirNoti="../";break;
@@ -27,7 +30,7 @@ include('register_globals.php');
         if(!isset($indexGerencia)){
             ?>
           <div class="cargar">
-            <p style='padding-top: 35px; font-size: 14px;text-align: center;' class="text-warning font-weight-bold">Procesando Datos</p>
+            <p style='padding-top: 35px; font-size: 14px;text-align: center;' class="text-warning font-weight-bold">Procesando Datos XXX</p>
          </div>
             <?php
         }
@@ -44,14 +47,15 @@ include('register_globals.php');
 }else{
 }
 
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","kidsplace");
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+//$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplace_gabriela");
 
 if (mysqli_connect_errno())
 {
 	echo "Error en la conexión: " . mysqli_connect_error();
 }
 mysqli_set_charset($enlaceCon,"utf8");
-include "notificaciones.php";
+
 if (!function_exists('mysqli_result')) {
     function mysqli_result($result, $number, $field=0) {
         mysqli_data_seek($result, $number);

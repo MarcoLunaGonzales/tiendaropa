@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8'); 
+
 date_default_timezone_set('America/La_Paz');
 
 if(!function_exists('register_globals')){
@@ -18,9 +19,7 @@ if(!function_exists('register_globals')){
 }else{
 }
 
-//$enlaceCon=mysqli_connect("www.minkasoftware.com","mysql_imprenta2","4879531Gabriela","altar");
 $enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
-
 
 if (mysqli_connect_errno())
 {

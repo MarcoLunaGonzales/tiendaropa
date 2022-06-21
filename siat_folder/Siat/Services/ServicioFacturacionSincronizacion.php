@@ -1,10 +1,12 @@
 <?php
 namespace SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services;
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
 
 class ServicioFacturacionSincronizacion extends ServicioSiat
 {
-	protected $wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl';
+	// protected $wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/FacturacionSincronizacion?wsdl';
+	public $wsdl=conexionSiatUrl::wsdlSincronizacion;
 	
 	protected function buildData()
 	{

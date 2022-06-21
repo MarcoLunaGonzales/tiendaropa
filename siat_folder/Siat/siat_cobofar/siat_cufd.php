@@ -9,6 +9,8 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioSia
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionCodigos;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\SiatConfig;
 
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
+
 class CufdTest
 {
 	/**
@@ -27,7 +29,8 @@ class CufdTest
 			'nit'			=> $siat_nit,
 			'razonSocial'	=> $siat_razonSocial,
 			'modalidad'     => ServicioSiat::MOD_COMPUTARIZADA_ENLINEA,
-			'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			// 'ambiente'      => ServicioSiat::AMBIENTE_PRUEBAS,
+			'ambiente'      => conexionSiatUrl::AMBIENTE_ACTUAL,
 			'tokenDelegado'	=> $siat_tokenDelegado,
 			'cuis'			=> null,
 			'cufd'			=> null,

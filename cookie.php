@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=0; //para no ejecutar las librerias js css
 
 require("conexionmysqli.php");
 $usuario = $_POST["usuario"];
@@ -9,6 +10,7 @@ $sql = "
     SELECT f.cod_cargo, f.cod_ciudad,f.cod_tipofuncionario
     FROM funcionarios f, usuarios_sistema u
     WHERE u.codigo_funcionario=f.codigo_funcionario AND u.codigo_funcionario='$usuario' AND u.contrasena='$contrasena' ";
+echo $sql;
 $resp = mysqli_query($enlaceCon,$sql);
 $num_filas = mysqli_num_rows ($resp);
 //$num_filas = i($resp);

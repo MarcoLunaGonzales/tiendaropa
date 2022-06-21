@@ -4,6 +4,8 @@ namespace SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioRecepcionFactura;
 use Exception;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudRecepcion;
+use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
+
 require_once __DIR__ . SB_DS . 'functions.php';
 
 class Connection
@@ -36,8 +38,10 @@ class Connection
 	 * @var string
 	 */
 	protected	$token;
-	protected	$endpoint 	= 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
-	protected	$wsdl 		= 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
+	// protected	$endpoint 	= 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
+	// protected	$wsdl 		= 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
+	public $endpoint=conexionSiatUrl::endpoint;
+	public $wsdl=conexionSiatUrl::wsdl;
 	
 	public		$debug = false;
 	public		$modalidad 	= 'computarizada';
