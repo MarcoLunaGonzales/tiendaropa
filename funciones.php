@@ -385,4 +385,53 @@ function montoVentaDocumento($enlaceCon,$codVenta){
 	return($totalVenta);	
 }
 
+
+function obtenerEstadoSalida($codSalida){
+  	$estilosVenta=1;
+  	require("conexionmysqli2.inc");
+  	$sql_detalle="SELECT salida_anulada FROM salida_almacenes where cod_salida_almacenes='$codSalida'";
+  	$estado=0;	
+  	$resp=mysqli_query($enlaceCon,$sql_detalle);
+  	while($detalle=mysqli_fetch_array($resp)){	
+       $estado=$detalle[0]; 	
+  	} 
+  	mysqli_close($enlaceCon); 
+  	return $estado;
+	}
+
+  function guardarPDFArqueoCajaVerticalFactura($nom,$html,$rutaGuardado,$codSalida){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('letter', 'portrait');    
+
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(540, 750, "{PAGE_NUM}/{PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 7, array(0,0,0)); 
+
+    $estado=obtenerEstadoSalida($codSalida);
+    if($estado!=0){ //facturas anuladas MARCA DE AGUA ANULADO
+      //marca de agua
+      $canvas2 = $mydompdf->get_canvas(); 
+      $w = $canvas2->get_width(); 
+      $h = $canvas2->get_height(); 
+      $font = Font_Metrics::get_font("times"); 
+      $text = "ANULADO"; 
+      $txtHeight = -100; 
+      $textWidth = 250; 
+      $canvas2->set_opacity(.5); 
+      $x = (($w-$textWidth)/2); 
+      $y = (($h-$txtHeight)/2); 
+      $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    //fin marca agua
+     }
+
+    $output = $mydompdf->output();    
+    file_put_contents($rutaGuardado, $output);
+  }
+
 ?>

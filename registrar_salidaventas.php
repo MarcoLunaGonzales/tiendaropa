@@ -949,7 +949,7 @@ function adicionarCliente() {
     var genero = $("#genero").val();
 	var tipoPrecio = $("#tipoPrecio").val();	
 
-  if(nomcli==""||nit==""||mail==""||tel1==""){
+  if(nomcli==""||nit==""|| (mail==""&&tel1=="")){
     Swal.fire("Informativo!", "Debe llenar los campos obligatorios", "warning");
   }else{
 	  

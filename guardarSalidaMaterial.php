@@ -133,8 +133,8 @@ $banderaValidacionStock=$datConf[0];
 //$banderaValidacionStock=mysql_result($respConf,0,0);
 
 
-//SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT
-if($tipoDoc==1){
+//SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
+if($tipoDoc==1 || $tipoDoc==4){
 	//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
 	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
@@ -164,7 +164,7 @@ do {
 	$codigo=$datCodSalida[0];
 
 	//PARA CUANDO ES FACTURA Y ACTIVAMOS PROCESOS SIAT
-	if($tipoDoc==1){
+	if($tipoDoc==1 || $tipoDoc==4){
 		if(isset($_POST['fecha_emision'])){
 			$anio=date("Y",strtotime($_POST['fecha_emision']));	
 		}
@@ -196,7 +196,7 @@ do {
 		if(!isset($_POST["nro_correlativo"])){
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}else{
-	  			$vectorNroCorrelativo=numeroCorrelativo(4);
+	  			// $vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDoc);
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}
 		$cod_dosificacion=$vectorNroCorrelativo[2];	

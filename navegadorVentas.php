@@ -393,7 +393,7 @@ $consulta = "
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
 	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,
-	(select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago
+	(select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago,siat_estado_facturacion
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 ";
 
@@ -448,6 +448,18 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}
 	$chk = "<input type='checkbox' name='codigo' value='$codigo'>";
 
+
+    $urlDetalle="dFacturaElectronica.php";
+    $siat_estado_facturacion=$dat['siat_estado_facturacion'];
+    // if($codTipoDoc==4){
+    //     $nro_correlativo="<i class=\"text-danger\">M-$nro_correlativo</i>";
+    //     if($siat_estado_facturacion!=1){
+    //          //$urlDetalle="dFactura.php";
+    //     }
+    // }else{
+    //     $nro_correlativo="F-$nro_correlativo";
+    // }
+
 	
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
@@ -467,11 +479,16 @@ while ($dat = mysqli_fetch_array($resp)) {
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
 	*/
+    switch ($siat_estado_facturacion) {
+        case 1:$color_fondo="#99E80A";break;
+        case 2:$color_fondo="#FF2E09";break;
+        case 3:$color_fondo="#12A4DF";break;  
+        default:$color_fondo="#12A4DF";break;      
+    }
 	if($codTipoDoc==1){
 		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-	}
-	else{
+	}else{
 		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemision2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
@@ -488,19 +505,26 @@ while ($dat = mysqli_fetch_array($resp)) {
      }else{
         echo "<td  bgcolor='$color_fondo'><a href='notaSalidaCambio.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/icon_detail.png' width='30' border='0' title='Ver Detalle del Cambio'></a></td>";
      }
+
 	 if($codTipoDoc==2){
 		echo "<td bgcolor='$color_fondo'>
 		<a href='#' onClick='ShowFacturar($codigo,$nro_correlativo);'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Convertir en Factura'></a></td>";	
 	 }elseif($codTipoDoc==1){
-		echo "<td align='center'>
+		echo "<td align='center' bgcolor='$color_fondo'>
 		<a href='#' onClick='convertirNR($codigo);'>
 		<img src='imagenes/restaurar2.png' width='20' border='0' title='Convertir en NR y Anular Factura'></a>
 		</td>";
 	 }
+     if($codTipoDoc!=1 && $codTipoDoc!=2){
+        echo "<td  bgcolor='$color_fondo'> ";
+        echo "</td>";   
+     }
+     echo "<td  bgcolor='$color_fondo'> <a href='$urlDetalle?codigo_salida=$codigo' target='_BLANK' title='DOCUMENTO FACTURA'  class='text-dark'><i class='material-icons'>description</i></a>";
+        echo "</td>";
+     
     }
 
-	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
 	echo "</tr>";
 }
 echo "</table></center><br>";
