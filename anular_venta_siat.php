@@ -146,7 +146,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					    
+					    location.href='navegadorVentas.php';
 					});
 					</script>";
 			}else{
@@ -157,7 +157,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			    text: '',
 			    type: 'success'
 				}).then(function() {
-				    
+				    location.href='navegadorVentas.php';
 				});
 				</script>";	//location.href='navegadorVentas.php';
 			}
@@ -169,7 +169,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			    text: '',
 			    type: 'error'
 			}).then(function() {
-			    
+			    location.href='navegadorVentas.php';
 			});
 			</script>";
 		}
@@ -180,7 +180,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 		    text: '',
 		    type: 'error'
 		}).then(function() {
-		    
+		    location.href='navegadorVentas.php';
 		});
 				</script>";		
 	}
@@ -191,7 +191,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 	    text: '',
 	    type: 'error'
 	}).then(function() {
-	    
+	    location.href='navegadorVentas.php';
 	});
 			</script>";	
 }
