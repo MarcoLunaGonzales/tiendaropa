@@ -173,6 +173,18 @@ function obtenerNombreMaestro($enlaceCon, $tabla,$codigo){
 	return($nombre);
 }
 
-
+function nombreFuncionarioReal($enlaceCon,$codigo)
+{	
+	$sql="select concat(nombres,' ',paterno,' ',materno) from funcionarios where codigo_funcionario='$codigo'";
+	$resp=mysqli_query($enlaceCon,$sql);
+	$nombre="";
+	while($dat=mysqli_fetch_array($resp)){
+		$nombre=$dat[0];
+	}
+	
+	// $nombre=mysqli_result($resp,0,0);
+	mysqli_close($enlaceCon);
+	return($nombre);
+}
 
 ?>

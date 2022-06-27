@@ -109,7 +109,6 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	// $mail->Host = 'www.farmaciasbolivia.com.bo';             // Especificar el servidor de correo a utilizar 
 
-
 	$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	// $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP	

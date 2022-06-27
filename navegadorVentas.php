@@ -12,7 +12,7 @@ require("estilos_almacenes.inc");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="lib/externos/jquery/jquery-ui/completo/jquery-ui-1.8.9.custom.css" rel="stylesheet" type="text/css"/>
         <link href="lib/css/paneles.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        <!-- <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.core.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.widget.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.button.min.js"></script>
@@ -22,7 +22,7 @@ require("estilos_almacenes.inc");
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.resizable.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.dialog.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.datepicker.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script> -->
         <script type='text/javascript' language='javascript'>
 
 function nuevoAjax()
@@ -86,7 +86,7 @@ function funOk(codReg,funOkConfirm)
                     }
                 });
             } else {
-                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introdusca el codigo de confirmacion.</div>",function(){},function(){});
+                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introduzca el codigo de confirmacion.</div>",function(){},function(){});
             }
         },function(){});
     });
@@ -191,6 +191,90 @@ function anular_salida(f)
             });
         }
     }
+}
+
+function anular_salida_siat(f)
+{   var i;
+    var j=0;
+    var j_cod_registro, estado_preparado;
+    var fecha_registro;
+    for(i=0;i<=f.length-1;i++)
+    {   if(f.elements[i].type=='checkbox')
+        {   if(f.elements[i].checked==true)
+            {   j_cod_registro=f.elements[i].value;
+                fecha_registro=f.elements[i-2].value;
+                estado_preparado=f.elements[i-1].value;
+                j=j+1;
+            }
+        }
+    }
+    if(j>1)
+    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    }
+    else
+    {   if(j==0)
+        {   alert('Debe seleccionar un registro para anularlo.');
+        }
+        else
+        {   
+            // funOk(j_cod_registro,function() {
+            //             location.href='anular_venta_siat.php?codigo_registro='+j_cod_registro;
+            // });
+
+            funVerifi(j_cod_registro);
+
+
+        }
+    }
+}
+function funVerifi(codReg){   
+    // var cod_sucursal=$("#cod_sucursal").val();
+
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida_siat.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular").html(resp);
+            $("#codigo_salida").val(codReg);
+            $("#contrasena_admin").val("");
+            $("#modalAnularFactura").modal("show");           
+      }
+ }); 
+}
+
+function confirmarCodigo(){ 
+    document.getElementById('boton_anular').style.visibility='hidden';
+   // var cod_sucursal=document.getElementById("cod_sucursal").value;  
+   // var cod_personal=document.getElementById("cod_personal").value;  
+   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var per=$("#rpt_personal").val(); 
+
+  // var rpt_tipoanulacion=$("#rpt_tipoanulacion").val(); 
+  // var glosa_anulacion=$("input#glosa_anulacion").val(); 
+
+  var enviar_correo=$("input#enviar_correo").val();
+  var correo_destino=$("input#correo_destino").val();
+
+  var parametros={"codigo":cad1,"clave":cad2,"per":per};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar_siat.php",
+        data: parametros,
+        success:  function (resp) { 
+            if(resp==1) {
+                location.href='anular_venta_siat.php?codigo_registro='+$("#codigo_salida").val()+'&id_caja='+per+'&enviar_correo='+enviar_correo+'&correo_destino='+correo_destino;
+            }else{
+               Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
+               $("#modalAnularFactura").modal("hide");    
+            }
+      }
+ }); 
 }
 
 function cambiarCancelado(f)
@@ -377,6 +461,7 @@ echo "<div class='divBotones'>
 		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>		
 		<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
     </div>";
 		
 echo "<div id='divCuerpo'><center><table class='texto'>";
@@ -534,11 +619,37 @@ echo "<div class='divBotones'>
 		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>		
 		<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
     </div>";
 	
 echo "</form>";
 
 ?>
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+        <div class="card-header card-header-danger card-header-icon">
+          <div class="card-icon">
+            <i class="material-icons">delete</i>
+          </div>
+          <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <input type="hidden" name="codigo_salida" id="codigo_salida" value="0">
+        <div class="card-body" id="datos_anular">
+           
+        </div>
+        <div class="card-footer" >
+           <button id="boton_anular" name="boton_anular" class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
+        </div>
+    </div>  
+    </div>
+</div>
+<!--    end small modal -->
+
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 450px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
@@ -682,6 +793,9 @@ echo "</form>";
 </div>
 
 
+
+
+
         <script type='text/javascript' language='javascript'>
         </script>
         <div id="pnldlgfrm"></div>
@@ -695,3 +809,5 @@ echo "</form>";
         <div id="pnldlgenespera"></div>
     </body>
 </html>
+
+
