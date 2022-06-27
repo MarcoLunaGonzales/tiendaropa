@@ -8,8 +8,6 @@ require("enviar_correo/php/send-email_anulacion.php");
 $global_almacen=$_COOKIE["global_almacen"];
 
 
-
-
 $enviar_correo=$_GET["enviar_correo"];
 $correo_destino=$_GET["correo_destino"];
 // $enviar_correo=true;
@@ -47,7 +45,7 @@ while($dat_verif=mysqli_fetch_array($resp_verif)){
 	$idproveedor=$dat_verif['cod_cliente'];
 	// $correo_destino=obtenerCorreosListaCliente($idproveedor);
 }		
-
+// $anulado==0;
 if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 	if($cufd<>"0" and $cuis<>"0"){
 		// echo "***";
@@ -131,7 +129,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			
 			if($enviar_correo){
 				// header("location:sendEmailVenta.php?codigo=$codigo_registro&evento=2&tipodoc=1");
-				$estado_envio=envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino);
+				$estado_envio=envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino,$enlaceCon);
 				if($estado_envio==1){
 					$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>SE ENVIÓ EL CORREO CON EXITO.</b></span>";
 				}elseif($estado_envio==0){

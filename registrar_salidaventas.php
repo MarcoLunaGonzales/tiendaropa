@@ -435,6 +435,66 @@ function ajaxClienteBuscar(f){
 	ajax.send(null);
 }
 
+
+function refrescarComboCliente(cliente){
+	var parametros={"cliente":cliente,"nit":$("#nitCliente").val()};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaClientesActual.php",
+        data: parametros,
+        success:  function (resp) {
+        	Swal.fire("Correcto!", "Se guardó el cliente con éxito", "success");   
+           $("#cliente").html(resp);  
+           ajaxRazonSocialCliente(document.getElementById('form1'));
+           $("#cliente").selectpicker("refresh");          
+           $("#modalNuevoCliente").modal("hide");                  	   
+        }
+    });	
+}
+
+function mostrarClientesActualesCombo(){
+	var parametros={"0":0};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaClientesActual.php",
+        data: parametros,
+        success:  function (resp) {
+           $("#cliente_campana").html(resp);  
+           $("#cliente_campana").val($("#cliente").val());
+           $("#cliente_campana").selectpicker("refresh");                         	   
+        }
+    });	
+}
+
+
+function mostrarRegistroConTarjeta(){
+	$("#titulo_tarjeta").html("");
+	if($("#nro_tarjeta").val()!=""){
+      $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	if($("#monto_tarjeta").val()==""){	  
+      $("#monto_tarjeta").val($("#totalFinal").val());
+      $("#efectivoRecibidoUnido").val($("#totalFinal").val());
+      $("#tipoVenta").val(2);
+      $(".selectpicker").selectpicker("refresh");
+      aplicarMontoCombinadoEfectivo(form1);
+      document.getElementById("nro_tarjeta").focus();
+	}
+	$("#modalPagoTarjeta").modal("show");	
+	//$("#nro_tarjeta").focus();	
+}
+function verificarPagoTargeta(){	
+  var nro_tarjeta=$("#nro_tarjeta").val();
+  if(nro_tarjeta!=""){
+  	$("#boton_tarjeta").attr("style","background:green");
+  }else{
+  	$("#boton_tarjeta").attr("style","background:#96079D");
+  }
+}
+
+
 function calculaMontoMaterial(indice){
 
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
@@ -1568,6 +1628,9 @@ if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
 	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
 					<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+					
+					<a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>
+
             <!--h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2-->
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
@@ -1726,6 +1789,66 @@ if($banderaErrorFacturacion==0){
   </div>
 </div>  
 <!--    end small modal -->
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">credit_card</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-12">
+		         <div class="row d-none">
+                  <label class="col-sm-3 col-form-label">Banco</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
+                          <?php echo "$cadComboBancos"; ?>
+                          <option value="0" selected>Otro</option>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;' id="nro_tarjeta" name="nro_tarjeta" value="" onkeydown="verificarPagoTargeta()" onkeyup="verificarPagoTargeta()" onkeypress="verificarPagoTargeta()" autocomplete="off" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="number" id="monto_tarjeta" name="monto_tarjeta" style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#057793;' step="any" value=""/>
+                    </div>
+                  </div>
+                </div> 
+                <br>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-info btn-sm">GUARDAR</a>               
+                <br><br>
+       </div>
+</div>                  
+
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
+
+
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>

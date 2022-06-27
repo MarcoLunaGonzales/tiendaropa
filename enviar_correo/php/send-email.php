@@ -12,7 +12,7 @@ if($_POST) {
    $rutaArchivo=trim($_POST['adjuntos_texto'],",");
    $rutaArchivoCSV=trim($_POST['adjuntos_texto_csv'],",");
    $fechaActual=date("Y-m-d H:m:s");
-    $mail_username="ROLANDO NAVIA";//Correo electronico emisor
+    $mail_username="KIDSPLACE";//Correo electronico emisor
     $mail_userpassword="";// contraseña correo emisor
 
 
