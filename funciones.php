@@ -79,6 +79,77 @@ function numeroCorrelativoCUFD2($tipoDoc){
   return array($nro_correlativo,$bandera);  
 }
 
+function obtenerCorreosListaCliente($id_proveedor){	
+  	require("conexionmysqli2.inc");
+  	$sql_detalle="SELECT DISTINCT email_cliente FROM `clientes` where cod_cliente='$id_proveedor'";
+  	$correosProveedor="";  
+  	$resp=mysqli_query($enlaceCon,$sql_detalle);  
+  	while($detalle=mysqli_fetch_array($resp)){  
+       $correo=$detalle[0];
+       $correosProveedor.=$correo.",";
+	} 
+	$correosProveedor=trim($correosProveedor,",");
+  	mysqli_close($enlaceCon); 
+  	return $correosProveedor;
+}
+
+
+
+
+
+function cargarDocumentosPDF($codigoVenta){
+	$home=1;
+	ob_start();
+	require "conexionmysqli2.inc";
+	include "dFacturaElectronicaAllPdf.php";
+	$html = ob_get_clean();
+	//error_reporting(E_ALL);
+	$sqlDatosVenta="select s.siat_cuf
+	        from `salida_almacenes` s
+	        where s.`cod_salida_almacenes`='$codigoVenta'";
+	$respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+	$cuf="";
+	while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
+	    $cuf=$datDatosVenta['siat_cuf'];
+	}
+	$nombreFile="siat_folder/Siat/temp/Facturas-XML/$cuf.pdf";
+	unlink($nombreFile);	
+
+	guardarPDFArqueoCajaVerticalFactura($cuf,$html,$nombreFile);
+	return $cuf.".pdf";
+
+}
+function cargarDocumentosXML($codSalida){
+	// $codSalida=$_GET['codVenta'];
+	require "conexionmysqli2.inc";
+	require_once "siat_folder/funciones_siat.php";  
+	$facturaImpuestos=generarXMLFacturaVentaImpuestos($codSalida);
+
+	$sqlDatosVenta="select s.siat_cuf
+	        from `salida_almacenes` s
+	        where s.`cod_salida_almacenes`='$codSalida'";
+	$respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
+	$cuf="";
+	while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
+	    $cuf=$datDatosVenta['siat_cuf'];
+
+	}
+	$nombreFile="siat_folder/Siat/temp/Facturas-XML/$cuf.xml";
+	unlink($nombreFile);	
+	$archivo = fopen($nombreFile,'a');    
+	fputs($archivo,$facturaImpuestos);
+	fclose($archivo);
+
+	// if($email==1){
+		// header("Content-Type: application/force-download");
+		// header("Content-Disposition: attachment; filename=\"$cuf.xml\"");
+		// readfile($nombreFile);	
+	// }else{
+		return $cuf.".xml";
+	// }
+}
+
+
 function redondear2($valor) { 
    $float_redondeado=round($valor * 100) / 100; 
    return $float_redondeado; 

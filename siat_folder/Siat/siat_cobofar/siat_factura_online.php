@@ -272,7 +272,7 @@ class FacturaOnline
 				//$service->setPrivateCertificateFile($privCert);
 				// $service->setPublicCertificateFile($pubCert);
 				$service->debug = true;
-
+				
 
 				$facturaXml = $service->buildInvoiceXml($factura);
 				return $facturaXml;
