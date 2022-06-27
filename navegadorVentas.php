@@ -544,16 +544,25 @@ while ($dat = mysqli_fetch_array($resp)) {
     // }else{
     //     $nro_correlativo="F-$nro_correlativo";
     // }
+    $datosAnulacion="";
+    $stikea="";
+    $stikec="";
+    if($salida_anulada==1){
+        $stikea="<strike class='text-danger'>";        
+        $stikec=" (ANULADO)</strike>";
+        // $datosAnulacion="title='<small><b class=\"text-primary\">$nro_correlativo ANULADA<br>Caja:</b> ".nombreVisitador($dat['cod_chofer_anulacion'])."<br><b class=\"text-primary\">F:</b> ".date("d/m/Y H:i",strtotime($dat['fecha_anulacion']))."</small>' data-toggle='tooltip'";
+        $chk="";
+    }
 
 	
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'>$nombreTipoDoc-$nro_correlativo</td>";
-    echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
-    echo "<td>$nombre_tiposalida</td>";
-    echo "<td>$tipoPago</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
+    echo "<td align='center'>$stikea$nombreTipoDoc-$nro_correlativo $stikec</td>";
+    echo "<td align='center'>$stikea$fecha_salida_mostrar $hora_salida$stikec</td>";
+    echo "<td>$stikea $nombre_tiposalida $stikec</td>";
+    echo "<td>$stikea $tipoPago $stikec</td><td>$stikea &nbsp;$razonSocial $stikec</td><td>$stikea&nbsp;$nitCli $stikec</td><td>$stikea &nbsp;$obs_salida $stikec</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
 	
 	$urlConversionFactura="convertNRToFactura.php?codVenta=$codigo";    
@@ -585,29 +594,30 @@ while ($dat = mysqli_fetch_array($resp)) {
      while($datCambio=mysqli_fetch_array($respCambio)){
         $codigoVentaCambio=$datCambio[0];        
      }
-     if($codigoVentaCambio==0){
+     if($codigoVentaCambio==0 ){
         echo "<td  bgcolor='$color_fondo'><a href='cambiarProductoVenta.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/change.png' width='30' border='0' title='Cambio de Producto'></a></td>";
      }else{
         echo "<td  bgcolor='$color_fondo'><a href='notaSalidaCambio.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/icon_detail.png' width='30' border='0' title='Ver Detalle del Cambio'></a></td>";
      }
 
-	 if($codTipoDoc==2){
+	 if($codTipoDoc==2 && $salida_anulada==0){
 		echo "<td bgcolor='$color_fondo'>
 		<a href='#' onClick='ShowFacturar($codigo,$nro_correlativo);'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Convertir en Factura'></a></td>";	
-	 }elseif($codTipoDoc==1){
+	 }elseif($codTipoDoc==1 && $salida_anulada==0){
 		echo "<td align='center' bgcolor='$color_fondo'>
 		<a href='#' onClick='convertirNR($codigo);'>
 		<img src='imagenes/restaurar2.png' width='20' border='0' title='Convertir en NR y Anular Factura'></a>
 		</td>";
-	 }
-     if($codTipoDoc!=1 && $codTipoDoc!=2){
-        echo "<td  bgcolor='$color_fondo'> ";
-        echo "</td>";   
+	 }else{
+        echo "<td align='center' bgcolor='$color_fondo'> </td>";
      }
+     // if($codTipoDoc!=1 && $codTipoDoc!=2){
+     //    echo "<td  bgcolor='$color_fondo'> ";
+     //    echo "</td>";   
+     // }
      echo "<td  bgcolor='$color_fondo'> <a href='$urlDetalle?codigo_salida=$codigo' target='_BLANK' title='DOCUMENTO FACTURA'  class='text-dark'><i class='material-icons'>description</i></a>";
         echo "</td>";
-     
     }
 
 	echo "</tr>";

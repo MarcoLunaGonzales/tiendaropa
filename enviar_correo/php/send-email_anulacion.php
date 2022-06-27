@@ -1,11 +1,16 @@
 <?php
 require 'PHPMailer/send.php';
-// require("../../funciones.php");
 
-function envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correosProveedor){
+
+
+function envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correosProveedor,$enlaceCon){
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+require_once("funciones.php");
+
  $email = "";//cc de correo
  // $contact_message = trim($_POST['message']);
-  $mail_username="COMERCIAL NAVIA TUADMIN";//Correo electronico emisor
+  $mail_username="KIDSPLACE";//Correo electronico emisor
   $mail_userpassword="";// contraseña correo emisor
 
 
@@ -13,9 +18,10 @@ function envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nit
   // $proveedor=$_POST['$proveedor'];
   // $nro_correlativo=$_POST['nro_correlativo'];
   // $cuf=$_POST['cuf'];
-
-  $urlDir=obtenerValorConfiguracion(46);
-
+// echo "***";
+  // echo "***";
+  $urlDir=obtenerValorConfiguracion($enlaceCon,46);
+// echo "***";
   // $correosProveedor=obtenerCorreosListaCliente($idproveedor);
   //$correosProveedor = "davidhuarina25@gmail.com,bsullcamani@gmail.com";
   if($correosProveedor<>""){

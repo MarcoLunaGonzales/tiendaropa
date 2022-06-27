@@ -75,7 +75,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 
 
 	 //imagenes
-    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/tufarma.png'));
+    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
 
@@ -176,7 +176,7 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 
 
 	 //imagenes
-    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/tufarma.png'));
+    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
 
