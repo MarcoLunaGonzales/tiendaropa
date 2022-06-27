@@ -332,6 +332,7 @@ if($sql_inserta==1){
 				$fechaEmision=$facturaImpuestos[1];
 				$cuf=$facturaImpuestos[2];		
 				if(isset($facturaImpuestos[0]->RespuestaServicioFacturacion->codigoRecepcion)){
+
 					$codigoRecepcion=$facturaImpuestos[0]->RespuestaServicioFacturacion->codigoRecepcion;
 					$sqlUpdMonto="update salida_almacenes set siat_fechaemision='$fechaEmision',siat_estado_facturacion='1',siat_codigoRecepcion='$codigoRecepcion',siat_cuf='$cuf',siat_codigocufd='$codigoCufd',siat_codigotipoemision='1' 
 							where cod_salida_almacenes='$codigo' ";
@@ -341,6 +342,7 @@ if($sql_inserta==1){
 						where cod_salida_almacenes='$codigo' ";
 					$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
 					$errorFacturaXml=1;
+					// echo $sqlUpdMonto;
 				}			
 			}
 			if($errorFacturaXml==0){
@@ -348,7 +350,7 @@ if($sql_inserta==1){
 					$cambioFactura=number_format($totalEfectivo-$totalFacturaMonto,2,'.','');
 					$sqlUpdCambio="update salida_almacenes set monto_cambio='$cambioFactura',observaciones='REVFACT' 
 					where cod_salida_almacenes='$codigo'";
-		   		mysqli_query($enlaceCon,$sqlUpdCambio);
+		   			mysqli_query($enlaceCon,$sqlUpdCambio);
 					echo "<script type='text/javascript' language='javascript'>	
 						location.href='errorDiferenciaFactura.php?codVenta=$codigo';
 							</script>";	
@@ -359,6 +361,7 @@ if($sql_inserta==1){
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
 				echo "<script type='text/javascript' language='javascript'>	
+				location.href='dFacturaElectronica.php?codigo_salida=$codigo';
 				</script>";	
 			}
 		}else if($tipoDoc==2){
