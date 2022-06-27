@@ -54,8 +54,8 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 		$respEvento=anulacionFactura_siat($codigoPuntoVenta,$cod_impuestos,$cuis,$cufd,$cuf);
 		// var_dump($respEvento);
 		$mensaje=$respEvento[1];
-		$respEvento[0]=1;
-		$respEvento[1]="sisisi";
+		// $respEvento[0]=1;
+		// $respEvento[1]="sisisi";
 		if($respEvento[0]==1){
 			
 			// echo "<br>**".print_r($respEvento)."**<br>";
@@ -115,10 +115,12 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			}
 
 			$sql="update salida_almacenes set salida_anulada=1, estado_salida=3 where cod_salida_almacenes='$codigo_registro'";
-			$resp=mysql_query($sql);
+			// $resp=mysql_query($sql);
+			$resp=mysqli_query($enlaceCon,$sql);
 
 			$sql="update facturas_venta set cod_estado=2 where cod_venta='$codigo_registro'";
-			$resp=mysql_query($sql);
+			// $resp=mysql_query($sql);
+			$resp=mysqli_query($enlaceCon,$sql);
 
 
 			// //SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
