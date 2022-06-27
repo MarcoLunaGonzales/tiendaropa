@@ -16,6 +16,7 @@ $nombreFile="siat_folder/Siat/temp/Facturas-XML/$cuf.pdf";
 unlink($nombreFile);	
 
 guardarPDFArqueoCajaVerticalFactura($cuf,$html,$nombreFile,$codigoVenta);
+// echo $html;
 
 if(isset($_GET["ds"])){
     ?><script type="text/javascript">

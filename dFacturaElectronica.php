@@ -87,7 +87,7 @@ if(isset($_GET['r'])){
                 // fclose($archivo);
 
 
-                ?><script type="text/javascript">window.location.href='formatoFactura.php?codVenta=<?=$codSalida?>'</script><?php
+                ?><script type="text/javascript">window.location.href='formatoFacturaOnLine.php?codVenta=<?=$codSalida?>'</script><?php
 
             }else{
                 $codigoError=$facturaImpuestos[0]->RespuestaServicioFacturacion->mensajesList->codigo;
@@ -121,7 +121,9 @@ if(isset($_GET['r'])){
 
 $sqlEst="select siat_estado_facturacion from salida_almacenes where cod_salida_almacenes='$codSalida'";
 $respEst=mysqli_query($enlaceCon,$sqlEst);
-$estadoFacturacion=mysqli_result($respEst,0,0);
+// $estadoFacturacion=mysqli_result($respEst,0,0);
+$datConf=mysqli_fetch_array($respEst);
+$estadoFacturacion=$datConf[0];
 
 ?>
 <style type="text/css">
@@ -156,7 +158,7 @@ $estadoFacturacion=mysqli_result($respEst,0,0);
 </style>
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4>FACTURA - COBOFAR COMERCIAL</h4>
+        <h4>FACTURA - TuAdmin</h4>
     </div>        
     <div class="card-body">
         <?=$stringEstado?>
@@ -176,7 +178,7 @@ $estadoFacturacion=mysqli_result($respEst,0,0);
         </div>
 
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
-         <a href='#' class="after-loop-item card border-0 card-tercero shadow-lg" style="background:#12C1A9;color:#fff;" onclick="window.open('formatoFactura.php?codVenta=<?=$codSalida?>','detalle_factura'); return false;">
+         <a href='#' class="after-loop-item card border-0 card-tercero shadow-lg" style="background:#12C1A9;color:#fff;" onclick="window.open('formatoFacturaOnLine.php?codVenta=<?=$codSalida?>','detalle_factura'); return false;">
             <div class="card-body d-flex align-items-center flex-column">
                <h4><i class="material-icons">print</i> <b>IMPRIMIR FACTURA</b></h4>
                <p>FACTURA COMPUTARIZADA</p>
@@ -281,7 +283,7 @@ $estadoFacturacion=mysqli_result($respEst,0,0);
          </a>
         </div>  
         <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">  
-        <a href='#' class="after-loop-item card border-0 card-tercero shadow-lg" style="background:#909090;color:#fff;" onclick="window.open('formatoFactura.php?codVenta=<?=$codSalida?>','detalle_factura'); return false;">
+        <a href='#' class="after-loop-item card border-0 card-tercero shadow-lg" style="background:#909090;color:#fff;" onclick="window.open('formatoFacturaOnLine.php?codVenta=<?=$codSalida?>','detalle_factura'); return false;">
             <div class="card-body d-flex align-items-center flex-column">
                <h4><i class="material-icons">print</i> <b>IMPRIMIR FACTURA</b></h4>
                <p>FACTURA COMPUTARIZADA OFFLINE</p>

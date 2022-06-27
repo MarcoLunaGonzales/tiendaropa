@@ -365,7 +365,7 @@ footer p {
                     <div class="row bb pb-3">
                         <table style="width: 100%;font-size: 14px;">
                             <tr><td width="40%"><div class="col-7">
-                            <p>Carmelita</p>
+                            <p>NAVIA CASTILLO ROLANDO EDUARDO</p>
                             <h3 style="color:#14AF91"><?=$sucursalTxt?></h3>
                             <div class="txn mt-2">Punto de Venta: <?=$siat_codigopuntoventa?></div>
                             <div class="txn mt-2">NIT: <?=$nitTxt?></div>
@@ -631,9 +631,9 @@ QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
                 <br>
             <footer>
                 <br>
-                <p class="m-0 text-center" style="font-size: 11px;">
+                <!-- <p class="m-0 text-center" style="font-size: 11px;">
                     Visítanos en <a href="http://www.farmaciasbolivia.com.bo/" target="_blank"> www.farmaciasbolivia.com.bo</a>
-                </p>
+                </p> -->
             </footer>
         </div>
     </div>

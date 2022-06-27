@@ -7,6 +7,25 @@ require("../funciones_siat.php");
   //datos de cabecera
   $cantidadItems=$_POST['contador_items'];//total de intems
   $codigoMotivoEvento=$_POST['cod_motivo'];
+
+  // $url_retorno="";
+  if($_POST['rpt_territorio']>0){
+    $rpt_territorio=$_POST['rpt_territorio'];
+    $url_retorno="location.href='facturas_cafc_list.php?rpt_territorio=".$rpt_territorio."';";
+  }else{
+    $rpt_territorio=0;
+    $url_retorno="location.href='facturas_cafc_list.php';";
+
+  }
+
+  $nuevo_cufd=0;
+  if(isset($_POST['nuevo_cufd'])){
+    $nuevo_cufd=1;//si se generará nuevo cufd
+  }
+  $nuevo_cuf=0;
+  if(isset($_POST['nuevo_cuf'])){
+    $nuevo_cuf=1;//si se generará nuevo cuf
+  }
   $descripcionX="";
   $codigoPuntoVenta=0; 
   $flagSuccess=false;
@@ -25,17 +44,17 @@ require("../funciones_siat.php");
   }
 $DatosConexion=verificarConexion();
 if($DatosConexion[0]==1){
-
   $string_codigos=trim($string_codigos,",");
   $cod_tipoEmision=2;//tipo emision OFFLINE
-  $sql="SELECT DATE_FORMAT(s.siat_fechaemision,'%Y-%m-%d')as siat_fechaemisionx,s.cod_almacen,a.nombre_almacen,(select cod_impuestos from ciudades where cod_ciudad= a.cod_ciudad)as cod_impuestos,a.cod_ciudad
-    FROM salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen 
+  $sql="SELECT DATE_FORMAT(s.siat_fechaemision,'%Y-%m-%d')as siat_fechaemisionx,s.cod_almacen,a.nombre_almacen,(select cod_impuestos from ciudades where cod_ciudad= a.cod_ciudad)as cod_impuestos,a.cod_ciudad,sc.cufd
+    FROM salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen join siat_cufd sc on s.siat_codigocufd=sc.codigo
     WHERE s.cod_salida_almacenes in ($string_codigos)
-    GROUP BY s.cod_almacen,siat_fechaemisionx ORDER BY a.nombre_almacen,siat_fechaemisionx";
-    // echo $sql;
+    GROUP BY s.cod_almacen,siat_fechaemisionx,s.siat_codigocufd
+    ORDER BY a.nombre_almacen,siat_fechaemisionx";
+     // echo $sql;
     $fecha_X=date('Y-m-d');
   $resp1=mysqli_query($enlaceCon,$sql);
-  while($row=mysqli_fetch_array($resp1)){ 
+  while($row=mysqli_fetch_array($resp1)){
     $fecha=$row['siat_fechaemisionx'];
     $cod_almacen=$row['cod_almacen'];
     $nombre_almacen=$row['nombre_almacen'];
@@ -45,15 +64,15 @@ if($DatosConexion[0]==1){
     $codigoPuntoVenta=obtenerPuntoVenta_BD($cod_ciudad);
     $cuis=obtenerCuis_siat($codigoPuntoVenta,$cod_impuestos);
     $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
-    $cufdEvento=obtenerCufd_anterior_BD($cod_ciudad,$fecha,$cuis);
-    
+    $cufdEvento=$row['cufd'];
+    //$cufdEvento=obtenerCufd_anterior_BD($cod_ciudad,$fecha,$cuis);
+    //$cufdEvento="BQcKhQ25VQ0JBNzTg3RjNCRTk4QTY=QnxMVkRMWUZXVU9FFNEUwNkEzNkY4N";
     // echo  $cuis; 
-    if($cufd<>"0" and $cufd<>'' and $cufdEvento<>"0"){
+    if($cufd<>"0" and $cufd<>''){
        // echo $cufd;
       $datos_hora=obtenerFechasEmisionFacturas($string_codigos,$cod_almacen,$fecha);
       $fecha_inicio=$fecha."T".$datos_hora[0]; 
       $fecha_fin=$fecha."T".$datos_hora[1];
-
       //buscamos algun evento disponible en ese rango de fechas
       $sw=0;
       $codigoEvento_datos=obtenerEventosignificativo_BD($codigoMotivoEvento,$codigoPuntoVenta,$cod_impuestos,$fecha_fin,$fecha_inicio);
@@ -71,6 +90,11 @@ if($DatosConexion[0]==1){
           $fecha_fin_datos=explode(" ", $fecha_fin);
           $fecha_fin=$fecha_fin_datos[0]."T".$fecha_fin_datos[1].".000";//agregamos milisegundos 
         }
+        if($nuevo_cufd==1){
+          deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
+          $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
+          $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
+        }
 
         $respEvento=solicitudEventoSignificativo($codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis);
         // echo "<br>**".print_r($respEvento)."**<br>";
@@ -87,17 +111,15 @@ if($DatosConexion[0]==1){
         }
         //enviamos el paquete con las facturas
         // echo $string_codigos."-".$cod_almacen."-".$fecha."-".$codigoMotivoEvento."-".$descripcionX."-".$codigoPuntoVenta."-".$cod_impuestos."-".$cufd."-".$cufdEvento."-".$fecha_fin."-".$fecha_inicio."-".$codigoEvento."<br>";
-        $respPaquete=solicitudRecepcionPaquetes($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcionX,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,2);
+        $respPaquete=solicitudRecepcionPaquetes($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcionX,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,2,$nuevo_cuf);
         $codigo=$respPaquete[0];
         $descripcionPaquete=$respPaquete[1];
         $descripcionValidacion=$respPaquete[2];
         if($codigo==1){
-
           $error=false;
           // $descripcionError=$nombre_almacen.": ".$descripcion;
           $descripcionError="<b>Evento</b>: ".$descripcionEvento."<br><b>Paquete:<br>Paso 1.- </b> ".$descripcionPaquete."<br><b>Paso 2.- </b> ".$descripcionValidacion;
         }else{
-
           $error=true;
           // $descripcionError=$nombre_almacen.": ".$descripcion;
           $descripcionError="<b>Evento:</b> ".$descripcionEvento."<br><b>Paquete:<br>Paso 1.- </b> ".$descripcionPaquete."<br><b>Paso 2.- </b> ".$descripcionValidacion;          
@@ -114,9 +136,6 @@ if($DatosConexion[0]==1){
       if($cufd=="0"){
         $descripcionError.=$nombre_almacen.": NO ENCONTRADO CUFD VIGENTE\n";
       }
-      if($cufdEvento=="0"){
-        $descripcionError.=$nombre_almacen.": NO ENCONTRADO CUFD de FECHA: $fecha\n";
-      }
       $error=true;
       break;
     }
@@ -129,7 +148,11 @@ if($DatosConexion[0]==1){
       html: '<table style=\"border:1px;font-size:14px\"><tr><td>".$descripcionError."</td></tr></table>',
       type: 'error'
     }).then(function() {
-        location.href='facturas_cafc_list.php';
+
+        
+
+        ".$url_retorno."
+
     });
     </script>";  
   }else{
@@ -139,13 +162,10 @@ if($DatosConexion[0]==1){
       html: '<table style=\"border:1px;font-size:14px\"><tr><td>".$descripcionError."</td></tr></table>',
       type: 'success'
     }).then(function() {
-        location.href='facturas_cafc_list.php';
+        
     });
     </script>";
   }
-
-
-
 }else{
   echo "<script language='Javascript'>
     Swal.fire({
@@ -153,7 +173,7 @@ if($DatosConexion[0]==1){
       text: '".$DatosConexion[1]."',
       type: 'error'
     }).then(function() {
-        location.href='facturas_cafc_list.php';
+        ".$url_retorno."
     });
     </script>"; 
   

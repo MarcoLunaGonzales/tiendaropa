@@ -159,7 +159,7 @@ class FacturaOnline
 		return $factura;
 	}
 
-	public function testRecepcionFacturaElectronica($codSalidaFactura,$tipoEmision=1,$ex=false,$online_siat=1)
+	public function testRecepcionFacturaElectronica($codSalidaFactura,$tipoEmision=1,$ex=false,$online_siat=1,$nuevo_cuf=0)
 	{
 
 		try
@@ -235,13 +235,10 @@ class FacturaOnline
 				$factura->cabecera->leyenda=$dataFact['leyenda'];
 
 				$factura->cabecera->cuf=$dataFact['siat_cuf'];
-				// if($dataFact['cod_tipo_doc']==4){
-				// 	$factura->buildCuf((int)$factura->cabecera->codigoSucursal, $config->modalidad, $tipoEmision, $tipoFactura, $dataFact['codigoControl_generado']);
-				// }
-				// if($dataFact['siat_codigotipoemision']==2 and $dataFact['siat_excepcion']<>0){
-				// 	$factura->cabecera->codigoTipoDocumentoIdentidad= 1;
-				// 	$factura->cabecera->codigoExcepcion=0;
-				// }
+				
+				if($nuevo_cuf==1){
+					$factura->buildCuf((int)$factura->cabecera->codigoSucursal, $config->modalidad, $tipoEmision, $tipoFactura, $dataFact['codigoControl_generado']);
+				}
 
 				//die($factura->cuf);
 				$factura->validate();

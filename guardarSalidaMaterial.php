@@ -53,15 +53,17 @@ if(isset($_POST['tipo_cambio_dolar'])){
    $tipo_cambio=$_POST['tipo_cambio_dolar'];
 }
 
-if(isset($codCliente)){	$codCliente=$_POST['codCliente']; }else{ $codCliente=0;	}
-if(isset($tipoPrecio)){	$tipoPrecio=$_POST['tipoPrecio']; }else{ $tipoPrecio=0;	}
-if(isset($razonSocial)){	$razonSocial=$_POST['razonSocial']; }else{ $razonSocial="";	}
+
+
+if(isset($_POST['cliente'])){	$codCliente=$_POST['cliente']; }else{ $codCliente=0;	}
+if(isset($_POST['tipoPrecio'])){	$tipoPrecio=$_POST['tipoPrecio']; }else{ $tipoPrecio=0;	}
+if(isset($_POST['razonSocial'])){	$razonSocial=$_POST['razonSocial']; }else{ $razonSocial="";	}
 if($razonSocial==""){
 	$razonSocial="SN";
 }
 $razonSocial=addslashes($razonSocial);
 
-if(isset($nitCliente)){	$nitCliente=$_POST['nitCliente']; }else{ $nitCliente=0;	}
+if(isset($_POST['nitCliente'])){	$nitCliente=$_POST['nitCliente']; }else{ $nitCliente=0;	}
 
 if((int)$nitCliente==123){
 	$razonSocial="SN";
@@ -73,17 +75,17 @@ if(isset($_POST['fecha_emision'])){
    $fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".date("H:i:s")));
 }
 
-if(isset($tipoVenta)){	$tipoVenta=$_POST['tipoVenta']; }else{ $tipoVenta=0;	}
-if(isset($observaciones)){	$observaciones=$_POST['observaciones']; }else{ $observaciones="";	}
+if(isset($_POST['tipoVenta'])){	$tipoVenta=$_POST['tipoVenta']; }else{ $tipoVenta=0;	}
+if(isset($_POST['observaciones'])){	$observaciones=$_POST['observaciones']; }else{ $observaciones="";	}
 
 $cuf="";
 
-if(isset($totalVenta)){	$totalVenta=$_POST['totalVenta']; }else{ $totalVenta=0;	}
-if(isset($descuentoVenta)){	$descuentoVenta=$_POST['descuentoVenta']; }else{ $descuentoVenta=0;	}
-if(isset($totalFinal)){	$totalFinal=$_POST['totalFinal']; }else{ $totalFinal=0;	}
-if(isset($totalEfectivo)){	$totalEfectivo=$_POST['totalEfectivo']; }else{ $totalEfectivo=0;	}
-if(isset($totalCambio)){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
-if(isset($complemento)){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
+if(isset($_POST['totalVenta'])){	$totalVenta=$_POST['totalVenta']; }else{ $totalVenta=0;	}
+if(isset($_POST['descuentoVenta'])){	$descuentoVenta=$_POST['descuentoVenta']; }else{ $descuentoVenta=0;	}
+if(isset($_POST['totalFinal'])){	$totalFinal=$_POST['totalFinal']; }else{ $totalFinal=0;	}
+if(isset($_POST['totalEfectivo'])){	$totalEfectivo=$_POST['totalEfectivo']; }else{ $totalEfectivo=0;	}
+if(isset($_POST['totalCambio'])){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
+if(isset($_POST['complemento'])){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
 
 $totalFinalRedondeado=round($totalFinal);
 
@@ -197,6 +199,7 @@ do {
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}else{
 	  			// $vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDoc);
+				$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}
 		$cod_dosificacion=$vectorNroCorrelativo[2];	
@@ -260,10 +263,14 @@ if($sql_inserta==1){
 		$codMaterial=$_POST["materiales$i"];
 		if($codMaterial!=0){
 
-			if(isset($cantidadUnitaria)){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
-			if(isset($precioUnitario)){	$precioUnitario=$_POST['precioUnitario$i']; }else{ $precioUnitario=0;	}
-			if(isset($descuentoProducto)){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
+			// if(isset($_POST['cantidad_unitaria$i'])){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
+			// if(isset($_POST['precio_unitario$i'])){	$precioUnitario=$_POST['precio_unitario$i']; }else{ $precioUnitario=0;	}
+			// if(isset($_POST['descuentoProducto$i'])){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
 			
+			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
+			$precioUnitario=$_POST["precio_unitario$i"];
+			$descuentoProducto=$_POST["descuentoProducto$i"];
+
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
 			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
