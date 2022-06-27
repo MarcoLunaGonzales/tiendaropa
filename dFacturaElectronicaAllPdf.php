@@ -348,7 +348,7 @@ footer p {
                 
             <table>
                 <tr><td><div class="logo">
-                    <img src="<?=__DIR__?>/imagenes/tufarma.png" alt="" class="img-fluid" style="width: 300px;">
+                    <img src="<?=__DIR__?>/imagenes/logo.jpg" alt="" class="img-fluid" style="width: 300px;">
                 </div></td>
                     <td><div class="top-left">
                     <div class="position-relative">
