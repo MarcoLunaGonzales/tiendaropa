@@ -1,7 +1,10 @@
 <?php
+
 if(!isset($_COOKIE["global_usuario"])){
   ?><!-- <script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");/*window.close();*/});</script> --><?php
 }
+
+
 set_time_limit(0);
 
 error_reporting(0);
@@ -11,14 +14,17 @@ date_default_timezone_set('America/La_Paz');
 if(!function_exists('log_querys')){
   include('register_logs.php');  
 }
+
 $dirNoti="";
 if(!function_exists('register_globals')){
 include('register_globals.php');
 
 	register_globals();
+
 	if(!isset($estilosVenta)){
         //verificar niveles en url para insertar librerias
         $niv_url=substr_count($_SERVER["REQUEST_URI"], '/');
+
         //echo "NIVURL:  ".$niv_url;
         
         switch ($niv_url) {
@@ -27,12 +33,14 @@ include('register_globals.php');
           case 4:include("librerias3.php");$dirNoti="../../";break;
         }
 
+
         if(!isset($indexGerencia)){
             ?>
           <div class="cargar">
             <p style='padding-top: 35px; font-size: 14px;text-align: center;' class="text-warning font-weight-bold">Procesando Datos XXX</p>
          </div>
             <?php
+
         }
         ?>
         
@@ -42,11 +50,11 @@ include('register_globals.php');
               <p class="text-muted">Aguard&aacute; un momento por favor</p>  
            </div>
          </div>
-        <?php	
+        <?php
 	}
 }else{
-}
 
+}
 
 $enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
 
@@ -67,4 +75,3 @@ if (!function_exists('mysqli_result')) {
         return $row[$field];
     }
 }
-?>

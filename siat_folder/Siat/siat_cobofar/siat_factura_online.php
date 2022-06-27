@@ -164,7 +164,7 @@ class FacturaOnline
 
 		try
 		{
-
+			
 			//datosCompletosFactura
 			require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";
 			//(SELECT codigoPuntoVenta from siat_puntoventa where cod_ciudad=c.cod_ciudad) as codigoPuntoVenta,

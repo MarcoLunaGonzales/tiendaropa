@@ -1,12 +1,4 @@
 <?php
-
-
-// $sqlRecep="select siat_codigoRecepcion from salida_almacenes where cod_salida_almacenes='$codigo'";
-// $respRecep=mysqli_query($enlaceCon,$sqlRecep);
-// $recepcion=mysqli_result($respRecep,0,0);
-
-
-//parametros para conexion 
 $siat_nombreSistema='TuAdmin';
 $siat_codigoSistema='71E742C6AB21890588DC46E';
 $siat_tipo='PROPIO';
