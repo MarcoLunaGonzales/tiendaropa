@@ -28,4 +28,3 @@ if (mysqli_connect_errno())
 	echo "Error en la conexión: " . mysqli_connect_error();
 }
 mysqli_set_charset($enlaceCon,"utf8");
-?>

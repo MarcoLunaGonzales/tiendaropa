@@ -97,6 +97,10 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	}
 }
 function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir=''){
+
+// 	error_reporting(E_ALL);
+// ini_set('display_errors', '1');
+
 	if($inicio==0){
 		require 'PHPMailer/src/Exception.php';
 	    require 'PHPMailer/src/PHPMailer.php';
@@ -129,15 +133,19 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	}
 
 
-	$adjuntos=explode( ',', $rutaArchivo);
-	for ($i=0; $i <count($adjuntos) ; $i++) { 
-		// echo "1";
-		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
-	}
+	// $adjuntos=explode( ',', $rutaArchivo);
+	// $mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/101497132B09436B1E4EA0BC55AD22B9ADF4DADB3297B7C7650AD86D74.xml");
+	// for ($i=0; $i <count($adjuntos) ; $i++) { 
+	// 	// echo "1";
+	// 	// $nombre_xml=trim($adjuntos[$i]);
+	// 	// $nombre_xml=utf8_decode($adjuntos[$i]);
+	// 	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_xml);
+	// }
 	$adjuntosCSV=explode( ',', $rutaArchivoCSV);
-	for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
-		// echo "2";
-		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntosCSV[$i]);
+	for ($i=0; $i <count($adjuntosCSV) ; $i++) { 		
+		$nombre_archivo=explode('.',$adjuntosCSV[$i]);
+		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
+		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
 	}
 	///////////////////////////////////////para la version de php 7
 	$mail->SMTPOptions = array(
@@ -193,11 +201,16 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
       return 0;
 	}else{
 		//UNLINK
-		for ($i=0; $i <count($adjuntos) ; $i++) { 
-			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
-		}
+		// for ($i=0; $i <count($adjuntos) ; $i++) { 			
+		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
+
+		// }
 		for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
-			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntosCSV[$i]);
+			
+			$nombre_archivo=explode('.',$adjuntosCSV[$i]);		
+			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
+			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
+
 		}
 	  	return 1;
 

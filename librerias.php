@@ -4,8 +4,6 @@
   <link href="assets/css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
   <!--<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>-->
-
-
   <script src="assets/js/core/jquery.min.js"></script>
   <script src="assets/js/core/jquery-ui.min.js"></script>
   <script src="assets/js/core/popper.min.js"></script>
@@ -26,7 +24,6 @@
   <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
   <script src="assets/js/plugins/jquery.dataTables.min.js"></script>
   <script src="assets/js/plugins/dataTables.fixedHeader.min.js"></script>
-
   <!--  Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
   <script src="assets/js/plugins/bootstrap-tagsinput.js"></script>
   <!--  Notifications Plugin    -->
@@ -34,5 +31,4 @@
   <script src="assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
   <script src="assets/js/mousetrap.min.js"></script>
   <script src="assets/alerts/alerts.js"></script>
-
   <script src="assets/alerts/functionsGeneral.js"></script>
