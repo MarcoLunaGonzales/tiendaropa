@@ -109,6 +109,7 @@ if(isset($_GET['r'])){
     }
     
     $estiloTitulo='';
+    // var_dump($resEstado);
     if($resEstado->RespuestaServicioFacturacion->codigoEstado==690){
         $estiloTitulo='style="color:green"';
     }elseif($resEstado->RespuestaServicioFacturacion->codigoEstado==691){

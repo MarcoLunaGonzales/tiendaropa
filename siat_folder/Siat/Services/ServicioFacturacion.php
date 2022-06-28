@@ -39,7 +39,8 @@ class ServicioFacturacion extends ServicioSiat
 		//print_r($facturaXml);
 		$this->debug($facturaXml, 1);
 		//print_r($factura);
-		file_put_contents('factura.xml', $facturaXml);
+		// file_put_contents('factura.xml', $facturaXml);
+		// file_put_contents('siat_folder/Siat/temp/Facturas-XML/'.$factura->cabecera->cuf.".xml", $facturaXml);
 		// var_dump($facturaXml);die;
 		
 		if($tipoEmision!=2){

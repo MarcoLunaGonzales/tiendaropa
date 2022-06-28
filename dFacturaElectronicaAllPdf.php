@@ -5,7 +5,14 @@ require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 
 $cod_ciudad=$_COOKIE["global_agencia"];
-$codigoVenta=$_GET["codigo_salida"];
+
+if(isset($_GET["codigo_salida"])){
+    $codigoVenta=$_GET["codigo_salida"];
+}else{
+    $codigoVenta=$codigoVenta;
+}
+
+
 $sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nombreTxt=mysqli_result($respConf,0,1);

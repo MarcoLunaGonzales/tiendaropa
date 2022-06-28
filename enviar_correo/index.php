@@ -219,6 +219,7 @@ while($detalle=mysqli_fetch_array($resp)){
               <div class="row">
                 <div class="col-md-12 form-group">
                   <input type="submit" value="ENVIAR CORREO" class="btn btn-primary rounded-0 py-2 px-4">
+                  <a class="btn btn-success" href="../formatoFacturaOnLine.php?codVenta=<?=$datos?>">Imprimir Factura</a>
                   <span class="submitting"></span>
                 </div>
               </div>
@@ -228,13 +229,14 @@ while($detalle=mysqli_fetch_array($resp)){
               ?><p> No se encontró el pedido.</p><?php
             }?>
 
-            <div id="form-message-warning mt-4"></div> 
+            <div id="form-message-warning">
+            </div> 
             <div id="form-message-success">
               Tú correo fué enviado con éxito, gracias.
-              <img src="../imagenes/farmacias_bolivia_loop.gif" width="350">
+              <img src="../imagenes/logo.gif" >
+              <a class="btn btn-success" href="../formatoFacturaOnLine.php?codVenta=<?=$datos?>">Imprimir Factura</a>
             </div>
             <p>Dpto. Sistemas ©TUADMIN_<?=date("Y")?></p>
-
           </div>
         </div>
         <div class="col-md-4">

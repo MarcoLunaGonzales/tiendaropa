@@ -129,7 +129,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			
 			if($enviar_correo){
 				// header("location:sendEmailVenta.php?codigo=$codigo_registro&evento=2&tipodoc=1");
-				$estado_envio=envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino,$enlaceCon);
+				$estado_envio=envio_factura($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino,$enlaceCon);
 				if($estado_envio==1){
 					$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>SE ENVIÓ EL CORREO CON EXITO.</b></span>";
 				}elseif($estado_envio==0){

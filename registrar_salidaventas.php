@@ -1330,6 +1330,10 @@ $ventaDebajoCosto=$datConf[0];
 //$ventaDebajoCosto=mysql_result($respConf,0,0);
 include("datosUsuario.php");
 
+
+if(isset($_GET['file'])){
+	unlink($_GET['file']);
+}
 ?>
 <nav class="mb-4 navbar navbar-expand-lg" style='background:#00ccb6 !important;color:white !important;'>
                 <a class="navbar-brand font-bold" href="#">KIDSPLACE VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
