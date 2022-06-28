@@ -197,6 +197,12 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->CharSet = 'UTF-8';
 	// $mail->Subject = $mail_subject;
 	$mail->msgHTML($message);
+
+	for ($i=0; $i <count($adjuntosCSV) ; $i++) {
+		$nombre_archivo=explode('.',$adjuntosCSV[$i]);
+		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
+		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
+	}
 	if(!$mail->send()){
       return 0;
 	}else{
@@ -205,13 +211,11 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
 
 		// }
-		for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
-			
-			$nombre_archivo=explode('.',$adjuntosCSV[$i]);		
-			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
-			unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
-
-		}
+		// for ($i=0; $i <count($adjuntosCSV) ; $i++) {
+		// 	$nombre_archivo=explode('.',$adjuntosCSV[$i]);
+		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
+		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
+		// }
 	  	return 1;
 
 	}

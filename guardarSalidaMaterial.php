@@ -7,6 +7,8 @@ require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
 
+// require("enviar_correo/php/send-email_anulacion.php");
+
 
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
@@ -136,6 +138,8 @@ $datConf=mysqli_fetch_array($respConf);
 $banderaValidacionStock=$datConf[0];
 //$banderaValidacionStock=mysql_result($respConf,0,0);
 
+//variables para envio de correo
+$siat_estado_facturacion="";
 
 //SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
 if($tipoDoc==1 || $tipoDoc==4){
@@ -332,11 +336,11 @@ if($sql_inserta==1){
 				$fechaEmision=$facturaImpuestos[1];
 				$cuf=$facturaImpuestos[2];		
 				if(isset($facturaImpuestos[0]->RespuestaServicioFacturacion->codigoRecepcion)){
-
 					$codigoRecepcion=$facturaImpuestos[0]->RespuestaServicioFacturacion->codigoRecepcion;
 					$sqlUpdMonto="update salida_almacenes set siat_fechaemision='$fechaEmision',siat_estado_facturacion='1',siat_codigoRecepcion='$codigoRecepcion',siat_cuf='$cuf',siat_codigocufd='$codigoCufd',siat_codigotipoemision='1' 
 							where cod_salida_almacenes='$codigo' ";
 					$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
+					$siat_estado_facturacion=1;
 				}else{
 					$sqlUpdMonto="update salida_almacenes set siat_codigotipoemision=2,siat_fechaemision='$fechaEmision',siat_codigocufd='$codigoCufd',siat_cuf='$cuf'
 						where cod_salida_almacenes='$codigo' ";
@@ -354,26 +358,77 @@ if($sql_inserta==1){
 					echo "<script type='text/javascript' language='javascript'>	
 						location.href='errorDiferenciaFactura.php?codVenta=$codigo';
 							</script>";	
-				}else{						
-					echo "<script type='text/javascript' language='javascript'>	
-					location.href='formatoFacturaOnLine.php?codVenta=$codigo';
-					</script>";	
+				}else{
+					// echo "<script type='text/javascript' language='javascript'>	
+					// location.href='formatoFacturaOnLine.php?codVenta=$codigo';
+					// </script>";	
+					$mensaje="transacción Existosa :)";	
+					$url="location.href='formatoFacturaOnLine.php?codVenta=$codigo';";				
+					
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
-				echo "<script type='text/javascript' language='javascript'>	
-				location.href='dFacturaElectronica.php?codigo_salida=$codigo';
-				</script>";	
+				// echo "<script type='text/javascript' language='javascript'>	
+				// location.href='dFacturaElectronica.php?codigo_salida=$codigo';
+				// </script>";	
+				$mensaje="Factura emitida fuera de línea :(";				
+				$url="location.href='dFacturaElectronica.php?codigo_salida=$codigo';";
 			}
+
+			//para correo solo en caso de offline y online
+			$enviar_correo=true;
+			// $correo_destino="";
+			$correo_destino=obtenerCorreosListaCliente($codCliente);
+			if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
+				$enviar_correo=false;
+			}
+			if($enviar_correo){
+				$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
+				echo "<script language='Javascript'>
+
+					Swal.fire({
+				    title: 'SIAT: ".$mensaje." ',
+				    html: '".$texto_correo."',
+				    type: 'success',
+				    showCancelButton: true,
+			        confirmButtonClass: 'btn btn-success',
+			        cancelButtonClass: 'btn btn-warning',
+			        confirmButtonText: 'Si, Enviar!',
+			        cancelButtonText: 'No, Solo Imprimir!',
+			        buttonsStyling: false
+					}).then((result) => {
+			          if (result.value) {
+			          	window.open('enviar_correo/index.php?datos=$codigo','_blank');
+			            
+			            return(true);
+			          } else if (result.dismiss === Swal.DismissReason.cancel) {
+			          	location.href=".$url.";
+			            return(false);
+			          }
+			        })
+					</script>";
+			}else{
+				echo "<script language='Javascript'>
+				Swal.fire({
+			    title: 'SIAT: ".$mensaje." ',
+			    html: '<b>Cliente sin registro de correo.</b>',
+			    text: '',
+			    type: 'success'
+				}).then(function() {
+				    location.href=".$url.";
+				});
+				</script>";	//location.href='navegadorVentas.php';
+			}
+
 		}else if($tipoDoc==2){
 			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
 			$banderaCorreo=obtenerValorConfiguracion(10);
 			if($banderaCorreo==1 || $banderaCorreo==2){
 				header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 			    $respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-		   }else{
-						echo "<script type='text/javascript' language='javascript'>
-						location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
-						</script>";		
+		    }else{
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
+				</script>";		
 			}
 		}else if($tipoDoc==4){
 			$sqlUpdMonto="update salida_almacenes set siat_codigotipoemision=2,siat_fechaemision='$fecha_emision_manual',siat_codigocufd='$codigoCufd'

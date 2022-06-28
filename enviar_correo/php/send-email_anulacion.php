@@ -4,8 +4,8 @@ require 'PHPMailer/send.php';
 
 
 function envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correosProveedor,$enlaceCon){
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
 require_once("funciones.php");
 
  $email = "";//cc de correo
