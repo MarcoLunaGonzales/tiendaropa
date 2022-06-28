@@ -1,6 +1,6 @@
 <?php
 $estilosVenta=1;
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 $rs=$_GET['rs'];
 
 $sql="select DISTINCT f.nit,f.razon_social from facturas_venta f 
