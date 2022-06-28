@@ -397,8 +397,7 @@ if($sql_inserta==1){
 			        buttonsStyling: false
 					}).then((result) => {
 			          if (result.value) {
-			          	window.open('enviar_correo/index.php?datos=$codigo','_blank');
-			            
+			            location.href='enviar_correo/index.php?datos=$codigo';
 			            return(true);
 			          } else if (result.dismiss === Swal.DismissReason.cancel) {
 			          	location.href=".$url.";
