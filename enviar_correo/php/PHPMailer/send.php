@@ -17,14 +17,23 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 
 	//$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	$mail->Host = 'smtp.mail.yahoo.com';
-	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = "cobofar@yahoo.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "ntknmkilprqqjofx"; 		// Tu contraseña de gmail
+	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+	// $mail->Host = 'smtp.mail.yahoo.com';
+	// $mail->Username = "cobofar@yahoo.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	// $mail_setFromEmail=$mail->Username;
+	// $mail->Password = "ntknmkilprqqjofx"; 		// Tu contraseña de gmail
 
 	// $mail->Username = 'rolandonaviacastillo10@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com	
 	// $mail->Password = 'R6YZTwc7SHfeDta'; 		// Tu contraseña de gmail
+
+
+	$mail->Host = 'p3plzcpnl491749.prod.phx3.secureserver.net';             // Especificar el servidor de correo a utilizar 
+	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_setFromEmail=$mail->Username;
+	$mail->Password = "M1nk4S0ftw4r3"; 	
+
+
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -113,14 +122,23 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	// $mail->Host = 'www.farmaciasbolivia.com.bo';             // Especificar el servidor de correo a utilizar 
 
-	$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	// $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP	
-	$mail->Username = 'cobofar@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_setFromEmail=$mail->Username;	
-	$mail->Password = 'ntknmkilprqqjofx'; 		// Tu contraseña de gmail
+	// // $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
+	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP	
+	// $mail->Username = 'cobofar@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	// $mail_setFromEmail=$mail->Username;	
+	// $mail->Password = 'ntknmkilprqqjofx'; 		// Tu contraseña de gmail
 	// $mail->Username = 'rolandonaviacastillo10@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com	
 	// $mail->Password = 'R6YZTwc7SHfeDta'; 		// Tu contraseña de gmail
+
+
+
+		$mail->Host = 'p3plzcpnl491749.prod.phx3.secureserver.net';             // Especificar el servidor de correo a utilizar 
+	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_setFromEmail=$mail->Username;
+	$mail->Password = "M1nk4S0ftw4r3"; 	
+
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
