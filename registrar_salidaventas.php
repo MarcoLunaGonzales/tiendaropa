@@ -1095,8 +1095,13 @@ function adicionarCliente() {
 		        success:  function (resp) {      						
 		           var r=resp.split("#####");	
 
+		           console.log("response:"+r);
+		           console.log("response[]:"+r[1]);
+
 		           if(parseInt(r[1])>0){           	
+		           	  
 		           	  refrescarComboCliente(r[1]);   
+		           	  
 		           	  $("#nomcli").val("");
 							    $("#apcli").val("");
 							    $("#ci").val("");

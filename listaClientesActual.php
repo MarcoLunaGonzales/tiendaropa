@@ -1,6 +1,6 @@
 <?php
 //$estilosVenta=1;
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 $cliente=$_GET["cliente"];
 $nit=$_GET["nit"];
 
