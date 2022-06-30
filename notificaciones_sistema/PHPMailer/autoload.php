@@ -1,3 +1,0 @@
-<?php
-
-$mail->Host = "";
