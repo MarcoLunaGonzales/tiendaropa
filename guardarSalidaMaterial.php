@@ -1,6 +1,6 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', '1');
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
 $start_time = microtime(true);
 require("conexionmysqli.php");
 require("estilos_almacenes.inc");
@@ -8,6 +8,11 @@ require("funciones.php");
 require("funciones_inventarios.php");
 
 // require("enviar_correo/php/send-email_anulacion.php");
+
+//PARA KIDSPLACE ROPA
+//$codigoActividadSIAT=475100;
+//PARA FARMACIA
+$codigoActividadSIAT=477300;
 
 
 $usuarioVendedor=$_COOKIE['global_usuario'];
@@ -144,12 +149,12 @@ $siat_estado_facturacion="";
 //SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
 if($tipoDoc==1 || $tipoDoc==4){
 	//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);

@@ -97,9 +97,9 @@ class FacturaOnline
 
 		    $detalle = new InvoiceDetail();
 			$detalle->cantidad				= $cantUnit;
-			$detalle->actividadEconomica	= '475100';
+			$detalle->actividadEconomica	= '477300';
 			$detalle->codigoProducto		= $codInterno;
-			$detalle->codigoProductoSin		= 62131; //SERVICIOS DE COMERCIO AL POR MENOR DE HILADOS Y TELAS EN TIENDAS NO ESPECIALIZADAS
+			$detalle->codigoProductoSin		= 62273; //SERVICIOS DE COMERCIO AL POR MENOR DE HILADOS Y TELAS EN TIENDAS NO ESPECIALIZADAS
 			$detalle->descripcion			= $nombreMat;
 			$detalle->precioUnitario		= $precioUnitFactura;
 			$detalle->montoDescuento		= $descUnit;

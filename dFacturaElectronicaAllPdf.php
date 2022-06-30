@@ -73,10 +73,9 @@ $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
 $cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,s.siat_cuf,s.siat_complemento,(SELECT nombre_tipopago from tipos_pago where cod_tipopago=s.cod_tipopago) as nombre_pago,s.siat_fechaemision,s.siat_codigotipoemision,s.siat_codigoPuntoVenta,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, 'cliente', s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,s.siat_cuf,s.siat_complemento,(SELECT nombre_tipopago from tipos_pago where cod_tipopago=s.cod_tipopago) as nombre_pago,s.siat_fechaemision,s.siat_codigotipoemision,s.siat_codigoPuntoVenta,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
         from `salida_almacenes` s, `tipos_docs` t, `clientes` c
-        where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
-        s.`cod_tipo_doc`=t.`codigo`";
+        where s.`cod_salida_almacenes`='$codigoVenta' and s.cod_tipo_doc=t.codigo";
         //echo $sqlDatosVenta;
 $respDatosVenta=mysqli_query($enlaceCon,$sqlDatosVenta);
 $siat_complemento="";
@@ -372,7 +371,7 @@ footer p {
                     <div class="row bb pb-3">
                         <table style="width: 100%;font-size: 14px;">
                             <tr><td width="40%"><div class="col-7">
-                            <p>NAVIA CASTILLO ROLANDO EDUARDO</p>
+                            <p>FARMACIA CARMELITA S.R.L.</p>
                             <h3 style="color:#14AF91"><?=$sucursalTxt?></h3>
                             <div class="txn mt-2">Punto de Venta: <?=$siat_codigopuntoventa?></div>
                             <div class="txn mt-2">NIT: <?=$nitTxt?></div>

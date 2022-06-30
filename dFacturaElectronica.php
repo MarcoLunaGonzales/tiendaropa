@@ -338,7 +338,7 @@ $estadoFacturacion=$datConf[0];
     }
         ?>         
     </div>
-    <div class="card-footer">
+    <!--div class="card-footer">
         <p>Departamento de Sistemas - COBOFAR </p>
-    </div>
+    </div-->
 </div>

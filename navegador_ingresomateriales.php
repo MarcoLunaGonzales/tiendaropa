@@ -237,6 +237,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     $anulado = $dat[7];
 	$proveedor=$dat[8];
 	$nroFacturaProveedor=$dat[9];
+	
 	$sqlAux=" select IFNULL(codigo_ingreso,0),nro_correlativo from  preingreso_almacenes  where codigo_ingreso=$codigo";
 	$respAux= mysqli_query($enlaceCon,$sqlAux);
 	$datAux=mysqli_fetch_array($respAux);

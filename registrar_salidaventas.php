@@ -1339,7 +1339,7 @@ if(isset($_GET['file'])){
 }
 ?>
 <nav class="mb-4 navbar navbar-expand-lg" style='background:#00ccb6 !important;color:white !important;'>
-                <a class="navbar-brand font-bold" href="#">KIDSPLACE VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
+                <a class="navbar-brand font-bold" href="#">VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
                 <div id="siat_error"></div>
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
