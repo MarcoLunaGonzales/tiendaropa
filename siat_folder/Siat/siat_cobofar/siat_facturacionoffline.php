@@ -118,15 +118,14 @@ class FacturacionOffLine
 			    FROM salida_almacenes s 
 			    WHERE s.cod_salida_almacenes in ($string_codigos) and s.cod_almacen=$cod_almacen and DATE_FORMAT(s.siat_fechaemision,'%Y-%m-%d') = '$fecha'";
 			    //echo  $sql;
-		    $valor=0;
-		    // require("../../conexionmysqli2.inc");
+		    $valor=0;		    
 		    require("../../conexionmysqli2.inc");
 		    // echo $sql;
+		    
 		    $resp=mysqli_query($enlaceCon,$sql);
 		    $facturax= new FacturaOnline();
 		    $facturax->endpoint=conexionSiatUrl::endpoint;
 		    $facturax->wsdl=conexionSiatUrl::wsdl;
-
 		    $cafc=null;
 		    while($row=mysqli_fetch_array($resp)){ 
 		      	$cod_salida_almacenes=$row['cod_salida_almacenes'];
@@ -147,7 +146,6 @@ class FacturacionOffLine
 		    $service->codigoSucursal=$cod_impuestos;
 		    $service->codigoPuntoVenta=$codigoPuntoVenta;
 		    // $service->cafc=$codigoPuntoVenta;
-		    
 			 $res = $service->recepcionPaqueteFactura($facturas, $codigoEvento,$tipoEmision,$tipoFactura,$cafc);
 			 // print_r($res);
 			 $sw_estado=false;
