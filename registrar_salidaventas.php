@@ -923,29 +923,28 @@ require("funciones.php");
 
 function validar(f, ventaDebajoCosto){
 	
-		if($("#nitCliente").val()=="0"){
-			errores++;
-			Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
-			$("#pedido_realizado").val(0);
+	if($("#nitCliente").val()=="0"){
+		// errores++;
+		Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
+		// $("#pedido_realizado").val(0);		
+		return(false);
 	}
 
 	if($("#nro_tarjeta").val().length!=16&&$("#nro_tarjeta").val()!=""){
-			errores++;
-			Swal.fire("Tarjeta!", "El número de Tarjeta debe tener 16 digitos<br><br><b>Ej: 1234********1234</b>", "info");
-			$("#pedido_realizado").val(0);
-			return(false);
+		// errores++;
+		Swal.fire("Tarjeta!", "El número de Tarjeta debe tener 16 digitos<br><br><b>Ej: 1234********1234</b>", "info");
+		// $("#pedido_realizado").val(0);
+		return(false);
 	}
 	//alert(ventaDebajoCosto);
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
-		
 		var item="";
 		var cantidad="";
 		var stock="";
 		var descuento="";
-						
 		for(var i=1; i<=cantidadItems; i++){
 			console.log("valor i: "+i);
 			console.log("objeto materiales: "+document.getElementById("materiales"+i));
@@ -1334,7 +1333,6 @@ $datConf=mysqli_fetch_array($respConf);
 $ventaDebajoCosto=$datConf[0];
 //$ventaDebajoCosto=mysql_result($respConf,0,0);
 include("datosUsuario.php");
-
 
 if(isset($_GET['file'])){
 	unlink($_GET['file']);
