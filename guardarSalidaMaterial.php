@@ -78,6 +78,12 @@ if((int)$nitCliente==123){
 	$razonSocial="SN";
 }
 
+if((int)$nitCliente==99001 || (int)$nitCliente==99002 || (int)$nitCliente==99003){
+	$siat_codigotipodocumentoidentidad=5;//nit
+}
+
+
+
 $fecha_emision_manual="";
 if(isset($_POST['fecha_emision']) and isset($_POST['hora_emision'])){
 	$fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".$_POST['hora_emision']));
@@ -394,39 +400,50 @@ if($sql_inserta==1){
 			}
 			if($enviar_correo){
 				$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
-				echo "<script language='Javascript'>
+				// echo "<script language='Javascript'>
 
-					Swal.fire({
-				    title: 'SIAT: ".$mensaje." ',
-				    html: '".$texto_correo."',
-				    type: 'success',
-				    showCancelButton: true,
-			        confirmButtonClass: 'btn btn-success',
-			        cancelButtonClass: 'btn btn-warning',
-			        confirmButtonText: 'Si, Enviar!',
-			        cancelButtonText: 'No, Solo Imprimir!',
-			        buttonsStyling: false
-					}).then((result) => {
-			          if (result.value) {
-			            location.href='enviar_correo/index.php?datos=$codigo';
-			            return(true);
-			          } else if (result.dismiss === Swal.DismissReason.cancel) {
-			          	location.href=".$url.";
-			            return(false);
-			          }
-			        })
-					</script>";
+				// 	Swal.fire({
+				//     title: 'SIAT: ".$mensaje." ',
+				//     html: '".$texto_correo."',
+				//     type: 'success',
+				//     showCancelButton: true,
+			 //        confirmButtonClass: 'btn btn-success',
+			 //        cancelButtonClass: 'btn btn-warning',
+			 //        confirmButtonText: 'Si, Enviar!',
+			 //        cancelButtonText: 'No, Solo Imprimir!',
+			 //        buttonsStyling: false
+				// 	}).then((result) => {
+			 //          if (result.value) {
+			 //            location.href='enviar_correo/index.php?datos=$codigo';
+			 //            return(true);
+			 //          } else if (result.dismiss === Swal.DismissReason.cancel) {
+			 //          	location.href=".$url.";
+			 //            return(false);
+			 //          }
+			 //        })
+				// 	</script>";
+
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='navegadorVentas.php?codVenta=$codigo';
+				</script>";		
+
+				
 			}else{
-				echo "<script language='Javascript'>
-				Swal.fire({
-			    title: 'SIAT: ".$mensaje." ',
-			    html: '<b>Cliente sin registro de correo.</b>',
-			    text: '',
-			    type: 'success'
-				}).then(function() {
-				    location.href=".$url.";
-				});
-				</script>";	//location.href='navegadorVentas.php';
+				// echo "<script language='Javascript'>
+				// Swal.fire({
+			 //    title: 'SIAT: ".$mensaje." ',
+			 //    html: '<b>Cliente sin registro de correo.</b>',
+			 //    text: '',
+			 //    type: 'success'
+				// }).then(function() {
+				//     location.href=".$url.";
+				// });
+				// </script>";	//location.href='navegadorVentas.php';
+
+
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='navegadorVentas.php?codVenta=$codigo';
+				</script>";		
 			}
 
 		}else if($tipoDoc==2){
