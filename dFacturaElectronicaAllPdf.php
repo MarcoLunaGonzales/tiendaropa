@@ -354,7 +354,7 @@ footer p {
                 
             <table>
                 <tr><td><div class="logo">
-                    <img src="<?=__DIR__?>/imagenes/logo.jpg" alt="" class="img-fluid" style="width: 300px;">
+                    <img src="<?=__DIR__?>/imagenes/logo_farmacia.png" alt="" class="img-fluid" style="width: 300px;">
                 </div></td>
                     <td><div class="top-left">
                     <div class="position-relative">
@@ -477,7 +477,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
                                     </div>
                                 </div>
                             </td>
-                            <td style="font-size: 10px !important;"><small>UNIDAD<br>(SERVICIOS)</small></td>
+                            <td style="font-size: 10px !important;"><small>UNIDAD<br>(Bienes)</small></td>
                             <td style="text-align: right;"><?=$cantUnit?></td>
                             <td style="text-align: right;"><?=$precioUnitFactura?></td>                                                        
                             <td style="text-align: right;"><?=$descUnit?></td>
