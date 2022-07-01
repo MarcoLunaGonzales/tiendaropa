@@ -66,9 +66,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 
 			// $resp_detalle=mysql_query($sql_detalle);
 			$resp=mysqli_query($enlaceCon,$sql_detalle);
-			while($dat_detalle=mysqli_fetch_array($resp)){ 
-			  
-			
+			while($dat_detalle=mysqli_fetch_array($resp)){
 				$codVenta=$dat_detalle[0];
 				$codMaterial=$dat_detalle[1];
 				$cantidadSalida=$dat_detalle[2];
@@ -129,7 +127,7 @@ if($anulado==0){ //verificamos si no está anulado // 0 no anulada 1 //anulado
 			
 			if($enviar_correo){
 				// header("location:sendEmailVenta.php?codigo=$codigo_registro&evento=2&tipodoc=1");
-				$estado_envio=envio_factura($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino,$enlaceCon);
+				$estado_envio=envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nitCliente,$sucursalCliente,$estado_siatCliente,$fechaCliente,$correo_destino,$enlaceCon);
 				if($estado_envio==1){
 					$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>SE ENVIÓ EL CORREO CON EXITO.</b></span>";
 				}elseif($estado_envio==0){

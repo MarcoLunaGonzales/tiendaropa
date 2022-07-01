@@ -32,7 +32,8 @@ require_once("funciones.php");
     //$mail_addAddress="dhuarina@farmaciasbolivia.com.bo,asd";//correo electronico destino
 
 
-    $template="enviar_correo/php/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+    // $template="enviar_correo/php/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+    $template="PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
     /*Inicio captura de datos enviados por $_POST para enviar el correo */
     $mail_setFromEmail=$mail_username;
     $mail_setFromName=$mail_username;
