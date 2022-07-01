@@ -1458,8 +1458,15 @@ include("datosUsuario.php");
 </td>
 
 <td align='center'>
-	<input type='hidden' class='form-control' value='<?php echo $fecha?>' id='fecha' size='10' name='fecha'>	
-	<input type='date' class='form-control' value='' min='<?=$fechaMinimaManual?>' max='<?=$fechaMaxManual?>' id='fecha_emision' size='10' name='fecha_emision' onchange="validarCufdFecha();return false;" required>		
+	<div class="row">
+		<div class="col-sm-6"> 
+			<input type='hidden' class='form-control' value='<?php echo $fecha?>' id='fecha' size='10' name='fecha'>
+			<input type='date' class='form-control' value='' min='<?=$fechaMinimaManual?>' max='<?=$fechaMaxManual?>' id='fecha_emision' size='10' name='fecha_emision' onchange="validarCufdFecha();return false;" required>
+		</div>
+		<div class="col-sm-6"> 
+		<input type='time' class='form-control' value=''   id='hora_emision' size='10' name='hora_emision' required>
+		</div>
+	</div>
 </td>
 
 <td class='d-none'>

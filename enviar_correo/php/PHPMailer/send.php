@@ -21,7 +21,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "M1nk4S0ftw4r3"; 	
+	$mail->Password = "M1nk4S0ftw4r3"; 
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -68,14 +68,10 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
 	$message = str_replace('{{codigo_nit_gerente}}', "1022039027", $message);	
 
-	
 
-
-	 //imagenes
+	//imagenes
     $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
-
-
 
 
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML

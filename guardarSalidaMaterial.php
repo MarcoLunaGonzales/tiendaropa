@@ -12,7 +12,7 @@ require("funciones_inventarios.php");
 //PARA KIDSPLACE ROPA
 //$codigoActividadSIAT=475100;
 //PARA FARMACIA
-$codigoActividadSIAT=477300;
+// $codigoActividadSIAT=477300;
 
 
 $usuarioVendedor=$_COOKIE['global_usuario'];
@@ -78,11 +78,15 @@ if((int)$nitCliente==123){
 	$razonSocial="SN";
 }
 
-
 $fecha_emision_manual="";
-if(isset($_POST['fecha_emision'])){
-   $fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".date("H:i:s")));
+if(isset($_POST['fecha_emision']) and isset($_POST['hora_emision'])){
+	$fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".$_POST['hora_emision']));
+}else{
+	if(isset($_POST['fecha_emision'])){
+	   $fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".date("H:i:s")));
+	}
 }
+
 
 if(isset($_POST['tipoVenta'])){	$tipoVenta=$_POST['tipoVenta']; }else{ $tipoVenta=0;	}
 if(isset($_POST['observaciones'])){	$observaciones=$_POST['observaciones']; }else{ $observaciones="";	}
@@ -149,12 +153,14 @@ $siat_estado_facturacion="";
 //SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
 if($tipoDoc==1 || $tipoDoc==4){
 	//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
