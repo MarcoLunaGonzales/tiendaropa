@@ -20,10 +20,8 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFac
 
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
-
 class FacturaOnline
 {
-
 	// protected $endpoint = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
 	// protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
 	public $endpoint = conexionSiatUrl::endpoint;

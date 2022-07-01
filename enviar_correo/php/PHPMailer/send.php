@@ -16,12 +16,13 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 
+	// $mail->SMTPDebug = true; 
 	//$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "M1nk4S0ftw4r3"; 
+	$mail->Password = "M1nk4S0ftw4r3"; 	
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -52,6 +53,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{customer_email}}', $mail_setFromEmail, $message);
 
 
+
 	//DATOS 
 	$botonEnvio='<a href="'.$urlDir.'/consulta/QR?nit={{codigo_nit_gerente}}&cuf={{codigo_cuf}}&numero={{codigo_factura}}&t=2" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#00cfe8;border-radius:20px;width:auto;border-top:1px solid #00cfe8;border-right:1px solid #00cfe8;border-bottom:1px solid #00cfe8;border-left:1px solid #00cfe8;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;">Verificar Factura</span></span></a>';
 	if($datosCabecera['estado_siat']==1){
@@ -66,10 +68,8 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "1022039027", $message);	
+	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
-
-	//imagenes
     $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
@@ -171,7 +171,7 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "1022039027", $message);	
+	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
 
 	 //imagenes
