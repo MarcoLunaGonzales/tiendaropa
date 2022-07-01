@@ -3,12 +3,8 @@
 if(!isset($_COOKIE["global_usuario"])){
   ?><!-- <script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");/*window.close();*/});</script> --><?php
 }
-
-
 set_time_limit(0);
-
 error_reporting(0);
-
 //header('Content-Type: text/html; charset=UTF-8'); 
 date_default_timezone_set('America/La_Paz');
 if(!function_exists('log_querys')){
@@ -56,10 +52,11 @@ include('register_globals.php');
 
 }
 
-$enlaceCon=mysqli_connect("localhost","root","4868422Marco","carmelitasiat_temp");
-
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
 
 //$enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
+// $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
+//$enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
 
 
 if (mysqli_connect_errno())

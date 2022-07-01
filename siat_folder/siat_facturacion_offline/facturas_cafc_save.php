@@ -90,11 +90,11 @@ if($DatosConexion[0]==1){
           $fecha_fin_datos=explode(" ", $fecha_fin);
           $fecha_fin=$fecha_fin_datos[0]."T".$fecha_fin_datos[1].".000";//agregamos milisegundos 
         }
-        if($nuevo_cufd==1){
-          deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
-          $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
-          $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
-        }
+        // if($nuevo_cufd==1){
+        //   deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
+        //   $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
+        //   $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
+        // }
 
         $respEvento=solicitudEventoSignificativo($codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis);
         // echo "<br>**".print_r($respEvento)."**<br>";
@@ -148,14 +148,18 @@ if($DatosConexion[0]==1){
       html: '<table style=\"border:1px;font-size:14px\"><tr><td>".$descripcionError."</td></tr></table>',
       type: 'error'
     }).then(function() {
-
-        
-
-        ".$url_retorno."
+      ".$url_retorno."
 
     });
     </script>";  
   }else{
+
+    if($nuevo_cufd==1){
+        deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
+        $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
+        $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
+      }
+
     echo "<script language='Javascript'>
     Swal.fire({
       title: 'CORRECTO',

@@ -46,7 +46,6 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $txt2=mysqli_result($respConf,0,1);
 
 
-
 $sqlConf="select id, valor from configuracion_facturas where id=9 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nitTxt=mysqli_result($respConf,0,1);
@@ -73,7 +72,7 @@ $fechaFactura=mysqli_result($respDatosFactura,0,5);
 
 $cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, 'cliente', s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,s.siat_cuf,s.siat_complemento,(SELECT nombre_tipopago from tipos_pago where cod_tipopago=s.cod_tipopago) as nombre_pago,s.siat_fechaemision,s.siat_codigotipoemision,s.siat_codigoPuntoVenta,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, 'cliente', s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,s.siat_cuf,s.siat_complemento,(SELECT nombre_tipopago from tipos_pago where cod_tipopago=s.cod_tipopago) as nombre_pago,s.siat_fechaemision,s.siat_codigotipoemision,s.siat_codigoPuntoVenta,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda,(SELECT siat_unidadProducto from ciudades where cod_ciudad in (select cod_ciudad from almacenes where cod_almacen=s.cod_almacen)) as unidad_medida
         from `salida_almacenes` s, `tipos_docs` t, `clientes` c
         where s.`cod_salida_almacenes`='$codigoVenta' and s.cod_tipo_doc=t.codigo";
         //echo $sqlDatosVenta;
@@ -113,6 +112,8 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 
     $siat_codigotipoemision=$datDatosVenta['siat_codigotipoemision'];
     $siat_codigopuntoventa=$datDatosVenta['siat_codigoPuntoVenta'];
+
+    $unidad_medida=$datDatosVenta['unidad_medida'];
 
     $nombrePago=$datDatosVenta['nombre_pago'];
     $txt3=$datDatosVenta['leyenda'];
@@ -354,7 +355,7 @@ footer p {
                 
             <table>
                 <tr><td><div class="logo">
-                    <img src="<?=__DIR__?>/imagenes/logo_farmacia.png" alt="" class="img-fluid" style="width: 300px;">
+                    <img src="<?=__DIR__?>/imagenes/logo.jpg" alt="" class="img-fluid" style="width: 300px;">
                 </div></td>
                     <td><div class="top-left">
                     <div class="position-relative">
@@ -371,12 +372,13 @@ footer p {
                     <div class="row bb pb-3">
                         <table style="width: 100%;font-size: 14px;">
                             <tr><td width="40%"><div class="col-7">
-                            <p>FARMACIA CARMELITA S.R.L.</p>
+                            <p><?=$nombreTxt?></p>
                             <h3 style="color:#14AF91"><?=$sucursalTxt?></h3>
                             <div class="txn mt-2">Punto de Venta: <?=$siat_codigopuntoventa?></div>
                             <div class="txn mt-2">NIT: <?=$nitTxt?></div>
                             <p class="address"> <?=$direccionTxt?></p>
                             <div class="txn mt-2">Tel: <?=$telefonoTxt?></div>
+                            <div class="txn mt-2">La Paz - Bolivia</div>
                         </div></td><td width="60%" valign="top"><div class="col-5">
                             <p>Nombre/Razón Social</p>
                             <h3 style="color:#14AF91"><?=$razonSocialCliente?></h3>
@@ -468,21 +470,21 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 
     ?>
     <tr>
-                            <td style="text-align: left;"><?=$codInterno?></td>
-                            <td style="text-align: left;">
-                                <div class="media">
-                                    <!-- <img class="mr-3 img-fluid" src="<?=__DIR__?>/<?=$dir_imagen_producto?>" alt="Pd"> -->
-                                    <div class="media-body">
-                                        <p class="mt-0 title" style="font-size: 10px !important;"><small><?=$nombreMat?></small></p>                                        
-                                    </div>
-                                </div>
-                            </td>
-                            <td style="font-size: 10px !important;"><small>UNIDAD<br>(Bienes)</small></td>
-                            <td style="text-align: right;"><?=$cantUnit?></td>
-                            <td style="text-align: right;"><?=$precioUnitFactura?></td>                                                        
-                            <td style="text-align: right;"><?=$descUnit?></td>
-                            <td style="text-align: right;"><?=$montoUnitProdDesc?></td>
-                        </tr>
+        <td style="text-align: left;"><?=$codInterno?></td>
+        <td style="text-align: left;">
+            <div class="media">
+                <!-- <img class="mr-3 img-fluid" src="<?=__DIR__?>/<?=$dir_imagen_producto?>" alt="Pd"> -->
+                <div class="media-body">
+                    <p class="mt-0 title" style="font-size: 10px !important;"><small><?=$nombreMat?></small></p>                                        
+                </div>
+            </div>
+        </td>
+        <td style="font-size: 10px !important;"><small><?=$unidad_medida?></small></td>
+        <td style="text-align: right;"><?=$cantUnit?></td>
+        <td style="text-align: right;"><?=$precioUnitFactura?></td>                                                        
+        <td style="text-align: right;"><?=$descUnit?></td>
+        <td style="text-align: right;"><?=$montoUnitProdDesc?></td>
+    </tr>
 
     <?php
     //$montoTotal=$montoTotal+$montoUnitProd; 
@@ -491,15 +493,11 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 }
 
 
-
 $descuentoVenta=number_format($descuentoVenta,2,'.','');
 //$montoFinal=$montoTotal-$descuentoVenta-$descuentoVentaProd;
 $montoFinal=$montoTotal-$descuentoVenta;
 //$montoTotal=number_format($montoTotal,1,'.','')."0";
 $montoFinal=number_format($montoFinal,2,'.','');
-
-
-
 
 
 

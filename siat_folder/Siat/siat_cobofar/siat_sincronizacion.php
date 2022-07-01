@@ -76,15 +76,18 @@ class SyncTest
 			$sync = new ServicioFacturacionSincronizacion($resCuis->RespuestaCuis->codigo, null, $config->tokenDelegado);
 			$sync->setConfig((array)$config);
 			$res = call_user_func([$sync, $action]);
-			print_r($res);
+			// print_r($res);
 			
 			require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";
 
 			switch ($action) {
 				case 'sincronizarActividades':					
 
-					// $lista=$res->RespuestaListaActividades->listaActividades;
-					$lista=$res->RespuestaListaActividades;
+					$lista=$res->RespuestaListaActividades->listaActividades;
+					if(count($lista)==1){
+						$lista=$res->RespuestaListaActividades;
+					}
+					// $lista=$res->RespuestaListaActividades;
 					// print_r($lista);
 					$sqlDelete="DELETE FROM siat_sincronizarActividades";
 					mysqli_query($enlaceCon,$sqlDelete);
@@ -92,7 +95,6 @@ class SyncTest
 						if(isset($li->codigoCaeb) && isset($li->descripcion)){
 							$sqlInsert="INSERT INTO siat_sincronizarActividades (codigoCaeb,descripcion,tipoActividad,created_at) VALUES ('$li->codigoCaeb','$li->descripcion','$li->tipoActividad',NOW())";
 						}
-						
 						// echo $sqlInsert;
 						mysqli_query($enlaceCon,$sqlInsert);
 					}

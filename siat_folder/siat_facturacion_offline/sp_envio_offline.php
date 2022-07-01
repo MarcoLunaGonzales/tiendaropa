@@ -4,10 +4,10 @@ require("../../conexionmysqli.inc");
 require("../funciones_siat.php");
 
   $codigoMotivoEvento=2;
-  $nuevo_cufd=0;
-  if(isset($_POST['nuevo_cufd'])){
+  // $nuevo_cufd=0;
+  // if(isset($_POST['nuevo_cufd'])){
     $nuevo_cufd=1;//si se generará nuevo cufd
-  }
+  // 
   $nuevo_cuf=0;
   if(isset($_POST['nuevo_cuf'])){
     $nuevo_cuf=1;//si se generará nuevo cuf
@@ -88,11 +88,11 @@ if($contador_items>0){
           $fecha_fin_datos=explode(" ", $fecha_fin);
           $fecha_fin=$fecha_fin_datos[0]."T".$fecha_fin_datos[1].".000";//agregamos milisegundos 
         }
-        if($nuevo_cufd==1){
-          deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
-          $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
-          $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
-        }
+        // if($nuevo_cufd==1){
+        //   deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
+        //   $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
+        //   $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
+        // }
         $respEvento=solicitudEventoSignificativo($codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis);
         // echo "<br>**".print_r($respEvento)."**<br>";
         $codigoEvento=$respEvento[0];
@@ -138,6 +138,11 @@ if($contador_items>0){
   if($error){
     echo "ERROR.".$descripcionError;    
   }else{
+    if($nuevo_cufd==1){
+      deshabilitarCufd($cod_ciudad,$cuis,$fecha_X);
+      $cufdNuevo=generarCufd($cod_ciudad,$cod_impuestos,$codigoPuntoVenta);
+      $cufd=obtenerCufd_Vigente_BD($cod_ciudad,$fecha_X,$cuis);
+    }
     echo "CORRECTO :).".$descripcionError;    
   }
 }else{

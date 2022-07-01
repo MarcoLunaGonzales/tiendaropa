@@ -16,24 +16,13 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 
+	// $mail->SMTPDebug = true; 
 	//$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	// $mail->Host = 'smtp.mail.yahoo.com';
-	// $mail->Username = "cobofar@yahoo.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	// $mail_setFromEmail=$mail->Username;
-	// $mail->Password = "ntknmkilprqqjofx"; 		// Tu contraseña de gmail
-
-	// $mail->Username = 'rolandonaviacastillo10@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com	
-	// $mail->Password = 'R6YZTwc7SHfeDta'; 		// Tu contraseña de gmail
-
-
-	$mail->Host = 'p3plzcpnl491749.prod.phx3.secureserver.net';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
 	$mail->Password = "M1nk4S0ftw4r3"; 	
-
-
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -64,6 +53,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{customer_email}}', $mail_setFromEmail, $message);
 
 
+
 	//DATOS 
 	$botonEnvio='<a href="'.$urlDir.'/consulta/QR?nit={{codigo_nit_gerente}}&cuf={{codigo_cuf}}&numero={{codigo_factura}}&t=2" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#00cfe8;border-radius:20px;width:auto;border-top:1px solid #00cfe8;border-right:1px solid #00cfe8;border-bottom:1px solid #00cfe8;border-left:1px solid #00cfe8;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="font-size: 16px; line-height: 2; word-break: break-word; mso-line-height-alt: 32px;">Verificar Factura</span></span></a>';
 	if($datosCabecera['estado_siat']==1){
@@ -78,16 +68,10 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "3760252015", $message);	
+	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
-	
-
-
-	 //imagenes
     $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
-
-
 
 
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
@@ -106,10 +90,6 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	}
 }
 function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir=''){
-
-// 	error_reporting(E_ALL);
-// ini_set('display_errors', '1');
-
 	if($inicio==0){
 		require 'PHPMailer/src/Exception.php';
 	    require 'PHPMailer/src/PHPMailer.php';
@@ -122,23 +102,22 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	// $mail->Host = 'www.farmaciasbolivia.com.bo';             // Especificar el servidor de correo a utilizar 
 
+
 	// $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	// // $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP	
+	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
+	// // $mail->Username = 'pruebaimpuesto@farmaciasbolivia.com.bo';          // Correo electronico saliente ejemplo: 
 	// $mail->Username = 'cobofar@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	// $mail_setFromEmail=$mail->Username;	
+	// $mail_setFromEmail=$mail->Username;
+	// // $mail->Password = 'Impuesto123*'; 		// Tu contraseña de gmail
 	// $mail->Password = 'ntknmkilprqqjofx'; 		// Tu contraseña de gmail
-	// $mail->Username = 'rolandonaviacastillo10@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com	
-	// $mail->Password = 'R6YZTwc7SHfeDta'; 		// Tu contraseña de gmail
 
 
-
-		$mail->Host = 'p3plzcpnl491749.prod.phx3.secureserver.net';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
 	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
 	$mail->Password = "M1nk4S0ftw4r3"; 	
-
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -152,19 +131,15 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 
 
 	// $adjuntos=explode( ',', $rutaArchivo);
-	// $mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/101497132B09436B1E4EA0BC55AD22B9ADF4DADB3297B7C7650AD86D74.xml");
 	// for ($i=0; $i <count($adjuntos) ; $i++) { 
-	// 	// echo "1";
-	// 	// $nombre_xml=trim($adjuntos[$i]);
-	// 	// $nombre_xml=utf8_decode($adjuntos[$i]);
-	// 	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_xml);
+	// 	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
 	// }
-	$adjuntosCSV=explode( ',', $rutaArchivoCSV);
-	for ($i=0; $i <count($adjuntosCSV) ; $i++) { 		
-		$nombre_archivo=explode('.',$adjuntosCSV[$i]);
-		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
-		$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
-	}
+	// $adjuntosCSV=explode( ',', $rutaArchivoCSV);
+	// for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
+	// 	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntosCSV[$i]);
+	// }
+	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
+	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
 	///////////////////////////////////////para la version de php 7
 	$mail->SMTPOptions = array(
           'ssl' => array(
@@ -196,15 +171,12 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "3760252015", $message);	
-
-	
+	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
 
 	 //imagenes
     $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
-
 
 
 	$mail->isHTML(true);  // Establecer el formato de correo electrónico en HTML
@@ -215,24 +187,18 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->CharSet = 'UTF-8';
 	// $mail->Subject = $mail_subject;
 	$mail->msgHTML($message);
-
-	for ($i=0; $i <count($adjuntosCSV) ; $i++) {
-		$nombre_archivo=explode('.',$adjuntosCSV[$i]);
-		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
-		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
-	}
+	
 	if(!$mail->send()){
       return 0;
 	}else{
+		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
+		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
 		//UNLINK
-		// for ($i=0; $i <count($adjuntos) ; $i++) { 			
+		// for ($i=0; $i <count($adjuntos) ; $i++) { 
 		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);
-
 		// }
-		// for ($i=0; $i <count($adjuntosCSV) ; $i++) {
-		// 	$nombre_archivo=explode('.',$adjuntosCSV[$i]);
-		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".xml");
-		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$nombre_archivo[0].".pdf");
+		// for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
+		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntosCSV[$i]);
 		// }
 	  	return 1;
 

@@ -65,7 +65,7 @@ $urlDir=$datValidar[0];
         $datosCabecera['fecha']=date("d/m/Y",strtotime($datDatosVenta['siat_fechaemision']));
     }
 
-
+    // echo "**".var_dump($urlDir)."**";
     $flag=sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir);
     // $flag=1;
     if($flag!=0){//se envio correctamente
