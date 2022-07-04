@@ -898,13 +898,22 @@ function alterna_modo_de_pantalla() {
 }
 
 function validarCufdFecha(){
-	$("#cufd_error").html("");	
-	if(validarCudfyCuisActivoFecha($("#fecha_emision").val())==0){
-		$("#cufd_error").html("<a href='#' class='btn btn-warning'>No se encontró el CUFD para la fecha "+$("#fecha_emision").val()+ " en la Sucursal</a>");			
+	$("#cufd_error").html("");
+	var valor_string=validarCudfyCuisActivoFecha($("#fecha_emision").val(),$("#hora_emision").val());
+	var respuesta=valor_string.split(',');
+	var estado = respuesta[0];
+	var fecha = respuesta[1];
+
+	if(estado==0){
+		$("#cufd_error").html("<a href='#' class='btn btn-warning'>No se encontró el CUFD en la Sucursal para la fecha "+$("#fecha_emision").val()+"</a>");			
+	}else{
+		if(estado==2){
+			$("#cufd_error").html("<a href='#' class='btn btn-warning'>CUFD no encontrado en fecha y hora "+$("#fecha_emision").val()+" "+$("#hora_emision").val()+". CUFD Cercano: "+fecha+" </a>");
+		}
 	}
 }
 
-function validarCudfyCuisActivoFecha(fecha){
+function validarCudfyCuisActivoFecha(fecha,hora){
 	var dato=0;
 	var parametros={"fecha":fecha};
     $.ajax({
@@ -1461,10 +1470,10 @@ include("datosUsuario.php");
 	<div class="row">
 		<div class="col-sm-6"> 
 			<input type='hidden' class='form-control' value='<?php echo $fecha?>' id='fecha' size='10' name='fecha'>
-			<input type='date' class='form-control' value='' min='<?=$fechaMinimaManual?>' max='<?=$fechaMaxManual?>' id='fecha_emision' size='10' name='fecha_emision' onchange="validarCufdFecha();return false;" required>
+			<input type='date' class='form-control' value='' min='<?=$fechaMinimaManual?>' max='<?=$fechaMaxManual?>' id='fecha_emision' size='10' name='fecha_emision'  required>
 		</div>
 		<div class="col-sm-6"> 
-		<input type='time' class='form-control' value=''   id='hora_emision' size='10' name='hora_emision' required>
+		<input type='time' class='form-control' value=''   id='hora_emision' size='10' name='hora_emision' required onchange="validarCufdFecha();return false;">
 		</div>
 	</div>
 </td>

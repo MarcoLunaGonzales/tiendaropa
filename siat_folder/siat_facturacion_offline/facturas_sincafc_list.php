@@ -61,7 +61,7 @@ if(isset($_GET['rpt_territorio'])){
                 <div class="form-group">
                   <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" id="nuevo_cufd" name="nuevo_cufd[]" value="1">
+                        <input class="form-check-input" type="checkbox" id="nuevo_cufd" name="nuevo_cufd[]" value="1" checked="true">
                         <span class="form-check-sign">
                           <span class="check"></span>
                         </span>
