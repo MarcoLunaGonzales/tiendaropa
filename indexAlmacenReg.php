@@ -49,7 +49,7 @@ include("datosUsuario.php");
 
 	<div class="header">
 		<a href="#menu"><span></span></a>
-		TuAdmin <?php echo $nombreTiendaRopa;?>
+		<?php echo $nombreTiendaRopa;?>
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
 			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
             <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>

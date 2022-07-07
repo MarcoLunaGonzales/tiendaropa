@@ -1338,7 +1338,7 @@ if(isset($_GET['file'])){
 	unlink($_GET['file']);
 }
 ?>
-<nav class="mb-4 navbar navbar-expand-lg" style='background:#00ccb6 !important;color:white !important;'>
+<nav class="mb-4 navbar navbar-expand-lg" style='background:#7200ca !important;color:white !important;'>
                 <a class="navbar-brand font-bold" href="#">VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
                 <div id="siat_error"></div>
                 
@@ -1368,7 +1368,7 @@ if(isset($_GET['file'])){
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
 
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
-<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#00ccb6 !important; font-size: 16px;">
+<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 <?php
 
 if($tipoDocDefault==2){
@@ -1515,7 +1515,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 </tr>
 
 
-<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#00ccb6 !important; font-size: 16px;">
+<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 
 
 	<th>Vendedor</th>

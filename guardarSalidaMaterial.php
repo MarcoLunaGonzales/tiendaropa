@@ -375,21 +375,15 @@ if($sql_inserta==1){
 					$sqlUpdCambio="update salida_almacenes set monto_cambio='$cambioFactura',observaciones='REVFACT' 
 					where cod_salida_almacenes='$codigo'";
 		   			mysqli_query($enlaceCon,$sqlUpdCambio);
-					echo "<script type='text/javascript' language='javascript'>	
-						location.href='errorDiferenciaFactura.php?codVenta=$codigo';
-							</script>";	
+						echo "<script type='text/javascript' language='javascript'>	
+							location.href='errorDiferenciaFactura.php?codVenta=$codigo';
+						</script>";	
 				}else{
-					// echo "<script type='text/javascript' language='javascript'>	
-					// location.href='formatoFacturaOnLine.php?codVenta=$codigo';
-					// </script>";	
 					$mensaje="transacción Existosa :)";	
 					$url="location.href='formatoFacturaOnLine.php?codVenta=$codigo';";				
 					
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
-				// echo "<script type='text/javascript' language='javascript'>	
-				// location.href='dFacturaElectronica.php?codigo_salida=$codigo';
-				// </script>";	
 				$mensaje="Factura emitida fuera de línea :(";				
 				$url="location.href='dFacturaElectronica.php?codigo_salida=$codigo';";
 			}
@@ -426,10 +420,11 @@ if($sql_inserta==1){
 			 //        })
 				// 	</script>";
 
+				
 				echo "<script type='text/javascript' language='javascript'>
 				location.href='navegadorVentas.php?codVenta=$codigo';
-				</script>";		
-
+				</script>";	
+	
 				
 			}else{
 				// echo "<script language='Javascript'>
@@ -446,7 +441,7 @@ if($sql_inserta==1){
 
 				echo "<script type='text/javascript' language='javascript'>
 				location.href='navegadorVentas.php?codVenta=$codigo';
-				</script>";		
+				</script>";
 			}
 
 		}else if($tipoDoc==2){
