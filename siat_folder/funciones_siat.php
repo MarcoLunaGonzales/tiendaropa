@@ -42,7 +42,7 @@ function obtenerCuis_vigente_BD($cod_ciudad){
 }
 
 function obtenerCufd_vigente_BD($cod_ciudad,$fecha,$cuis){
-	$sql="select cufd from siat_cufd where cod_ciudad=$cod_ciudad and fecha = '$fecha' and estado=1 and cuis='$cuis' AND cufd <> '' or cufd <> null";
+	$sql="select cufd from siat_cufd where cod_ciudad=$cod_ciudad and fecha = '$fecha' and estado=1 and cuis='$cuis' AND (cufd <> '' or cufd <> null)";
 	 	   // echo $sql;
   $valor="0";
   // require("../../conexionmysqli.inc");
