@@ -78,9 +78,6 @@ if((int)$nitCliente==123){
 	$razonSocial="SN";
 }
 
-if((int)$nitCliente==99001 || (int)$nitCliente==99002 || (int)$nitCliente==99003){
-	$siat_codigotipodocumentoidentidad=5;//nit
-}
 
 
 
@@ -173,6 +170,12 @@ if($tipoDoc==1 || $tipoDoc==4){
 	$cod_leyenda=$datConf[0];
 	$siat_codigotipodocumentoidentidad=$_POST["tipo_documento"];	
 }
+
+/*VALIDACION MANUAL CASOS ESPECIALES*/
+if((int)$nitCliente=='99001' || (int)$nitCliente=='99002' || (int)$nitCliente=='99003'){
+	$siat_codigotipodocumentoidentidad=5;//nit
+}
+
 
 $created_by=$usuarioVendedor;
 
