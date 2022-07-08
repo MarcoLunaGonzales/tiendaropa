@@ -1,6 +1,9 @@
 <?php
 require '../../conexionmysqli2.inc';
 require 'PHPMailer/send.php';
+include("../../datosUsuario.php");
+
+
 if($_POST) {
 
    $name = trim($_POST['name']);
@@ -12,8 +15,13 @@ if($_POST) {
    $rutaArchivo=trim($_POST['adjuntos_texto'],",");
    $rutaArchivoCSV=trim($_POST['adjuntos_texto_csv'],",");
    $fechaActual=date("Y-m-d H:m:s");
-    $mail_username="KIDSPLACE";//Correo electronico emisor
-    $mail_userpassword="";// contraseña correo emisor
+
+   //SACAMOS EL NOMBRE DE LA TIENDA DESDE LAS CONFIGURACIONES Y DATOS USUARIO
+   $mail_username=$nombreTiendaRopa;//Correo electronico emisor
+   if($mail_username==""){
+      $mail_username="Envio de Correo Compra SIAT";
+   }
+   $mail_userpassword="";// contraseña correo emisor
 
 
 $sqlDir="select valor_configuracion from configuraciones where id_configuracion=46";

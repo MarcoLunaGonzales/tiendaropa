@@ -12,6 +12,9 @@ if(isset($_GET["codigo_salida"])){
     $codigoVenta=$codigoVenta;
 }
 
+//OBTENEMOS EL LOGO Y EL NOMBRE DEL SISTEMA
+$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
+$nombreSistemaEmail=obtenerValorConfiguracion($enlaceCon,12);
 
 $sqlConf="select id, valor from configuracion_facturas where id=1 and cod_ciudad='$cod_ciudad'";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
@@ -355,7 +358,7 @@ footer p {
                 
             <table>
                 <tr><td><div class="logo">
-                    <img src="<?=__DIR__?>/imagenes/logo.jpg" alt="" class="img-fluid" style="width: 300px;">
+                    <img src="<?=__DIR__?>/imagenes/<?=$logoEnvioEmail;?>" alt="" class="img-fluid" style="width: 300px;">
                 </div></td>
                     <td><div class="top-left">
                     <div class="position-relative">

@@ -146,7 +146,7 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
                 <div class="col-10">
                     <div class="row bb pb-3">
                         <div class="col-7">
-                            <p>Farmacias Bolivia</p>
+                            <p>Sistema Comercial</p>
                             <h2><?=$sucursalTxt?></h2>
                             <p class="address"> <?=$direccionTxt?></p>
                             <div class="txn mt-2">Tel: <?=$telefonoTxt?></div>

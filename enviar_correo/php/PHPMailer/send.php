@@ -13,6 +13,12 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	    require 'PHPMailer/src/PHPMailer.php';
 	    require 'PHPMailer/src/SMTP.php';
 	}    
+	require '../../funciones.php';
+	require '../../conexionmysqli.inc';
+
+	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
+	$nombreSistemaEmail=obtenerValorConfiguracion($enlaceCon,12);
+
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 
@@ -20,9 +26,9 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	//$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
 	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail->Username = "mailfacturacion@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "M1nk4S0ftw4r3"; 	
+	$mail->Password = "8cElVZl^)A5a"; 	
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -70,7 +76,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
 	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
-    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
+    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/'.$logoEnvioEmail));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
 
@@ -96,28 +102,20 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	    require 'PHPMailer/src/SMTP.php';
 	}   
 
+	require '../../funciones.php';
+	require '../../conexionmysqli.inc';
+	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
+	$nombreSistemaEmail=obtenerValorConfiguracion($enlaceCon,12);
+
 	//recibimos correos
 	$mail = new PHPMailer;
-	//$mail->SMTPDebug = 4; 
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
-	// $mail->Host = 'www.farmaciasbolivia.com.bo';             // Especificar el servidor de correo a utilizar 
-
-
-	// $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	// // $mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	// $mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	// // $mail->Username = 'pruebaimpuesto@farmaciasbolivia.com.bo';          // Correo electronico saliente ejemplo: 
-	// $mail->Username = 'cobofar@yahoo.com';          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	// $mail_setFromEmail=$mail->Username;
-	// // $mail->Password = 'Impuesto123*'; 		// Tu contraseña de gmail
-	// $mail->Password = 'ntknmkilprqqjofx'; 		// Tu contraseña de gmail
-
 
 	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = "kidsplace@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail->Username = "mailfacturacion@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
 	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "M1nk4S0ftw4r3"; 	
+	$mail->Password = "8cElVZl^)A5a"; 	
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
 	$mail->Port = 587;                          // Puerto TCP  para conectarse 
@@ -174,8 +172,8 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
 
 
-	 //imagenes
-    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/logo.jpg'));
+	//imagenes
+    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/'.$logoEnvioEmail));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
 

@@ -159,7 +159,7 @@ $estadoFacturacion=$datConf[0];
 </style>
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4>FACTURA - TuAdmin</h4>
+        <h4>Detalle de Factura Electronica SIAT</h4>
     </div>        
     <div class="card-body">
         <?=$stringEstado?>
