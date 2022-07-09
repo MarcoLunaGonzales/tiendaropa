@@ -77,7 +77,8 @@ echo "<script language='Javascript'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 	</div>";
-	
+	echo "<br>";
+	echo "<br>";
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Nombre de Tipo de Ingreso</th><th>Definicion de Tipo de Ingreso</th><th>Tipo de Almacen</th></tr>";
 	while($dat=mysqli_fetch_array($resp))

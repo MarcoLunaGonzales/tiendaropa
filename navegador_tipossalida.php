@@ -78,6 +78,8 @@ echo "<script language='Javascript'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 	</div>";
+	echo "<br>";
+	echo "<br>";
 	
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Nombre de Tipo de Salida</th><th>Glosa</th><th>Tipo Almacen</th></tr>";

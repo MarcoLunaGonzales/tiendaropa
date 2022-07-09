@@ -6,6 +6,12 @@ require("../../estilos_almacenes.inc");
 
 echo "<center>";
 echo "<h1>Proveedores</h1>";
+
+echo "<div class='divBotones'><input class='boton' type='button' value='Adicionar' onclick='javascript:frmAdicionar();'>
+<input class='boton' type='button' value='Editar' onclick='javascript:frmModificar();'>
+<input class='boton2' type='button' value='Eliminar' onclick='javascript:frmEliminar();'></div><br><br>";
+
+
 echo "<table class='texto'>";
 echo "<tr>";
 echo "<th>&nbsp;</th><th>Nombre</th><th>Ciudad</th><th>Direccion</th><th>Correo</th><th>Telefono 1</th><th>Telefono 2</th><th>Contacto</th><th>Marcas</th>";

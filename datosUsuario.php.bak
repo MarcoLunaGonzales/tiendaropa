@@ -54,10 +54,9 @@
 	$datNombreTiendaRopa=mysqli_fetch_array($respNombreTiendaRopa);
 	$nombreTiendaRopa=$datNombreTiendaRopa[0];
 	
-	$sqlLogoTiendaRopa="select valor_configuracion from configuraciones where id_configuracion=13";
-	
+	$sqlLogoTiendaRopa="select valor_configuracion from configuraciones where id_configuracion=13";	
 	$respLogoTiendaRopa=mysqli_query($enlaceCon,$sqlLogoTiendaRopa);
-	$datLogoTiendaRopa=mysqli_fetch_array($sqlLogoTiendaRopa);
+	$datLogoTiendaRopa=mysqli_fetch_array($respLogoTiendaRopa);
 	$logoTiendaRopa=$datLogoTiendaRopa[0];
 
 	/*

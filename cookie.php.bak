@@ -1,4 +1,5 @@
 <?php
+$estilosVenta=0; //para no ejecutar las librerias js css
 
 require("conexionmysqli.php");
 $usuario = $_POST["usuario"];
@@ -9,6 +10,7 @@ $sql = "
     SELECT f.cod_cargo, f.cod_ciudad,f.cod_tipofuncionario
     FROM funcionarios f, usuarios_sistema u
     WHERE u.codigo_funcionario=f.codigo_funcionario AND u.codigo_funcionario='$usuario' AND u.contrasena='$contrasena' ";
+echo $sql;
 $resp = mysqli_query($enlaceCon,$sql);
 $num_filas = mysqli_num_rows ($resp);
 //$num_filas = i($resp);
@@ -40,7 +42,7 @@ if ($num_filas != 0) {
 
 	setcookie("global_almacen",$global_almacen);
 	setcookie("globalGestion", $globalGestion);
-	setcookie("globalTipoFuncioario", $cod_tipofuncionario);
+	setcookie("globalTipoFuncionario", $cod_tipofuncionario);
 	if($cod_tipofuncionario==1){
 		// funcionario Interno
 		if($cod_cargo==1000 || $cod_cargo==1001 || $cod_cargo==1002){
