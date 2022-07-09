@@ -1,6 +1,9 @@
 <?php
         require("conexionmysqli.php");
 		require("estilos_almacenes.inc");
+$fondo_fila="";
+$restablecer="";
+
 /**
  * Desarrollado por Datanet-Bolivia.
  * @autor: Marco Antonio Luna Gonzales
