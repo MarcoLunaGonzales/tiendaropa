@@ -49,7 +49,7 @@ include("datosUsuario.php");
 
 	<div class="header">
 		<a href="#menu"><span></span></a>
-		TuAdmin <?php echo $nombreTiendaRopa;?>
+		<?php echo $nombreTiendaRopa;?>
 		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
 			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
             <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
@@ -95,6 +95,8 @@ include("datosUsuario.php");
 					</li>		
 					<li><span>SIAT</span>
 						<ul>
+							<li><a href="siat_folder/siat_facturacion_offline/facturas_sincafc_list.php" target="contenedorPrincipal">Facturas Off-line</a></li>
+							<li><a href="siat_folder/siat_facturacion_offline/facturas_cafc_list.php" target="contenedorPrincipal">Facturas Off-line CAFC</a></li>
 							<li><a href="siat_folder/siat_sincronizacion/index.php" target="contenedorPrincipal">Sincronización</a></li>
 							<li><a href="siat_folder/siat_puntos_venta/index.php" target="contenedorPrincipal">Puntos Venta</a></li>
 							<li><a href="siat_folder/siat_cuis_cufd/index.php" target="contenedorPrincipal">Generación CUIS y CUFD</a></li>
@@ -124,6 +126,7 @@ include("datosUsuario.php");
 				<ul>
 					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos & Salidas</a></li>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>
+					<li><a href="registrar_salidaventas_manuales.php" target="_blank">Factura Manual de Contigencia</a></li>
 				</ul>	
 			</li>
 			<!--li><span>Listado de Cobranzas</span>

@@ -11,11 +11,9 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFac
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\SiatConfig;
 
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioOperaciones;
-
-// use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\siat_cobofar\siat_factura_online;
-
-
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionComputarizada;
+
+// use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFacturacionElectronica;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioRecepcionFactura;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioRecepcionPaquete;
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Messages\SolicitudServicioValidacionRecepcionPaquete;
@@ -92,7 +90,7 @@ class FacturacionOffLine
 		}
 		return array($codigoEvento,$descripcion);	
 	}
-	public static function RecepcionPaqueteFactura($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo)
+	public static function RecepcionPaqueteFactura($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo,$nuevo_cuf=0)
 	{
 		try
 		{	
@@ -102,17 +100,13 @@ class FacturacionOffLine
 			// instanciar*****
 			$tipoEmision = 2;
 			$tipoFactura = 1;
-
 			require_once "siat_factura_online.php";
-			// $privCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'privatekey.pem';
-			// $pubCert = MOD_SIAT_DIR . SB_DS . 'certs' . SB_DS . 'CORPORACION_BOLIVIANA_DE_FARMACIAS_SA_CER.pem';
 			$config = self::buildConfig();
 			$config->validate();
 			
 			$service = new ServicioFacturacionComputarizada($cuis, $cufd, $config->tokenDelegado);
-			$service->wsdl=conexionSiatUrl::wsdlFacturacionElectronica;
+			// $service->wsdl=conexionSiatUrl::wsdlFacturacionElectronica;
 			$service->setConfig((array)$config);
-			
 			// $service->setPrivateCertificateFile($privCert);
 			// $service->setPublicCertificateFile($pubCert);
 			$service->debug = true;
@@ -124,27 +118,23 @@ class FacturacionOffLine
 			    FROM salida_almacenes s 
 			    WHERE s.cod_salida_almacenes in ($string_codigos) and s.cod_almacen=$cod_almacen and DATE_FORMAT(s.siat_fechaemision,'%Y-%m-%d') = '$fecha'";
 			    //echo  $sql;
-		    $valor=0;
-		    // require("../../conexionmysqli2.inc");
+		    $valor=0;		    
 		    require("../../conexionmysqli2.inc");
 		    // echo $sql;
+		    
 		    $resp=mysqli_query($enlaceCon,$sql);
 		    $facturax= new FacturaOnline();
 		    $facturax->endpoint=conexionSiatUrl::endpoint;
 		    $facturax->wsdl=conexionSiatUrl::wsdl;
-
 		    $cafc=null;
 		    while($row=mysqli_fetch_array($resp)){ 
 		      	$cod_salida_almacenes=$row['cod_salida_almacenes'];
 		      	$cafc=$row['cafc'];
-				$factura=$facturax::testRecepcionFacturaElectronica($cod_salida_almacenes,2);   
-				// $facturax::testRecepcionFacturaElectronica($cod_salida_almacenes,2);      
-				// echo "+++";
+				$factura=$facturax::testRecepcionFacturaElectronica($cod_salida_almacenes,2,false,1,$nuevo_cuf);
 				if($cafc<>null&&$row['cod_tipo_doc']==4){
 					$factura->cabecera->cafc=$cafc;
 				}
 				$codigo_cuf=$factura->cabecera->cuf;
-				
 				$codigoTipoDocumentoIdentidad=$factura->cabecera->codigoTipoDocumentoIdentidad;
 				$codigoExcepcion=$factura->cabecera->codigoExcepcion;
 
@@ -156,7 +146,6 @@ class FacturacionOffLine
 		    $service->codigoSucursal=$cod_impuestos;
 		    $service->codigoPuntoVenta=$codigoPuntoVenta;
 		    // $service->cafc=$codigoPuntoVenta;
-		    
 			 $res = $service->recepcionPaqueteFactura($facturas, $codigoEvento,$tipoEmision,$tipoFactura,$cafc);
 			 // print_r($res);
 			 $sw_estado=false;

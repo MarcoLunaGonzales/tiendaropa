@@ -1,5 +1,5 @@
 <?php
-require "conexionmysqli.php";
+require "conexionmysqli2.inc";
 $existeSucursal=1;
 $cliente=$_GET['cliente'];
 $nit=trim($_GET['nit']);

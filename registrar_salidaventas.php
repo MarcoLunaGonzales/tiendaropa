@@ -435,6 +435,66 @@ function ajaxClienteBuscar(f){
 	ajax.send(null);
 }
 
+
+function refrescarComboCliente(cliente){
+	var parametros={"cliente":cliente,"nit":$("#nitCliente").val()};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaClientesActual.php",
+        data: parametros,
+        success:  function (resp) {
+        	Swal.fire("Correcto!", "Se guardó el cliente con éxito", "success");   
+           $("#cliente").html(resp);  
+           ajaxRazonSocialCliente(document.getElementById('form1'));
+           $("#cliente").selectpicker("refresh");          
+           $("#modalNuevoCliente").modal("hide");                  	   
+        }
+    });	
+}
+
+function mostrarClientesActualesCombo(){
+	var parametros={"0":0};
+	$.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "listaClientesActual.php",
+        data: parametros,
+        success:  function (resp) {
+           $("#cliente_campana").html(resp);  
+           $("#cliente_campana").val($("#cliente").val());
+           $("#cliente_campana").selectpicker("refresh");                         	   
+        }
+    });	
+}
+
+
+function mostrarRegistroConTarjeta(){
+	$("#titulo_tarjeta").html("");
+	if($("#nro_tarjeta").val()!=""){
+      $("#titulo_tarjeta").html("(REGISTRADO)");
+	}
+	if($("#monto_tarjeta").val()==""){	  
+      $("#monto_tarjeta").val($("#totalFinal").val());
+      $("#efectivoRecibidoUnido").val($("#totalFinal").val());
+      $("#tipoVenta").val(2);
+      $(".selectpicker").selectpicker("refresh");
+      aplicarMontoCombinadoEfectivo(form1);
+      document.getElementById("nro_tarjeta").focus();
+	}
+	$("#modalPagoTarjeta").modal("show");	
+	//$("#nro_tarjeta").focus();	
+}
+function verificarPagoTargeta(){	
+  var nro_tarjeta=$("#nro_tarjeta").val();
+  if(nro_tarjeta!=""){
+  	$("#boton_tarjeta").attr("style","background:green");
+  }else{
+  	$("#boton_tarjeta").attr("style","background:#96079D");
+  }
+}
+
+
 function calculaMontoMaterial(indice){
 
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
@@ -628,6 +688,82 @@ function buscarMaterial(f, numMaterial){
 	
 }
 
+
+function check(e) {
+
+    tecla = (document.all) ? e.keyCode : e.which;
+
+    //Tecla de retroceso para borrar, siempre la permite
+    if (tecla == 8||tecla==13) {
+        return true;
+    }
+
+    // Patron de entrada, en este caso solo acepta numeros y letras
+    if($("#tipo_documento").val()!=1){
+    	patron = /[A-Za-z0-9-]/;
+    }else{
+    	patron = /[0-9]/;
+    }
+    
+    tecla_final = String.fromCharCode(tecla);
+    return patron.test(tecla_final);
+}
+
+$(document).ready(function (){
+		mostrarComplemento();
+});
+
+function isNumeric(char) {
+  return !isNaN(char - parseInt(char));
+}
+
+function maskIt(pattern, value) {
+  let position = 0;
+  let currentChar = 0;
+  let masked = '';
+  while(position < pattern.length && currentChar < value.length) {
+    if(pattern[position] === '0') {
+      masked += value[currentChar];
+      currentChar++;
+    } else {
+      masked += pattern[position];
+    }
+    position++;
+  }
+  return masked;
+}
+function numberCharactersPattern(pattern) {
+  let numberChars = 0;
+  for(let i = 0; i < pattern.length; i++) {
+    if(pattern[i] === '0') {
+      numberChars ++;
+    }
+  }
+  return numberChars;
+}
+function applyInputMask(elementId, mask) {
+  let inputElement = document.getElementById(elementId);
+  let content = '';
+  let maxChars = numberCharactersPattern(mask);
+  
+  inputElement.addEventListener('keydown', function(e) {
+    e.preventDefault();
+    if (isNumeric(e.key) && content.length < maxChars) {
+      content += e.key;
+    }
+    if(e.keyCode == 8) {
+      if(content.length > 0) {
+        content = content.substr(0, content.length - 1);
+      }
+    }
+    inputElement.value = maskIt('0000********0000', content);
+  })
+}
+
+$( document ).ready(function() {
+  applyInputMask('nro_tarjeta', '0000********0000');
+});
+
 </script>
 <?php 
 $rpt_territorio=$_COOKIE['global_agencia'];
@@ -787,17 +923,28 @@ require("funciones.php");
 
 function validar(f, ventaDebajoCosto){
 	
+	if($("#nitCliente").val()=="0"){
+		// errores++;
+		Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
+		// $("#pedido_realizado").val(0);		
+		return(false);
+	}
+
+	if($("#nro_tarjeta").val().length!=16&&$("#nro_tarjeta").val()!=""){
+		// errores++;
+		Swal.fire("Tarjeta!", "El número de Tarjeta debe tener 16 digitos<br><br><b>Ej: 1234********1234</b>", "info");
+		// $("#pedido_realizado").val(0);
+		return(false);
+	}
 	//alert(ventaDebajoCosto);
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	if(cantidadItems>0){
-		
 		var item="";
 		var cantidad="";
 		var stock="";
 		var descuento="";
-						
 		for(var i=1; i<=cantidadItems; i++){
 			console.log("valor i: "+i);
 			console.log("objeto materiales: "+document.getElementById("materiales"+i));
@@ -885,25 +1032,6 @@ function mostrarComplemento(){
 	}
 }
 
-function check(e) {
- //alert ("vheck");
-    tecla = (document.all) ? e.keyCode : e.which;
-
-    //Tecla de retroceso para borrar, siempre la permite
-    if (tecla == 8||tecla==13) {
-        return true;
-    }
-
-    // Patron de entrada, en este caso solo acepta numeros y letras
-    if($("#tipo_documento").val()!=1){
-    	patron = /[A-Za-z0-9-]/;
-    }else{
-    	patron = /[0-9]/;
-    }
-    
-    tecla_final = String.fromCharCode(tecla);
-    return patron.test(tecla_final);
-}
 
 $(document).ready(function (){
 		mostrarComplemento();
@@ -949,7 +1077,7 @@ function adicionarCliente() {
     var genero = $("#genero").val();
 	var tipoPrecio = $("#tipoPrecio").val();	
 
-  if(nomcli==""||nit==""||mail==""||tel1==""){
+  if(nomcli==""||nit==""|| (mail==""&&tel1=="")){
     Swal.fire("Informativo!", "Debe llenar los campos obligatorios", "warning");
   }else{
 	  
@@ -966,8 +1094,13 @@ function adicionarCliente() {
 		        success:  function (resp) {      						
 		           var r=resp.split("#####");	
 
+		           console.log("response:"+r);
+		           console.log("response[]:"+r[1]);
+
 		           if(parseInt(r[1])>0){           	
+		           	  
 		           	  refrescarComboCliente(r[1]);   
+		           	  
 		           	  $("#nomcli").val("");
 							    $("#apcli").val("");
 							    $("#ci").val("");
@@ -1201,9 +1334,12 @@ $ventaDebajoCosto=$datConf[0];
 //$ventaDebajoCosto=mysql_result($respConf,0,0);
 include("datosUsuario.php");
 
+if(isset($_GET['file'])){
+	unlink($_GET['file']);
+}
 ?>
-<nav class="mb-4 navbar navbar-expand-lg" style='background:#00ccb6 !important;color:white !important;'>
-                <a class="navbar-brand font-bold" href="#">KIDSPLACE VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
+<nav class="mb-4 navbar navbar-expand-lg" style='background:#7200ca !important;color:white !important;'>
+                <a class="navbar-brand font-bold" href="#">VENTAS [<?php echo $fechaSistemaSesion?>][<b id="hora_sistema"><?php echo $horaSistemaSesion;?></b>] [<?php echo $nombreAlmacenSesion;?>]</a>
                 <div id="siat_error"></div>
                 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
@@ -1225,14 +1361,14 @@ include("datosUsuario.php");
 
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" ><!--onsubmit='return checkSubmit();'-->
 
-<input type="hidden" id="siat_error_valor" name="siat_error_valor">
+	<input type="hidden" id="siat_error_valor" name="siat_error_valor">
 	<input type="hidden" id="confirmacion_guardado" value="0">
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
 
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
-<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#00ccb6 !important; font-size: 16px;">
+<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 <?php
 
 if($tipoDocDefault==2){
@@ -1379,7 +1515,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 </tr>
 
 
-<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#00ccb6 !important; font-size: 16px;">
+<tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 
 
 	<th>Vendedor</th>
@@ -1568,6 +1704,9 @@ if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
 	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
 					<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+					
+					<a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>
+
             <!--h2 style='font-size:11px;color:#9EA09E;'>TIPO DE CAMBIO $ : <b style='color:#189B22;'> ".$tipoCambio." Bs.</b></h2-->
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
@@ -1616,6 +1755,64 @@ if($banderaErrorFacturacion==0){
     </div>
   </div>
 <!--    end small modal -->
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalPagoTarjeta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content card">
+               <div class="card-header card-header-primary card-header-icon">
+                  <div class="card-icon" style="background: #96079D;color:#fff;">
+                    <i class="material-icons">credit_card</i>
+                  </div>
+                  <h4 class="card-title text-dark font-weight-bold">Pago con Tarjeta <small id="titulo_tarjeta"></small></h4>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+                <div class="card-body">
+<div class="row">
+	<div class="col-sm-12">
+		         <div class="row d-none">
+                  <label class="col-sm-3 col-form-label">Banco</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <select class="selectpicker form-control" name="banco_tarjeta" id="banco_tarjeta" data-style="btn btn-success" data-live-search="true">                      	
+                          <?php echo "$cadComboBancos"; ?>
+                          <option value="0" selected>Otro</option>
+                       </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Numero <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="text" style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;' id="nro_tarjeta" name="nro_tarjeta" value="" onkeydown="verificarPagoTargeta()" onkeyup="verificarPagoTargeta()" onkeypress="verificarPagoTargeta()" autocomplete="off" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Monto <br>Tarjeta</label>
+                  <div class="col-sm-9">
+                    <div class="form-group">
+                      <input class="form-control" type="number" id="monto_tarjeta" name="monto_tarjeta" style='height:40px;font-size:35px;width:80%;background:#A5F9EA !important; float:left; margin-top:4px; color:#057793;' step="any" value=""/>
+                    </div>
+                  </div>
+                </div> 
+                <br>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-info btn-sm">GUARDAR</a>               
+                <br><br>
+       </div>
+</div>                  
+
+                </div>
+      </div>  
+    </div>
+  </div>
+<!--    end small modal -->
+
 </form>
 <!-- small modal -->
 <div class="modal fade modal-primary" id="modalNuevoCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -1726,6 +1923,13 @@ if($banderaErrorFacturacion==0){
   </div>
 </div>  
 <!--    end small modal -->
+
+
+
+
+
+
+
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
  <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>

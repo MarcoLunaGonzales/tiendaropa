@@ -1,6 +1,5 @@
 <?php
 require "Siat/siat_cobofar/siat_facturacionoffline.php";   
-
 date_default_timezone_set('America/La_Paz');
 function obtenerFechasEmisionFacturas($string_codigos,$cod_almacen,$fecha){
 	$sql="SELECT max(s.siat_fechaemision)as fin,min(s.siat_fechaemision)as inicio
@@ -43,7 +42,7 @@ function obtenerCuis_vigente_BD($cod_ciudad){
 }
 
 function obtenerCufd_vigente_BD($cod_ciudad,$fecha,$cuis){
-	$sql="select cufd from siat_cufd where cod_ciudad=$cod_ciudad and fecha = '$fecha' and estado=1 and cuis='$cuis' AND cufd <> '' or cufd <> null";
+	$sql="select cufd from siat_cufd where cod_ciudad=$cod_ciudad and fecha = '$fecha' and estado=1 and cuis='$cuis' AND (cufd <> '' or cufd <> null)";
 	 	   // echo $sql;
   $valor="0";
   // require("../../conexionmysqli.inc");
@@ -106,9 +105,9 @@ function obtenerCufd_anterior_BD($cod_ciudad,$fecha,$cuis){
   return $valor;
 }
 
-function solicitudRecepcionPaquetes($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo){
+function solicitudRecepcionPaquetes($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo,$nuevo_cuf){
   $recepcionFactura= new FacturacionOffLine();
-  $resEvent=$recepcionFactura::RecepcionPaqueteFactura($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo);
+  $resEvent=$recepcionFactura::RecepcionPaqueteFactura($string_codigos,$cod_almacen,$fecha,$codigoMotivoEvento,$descripcion,$codigoPuntoVenta,$cod_impuestos,$cufd,$cufdEvento,$fecha_fin,$fecha_inicio,$cuis,$codigoEvento,$tipo,$nuevo_cuf);
  	return array($resEvent[0],$resEvent[1],$resEvent[2]);
 }
 function obtenerCuis_siat($codigoPuntoVenta,$codigoSucursal){
@@ -180,20 +179,6 @@ function obtenerCantidadPuntosVenta($codTipo){
     }
 }
 
-function deshabilitarCufd($cod_ciudad,$cuis,$fecha_x){
-
-  $valor=0;
-  $sql="UPDATE siat_cufd set estado=0 where cod_ciudad='$cod_ciudad' and fecha ='$fecha_x' and cuis='$cuis' and estado=1";
-  //echo $sql;
-    $fecha="";
-    require dirname(__DIR__)."/conexionmysqli2.inc";    
-    $resp=mysqli_query($enlaceCon,$sql);
-    while($row=mysqli_fetch_array($resp)){ 
-      $fecha=date("d/m/Y H:i:s",strtotime($row[0]));
-    }
-    return $fecha;
-}
-
 function generarCuis($ciudad,$codigoSucursal,$codigoPuntoVenta){
    require_once "Siat/siat_cobofar/siat_cuis.php";  
    $test= new CuisTest();
@@ -203,6 +188,21 @@ function generarCufd($ciudad,$codigoSucursal,$codigoPuntoVenta){
    require_once "Siat/siat_cobofar/siat_cufd.php";  
    $test= new CufdTest();
    $test::testCufd($ciudad,$codigoSucursal,$codigoPuntoVenta);
+}
+
+function deshabilitarCufd($cod_ciudad,$cuis,$fecha_X){
+   
+  
+   // echo $sql;
+  $valor="0";
+  // require("../../conexionmysqli.inc");
+  require dirname(__DIR__)."/conexionmysqli.inc";
+  
+  $sqlUpdate="UPDATE siat_cufd SET estado=0 where cod_ciudad='$cod_ciudad' and fecha='$fecha_X' and cuis='$cuis' and estado=1;";
+  mysqli_query($enlaceCon,$sqlUpdate);
+
+  return $valor;
+
 }
 
 function generarFacturaVentaImpuestos($codSalidaSucursal,$ex = false,$online_siat = 1){

@@ -19,7 +19,7 @@ class InvoiceDetail extends Message
 	
 	public function __construct()
 	{
-		$this->unidadMedida	= 58;
+		$this->unidadMedida	= 57;
 	}
 	public function validate()
 	{

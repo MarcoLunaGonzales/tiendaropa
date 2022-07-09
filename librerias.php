@@ -26,7 +26,6 @@
   <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
   <script src="assets/js/plugins/jquery.dataTables.min.js"></script>
   <script src="assets/js/plugins/dataTables.fixedHeader.min.js"></script>
-
   <!--  Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
   <script src="assets/js/plugins/bootstrap-tagsinput.js"></script>
   <!--  Notifications Plugin    -->
@@ -34,5 +33,4 @@
   <script src="assets/js/material-dashboard.js?v=2.1.0" type="text/javascript"></script>
   <script src="assets/js/mousetrap.min.js"></script>
   <script src="assets/alerts/alerts.js"></script>
-
   <script src="assets/alerts/functionsGeneral.js"></script>

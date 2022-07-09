@@ -1,6 +1,6 @@
 <?php
 
-require("../../conexionmysqli.php");
+require("../../conexionmysqli2.inc");
 
 $nomCli = $_GET["nomcli"];
 $apCli = $_GET["apcli"];

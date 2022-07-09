@@ -2,7 +2,7 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Producto</th><th>Marca</th><th>Color</th><th>Talla</th><th>Stock</th><th>Precio</th></tr>
+<th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Stock</th><th>Precio</th></tr>
 <?php
 require("conexionmysqli.php");
 require("funciones.php");

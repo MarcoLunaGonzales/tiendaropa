@@ -13,6 +13,14 @@
 <?php //ESTADO FINALIZADO
 require("../../conexionmysqli.inc");
 require("../../estilos_almacenes.inc");
+
+if(isset($_GET['rpt_territorio'])){
+  $rpt_territorio=$_GET['rpt_territorio'];
+  $sqladd=" and a.cod_ciudad in ($rpt_territorio)"; 
+}else{
+  $rpt_territorio=0;
+  $sqladd=" "; 
+}
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -28,11 +36,11 @@ require("../../estilos_almacenes.inc");
             </div> 
           </div>
           <form action="facturas_cafc_save.php" method="POST" onsubmit="return valida(this)" enctype="multipart/form-data">
-
-          
+            <input type="hidden" name="rpt_territorio" value="<?=$rpt_territorio?>">
           <div class="card-body">
             <div class="row">
-            <div class="col-sm-7">
+              <label class="col-sm-1 col-form-label">Motivo </label>
+            <div class="col-sm-4">
               <div class="form-group">
                   <select id="cod_motivo" name="cod_motivo" class="selectpicker form-control" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" required="true">
                   <option value="">SELECCIONE MOTIVO EVENTO</option>
@@ -46,6 +54,39 @@ require("../../estilos_almacenes.inc");
                   </select>
               </div>
             </div>
+
+            <?php 
+            // if($_COOKIE['global_usuario']==-1){
+              ?>
+            <label class="col-sm-2 col-form-label">Obtener Nuevo CUFD</label>
+            <div class="col-sm-1">
+              <div class="form-group">
+                <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="nuevo_cufd" name="nuevo_cufd[]" value="1" checked="true">
+                      <span class="form-check-sign">
+                        <span class="check"></span>
+                      </span>
+                    </label>
+                  </div>
+              </div>
+            </div>
+            <label class="col-sm-2 col-form-label">Obtener Nuevo CUF</label>
+              <div class="col-sm-1">
+                <div class="form-group">
+                  <div class="form-check">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="nuevo_cuf" name="nuevo_cuf[]" value="1">
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                </div>
+              </div>
+            <?php //}
+             ?>
+
             </div>
             <div class="table-responsive">
               <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed table-striped " style="width:100%">
@@ -59,13 +100,11 @@ require("../../estilos_almacenes.inc");
                   <?php
                   $index=0;
                   $cod_tipoEmision=2;//tipo emision OFFLINE
-                   $sql="SELECT s.cod_salida_almacenes,(select nombre_almacen from almacenes where cod_almacen=s.cod_almacen)sucursal, s.siat_fechaemision, s.nro_correlativo,  
-                (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente)cliente, s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,s.siat_codigotipoemision
-                FROM salida_almacenes s
-                WHERE s.cod_tiposalida=1001 and s.salida_anulada=0 and s.cod_tipo_doc=4
-                and siat_codigotipoemision=$cod_tipoEmision and siat_codigoRecepcion is null
-                order by 2,nro_correlativo";
-
+                   $sql="SELECT s.cod_salida_almacenes,a.nombre_almacen as sucursal, s.siat_fechaemision, s.nro_correlativo,  
+                  (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente)cliente, s.cod_tipo_doc, razon_social, nit,s.cod_tipopago,s.monto_final,s.siat_codigotipoemision
+                  FROM salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen
+                  WHERE s.cod_tiposalida=1001 and s.salida_anulada=0 and s.cod_tipo_doc=4 and s.siat_codigotipoemision=$cod_tipoEmision and s.siat_codigoRecepcion is null $sqladd
+                  order by a.nombre_almacen,s.nro_correlativo";
                   // echo $sql;
                   $resp=mysqli_query($enlaceCon,$sql);
                   while($row=mysqli_fetch_array($resp)){ 

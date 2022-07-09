@@ -40,7 +40,7 @@ body{background: #fff;} .filter-option{padding-top: 5px !important;padding-left:
 .cargar-ajax div h4::before{
   color: #2CEEBC !important;
   font-weight: negrita;
-  content: "FARMACIAS BOLIVIA: ";
+  content: "TuAdmin : ";
 }
 
             .btn-info{

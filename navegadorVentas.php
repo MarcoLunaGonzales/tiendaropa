@@ -12,7 +12,7 @@ require("estilos_almacenes.inc");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="lib/externos/jquery/jquery-ui/completo/jquery-ui-1.8.9.custom.css" rel="stylesheet" type="text/css"/>
         <link href="lib/css/paneles.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        <!-- <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.core.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.widget.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.button.min.js"></script>
@@ -22,7 +22,7 @@ require("estilos_almacenes.inc");
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.resizable.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.dialog.min.js"></script>
         <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.datepicker.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
+        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script> -->
         <script type='text/javascript' language='javascript'>
 
 function nuevoAjax()
@@ -86,7 +86,7 @@ function funOk(codReg,funOkConfirm)
                     }
                 });
             } else {
-                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introdusca el codigo de confirmacion.</div>",function(){},function(){});
+                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introduzca el codigo de confirmacion.</div>",function(){},function(){});
             }
         },function(){});
     });
@@ -191,6 +191,90 @@ function anular_salida(f)
             });
         }
     }
+}
+
+function anular_salida_siat(f)
+{   var i;
+    var j=0;
+    var j_cod_registro, estado_preparado;
+    var fecha_registro;
+    for(i=0;i<=f.length-1;i++)
+    {   if(f.elements[i].type=='checkbox')
+        {   if(f.elements[i].checked==true)
+            {   j_cod_registro=f.elements[i].value;
+                fecha_registro=f.elements[i-2].value;
+                estado_preparado=f.elements[i-1].value;
+                j=j+1;
+            }
+        }
+    }
+    if(j>1)
+    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    }
+    else
+    {   if(j==0)
+        {   alert('Debe seleccionar un registro para anularlo.');
+        }
+        else
+        {   
+            // funOk(j_cod_registro,function() {
+            //             location.href='anular_venta_siat.php?codigo_registro='+j_cod_registro;
+            // });
+
+            funVerifi(j_cod_registro);
+
+
+        }
+    }
+}
+function funVerifi(codReg){   
+    // var cod_sucursal=$("#cod_sucursal").val();
+
+var parametros={"codigo":codReg};
+ $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/frmConfirmarCodigoSalida_siat.php",
+        data: parametros,
+        success:  function (resp) { 
+            $("#datos_anular").html(resp);
+            $("#codigo_salida").val(codReg);
+            $("#contrasena_admin").val("");
+            $("#modalAnularFactura").modal("show");           
+      }
+ }); 
+}
+
+function confirmarCodigo(){ 
+    document.getElementById('boton_anular').style.visibility='hidden';
+   // var cod_sucursal=document.getElementById("cod_sucursal").value;  
+   // var cod_personal=document.getElementById("cod_personal").value;  
+   
+  var cad1=$("input#idtxtcodigo").val();
+  var cad2=$("input#idtxtclave").val(); 
+  var per=$("#rpt_personal").val(); 
+
+  // var rpt_tipoanulacion=$("#rpt_tipoanulacion").val(); 
+  // var glosa_anulacion=$("input#glosa_anulacion").val(); 
+
+  var enviar_correo=$("input#enviar_correo").val();
+  var correo_destino=$("input#correo_destino").val();
+
+  var parametros={"codigo":cad1,"clave":cad2,"per":per};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "programas/salidas/validacionCodigoConfirmar_siat.php",
+        data: parametros,
+        success:  function (resp) { 
+            if(resp==1) {
+                location.href='anular_venta_siat.php?codigo_registro='+$("#codigo_salida").val()+'&id_caja='+per+'&enviar_correo='+enviar_correo+'&correo_destino='+correo_destino;
+            }else{
+               Swal.fire("Error!","El codigo que ingreso es incorrecto","error");
+               $("#modalAnularFactura").modal("hide");    
+            }
+      }
+ }); 
 }
 
 function cambiarCancelado(f)
@@ -376,13 +460,14 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 echo "<div class='divBotones'>
 		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>		
-		<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+		<!--input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'-->
+        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
     </div>";
 		
 echo "<div id='divCuerpo'><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>FG</th>";
+echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>FG</th><th>-</th>";
 if($global_admin_cargo==1){
-    echo "<th>Cambio</th><th>Convertir</th>";
+    echo "<th>-</th><th>-</th>";
 }
     echo "</tr>";
 	
@@ -393,7 +478,7 @@ $consulta = "
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
 	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,
-	(select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago
+	(select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago,siat_estado_facturacion
 	FROM salida_almacenes s, tipos_salida ts 
 	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 ";
 
@@ -448,15 +533,36 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}
 	$chk = "<input type='checkbox' name='codigo' value='$codigo'>";
 
+
+    $urlDetalle="dFacturaElectronica.php";
+    $siat_estado_facturacion=$dat['siat_estado_facturacion'];
+    // if($codTipoDoc==4){
+    //     $nro_correlativo="<i class=\"text-danger\">M-$nro_correlativo</i>";
+    //     if($siat_estado_facturacion!=1){
+    //          //$urlDetalle="dFactura.php";
+    //     }
+    // }else{
+    //     $nro_correlativo="F-$nro_correlativo";
+    // }
+    $datosAnulacion="";
+    $stikea="";
+    $stikec="";
+    if($salida_anulada==1){
+        $stikea="<strike class='text-danger'>";        
+        $stikec=" (ANULADO)</strike>";
+        // $datosAnulacion="title='<small><b class=\"text-primary\">$nro_correlativo ANULADA<br>Caja:</b> ".nombreVisitador($dat['cod_chofer_anulacion'])."<br><b class=\"text-primary\">F:</b> ".date("d/m/Y H:i",strtotime($dat['fecha_anulacion']))."</small>' data-toggle='tooltip'";
+        $chk="";
+    }
+
 	
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
     //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
-    echo "<td align='center'>$nombreTipoDoc-$nro_correlativo</td>";
-    echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
-    echo "<td>$nombre_tiposalida</td>";
-    echo "<td>$tipoPago</td><td>&nbsp;$razonSocial</td><td>&nbsp;$nitCli</td><td>&nbsp;$obs_salida</td>";
+    echo "<td align='center'>$stikea$nombreTipoDoc-$nro_correlativo $stikec</td>";
+    echo "<td align='center'>$stikea$fecha_salida_mostrar $hora_salida$stikec</td>";
+    echo "<td>$stikea $nombre_tiposalida $stikec</td>";
+    echo "<td>$stikea $tipoPago $stikec</td><td>$stikea &nbsp;$razonSocial $stikec</td><td>$stikea&nbsp;$nitCli $stikec</td><td>$stikea &nbsp;$obs_salida $stikec</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
 	
 	$urlConversionFactura="convertNRToFactura.php?codVenta=$codigo";    
@@ -467,11 +573,16 @@ while ($dat = mysqli_fetch_array($resp)) {
 	/*echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Detalle'></a></td>";
 	*/
+    switch ($siat_estado_facturacion) {
+        case 1:$color_fondo="#99E80A";break;
+        case 2:$color_fondo="#FF2E09";break;
+        case 3:$color_fondo="#12A4DF";break;  
+        default:$color_fondo="#12A4DF";break;      
+    }
 	if($codTipoDoc==1){
 		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-	}
-	else{
+	}else{
 		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemision2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
@@ -483,24 +594,32 @@ while ($dat = mysqli_fetch_array($resp)) {
      while($datCambio=mysqli_fetch_array($respCambio)){
         $codigoVentaCambio=$datCambio[0];        
      }
-     if($codigoVentaCambio==0){
+     if($codigoVentaCambio==0 ){
         echo "<td  bgcolor='$color_fondo'><a href='cambiarProductoVenta.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/change.png' width='30' border='0' title='Cambio de Producto'></a></td>";
      }else{
         echo "<td  bgcolor='$color_fondo'><a href='notaSalidaCambio.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/icon_detail.png' width='30' border='0' title='Ver Detalle del Cambio'></a></td>";
      }
-	 if($codTipoDoc==2){
+
+	 if($codTipoDoc==2 && $salida_anulada==0){
 		echo "<td bgcolor='$color_fondo'>
 		<a href='#' onClick='ShowFacturar($codigo,$nro_correlativo);'>
 		<img src='imagenes/icon_detail.png' width='30' border='0' title='Convertir en Factura'></a></td>";	
-	 }elseif($codTipoDoc==1){
-		echo "<td align='center'>
+	 }elseif($codTipoDoc==1 && $salida_anulada==0){
+		echo "<td align='center' bgcolor='$color_fondo'>
 		<a href='#' onClick='convertirNR($codigo);'>
 		<img src='imagenes/restaurar2.png' width='20' border='0' title='Convertir en NR y Anular Factura'></a>
 		</td>";
-	 }
+	 }else{
+        echo "<td align='center' bgcolor='$color_fondo'> </td>";
+     }
+     // if($codTipoDoc!=1 && $codTipoDoc!=2){
+     //    echo "<td  bgcolor='$color_fondo'> ";
+     //    echo "</td>";   
+     // }
+     echo "<td  bgcolor='$color_fondo'> <a href='$urlDetalle?codigo_salida=$codigo' target='_BLANK' title='DOCUMENTO FACTURA'  class='text-dark'><i class='material-icons'>description</i></a>";
+        echo "</td>";
     }
 
-	/*echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Grande'></a></td>";*/
 	echo "</tr>";
 }
 echo "</table></center><br>";
@@ -509,12 +628,38 @@ echo "</div>";
 echo "<div class='divBotones'>
 		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>		
-		<input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+		<!--input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'-->
+        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
     </div>";
 	
 echo "</form>";
 
 ?>
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalAnularFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+        <div class="card-header card-header-danger card-header-icon">
+          <div class="card-icon">
+            <i class="material-icons">delete</i>
+          </div>
+          <h4 class="card-title text-danger font-weight-bold">Anulación de Facturas</h4>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true" style="position:absolute;top:0px;right:0;">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+        <input type="hidden" name="codigo_salida" id="codigo_salida" value="0">
+        <div class="card-body" id="datos_anular">
+           
+        </div>
+        <div class="card-footer" >
+           <button id="boton_anular" name="boton_anular" class="btn btn-default" onclick="confirmarCodigo()">ANULAR</button>
+        </div>
+    </div>  
+    </div>
+</div>
+<!--    end small modal -->
+
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 450px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
@@ -658,6 +803,9 @@ echo "</form>";
 </div>
 
 
+
+
+
         <script type='text/javascript' language='javascript'>
         </script>
         <div id="pnldlgfrm"></div>
@@ -671,3 +819,5 @@ echo "</form>";
         <div id="pnldlgenespera"></div>
     </body>
 </html>
+
+

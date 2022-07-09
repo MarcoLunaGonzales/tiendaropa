@@ -38,7 +38,7 @@ const menuFarma = new Mmenu(
                         {
                             position: 'bottom',
                             content: [
-                                '<a href="http://www.farmaciasbolivia.com.bo" target="_blank">Farmacias Bolivia - Comercial</a>',
+                                '<a href="" target="_blank">Sistema Comercial</a>',
                             ],
                         },
                     ],

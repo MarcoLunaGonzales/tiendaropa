@@ -20,10 +20,8 @@ use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\Services\ServicioFac
 
 use SinticBolivia\SBFramework\Modules\Invoices\Classes\Siat\conexionSiatUrl;
 
-
 class FacturaOnline
 {
-
 	// protected $endpoint = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada';
 	// protected	$wsdl = 'https://pilotosiatservicios.impuestos.gob.bo/v2/ServicioFacturacionComputarizada?wsdl';
 	public $endpoint = conexionSiatUrl::endpoint;
@@ -75,6 +73,7 @@ class FacturaOnline
 		while($datDetalle=mysqli_fetch_array($respDetalle)){
 		    $codInterno=$datDetalle[0];
 		    $cantUnit=$datDetalle[1];
+		    $nombreMat=str_replace("&","&amp;",$datDetalle[2]);
 		    $nombreMat=$datDetalle[2];
 		    $precioUnit=$datDetalle[3];
 		    $descUnit=$datDetalle[4];
@@ -97,9 +96,9 @@ class FacturaOnline
 
 		    $detalle = new InvoiceDetail();
 			$detalle->cantidad				= $cantUnit;
-			$detalle->actividadEconomica	= '475100';
+			$detalle->actividadEconomica	= $dataFact['siat_codigoActividad'];//	'477300';
 			$detalle->codigoProducto		= $codInterno;
-			$detalle->codigoProductoSin		= 62131; //SERVICIOS DE COMERCIO AL POR MENOR DE HILADOS Y TELAS EN TIENDAS NO ESPECIALIZADAS
+			$detalle->codigoProductoSin		= $dataFact['siat_codigoProducto'];//62273; //SERVICIOS DE COMERCIO AL POR MENOR DE HILADOS Y TELAS EN TIENDAS NO ESPECIALIZADAS
 			$detalle->descripcion			= $nombreMat;
 			$detalle->precioUnitario		= $precioUnitFactura;
 			$detalle->montoDescuento		= $descUnit;
@@ -128,7 +127,8 @@ class FacturaOnline
 		$factura->cabecera->codigoPuntoVenta	= $codigoPuntoVenta;
 		// $factura->cabecera->fechaEmision		= date('Y-m-d\TH:i:s.v'); 		
 		$factura->cabecera->fechaEmision		= $fechaemision;	
-		$factura->cabecera->nombreRazonSocial	= $dataFact['razon_social'];
+		// $factura->cabecera->nombreRazonSocial	= $dataFact['razon_social'];
+		$factura->cabecera->nombreRazonSocial	= str_replace("&","&amp;",$dataFact['razon_social']);
 		$factura->cabecera->codigoTipoDocumentoIdentidad	= $dataFact['siat_codigotipodocumentoidentidad']; //CI - CEDULA DE IDENTIDAD
 		$factura->cabecera->numeroDocumento		= $dataFact['nit'];
 		$factura->cabecera->codigoCliente		= $dataFact['cod_cliente'];
@@ -146,9 +146,7 @@ class FacturaOnline
 		if($dataFact['nro_tarjeta']!=""){
 			$factura->cabecera->numeroTarjeta=$dataFact['nro_tarjeta'];	
 		}
-
 		$factura->cabecera->descuentoAdicional	= $descuentoVenta; //VERIFICAR
-
 
 		$factura->cabecera->codigoMoneda		= 1; //BOLIVIANO
 		$factura->cabecera->tipoCambio			= 1;
@@ -159,18 +157,18 @@ class FacturaOnline
 		return $factura;
 	}
 
-	public function testRecepcionFacturaElectronica($codSalidaFactura,$tipoEmision=1,$ex=false,$online_siat=1)
+	public function testRecepcionFacturaElectronica($codSalidaFactura,$tipoEmision=1,$ex=false,$online_siat=1,$nuevo_cuf=0)
 	{
 
 		try
 		{
-
+			
 			//datosCompletosFactura
 			require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";
 			//(SELECT codigoPuntoVenta from siat_puntoventa where cod_ciudad=c.cod_ciudad) as codigoPuntoVenta,
 			//(SELECT codigo_control from siat_cufd where cod_ciudad=c.cod_ciudad and fecha=s.fecha and estado=1)codigoControl,
 			//(SELECT cufd from siat_cufd where cod_ciudad=c.cod_ciudad and fecha=s.fecha and estado=1)cufd,
-			$consulta="select s.cod_salida_almacenes,c.cod_ciudad,
+			$consulta="SELECT s.cod_salida_almacenes,c.cod_ciudad,
 			s.siat_codigoPuntoVenta as codigoPuntoVenta,			
 			
 			(select cufd from siat_cufd where codigo=s.siat_codigocufd)cufd_generado,
@@ -190,7 +188,8 @@ class FacturaOnline
 			(select codigoClasificador from siat_tipos_pago where cod_tipopago=s.cod_tipopago)codigoMetodoPago,
 			s.monto_total as monto_referencial,
 			s.descuento,
-			(select  CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') FROM funcionarios where codigo_funcionario=s.cod_chofer)as usuario,s.siat_fechaemision,s.siat_complemento,s.siat_codigoRecepcion,s.siat_cuf,(select nro_tarjeta from tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1)as nro_tarjeta,(select descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+			(select  CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') FROM funcionarios where codigo_funcionario=s.cod_chofer)as usuario,s.siat_fechaemision,s.siat_complemento,s.siat_codigoRecepcion,s.siat_cuf,(select nro_tarjeta from tarjetas_salidas where cod_salida_almacen=s.cod_salida_almacenes limit 1)as nro_tarjeta,(select descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda,
+			(select siat_cafc from dosificaciones d where d.cod_dosificacion=s.cod_dosificacion and d.tipo_dosificacion=2 and d.tipo_descargo=2)as cafc,c.siat_codigoActividad,c.siat_codigoProducto
 
 			 from salida_almacenes s join almacenes a on a.cod_almacen=s.cod_almacen
 			join ciudades c on c.cod_ciudad=a.cod_ciudad
@@ -235,13 +234,10 @@ class FacturaOnline
 				$factura->cabecera->leyenda=$dataFact['leyenda'];
 
 				$factura->cabecera->cuf=$dataFact['siat_cuf'];
-				// if($dataFact['cod_tipo_doc']==4){
-				// 	$factura->buildCuf((int)$factura->cabecera->codigoSucursal, $config->modalidad, $tipoEmision, $tipoFactura, $dataFact['codigoControl_generado']);
-				// }
-				// if($dataFact['siat_codigotipoemision']==2 and $dataFact['siat_excepcion']<>0){
-				// 	$factura->cabecera->codigoTipoDocumentoIdentidad= 1;
-				// 	$factura->cabecera->codigoExcepcion=0;
-				// }
+				
+				if($nuevo_cuf==1){
+					$factura->buildCuf((int)$factura->cabecera->codigoSucursal, $config->modalidad, $tipoEmision, $tipoFactura, $dataFact['codigoControl_generado']);
+				}
 
 				//die($factura->cuf);
 				$factura->validate();
@@ -258,13 +254,15 @@ class FacturaOnline
 				$factura = self::buildInvoice($codigoPuntoVenta, $codigoSucursal, $config->modalidad,$dataFact,$fechaemision);
 				$factura->cabecera->razonSocialEmisor	= $config->razonSocial;
 				$factura->cabecera->nitEmisor 	= $config->nit;
-
 				
 				//$factura->cabecera->cufd		= $dataFact['cufd'];
 				$factura->cabecera->cufd		= $dataFact['cufd_generado'];
-
 				$factura->cabecera->codigoExcepcion=$dataFact['siat_excepcion'];				
 
+				$cafc=$dataFact['cafc'];
+				if($cafc<>null&&$dataFact['cod_tipo_doc']==4){
+					$factura->cabecera->cafc=$cafc;
+				}
 
 				$factura->cabecera->cuf=$dataFact['siat_cuf'];
 				$factura->cabecera->leyenda=$dataFact['leyenda'];
@@ -275,7 +273,7 @@ class FacturaOnline
 				//$service->setPrivateCertificateFile($privCert);
 				// $service->setPublicCertificateFile($pubCert);
 				$service->debug = true;
-
+				
 
 				$facturaXml = $service->buildInvoiceXml($factura);
 				return $facturaXml;
@@ -421,7 +419,8 @@ class FacturaOnline
 		require dirname(__DIR__). SB_DS ."../../conexionmysqli2.inc";			
 		$global_agencia=$_COOKIE["global_agencia"];
 		$fechaActual=date("Y-m-d");
-		$consulta="SELECT s.cuis,c.cod_impuestos,(SELECT codigoPuntoVenta from siat_puntoventa where cod_ciudad=c.cod_ciudad limit 1) as punto_venta,(SELECT cufd from siat_cufd where fecha='$fechaActual' and cod_ciudad=c.cod_ciudad and s.cuis=cuis order by fecha limit 1)as siat_cufd from siat_cuis s join ciudades c on c.cod_ciudad=s.cod_ciudad where s.cod_ciudad='$global_agencia' and cod_gestion=YEAR(NOW()) and estado=1";		
+		$consulta="SELECT s.cuis,c.cod_impuestos,(SELECT codigoPuntoVenta from siat_puntoventa where cod_ciudad=c.cod_ciudad limit 1) as punto_venta,(SELECT cufd from siat_cufd where fecha='$fechaActual' and cod_ciudad=c.cod_ciudad and s.cuis=cuis   and estado=1 order by fecha limit 1)as siat_cufd from siat_cuis s join ciudades c on c.cod_ciudad=s.cod_ciudad where s.cod_ciudad='$global_agencia' and cod_gestion=YEAR(NOW()) and estado=1";		
+		// echo $consulta;
 		$resp = mysqli_query($enlaceCon,$consulta);	
 		$dataList = $resp->fetch_array(MYSQLI_ASSOC);
 		$cuis = $dataList['cuis'];

@@ -1,9 +1,18 @@
 <?php
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
 $start_time = microtime(true);
 require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
+
+// require("enviar_correo/php/send-email_anulacion.php");
+
+//PARA KIDSPLACE ROPA
+//$codigoActividadSIAT=475100;
+//PARA FARMACIA
+// $codigoActividadSIAT=477300;
 
 
 $usuarioVendedor=$_COOKIE['global_usuario'];
@@ -53,37 +62,46 @@ if(isset($_POST['tipo_cambio_dolar'])){
    $tipo_cambio=$_POST['tipo_cambio_dolar'];
 }
 
-if(isset($codCliente)){	$codCliente=$_POST['codCliente']; }else{ $codCliente=0;	}
-if(isset($tipoPrecio)){	$tipoPrecio=$_POST['tipoPrecio']; }else{ $tipoPrecio=0;	}
-if(isset($razonSocial)){	$razonSocial=$_POST['razonSocial']; }else{ $razonSocial="";	}
+
+
+if(isset($_POST['cliente'])){	$codCliente=$_POST['cliente']; }else{ $codCliente=0;	}
+if(isset($_POST['tipoPrecio'])){	$tipoPrecio=$_POST['tipoPrecio']; }else{ $tipoPrecio=0;	}
+if(isset($_POST['razonSocial'])){	$razonSocial=$_POST['razonSocial']; }else{ $razonSocial="";	}
 if($razonSocial==""){
 	$razonSocial="SN";
 }
 $razonSocial=addslashes($razonSocial);
 
-if(isset($nitCliente)){	$nitCliente=$_POST['nitCliente']; }else{ $nitCliente=0;	}
+if(isset($_POST['nitCliente'])){	$nitCliente=$_POST['nitCliente']; }else{ $nitCliente=0;	}
 
 if((int)$nitCliente==123){
 	$razonSocial="SN";
 }
 
 
+
+
 $fecha_emision_manual="";
-if(isset($_POST['fecha_emision'])){
-   $fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".date("H:i:s")));
+if(isset($_POST['fecha_emision']) and isset($_POST['hora_emision'])){
+	$fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".$_POST['hora_emision']));
+}else{
+	if(isset($_POST['fecha_emision'])){
+	   $fecha_emision_manual=date("Y-m-d\TH:i:s.v",strtotime($_POST['fecha_emision']." ".date("H:i:s")));
+	}
 }
 
-if(isset($tipoVenta)){	$tipoVenta=$_POST['tipoVenta']; }else{ $tipoVenta=0;	}
-if(isset($observaciones)){	$observaciones=$_POST['observaciones']; }else{ $observaciones="";	}
+
+if(isset($_POST['tipoVenta'])){	$tipoVenta=$_POST['tipoVenta']; }else{ $tipoVenta=0;	}
+if(isset($_POST['observaciones'])){	$observaciones=$_POST['observaciones']; }else{ $observaciones="";	}
 
 $cuf="";
 
-if(isset($totalVenta)){	$totalVenta=$_POST['totalVenta']; }else{ $totalVenta=0;	}
-if(isset($descuentoVenta)){	$descuentoVenta=$_POST['descuentoVenta']; }else{ $descuentoVenta=0;	}
-if(isset($totalFinal)){	$totalFinal=$_POST['totalFinal']; }else{ $totalFinal=0;	}
-if(isset($totalEfectivo)){	$totalEfectivo=$_POST['totalEfectivo']; }else{ $totalEfectivo=0;	}
-if(isset($totalCambio)){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
-if(isset($complemento)){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
+if(isset($_POST['totalVenta'])){	$totalVenta=$_POST['totalVenta']; }else{ $totalVenta=0;	}
+if(isset($_POST['descuentoVenta'])){	$descuentoVenta=$_POST['descuentoVenta']; }else{ $descuentoVenta=0;	}
+if(isset($_POST['totalFinal'])){	$totalFinal=$_POST['totalFinal']; }else{ $totalFinal=0;	}
+if(isset($_POST['totalEfectivo'])){	$totalEfectivo=$_POST['totalEfectivo']; }else{ $totalEfectivo=0;	}
+if(isset($_POST['totalCambio'])){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
+if(isset($_POST['complemento'])){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
 
 $totalFinalRedondeado=round($totalFinal);
 
@@ -132,22 +150,32 @@ $datConf=mysqli_fetch_array($respConf);
 $banderaValidacionStock=$datConf[0];
 //$banderaValidacionStock=mysql_result($respConf,0,0);
 
+//variables para envio de correo
+$siat_estado_facturacion="";
 
-//SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT
-if($tipoDoc==1){
+//SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
+if($tipoDoc==1 || $tipoDoc==4){
 	//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 and estado=1 ORDER BY rand() LIMIT 1;";
+	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
-	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=475100 and estado=1 ORDER BY rand() LIMIT 1;";
+	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
+	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
 	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
 	$siat_codigotipodocumentoidentidad=$_POST["tipo_documento"];	
 }
+
+/*VALIDACION MANUAL CASOS ESPECIALES*/
+if((int)$nitCliente=='99001' || (int)$nitCliente=='99002' || (int)$nitCliente=='99003'){
+	$siat_codigotipodocumentoidentidad=5;//nit
+}
+
 
 $created_by=$usuarioVendedor;
 
@@ -164,7 +192,7 @@ do {
 	$codigo=$datCodSalida[0];
 
 	//PARA CUANDO ES FACTURA Y ACTIVAMOS PROCESOS SIAT
-	if($tipoDoc==1){
+	if($tipoDoc==1 || $tipoDoc==4){
 		if(isset($_POST['fecha_emision'])){
 			$anio=date("Y",strtotime($_POST['fecha_emision']));	
 		}
@@ -196,7 +224,8 @@ do {
 		if(!isset($_POST["nro_correlativo"])){
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}else{
-	  			$vectorNroCorrelativo=numeroCorrelativo(4);
+	  			// $vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDoc);
+				$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}
 		$cod_dosificacion=$vectorNroCorrelativo[2];	
@@ -260,10 +289,14 @@ if($sql_inserta==1){
 		$codMaterial=$_POST["materiales$i"];
 		if($codMaterial!=0){
 
-			if(isset($cantidadUnitaria)){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
-			if(isset($precioUnitario)){	$precioUnitario=$_POST['precioUnitario$i']; }else{ $precioUnitario=0;	}
-			if(isset($descuentoProducto)){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
+			// if(isset($_POST['cantidad_unitaria$i'])){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
+			// if(isset($_POST['precio_unitario$i'])){	$precioUnitario=$_POST['precio_unitario$i']; }else{ $precioUnitario=0;	}
+			// if(isset($_POST['descuentoProducto$i'])){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
 			
+			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
+			$precioUnitario=$_POST["precio_unitario$i"];
+			$descuentoProducto=$_POST["descuentoProducto$i"];
+
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
 			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
@@ -327,11 +360,13 @@ if($sql_inserta==1){
 					$sqlUpdMonto="update salida_almacenes set siat_fechaemision='$fechaEmision',siat_estado_facturacion='1',siat_codigoRecepcion='$codigoRecepcion',siat_cuf='$cuf',siat_codigocufd='$codigoCufd',siat_codigotipoemision='1' 
 							where cod_salida_almacenes='$codigo' ";
 					$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
+					$siat_estado_facturacion=1;
 				}else{
 					$sqlUpdMonto="update salida_almacenes set siat_codigotipoemision=2,siat_fechaemision='$fechaEmision',siat_codigocufd='$codigoCufd',siat_cuf='$cuf'
 						where cod_salida_almacenes='$codigo' ";
 					$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
 					$errorFacturaXml=1;
+					// echo $sqlUpdMonto;
 				}			
 			}
 			if($errorFacturaXml==0){
@@ -339,29 +374,86 @@ if($sql_inserta==1){
 					$cambioFactura=number_format($totalEfectivo-$totalFacturaMonto,2,'.','');
 					$sqlUpdCambio="update salida_almacenes set monto_cambio='$cambioFactura',observaciones='REVFACT' 
 					where cod_salida_almacenes='$codigo'";
-		   		mysqli_query($enlaceCon,$sqlUpdCambio);
-					echo "<script type='text/javascript' language='javascript'>	
-						location.href='errorDiferenciaFactura.php?codVenta=$codigo';
-							</script>";	
-				}else{						
-					echo "<script type='text/javascript' language='javascript'>	
-					location.href='formatoFacturaOnLine.php?codVenta=$codigo';
-					</script>";	
+		   			mysqli_query($enlaceCon,$sqlUpdCambio);
+						echo "<script type='text/javascript' language='javascript'>	
+							location.href='errorDiferenciaFactura.php?codVenta=$codigo';
+						</script>";	
+				}else{
+					$mensaje="transacción Existosa :)";	
+					$url="location.href='formatoFacturaOnLine.php?codVenta=$codigo';";				
+					
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
-				echo "<script type='text/javascript' language='javascript'>	
-				</script>";	
+				$mensaje="Factura emitida fuera de línea :(";				
+				$url="location.href='dFacturaElectronica.php?codigo_salida=$codigo';";
 			}
+
+			//para correo solo en caso de offline y online
+			$enviar_correo=true;
+			// $correo_destino="";
+			$correo_destino=obtenerCorreosListaCliente($codCliente);
+			if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
+				$enviar_correo=false;
+			}
+			if($enviar_correo){
+				$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
+				// echo "<script language='Javascript'>
+
+				// 	Swal.fire({
+				//     title: 'SIAT: ".$mensaje." ',
+				//     html: '".$texto_correo."',
+				//     type: 'success',
+				//     showCancelButton: true,
+			 //        confirmButtonClass: 'btn btn-success',
+			 //        cancelButtonClass: 'btn btn-warning',
+			 //        confirmButtonText: 'Si, Enviar!',
+			 //        cancelButtonText: 'No, Solo Imprimir!',
+			 //        buttonsStyling: false
+				// 	}).then((result) => {
+			 //          if (result.value) {
+			 //            location.href='enviar_correo/index.php?datos=$codigo';
+			 //            return(true);
+			 //          } else if (result.dismiss === Swal.DismissReason.cancel) {
+			 //          	location.href=".$url.";
+			 //            return(false);
+			 //          }
+			 //        })
+				// 	</script>";
+
+				
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='navegadorVentas.php?codVenta=$codigo';
+				</script>";	
+	
+				
+			}else{
+				// echo "<script language='Javascript'>
+				// Swal.fire({
+			 //    title: 'SIAT: ".$mensaje." ',
+			 //    html: '<b>Cliente sin registro de correo.</b>',
+			 //    text: '',
+			 //    type: 'success'
+				// }).then(function() {
+				//     location.href=".$url.";
+				// });
+				// </script>";	//location.href='navegadorVentas.php';
+
+
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='navegadorVentas.php?codVenta=$codigo';
+				</script>";
+			}
+
 		}else if($tipoDoc==2){
 			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
 			$banderaCorreo=obtenerValorConfiguracion(10);
 			if($banderaCorreo==1 || $banderaCorreo==2){
 				header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 			    $respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-		   }else{
-						echo "<script type='text/javascript' language='javascript'>
-						location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
-						</script>";		
+		    }else{
+				echo "<script type='text/javascript' language='javascript'>
+				location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
+				</script>";		
 			}
 		}else if($tipoDoc==4){
 			$sqlUpdMonto="update salida_almacenes set siat_codigotipoemision=2,siat_fechaemision='$fecha_emision_manual',siat_codigocufd='$codigoCufd'
