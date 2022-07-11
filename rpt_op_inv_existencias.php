@@ -55,6 +55,12 @@ echo "<script language='JavaScript'>
 $fecha_rptdefault=date("Y-m-d");
 $globalCiudad=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
+$globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
+$global_usuario=$_COOKIE['global_usuario'];
+
+$sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
+$respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
+$cantFuncProv=mysqli_num_rows($respFuncProv);
 
 
 if($rpt_territorio==""){
@@ -109,7 +115,14 @@ echo"<form method='post' action=''>";
 	}
 	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Marcas</th><td><select name='rpt_marca' class='texto' size='10' multiple>";
-	$sqlMarca="select codigo, nombre from marcas where estado=1 order by 2";
+	$sqlMarca="select codigo, nombre from marcas where estado=1";
+		if($globalTipoFuncionario==2){
+		if($cantFuncProv>0){
+			$sqlMarca= $sqlMarca." and codigo in( select codigo from proveedores_marcas where cod_proveedor in
+			( select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario))";
+		}
+	}
+	$sqlMarca= $sqlMarca."  order by 2";
 	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
 	while($datMarca=mysqli_fetch_array($respMarca))
 	{	$codigoMarca=$datMarca[0];

@@ -89,17 +89,29 @@ echo "<script language='Javascript'>
 	<th>Abreviatura</th>
 	<th>Sub-Grupos</th>
 	</tr>";
-	while($dat=mysqli_fetch_array($resp))
-	{
+	while($dat=mysqli_fetch_array($resp)){
 		$codigo=$dat[0];
 		$nombre=$dat[1];
 		$abreviatura=$dat[2];
+		
 		echo "<tr>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>
 		<td>$abreviatura</td>
-		<td><a href='listDetalle.php?codigo=$codigo'><img src='../imagenes/go2.png' width='40'></a></td>
-		</tr>";
+		<td><a href='listDetalle.php?codigo=$codigo'>Ir a SubGrupos</a>";
+			
+		$sqlSubGrupo="SELECT codigo,nombre, abreviatura FROM `subgrupos` where estado=1 and cod_grupo=".$codigo;
+		$respSubGrupo=mysqli_query($enlaceCon,$sqlSubGrupo);
+		echo "<table style='border-spacing: 0;'>";
+		while($datSubGrupo=mysqli_fetch_array($respSubGrupo)){
+			$codigoSub=$datSubGrupo[0];
+			$nombreSub=$datSubGrupo[1];
+			echo "<tr><td>$codigoSub</td><td>$nombreSub</td></tr>";
+		}
+		echo "</table>";
+		
+		
+		echo"</td></tr>";
 	}
 	echo "</table></center><br>";
 	

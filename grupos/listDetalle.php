@@ -12,6 +12,9 @@ echo "<script language='Javascript'>
 		function enviar_nav()
 		{	location.href='$urlRegisterDet?cod_maestro=$codMaestro';
 		}
+		function irGrupos()
+		{	location.href='list.php';
+		}
 		function eliminar_nav(f)
 		{
 			var i;
@@ -87,6 +90,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	<input type='button' value='Cancelar' name='Editar' class='boton' onclick='irGrupos(this.form)'>
 	</div> <br> <br>";
 	
 	
@@ -115,6 +119,7 @@ echo "<script language='Javascript'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
+	<input type='button' value='Cancelar' name='Editar' class='boton' onclick='irGrupos(this.form)'>
 	</div>";
 	
 	echo "</form>";
