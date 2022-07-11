@@ -915,7 +915,7 @@ function validarCufdFecha(){
 
 function validarCudfyCuisActivoFecha(fecha,hora){
 	var dato=0;
-	var parametros={"fecha":fecha};
+	var parametros={"fecha":fecha,"hora":hora};
     $.ajax({
         type: "GET",
         dataType: 'html',
