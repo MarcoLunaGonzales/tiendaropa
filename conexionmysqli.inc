@@ -52,7 +52,7 @@ include('register_globals.php');
 
 }
 
-$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+$enlaceCon=mysqli_connect("localhost","root","4868422Marco","altarsiat");
 
 //$enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
 // $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
