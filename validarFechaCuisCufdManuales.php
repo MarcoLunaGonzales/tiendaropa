@@ -16,7 +16,7 @@ while($reg=mysqli_fetch_array($rs)){
   $cuis = $reg["cuis"];
 }
 // existe en hora
-$cons="SELECT cufd from siat_cufd where cod_ciudad='$ciudad' and cuis='$cuis' and created_at < '$fecha $hora:00'  limit 1";
+$cons="SELECT  cufd from siat_cufd where cod_ciudad='$ciudad' and cuis='$cuis' and  created_at between '$fecha 00:00:00' and '$fecha $hora:00' order by created_at desc limit 1";
 // echo $cons;//and '$fecha 23:59:59'
 $rs=mysqli_query($enlaceCon,$cons);
 while($reg=mysqli_fetch_array($rs)){
