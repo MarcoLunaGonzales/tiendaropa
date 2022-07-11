@@ -205,7 +205,11 @@ do {
 
 		if(isset($_POST['fecha_emision'])){
 			$fechaEmit=$_POST['fecha_emision'];	
-			$sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fechaEmit' and cuis='$cuis' LIMIT 1";	
+			$horaEmit=$_POST['hora_emision'];	
+
+			// $sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fechaEmit' and cuis='$cuis' LIMIT 1";	
+
+			$sqlCufd="SELECT codigo,cufd,codigo_control from siat_cufd where cod_ciudad='$globalSucursal' and cuis='$cuis' and  created_at between '$fechaEmit 00:00:00' and '$fechaEmit $horaEmit:00' order by created_at desc limit 1";
 		}else{
 			$sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fecha' and cuis='$cuis' LIMIT 1";	
 		}
