@@ -16,16 +16,17 @@ while($reg=mysqli_fetch_array($rs)){
   $cuis = $reg["cuis"];
 }
 // existe en hora
-$cons="SELECT cufd from siat_cufd where cod_ciudad='$ciudad' and cuis='$cuis' and created_at BETWEEN '$fecha $hora:00' and '$fecha 23:59:59' limit 1";
+$cons="SELECT cufd from siat_cufd where cod_ciudad='$ciudad' and cuis='$cuis' and created_at < '$fecha $hora:00'  limit 1";
+// echo $cons;//and '$fecha 23:59:59'
 $rs=mysqli_query($enlaceCon,$cons);
 while($reg=mysqli_fetch_array($rs)){
-  $existeSucursal=1;
+  $existeSucursal=1;  
 }
 
 if($existeSucursal==0){
 	//existe en fecha
 	$created_at="";
-	$cons="SELECT created_at FROM siat_cufd where fecha>'$fecha' and cod_ciudad='$ciudad' and cuis='$cuis' limit 1;";
+	$cons="SELECT created_at FROM siat_cufd where fecha>='$fecha' and cod_ciudad='$ciudad' and cuis='$cuis' limit 1;";
 	// echo $cons;
 	$rs=mysqli_query($enlaceCon,$cons);
 	while($reg=mysqli_fetch_array($rs)){

@@ -450,17 +450,17 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
     $montoUnit=redondear2($montoUnit);
     
     $precioUnitFactura=redondear2($precioUnitFactura);
-    $precioUnitFactura=number_format($precioUnitFactura,2);
+    // $precioUnitFactura=number_format($precioUnitFactura,2);
 
     // - $descUnit
     $descUnit=redondear2($descUnit);  
-    $descUnit=number_format($descUnit,2);  
+    // $descUnit=number_format($descUnit,2);  
     $descuentoVentaProd+=$descUnit;
     $montoUnitProd=($cantUnit*$precioUnit);
 
     $montoUnitProdDesc=$montoUnitProd-$descUnit;
     $montoUnitProdDesc=redondear2($montoUnitProdDesc);
-    $montoUnitProdDesc=number_format($montoUnitProdDesc,2);
+    // $montoUnitProdDesc=number_format($montoUnitProdDesc,2);
 
     $montoUnitProd=redondear2($montoUnitProd);
 
@@ -484,9 +484,9 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
         </td>
         <td style="font-size: 10px !important;"><small><?=$unidad_medida?></small></td>
         <td style="text-align: right;"><?=$cantUnit?></td>
-        <td style="text-align: right;"><?=$precioUnitFactura?></td>                                                        
-        <td style="text-align: right;"><?=$descUnit?></td>
-        <td style="text-align: right;"><?=$montoUnitProdDesc?></td>
+        <td style="text-align: right;"><?=number_format($precioUnitFactura,2)?></td>                                                        
+        <td style="text-align: right;"><?=number_format($descUnit,2)?></td>
+        <td style="text-align: right;"><?=number_format($montoUnitProdDesc,2)?></td>
     </tr>
 
     <?php
@@ -495,7 +495,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
     $yyy=$yyy+6;
 }
 
-
+// echo $montoTotal;
 $descuentoVenta=number_format($descuentoVenta,2,'.','');
 //$montoFinal=$montoTotal-$descuentoVenta-$descuentoVentaProd;
 $montoFinal=$montoTotal-$descuentoVenta;
@@ -565,25 +565,25 @@ while($filaDesc=mysqli_fetch_array($resp1)){
                         <table class="table border-0 table-hover" style="width: 100%;font-size: 11px;">
                             <tr>
                                 <td style="text-align: left;font-weight: none;">SUBTOTAL Bs:</td>
-                                <td style="text-align: right;"><?=$montoTotal?></td>
+                                <td style="text-align: right;"><?=number_format($montoTotal,2)?></td>
                             </tr>
 
                             <tr>
                                 <td style="text-align: left;font-weight: none;">DESCUENTO Bs:</td>
-                                <td style="text-align: right;"><?=$descuentoVenta?></td>
+                                <td style="text-align: right;"><?=number_format($descuentoVenta,2)?></td>
                             </tr>
                             <tfoot>
                                 <tr>
                                     <td style="text-align: left;">TOTAL Bs:</td>
-                                    <td style="text-align: right;"><?=$montoFinal?></td>
+                                    <td style="text-align: right;"><?=number_format($montoFinal,2)?></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: left;">MONTO A PAGAR Bs:</td>
-                                    <td style="text-align: right;"><?=$montoFinal?></td>
+                                    <td style="text-align: right;"><?=number_format($montoFinal,2)?></td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: left;">IMPORTE BASE CRÉDITO FISCAL:</td>
-                                    <td style="text-align: right;"><?=$montoFinal?></td>
+                                    <td style="text-align: right;"><?=number_format($montoFinal,2)?></td>
                                 </tr>
                             </tfoot>
                         </table>
