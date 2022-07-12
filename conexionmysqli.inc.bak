@@ -51,10 +51,15 @@ include('register_globals.php');
 }else{
 
 }
+<<<<<<< HEAD
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
+//$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+=======
 
-$enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+// $enlaceCon=mysqli_connect("localhost","root","4868422Marco","kidsplacesiat");
+>>>>>>> 47fc203515723f172131b64b9e11515fd4e9ca34
 
-//$enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
+$enlaceCon=mysqli_connect("localhost","root","12345678","kidsplace");
 // $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
 //$enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
 
