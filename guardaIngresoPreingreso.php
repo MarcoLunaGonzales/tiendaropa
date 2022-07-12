@@ -1,6 +1,6 @@
 <?php
 
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
@@ -57,23 +57,42 @@ select 1,cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimi
  costo_actualizado_final, costo_promedio, precio_neto from preingreso_detalle_almacenes where cod_ingreso_almacen=".$_GET['codigoPreingreso'];
 mysqli_query($enlaceCon,$sql2);
     
-	
-	  echo "<script language='Javascript'>
+		echo "<script language='Javascript'>
+			Swal.fire('Los datos fueron insertados correctamente.')
+		    .then(() => {
+				location.href='navegador_ingresomateriales.php';
+		    });
+		</script>";
+	  /*echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_ingresomateriales.php';
-		</script>";	
+		</script>";	*/
 
     	
 }else{
-	echo "<script language='Javascript'>
+			echo "<script language='Javascript'>
+			Swal.fire('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.')
+		    .then(() => {
+				location.href='navegador_preingreso.php';
+		    });
+		</script>";
+		
+	/*echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_preingreso.php';
-		</script>";	
+		</script>";	*/
 }
 }else{
 		echo "<script language='Javascript'>
+			Swal.fire('YA SE GENERO EL INGRESO.')
+		    .then(() => {
+				location.href='navegador_preingreso.php';
+		    });
+		</script>";
+		
+		/*echo "<script language='Javascript'>
 		alert('YA SE GENERO EL INGRESO.');
 		location.href='navegador_preingreso.php';
-		</script>";	
+		</script>";	*/
 }
 ?>

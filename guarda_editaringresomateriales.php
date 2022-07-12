@@ -1,6 +1,6 @@
 <?php
 
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
@@ -44,9 +44,17 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 
 }
 
-echo "<script language='Javascript'>
+	echo "<script language='Javascript'>
+			Swal.fire('Los datos fueron modificados correctamente.')
+		    .then(() => {
+				location.href='navegador_ingresomateriales.php';
+		    });
+		</script>";
+			
+
+/*echo "<script language='Javascript'>
     alert('Los datos fueron modificados correctamente.');
     location.href='navegador_ingresomateriales.php';
-    </script>";
+    </script>";*/
 
 ?>
