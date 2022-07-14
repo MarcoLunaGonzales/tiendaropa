@@ -1,5 +1,11 @@
 <?php
-$codSalida=$_GET['codVenta'];
+if(isset($_GET['codVenta'])){
+	$codSalida=$_GET['codVenta'];
+}else{
+	$codSalida=$codigoVenta;
+}
+
+
 require "conexionmysqli2.inc";
 require_once "siat_folder/funciones_siat.php";  
 $facturaImpuestos=generarXMLFacturaVentaImpuestos($codSalida);
@@ -19,15 +25,20 @@ $archivo = fopen($nombreFile,'a');
 fputs($archivo,$facturaImpuestos);
 fclose($archivo);
 
-
-if(!isset($_GET["email"])){
-	header("Content-Type: application/force-download");
-	header("Content-Disposition: attachment; filename=\"$cuf.xml\"");
-	readfile($nombreFile);	
-	unlink($nombreFile);
+if(isset($sw_correo)){
+	
 }else{
-	echo $cuf.".xml";
+	if(!isset($_GET["email"])){
+		header("Content-Type: application/force-download");
+		header("Content-Disposition: attachment; filename=\"$cuf.xml\"");
+		readfile($nombreFile);	
+		unlink($nombreFile);
+	}else{
+		echo $cuf.".xml";
+	}	
 }
+
+
 
 
 
