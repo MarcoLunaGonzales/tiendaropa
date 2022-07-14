@@ -392,16 +392,21 @@ if($sql_inserta==1){
 				$url="location.href='dFacturaElectronica.php?codigo_salida=$codigo';";
 			}
 
-			//para correo solo en caso de offline y online
-			$enviar_correo=true;
-			// $correo_destino="";
-			$correo_destino=obtenerCorreosListaCliente($codCliente);
-			if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
+			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
+			$banderaCorreo=obtenerValorConfiguracion($enlaceCon,10);
+			if($banderaCorreo==1){
+				//para correo solo en caso de offline y online
+				$enviar_correo=true;
+				$correo_destino=obtenerCorreosListaCliente($codCliente);
+				if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
+					$enviar_correo=false;
+					$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
+				}
+			}else{
 				$enviar_correo=false;
+				$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>CORREO NO ENVIADO</b></span>";
 			}
-
 			if($enviar_correo){
-
 				$sw_correo=true;
 				$codigoVenta=$codigo;
 				require_once "descargarFacturaXml.php";
@@ -416,7 +421,6 @@ if($sql_inserta==1){
 				}else{
 					$texto_correo="<span style=\"border:1px;font-size:18px;color:red;\"><b>Ocurrio un error al enviar el correo, vuelva a intentarlo.</b></span>";
 				}
-
 				echo "<script language='Javascript'>
 					Swal.fire({
 				    title: 'SIAT: ".$mensaje."',
@@ -456,10 +460,9 @@ if($sql_inserta==1){
 	
 				
 			}else{
-				$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
 				echo "<script language='Javascript'>
 					Swal.fire({
-				    title: 'SIAT: ".$mensaje." :)',
+				    title: 'SIAT: ".$mensaje."',
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
