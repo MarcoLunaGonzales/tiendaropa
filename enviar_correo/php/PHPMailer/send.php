@@ -17,7 +17,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	require '../../conexionmysqli.inc';
 
 	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
-	$nombreSistemaEmail=obtenerValorConfiguracion($enlaceCon,12);
+	$mail_setFromName=obtenerValorConfiguracion($enlaceCon,12);
 
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
@@ -95,21 +95,31 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	  return 1;
 	}
 }
-function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir=''){
+function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir='',$variablex=0,$conn=null){
+
+	// error_reporting(E_ALL);
+	// ini_set('display_errors', '1');
 	if($inicio==0){
 		require 'PHPMailer/src/Exception.php';
 	    require 'PHPMailer/src/PHPMailer.php';
 	    require 'PHPMailer/src/SMTP.php';
 	}   
-
-	require '../../funciones.php';
-	require '../../conexionmysqli.inc';
+	if($variablex==1){
+		require_once 'funciones.php';	
+		// require_once 'conexionmysqli.inc';
+		$enlaceCon=$conn;
+		$add_url="";
+	}else{
+		require_once '../../funciones.php';	
+		require_once '../../conexionmysqli.inc';
+		$add_url="../../";
+	}
 	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
-	$nombreSistemaEmail=obtenerValorConfiguracion($enlaceCon,12);
-
+	$mail_setFromName=obtenerValorConfiguracion($enlaceCon,12);
 	//recibimos correos
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
+	 // $mail->SMTPDebug = true; 
 
 	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
@@ -136,8 +146,8 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	// for ($i=0; $i <count($adjuntosCSV) ; $i++) { 
 	// 	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntosCSV[$i]);
 	// }
-	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
-	$mail->addAttachment("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
+	$mail->addAttachment($add_url."siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
+	$mail->addAttachment($add_url."siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
 	///////////////////////////////////////para la version de php 7
 	$mail->SMTPOptions = array(
           'ssl' => array(
@@ -173,7 +183,12 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 
 
 	//imagenes
-    $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/'.$logoEnvioEmail));
+	if($variablex==1){		
+		$logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('enviar_correo/php/PHPMailer/images/'.$logoEnvioEmail));
+	}else{
+		$logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/'.$logoEnvioEmail));	
+	}
+    
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
 
 
@@ -187,10 +202,11 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$mail->msgHTML($message);
 	
 	if(!$mail->send()){
+		echo 'Mailer Error: ' . $mail->ErrorInfo;
       return 0;
 	}else{
-		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
-		unlink("../../siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
+		unlink($add_url."siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".xml");
+		unlink($add_url."siat_folder/Siat/temp/Facturas-XML/".$datosCabecera['cuf'].".pdf");
 		//UNLINK
 		// for ($i=0; $i <count($adjuntos) ; $i++) { 
 		// 	unlink("../../siat_folder/Siat/temp/Facturas-XML/".$adjuntos[$i]);

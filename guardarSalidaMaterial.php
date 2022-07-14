@@ -6,8 +6,8 @@ require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
+require("enviar_correo/php/send-email_anulacion.php");
 
-// require("enviar_correo/php/send-email_anulacion.php");
 
 //PARA KIDSPLACE ROPA
 //$codigoActividadSIAT=475100;
@@ -399,8 +399,35 @@ if($sql_inserta==1){
 			if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
 				$enviar_correo=false;
 			}
+
 			if($enviar_correo){
-				$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
+
+				$sw_correo=true;
+				$codigoVenta=$codigo;
+				require_once "descargarFacturaXml.php";
+				$codigoVenta=$codigo;
+				require_once "descargarFacturaPDF.php";
+
+				$estado_envio=envio_factura($codigoVenta,$correo_destino,$enlaceCon);
+				if($estado_envio==1){
+					$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>SE ENVIÓ EL CORREO CON EXITO.</b></span>";
+				}elseif($estado_envio==0){
+					$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
+				}else{
+					$texto_correo="<span style=\"border:1px;font-size:18px;color:red;\"><b>Ocurrio un error al enviar el correo, vuelva a intentarlo.</b></span>";
+				}
+
+				echo "<script language='Javascript'>
+					Swal.fire({
+				    title: 'SIAT: ".$mensaje."',
+				    html: '".$texto_correo."',
+				    type: 'success'
+					}).then(function() {
+					   location.href='navegadorVentas.php'; 
+					});
+					</script>";
+
+				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
 				// echo "<script language='Javascript'>
 
 				// 	Swal.fire({
@@ -423,14 +450,22 @@ if($sql_inserta==1){
 			 //          }
 			 //        })
 				// 	</script>";
-
-				
-				echo "<script type='text/javascript' language='javascript'>
-				location.href='navegadorVentas.php?codVenta=$codigo';
-				</script>";	
+				// echo "<script type='text/javascript' language='javascript'>
+				// location.href='navegadorVentas.php?codVenta=$codigo';
+				// </script>";	
 	
 				
 			}else{
+				$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
+				echo "<script language='Javascript'>
+					Swal.fire({
+				    title: 'SIAT: ".$mensaje." :)',
+				    html: '".$texto_correo."',
+				    type: 'success'
+					}).then(function() {
+					    location.href='navegadorVentas.php';
+					});
+					</script>";
 				// echo "<script language='Javascript'>
 				// Swal.fire({
 			 //    title: 'SIAT: ".$mensaje." ',
@@ -443,9 +478,9 @@ if($sql_inserta==1){
 				// </script>";	//location.href='navegadorVentas.php';
 
 
-				echo "<script type='text/javascript' language='javascript'>
-				location.href='navegadorVentas.php?codVenta=$codigo';
-				</script>";
+				// echo "<script type='text/javascript' language='javascript'>
+				// location.href='navegadorVentas.php?codVenta=$codigo';
+				// </script>";
 			}
 
 		}else if($tipoDoc==2){

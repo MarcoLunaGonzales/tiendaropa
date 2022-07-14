@@ -3,10 +3,10 @@ set_time_limit(0);
 
 error_reporting(0);
 
-$enlaceCon=mysqli_connect("localhost","root","4868422Marco","altarsiat");
+// $enlaceCon=mysqli_connect("localhost","root","4868422Marco","altarsiat");
 //$enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
 // $enlaceCon=mysqli_connect("localhost","root","4868422Marco","carmelitasiat_temp");
-// $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
+$enlaceCon=mysqli_connect("localhost","root","12345678","kidsplace");
 
 if (mysqli_connect_errno())
 {

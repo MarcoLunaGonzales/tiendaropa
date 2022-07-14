@@ -55,7 +55,7 @@ require("../funciones_siat.php");
         FROM salida_almacenes s join almacenes a on s.cod_almacen=a.cod_almacen join siat_cufd sc on s.siat_codigocufd=sc.codigo
         WHERE s.cod_salida_almacenes in ($string_codigos)
         GROUP BY s.cod_almacen,s.fecha,s.siat_codigocufd
-        ORDER BY a.nombre_almacen,s.fecha";
+        ORDER BY a.nombre_almacen,s.created_at";
         // echo $sql;
         $fecha_X=date('Y-m-d');
         // $fecha_X=date('2022-07-02');
