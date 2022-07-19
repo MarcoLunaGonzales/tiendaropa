@@ -1,6 +1,12 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 $home=1;
 ob_start();
+if(isset($sw_correo)){}else{
+
+}
 include "dFacturaElectronicaAllPdf.php";
 $html = ob_get_clean();
 //error_reporting(E_ALL);
@@ -18,16 +24,21 @@ unlink($nombreFile);
 guardarPDFArqueoCajaVerticalFactura($cuf,$html,$nombreFile,$codigoVenta);
 // echo $html;
 
-if(isset($_GET["ds"])){
-    ?><script type="text/javascript">
-        var link = document.createElement('a');
-        link.href = '<?=$nombreFile?>';
-        link.download = '<?=$cuf?>.pdf';
-        link.dispatchEvent(new MouseEvent('click'));window.location.href='deleteFile.php?file=<?=$nombreFile?>';</script><?php
-}else{
-    echo $cuf.".pdf";
-}
 
+if(isset($sw_correo)){
+	
+}else{
+
+	if(isset($_GET["ds"])){
+	    ?><script type="text/javascript">
+	        var link = document.createElement('a');
+	        link.href = '<?=$nombreFile?>';
+	        link.download = '<?=$cuf?>.pdf';
+	        link.dispatchEvent(new MouseEvent('click'));window.location.href='deleteFile.php?file=<?=$nombreFile?>';</script><?php
+	}else{
+		echo $cuf.".pdf";
+	}
+}
 //unlink($nombreFile);
 
 

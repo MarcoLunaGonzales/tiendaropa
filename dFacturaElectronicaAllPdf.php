@@ -1,6 +1,8 @@
 <?php
+
     include "conexionmysqli.inc";
-    require('funciones.php');
+    require_once('funciones.php');
+    
 require('funcion_nombres.php');
 require('NumeroALetras.php');
 include('phpqrcode/qrlib.php'); 

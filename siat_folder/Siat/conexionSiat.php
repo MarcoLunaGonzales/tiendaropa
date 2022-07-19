@@ -1,4 +1,5 @@
 <?php
+
 // $siat_nombreSistema='TuAdmin';
 // $siat_codigoSistema='71E742C6AB21890588DC46E';
 // $siat_tipo='PROPIO';
