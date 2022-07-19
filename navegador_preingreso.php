@@ -218,7 +218,8 @@ $respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
 $cantFuncProv=mysqli_num_rows($respFuncProv);
 $consulta = "
     SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,
-	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor, i.nro_factura_proveedor
+	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor, i.nro_factura_proveedor,
+	i.created_by,i.created_date, i.modified_by, i.modified_date
     FROM preingreso_almacenes i, tipos_ingreso ti
     WHERE i.cod_tipoingreso=ti.cod_tipoingreso";
 	if($globalTipoFuncionario==2){
@@ -238,14 +239,17 @@ echo "<br/><table border='1' cellspacing='0' class='textomini'>
 
 echo "<div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 <input type='button' value='Editar' class='boton' onclick='editar_preingreso(this.form)'>
-<input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_preingreso(this.form)'>
+<input type='button' value='Anular' name='anular' class='boton2' onclick='anular_preingreso(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div><br>";
 
 echo "<div id='divCuerpo'>";
 echo "<br><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Pre Ingreso</th><th>Nro.Factura</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
-<th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th><th>Nro Ingreso</th></tr>";
+<th>Observaciones</th>
+<th>Registro</th>
+<th>Ult. Edicion</th>
+<th>&nbsp;</th><th>&nbsp;</th><th>Nro Ingreso</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_ingreso = $dat[1];
@@ -258,6 +262,24 @@ while ($dat = mysqli_fetch_array($resp)) {
     $anulado = $dat[7];
 	$proveedor=$dat[8];
 	$nroFacturaProveedor=$dat[9];
+	
+	$created_by=$dat[10];
+	$sqlRegUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$created_by;
+	$respRegUsu=mysqli_query($enlaceCon,$sqlRegUsu);
+	$usuReg =" ";
+	while($datRegUsu=mysqli_fetch_array($respRegUsu)){
+		$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
+	}
+	$created_date=$dat[11];
+	$modified_by=$dat[12];
+	$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
+	$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
+	$usuMod ="";
+	while($datModUsu=mysqli_fetch_array($respModUsu)){
+		$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
+	}
+	$modified_date=$dat[13];
+	
 
     echo "<input type='hidden' name='fecha_ingreso$nro_correlativo' value='$fecha_ingreso_mostrar'>";
 
@@ -280,7 +302,14 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
 	<td>&nbsp;$proveedor</td>
 	<td>&nbsp;$obs_ingreso</td>
-	<td align='center'><a target='_BLANK' href='navegador_predetalleingresomateriales.php?codigo_ingreso=$codigo'>
+	<td>&nbsp;$usuReg<br>$created_date</td>";
+	if(empty($usuMod)){
+	echo "<td>&nbsp</td>";
+	}else{
+		echo "<td>&nbsp;$usuMod<br>$modified_date</td>";
+    }				
+	 
+	 echo "<td align='center'><a target='_BLANK' href='navegador_predetalleingresomateriales.php?codigo_ingreso=$codigo'>
 	<img src='imagenes/detalles.png' border='0' width='30' heigth='30' title='Ver Detalles del Ingreso'></a>
 	</td>";
 	if($anulado==0){

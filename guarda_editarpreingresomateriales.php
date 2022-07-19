@@ -43,6 +43,12 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 	}
 
 }
+$modifiedBy=$_COOKIE['global_usuario'];
+$modifiedDate=date("Y-m-d H:i:s");
+
+$consulta=" update preingreso_almacenes set modified_by='".$modifiedBy."', modified_date='".$modifiedDate."' where cod_ingreso_almacen=".$codIngreso;
+//echo $consulta;
+mysqli_query($enlaceCon,$consulta);
 
 	echo "<script language='Javascript'>
 			Swal.fire('Los datos fueron modificados correctamente.')

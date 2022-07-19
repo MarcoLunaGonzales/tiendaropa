@@ -25,7 +25,7 @@ if(!function_exists('register_globals')){
  // $enlaceCon=mysqli_connect("localhost","root","4868422Marco","carmelitasiat_temp");
 // $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
 //$enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar2");
 
 if (mysqli_connect_errno())
 {

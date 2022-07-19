@@ -51,7 +51,7 @@ include('register_globals.php');
 }else{
 
 }
-$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar");
+$enlaceCon=mysqli_connect("localhost","root","4879531gabriela","altar2");
 // $enlaceCon=mysqli_connect("localhost","root","12345678","carmelita");
 //$enlaceCon=mysqli_connect("localhost","root","12345678","tiendaropa1000");
 
