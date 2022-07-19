@@ -1,37 +1,44 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 
 
-function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$datosCabecera,$urlDir=''){
+function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$datosCabecera,$urlDir='',$enlaceCon=''){
 	// echo "**";
 
 	if($inicio==0){
-		require 'PHPMailer/src/Exception.php';
-	    require 'PHPMailer/src/PHPMailer.php';
-	    require 'PHPMailer/src/SMTP.php';
+		require_once 'PHPMailer/src/Exception.php';
+	    require_once 'PHPMailer/src/PHPMailer.php';
+	    require_once 'PHPMailer/src/SMTP.php';
 	}    
-	require '../../funciones.php';
-	require '../../conexionmysqli.inc';
+	require_once 'funciones.php';
+	//require_once 'conexionmysqli.inc';
+	require_once 'config.php';
+
 
 	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
 	$mail_setFromName=obtenerValorConfiguracion($enlaceCon,12);
 
+	/*SACAR EL NIT DE LA CONFIGURACION 9 UN SOLO NIT POR CADA INSTANCIA*/
+	$sqlConf="select id, valor from configuracion_facturas where id=9 limit 0,1";
+	$respConf=mysqli_query($enlaceCon,$sqlConf);
+	$nitTxt=mysqli_result($respConf,0,1);
+
+
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 
-	// $mail->SMTPDebug = true; 
-	//$mail->Host = 'smtp.mail.yahoo.com';             // Especificar el servidor de correo a utilizar 
-	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = EMAIL_HOST;             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = "mailfacturacion@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "8cElVZl^)A5a"; 	
+	$mail->Username = EMAIL_USERNAME;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_setFromEmail=EMAIL_FROM;
+	$mail->Password = EMAIL_PASSWORD; 	
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
-	$mail->Port = 587;                          // Puerto TCP  para conectarse 
+	$mail->Port = EMAIL_PORT;                          // Puerto TCP  para conectarse 
 	$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
 	$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
 
@@ -74,7 +81,7 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
+	$message = str_replace('{{codigo_nit_gerente}}', $nitTxt, $message);	
 
     $logoCorreo = "data:image/png;base64,".base64_encode(file_get_contents('PHPMailer/images/'.$logoEnvioEmail));
 	$message = str_replace('{{logo_general}}', $logoCorreo, $message);
@@ -97,38 +104,46 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 }
 function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$rutaArchivoCSV,$datosCabecera,$urlDir='',$variablex=0,$conn=null){
 
-	// error_reporting(E_ALL);
-	// ini_set('display_errors', '1');
+	
+
 	if($inicio==0){
-		require 'PHPMailer/src/Exception.php';
-	    require 'PHPMailer/src/PHPMailer.php';
-	    require 'PHPMailer/src/SMTP.php';
+		require_once 'PHPMailer/src/Exception.php';
+	    require_once 'PHPMailer/src/PHPMailer.php';
+	    require_once 'PHPMailer/src/SMTP.php';
 	}   
 	if($variablex==1){
 		require_once 'funciones.php';	
+		require_once 'config.php';
 		// require_once 'conexionmysqli.inc';
 		$enlaceCon=$conn;
 		$add_url="";
 	}else{
 		require_once '../../funciones.php';	
 		require_once '../../conexionmysqli.inc';
+		require_once '../../config.php';
 		$add_url="../../";
 	}
 	$logoEnvioEmail=obtenerValorConfiguracion($enlaceCon,13);
 	$mail_setFromName=obtenerValorConfiguracion($enlaceCon,12);
+
+	/*SACAR EL NIT DE LA CONFIGURACION 9 UN SOLO NIT POR CADA INSTANCIA*/
+	$sqlConf="select id, valor from configuracion_facturas where id=9 limit 0,1";
+	$respConf=mysqli_query($enlaceCon,$sqlConf);
+	$nitTxt=mysqli_result($respConf,0,1);
+
 	//recibimos correos
 	$mail = new PHPMailer;
 	$mail->isSMTP();                            // Establecer el correo electrónico para utilizar SMTP
 	 // $mail->SMTPDebug = true; 
 
-	$mail->Host = 'mail.minkasoftware.com';             // Especificar el servidor de correo a utilizar 
+	$mail->Host = EMAIL_HOST;             // Especificar el servidor de correo a utilizar 
 	$mail->SMTPAuth = true;                     // Habilitar la autenticacion con SMTP
-	$mail->Username = "mailfacturacion@minkasoftware.com";          // Correo electronico saliente ejemplo: tucorreo@gmail.com
-	$mail_setFromEmail=$mail->Username;
-	$mail->Password = "8cElVZl^)A5a"; 	
+	$mail->Username = EMAIL_USERNAME;          // Correo electronico saliente ejemplo: tucorreo@gmail.com
+	$mail_setFromEmail=EMAIL_FROM;
+	$mail->Password = EMAIL_PASSWORD; 	
 
 	$mail->SMTPSecure = 'tls';                  // Habilitar encriptacion, `ssl` es aceptada
-	$mail->Port = 587;                          // Puerto TCP  para conectarse 
+	$mail->Port = EMAIL_PORT;                          // Puerto TCP  para conectarse 
 	$mail->setFrom($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe aparecer el correo electrónico. Puede utilizar cualquier dirección que el servidor SMTP acepte como válida. El segundo parámetro opcional para esta función es el nombre que se mostrará como el remitente en lugar de la dirección de correo electrónico en sí.
 	$mail->addReplyTo($mail_setFromEmail, $mail_setFromName);//Introduzca la dirección de la que debe responder. El segundo parámetro opcional para esta función es el nombre que se mostrará para responder
 	
@@ -179,7 +194,7 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	$message = str_replace('{{codigo_sucursal}}', $datosCabecera['sucursal'], $message);
 	$message = str_replace('{{codigo_fecha}}', $datosCabecera['fecha'], $message);	
 	$message = str_replace('{{codigo_factura}}', $datosCabecera['nro_factura'], $message);	
-	$message = str_replace('{{codigo_nit_gerente}}', "", $message);	
+	$message = str_replace('{{codigo_nit_gerente}}',$nitTxt, $message);	
 
 
 	//imagenes

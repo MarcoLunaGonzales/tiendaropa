@@ -1,19 +1,20 @@
 <?php
 
+require_once 'config.php';
+
 if(!isset($_COOKIE["global_usuario"])){
   ?><!-- <script type="text/javascript">$( document ).ready(function() {Swal.fire("ERROR!", "Inicie Sesion!", "error");/*window.close();*/});</script> --><?php
 }
 set_time_limit(0);
 error_reporting(0);
-//header('Content-Type: text/html; charset=UTF-8'); 
 date_default_timezone_set('America/La_Paz');
 if(!function_exists('log_querys')){
-  include('register_logs.php');  
+  require_once('register_logs.php');  
 }
 
 $dirNoti="";
 if(!function_exists('register_globals')){
-include('register_globals.php');
+require_once('register_globals.php');
 
 	register_globals();
 
@@ -24,9 +25,9 @@ include('register_globals.php');
         //echo "NIVURL:  ".$niv_url;
         
         switch ($niv_url) {
-          case 2:include("librerias.php");$dirNoti="";break;
-          case 3:include("librerias2.php");$dirNoti="../";break;
-          case 4:include("librerias3.php");$dirNoti="../../";break;
+          case 2:require_once("librerias.php");$dirNoti="";break;
+          case 3:require_once("librerias2.php");$dirNoti="../";break;
+          case 4:require_once("librerias3.php");$dirNoti="../../";break;
         }
 
 
@@ -51,7 +52,8 @@ include('register_globals.php');
 }else{
 
 }
-$enlaceCon=mysqli_connect("localhost","root","12345678","kidsplace");
+
+$enlaceCon=mysqli_connect(DATABASE_HOST,DATABASE_USER,DATABASE_PASSWORD,DATABASE_NAME);
 
 
 if (mysqli_connect_errno())
