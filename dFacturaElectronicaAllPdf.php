@@ -56,11 +56,6 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nitTxt=mysqli_result($respConf,0,1);
 
 
-// $sqlDatosFactura="select d.nro_autorizacion, DATE_FORMAT(d.fecha_limite_emision, '%d/%m/%Y'), f.codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.fecha, '%d/%m/%Y') from facturas_venta f, dosificaciones d
-//     where f.cod_dosificacion=d.cod_dosificacion and f.cod_venta=$codigoVenta";
-
-// $sqlDatosFactura="select '','', f.codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.fecha, '%d/%m/%Y') from facturas_venta f     where  f.cod_venta=$codigoVenta";
-
 $sqlDatosFactura="select '' as nro_autorizacion, '', '' as codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y') from salida_almacenes f
     where f.cod_salida_almacenes=$codigoVenta";
     
@@ -146,9 +141,7 @@ ob_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    
-
-    <title>Factura</title>
+    <title>Factura <?=$nroDocVenta?></title>
 </head>
 <style type="text/css">
     
@@ -360,12 +353,12 @@ footer p {
                 
             <table>
                 <tr><td><div class="logo">
-                    <img src="<?=__DIR__?>/imagenes/<?=$logoEnvioEmail;?>" alt="" class="img-fluid" style="width: 300px;">
+                    <img src="<?=__DIR__?>/imagenes/<?=$logoEnvioEmail;?>" alt="" class="img-fluid" style="width: 200px;">
                 </div></td>
                     <td><div class="top-left">
                     <div class="position-relative">
-                        <div style="font-size: 20px;width:100%;background:#14AF91;color:#fff;padding: 5px;"><p>FACTURA <br><small><small>(Con Derecho a Crédito Fiscal)</small></small></p></div>                        
-                        <p style="width:300px !important;hyphens: auto;word-wrap: break-word;word-break: break-word;font-size: 11px;">Código Autorización: <span><?=$cuf?></span></p><p style='font-size: 11px;'>Factura No. <span><?=$nroDocVenta?></span></p>
+                        <div style="font-size: 15px;width:100%;background:#14AF91;color:#fff;padding: 5px;"><p>FACTURA <br><small><small>(Con Derecho a Crédito Fiscal)</small></small></p></div>                        
+                        <p style="width:300px !important;hyphens: auto;word-wrap: break-word;word-break: break-word;font-size: 10px;">Código Autorización: <span><?=$cuf?></span></p><p style='font-size: 14px;'>Factura No. <span><?=$nroDocVenta?></span></p>
                     </div>
                 </div></td>
                 </tr>
@@ -375,18 +368,18 @@ footer p {
             <section class="store-user mt-5">
                 <div class="col-10">
                     <div class="row bb pb-3">
-                        <table style="width: 100%;font-size: 14px;">
+                        <table style="width: 100%;font-size: 12px;">
                             <tr><td width="40%"><div class="col-7">
                             <p><?=$nombreTxt?></p>
-                            <h3 style="color:#14AF91"><?=$sucursalTxt?></h3>
+                            <h4 style="color:#14AF91"><?=$sucursalTxt?></h4>
                             <div class="txn mt-2">Punto de Venta: <?=$siat_codigopuntoventa?></div>
                             <div class="txn mt-2">NIT: <?=$nitTxt?></div>
                             <p class="address"> <?=$direccionTxt?></p>
                             <div class="txn mt-2">Tel: <?=$telefonoTxt?></div>
                             <div class="txn mt-2">La Paz - Bolivia</div>
-                        </div></td><td width="60%" valign="top"><div class="col-5">
+                            </div></td><td width="60%" valign="top"><div class="col-5">
                             <p>Nombre/Razón Social</p>
-                            <h3 style="color:#14AF91"><?=$razonSocialCliente?></h3>
+                            <h4 style="color:#14AF91"><?=$razonSocialCliente?></h4>
                             <!-- <p class="address"><?=$nombreCliente?></p> -->
                             <p class="address">NIT/CI/CEX: <?=$nitCliente." ".$siat_complemento?></p>
                             <p class="address">Cod. Cliente: <?=$cod_cliente?></p>
@@ -397,7 +390,7 @@ footer p {
                         
                         
                     </div>
-                    <div class="row extra-info pt-3" style="font-size: 14px;">
+                    <div class="row extra-info pt-3" style="font-size: 12px;">
                         <div class="col-7">
                             <p>Tipo de Pago: <span><?=$nombrePago?></span></p>
                             
@@ -411,16 +404,16 @@ footer p {
             </section>
 
             <section class="product-area mt-4">
-                <table class="table table-hover productos" style="width: 100%;font-size: 11px !important;">
+                <table class="table table-hover productos" style="width: 100%;font-size: 10px !important;">
                     <thead>
-                        <tr style="background: #4CD1AC;font-size: 10px !important">
-                            <th>CÓDIGO<br>PRODUCTO<br>/SERVICIO</th>                            
+                        <tr style="background: #4CD1AC;font-size: 9px !important">
+                            <th width="13%">Codigo<br>Producto/Servicio</th>                            
                             <th width="40%">DESCRIPCIÓN</th>
-                            <th>UNIDAD<br>MEDIDA</th>
-                            <th>CANTIDAD</th>
-                            <th>PRECIO<br>UNITARIO</th>                                                    
-                            <th>DESCUENTO</th>
-                            <th>SUBTOTAL</th>
+                            <th width="13%">Unidad Medida</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>                                                    
+                            <th>Descuento</th>
+                            <th>Subtotal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -484,7 +477,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
                 </div>
             </div>
         </td>
-        <td style="font-size: 10px !important;"><small><?=$unidad_medida?></small></td>
+        <td style="font-size: 11px !important;"><small><?=$unidad_medida?></small></td>
         <td style="text-align: right;"><?=$cantUnit?></td>
         <td style="text-align: right;"><?=number_format($precioUnitFactura,2)?></td>                                                        
         <td style="text-align: right;"><?=number_format($descUnit,2)?></td>
@@ -518,8 +511,6 @@ if($montoDecimal==""){
 }
 $txtMonto=NumeroALetras::convertir($montoEntero);
 
-
-
 ?>
 
 
@@ -531,7 +522,7 @@ $codeContents = $cadenaQR;
 $fechahora=date("dmy.His");
 $fileName="qrs/".$fechahora.$nroDocVenta.".png"; 
     
-QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
+QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 3);
 
 ?>
 <!-- <img src="<?=$fileName?>" style="margin: 0px;padding: 0;"> -->
@@ -557,14 +548,14 @@ while($filaDesc=mysqli_fetch_array($resp1)){
 
             <section class="balance-info">
                 <div class="row">
-                    <table style="width: 100%;font-size: 14px;">
+                    <table style="width: 100%;font-size: 12px;">
                         <tr>
                             <td width="65%"><div class="col-8">
                         <!-- <p class="m-0 font-weight-bold"> Son: </p> -->
                         <p>Son: <?="$txtMonto"." ".$montoDecimal."/100 Bolivianos"?></p>
                     </div></td>
                             <td width="35%"><br><div class="col-4">
-                        <table class="table border-0 table-hover" style="width: 100%;font-size: 11px;">
+                        <table class="table border-0 table-hover" style="width: 100%;font-size: 12px;">
                             <tr>
                                 <td style="text-align: left;font-weight: none;">SUBTOTAL Bs:</td>
                                 <td style="text-align: right;"><?=number_format($montoTotal,2)?></td>
@@ -616,33 +607,21 @@ $codeContents = $cadenaQR;
 $fechahora=date("dmy.His");
 $fileName=__DIR__."/qrs/".$fechahora.$nroDocVenta.".png"; 
     
-QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
-
+QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 3);
 //$txt3=iconv('utf-8', 'windows-1252', $txt3); 
-
-
-
 ?>
-<img src="<?=$fileName?>" style="margin: 0px;padding: 0;width: 120px;">
-
                     </div>
                 </div> 
-                <center>
-                    <p class="m-0 text-center" style="font-size: 12px;"><?=$txt2?></p> 
-                    <p class="m-0 text-center" style="font-size: 11px;"><?=$txt3?></p>
-                    <p class="m-0 text-center" style="font-size: 10px;">"<?=$txtLeyendaFin?>"</p>                
-                </center>
             </section>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
             <footer>
-                <br>
-                <!-- <p class="m-0 text-center" style="font-size: 11px;">
-                    Visítanos en <a href="http://www.farmaciasbolivia.com.bo/" target="_blank"> www.farmaciasbolivia.com.bo</a>
-                </p> -->
+                <table border="0">
+                    <td><img src="<?=$fileName?>" style="margin: 0px;padding: 0;width: 120px;"></td>
+                    <td align="center" class="table table-hover productos" style="font-size: 11px !important;">
+                            <?=$txt2?><br> 
+                            <?=$txt3?><br>
+                            <?=$txtLeyendaFin?>                       
+                    </td>
+                </table>
             </footer>
         </div>
     </div>

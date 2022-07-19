@@ -65,7 +65,7 @@ echo "<script language='Javascript'>
 				}
 			}
 		}
-        function cambiar_vista(f)
+    function cambiar_vista(f)
 		{
 			var modo_vista;
 			var modo_orden;
@@ -129,6 +129,7 @@ echo "<script language='Javascript'>
 	echo "<h1>Registro de Productos</h1>";
 
 	echo "<form method='post' action=''>";
+	
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
@@ -402,4 +403,6 @@ function Hidden(){
 	
 	</div>
 </div>
+
+
 </form>

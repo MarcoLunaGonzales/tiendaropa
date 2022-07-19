@@ -49,7 +49,7 @@ function envio_facturaanulada($idproveedor,$proveedor,$nro_correlativo,$cuf,$nit
       $datosCabecera['estado_siat']=$estado_siatCliente;        
       $datosCabecera['fecha']=$fechaCliente;
 
-    $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0,$datosCabecera,$urlDir);
+    $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0,$datosCabecera,$urlDir,$enlaceCon);
     if($flag!=0){//se envio correctamente
       return 1;
     }else{//error al enviar el correo
