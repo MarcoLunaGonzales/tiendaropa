@@ -61,7 +61,7 @@ function descontar_inventarios($enlaceCon,$cod_salida, $cod_almacen, $cod_materi
 			}
 		}
 	}
-	recalculaCostos($codMaterial, $cod_almacen);
+	//recalculaCostos($codMaterial, $cod_almacen);
 	
 	return($banderaError);
 }
