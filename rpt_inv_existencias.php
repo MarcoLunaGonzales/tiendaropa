@@ -31,7 +31,11 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	$resp_nombre_almacen=mysqli_query($enlaceCon,$sql_nombre_almacen);
 	$datos_nombre_almacen=mysqli_fetch_array($resp_nombre_almacen);
 	$nombre_almacen=$datos_nombre_almacen[0];
-		echo "<h1>Reporte Existencias Almacen<br>Territorio: <strong>$nombre_territorio</strong> Nombre Almacen: <strong>$nombre_almacen</strong> <br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</h1>";
+	
+	echo "<table align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Existencias Almacen
+	<br>Territorio: $nombre_territorio <br>Nombre Almacen: <strong>$nombre_almacen</strong>
+	<br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</td></tr></table>";
+	
 		//desde esta parte viene el reporte en si
 		
 		if($rptOrdenar==1){

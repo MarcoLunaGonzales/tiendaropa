@@ -31,7 +31,13 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	$resp_nombre_almacen=mysqli_query($enlaceCon,$sql_nombre_almacen);
 	$datos_nombre_almacen=mysqli_fetch_array($resp_nombre_almacen);
 	$nombre_almacen=$datos_nombre_almacen[0];
-		echo "<h1>Reporte Existencias Almacen<br>Territorio: <strong>$nombre_territorio</strong> Nombre Almacen: <strong>$nombre_almacen</strong> <br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</h1>";
+	
+	echo "<table align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Existencias Almacen
+	<br>Territorio: $nombre_territorio <br>Nombre Almacen: <strong>$nombre_almacen</strong>
+	<br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</td></tr></table>";
+	
+		echo "<h1>Reporte Existencias Almacen<br>Territorio: <strong>$nombre_territorio</strong>
+		Nombre Almacen: <strong>$nombre_almacen</strong> <br>Existencias a Fecha: <strong>$rpt_fecha</strong><br>$txt_reporte</h1>";
 		//desde esta parte viene el reporte en si
 		
 		if($rptOrdenar==1){
@@ -60,7 +66,18 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			from grupos g, 
 			material_apoyo m where g.codigo=m.cod_grupo and m.estado='1' 
 			and m.cod_grupo in ($rptGrupo) ";
-			$sql_item=$sql_item." and m.cod_marca in ($rptMarca) ";
+			if($globalTipoFuncionario==2){
+				if($cantFuncProv>0){
+					$sql_item= $sql_item." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor in
+					( select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario))";						
+				}
+			}else{
+				$sql_item= $sql_item." and ma.cod_marca in ($rptMarca) ";
+			}	
+			if($rptBarCode!=""){
+				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
+			}
+			//$sql_item=$sql_item." and m.cod_marca in ($rptMarca) ";
 			if($rptBarCode!=""){
 				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
 			}
