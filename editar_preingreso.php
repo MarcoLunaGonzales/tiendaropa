@@ -274,7 +274,7 @@ while($dat1=mysqli_fetch_array($resp1))
 			
 			<?php
 			$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
-				lote, fecha_vencimiento
+				lote, fecha_vencimiento,m.codigo2
 				from `preingreso_detalle_almacenes` id, `material_apoyo` m where
 				id.`cod_material`=m.`codigo_material` and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
@@ -287,6 +287,7 @@ while($dat1=mysqli_fetch_array($resp1))
 				$precioNeto=$datDetalle[4];
 				$loteMaterial=$datDetalle[5];
 				$fechaVencimiento=$datDetalle[6];
+				$codigo2=$datDetalle[7];
 				$num=$indiceMaterial;
 				
 				//SACAMOS EL PRECIO
@@ -323,9 +324,9 @@ while($dat1=mysqli_fetch_array($resp1))
 	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" accesskey="B"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 
-<td width="35%" align="center">
+<td width="35%" align="left">
 <input type="hidden" name="material<?php echo $num;?>" id="material<?php echo $num;?>" value="<?=$codMaterial;?>">
-<div id="cod_material<?php echo $num;?>" class='textograndenegro'><?=$nombreMaterial;?></div>
+<div id="cod_material<?php echo $num;?>" class='textograndenegro'><strong><?=$codigo2;?></strong> <?=$nombreMaterial;?></div>
 </td>
 
 <td align="center" width="10%">
