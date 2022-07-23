@@ -3,7 +3,7 @@ DATABASE_DRIVER = mysql
 DATABASE_ENCODING = utf8
 
 [ parametros de conexion bd mysql ]
-DATABASE_HOST = sql812.main-hosting.eu [ localhost ]
+DATABASE_HOST = sql812.main-hosting.eu
 DATABASE_PORT = 3306
 DATABASE_NAME = u766635384_altar
 DATABASE_USER = u766635384_minkauserbd

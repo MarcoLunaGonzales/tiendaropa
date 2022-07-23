@@ -53,7 +53,7 @@ if($resp_inserta==1){
 	 
 		$sql2="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, 
 lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-select 1,cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado,
+select $codigo,cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado,
  costo_actualizado_final, costo_promedio, precio_neto from preingreso_detalle_almacenes where cod_ingreso_almacen=".$_GET['codigoPreingreso'];
 mysqli_query($enlaceCon,$sql2);
     

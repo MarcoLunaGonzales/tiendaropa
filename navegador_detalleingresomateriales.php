@@ -33,7 +33,7 @@
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 
 	echo "<br><table border=0 class='texto' align='center'>";
-	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
+	echo "<tr><th>Nro</th><th>&nbsp;</th><th>&nbsp;</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
 	$indice=1;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
@@ -50,7 +50,7 @@
 		
 		$cantidad_unitaria=redondear2($cantidad_unitaria);
 		
-				$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre 
+				$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre,ma.codigo2
 		from material_apoyo ma
 		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
 		left join grupos g on (s.cod_grupo=g.codigo)
@@ -63,7 +63,10 @@
 			$nombre_subgrupo=$dat_nombre_material[1];
 		$nombre_grupo=$dat_nombre_material[2];
 		$nombre_marca=$dat_nombre_material[3];
-		echo "<tr><td align='center'>$indice</td><td>$barCode</td>
+		$codigo2=$dat_nombre_material[4];
+		echo "<tr><td align='center'>$indice</td>
+		<td>$barCode</td>
+		<td>$codigo2</td>
 		<td>$nombre_grupo - $nombre_subgrupo</td>
 		<td>$nombre_marca</td>
 		<td>$nombre_material - $color $talla</td><td align='center'>$cantidad_unitaria</td>

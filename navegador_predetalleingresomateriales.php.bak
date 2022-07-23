@@ -4,7 +4,7 @@
 	require("funciones.php");
 	echo "<form method='post' action=''>";
 	$sql="select i.cod_ingreso_almacen, i.fecha, ti.nombre_tipoingreso, i.observaciones, i.nro_correlativo, p.nombre_proveedor
-	FROM preingreso_almacenes i, tipos_ingreso ti
+	FROM preingreso_almacenes i, tipos_ingreso ti, proveedores p
 	where i.cod_tipoingreso=ti.cod_tipoingreso 
 	and	i.cod_proveedor=p.cod_proveedor
 	and i.cod_almacen='$global_almacen' and i.cod_ingreso_almacen='$codigo_ingreso'";
@@ -48,7 +48,7 @@
 		$totalValorItem=$cantidad_unitaria*$precioNeto;
 		
 		$cantidad_unitaria=redondear2($cantidad_unitaria);
-		$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre
+		$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre, ma.codigo2
 		from material_apoyo ma
 		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
 		left join grupos g on (s.cod_grupo=g.codigo)
@@ -61,7 +61,10 @@
 		$nombre_subgrupo=$dat_nombre_material[1];
 		$nombre_grupo=$dat_nombre_material[2];
 		$nombre_marca=$dat_nombre_material[3];
-		echo "<tr><td align='center'>$indice</td><td>$barCode</td>
+		$codigo2=$dat_nombre_material[4];
+		echo "<tr><td align='center'>$indice</td>
+		<td>$barCode</td>
+		<td>$codigo2</td>
 		<td>$nombre_grupo - $nombre_subgrupo</td>
 		<td>$nombre_marca</td>
 		<td>$nombre_material - $color $talla</td><td align='center'>$cantidad_unitaria</td>

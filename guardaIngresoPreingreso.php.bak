@@ -53,7 +53,7 @@ if($resp_inserta==1){
 	 
 		$sql2="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, 
 lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-select 1,cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado,
+select $codig,cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento,precio_bruto, costo_almacen, costo_actualizado,
  costo_actualizado_final, costo_promedio, precio_neto from preingreso_detalle_almacenes where cod_ingreso_almacen=".$_GET['codigoPreingreso'];
 mysqli_query($enlaceCon,$sql2);
     
@@ -70,15 +70,29 @@ mysqli_query($enlaceCon,$sql2);
 
     	
 }else{
-	echo "<script language='Javascript'>
+			echo "<script language='Javascript'>
+			Swal.fire('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.')
+		    .then(() => {
+				location.href='navegador_preingreso.php';
+		    });
+		</script>";
+		
+	/*echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_preingreso.php';
-		</script>";	
+		</script>";	*/
 }
 }else{
 		echo "<script language='Javascript'>
+			Swal.fire('YA SE GENERO EL INGRESO.')
+		    .then(() => {
+				location.href='navegador_preingreso.php';
+		    });
+		</script>";
+		
+		/*echo "<script language='Javascript'>
 		alert('YA SE GENERO EL INGRESO.');
 		location.href='navegador_preingreso.php';
-		</script>";	
+		</script>";	*/
 }
 ?>
