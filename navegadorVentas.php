@@ -455,17 +455,19 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 <th>Ventas Registradas</th><td bgcolor='#f9e79f' width='5%'></td>
 <th>Ventas Entregadas</th><td bgcolor='#1abc9c' width='5%'></td>
 <th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
-<td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
+<td bgcolor='' width='10%'>&nbsp;</td></tr></table>";
 //
-echo "<br><br><div class='divBotones'>
+echo "<div class='divBotones'>
 		<input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>		
 		<!--input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'-->
         <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
     </div>";
-		
+
+echo "<br>";
+
 echo "<div id='divCuerpo'><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>FG</th><th>-</th>";
+echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>-</th>";
 if($global_admin_cargo==1){
     echo "<th>-</th><th>-</th>";
 }
@@ -580,11 +582,9 @@ while ($dat = mysqli_fetch_array($resp)) {
         default:$color_fondo="#12A4DF";break;      
     }
 	if($codTipoDoc==1){
-		echo "<td  bgcolor='$color_fondo'><a href='formatoFactura2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
+		echo "<td  bgcolor='$color_fondo'><a href='formatoFacturaOnLine.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}else{
 		echo "<td  bgcolor='$color_fondo'><a href='formatoNotaRemision2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
-		echo "<td  bgcolor='$color_fondo'><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/detalle.png' width='30' border='0' title='Factura Formato Pequeño'></a></td>";
 	}
 	
     $codigoVentaCambio=0;

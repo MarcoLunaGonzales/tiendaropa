@@ -319,7 +319,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$montoUnitProd=redondear2($montoUnitProd);
 
 	?>
-    <table width="100%"><tr class="arial-7"><td align="left"  width="15%">(<?=$codInterno?>)</td><td colspan="3" align="left"><?=$nombreMat?></td></tr>
+    <table width="100%"><tr class="arial-7"><td align="left"  width="20%">(Cod-<?=$codInterno?>)</td><td colspan="3" align="left"><?=$nombreMat?></td></tr>
     <tr class="arial-8"><td align="left"  width="15%"><?="$cantUnit"?></td><td align="right" width="25%"><?="$precioUnitFactura"?></td><td align="right"  width="25%"><?="$descUnit"?></td><td align="right"  width="35%"><?="$montoUnitProdDesc"?></td></tr></table>
 	<?php
 	//$montoTotal=$montoTotal+$montoUnitProd;	 ESTE ERA OFICIAL
