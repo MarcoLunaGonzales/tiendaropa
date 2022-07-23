@@ -28,7 +28,7 @@ echo "<tr><th colspan='2'>Saldo Inicial Caja Chica</th></tr>
 <tr><th>Fecha</th><th>Monto Apertura de Caja Chica [Bs]</th></tr>";
 $consulta = "select DATE_FORMAT(c.fecha_cajachica, '%d/%m/%Y'), c.monto, c.fecha_cajachica from cajachica_inicio c where 
 c.fecha_cajachica='$fecha_iniconsulta'";
-echo $consulta;
+//echo $consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 while ($dat = mysqli_fetch_array($resp)) {
 	$fechaCajaChica = $dat[0];
