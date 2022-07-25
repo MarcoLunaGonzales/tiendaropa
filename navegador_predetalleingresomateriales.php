@@ -33,9 +33,10 @@
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by m.descripcion_material";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 
-	echo "<br><table border=0 class='texto' align='center'>";
+	echo "<br><table border=0 class='textoform' align='center'>";
 	echo "<tr><th>Nro</th><th>&nbsp;</th><th>&nbsp;</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
 	$indice=1;
+	$totalCantProd=0;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
@@ -50,6 +51,8 @@
 		$totalValorItem=$cantidad_unitaria*$precioNeto;
 		
 		$cantidad_unitaria=redondear2($cantidad_unitaria);
+		
+		$totalCantProd=$totalCantProd+$cantidad_unitaria;
 		$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre, ma.codigo2
 		from material_apoyo ma
 		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
@@ -64,16 +67,29 @@
 		$nombre_grupo=$dat_nombre_material[2];
 		$nombre_marca=$dat_nombre_material[3];
 		$codigo2=$dat_nombre_material[4];
-		echo "<tr><td align='center'>$indice</td>
+		
+		if($cantidad_unitaria>1){
+		echo "<tr bgcolor='#d3ffce' border ='1'>";
+		}else{
+			echo "<tr>";
+		}		
+		echo "<td align='center'  border ='1'><strong>$indice</strong></td>
 		<td>$barCode</td>
 		<td>$codigo2</td>
 		<td>$nombre_grupo - $nombre_subgrupo</td>
 		<td>$nombre_marca</td>
-		<td>$nombre_material - $color $talla</td><td align='center'>$cantidad_unitaria</td>
-		<td align='center'>$loteProducto</td>
+		<td>$nombre_material - $color $talla</td>";
+		if($cantidad_unitaria >1){
+			echo "<td align='center' bgcolor='#d3ffce' > <strong><font size='2' color ='#ff0076'>$cantidad_unitaria</font></strong></td>";
+		}else{
+			echo "<td align='center' >$cantidad_unitaria</td>";
+		}
+		echo "<td align='center'>$loteProducto</td>
 		<td align='center'>$precioNeto</td><td align='center'>$totalValorItem</td></tr>";
 		$indice++;
 	}
+	echo "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align='right'><strong>Total Productos</strong></td>
+	<td align='center'><strong>$totalCantProd</strong></td><td colspan='4'>&nbsp;</td><tr>";
 	echo "</table>";
 	
 	echo "<center><a href='javascript:window.print();'><IMG border='no'
