@@ -27,7 +27,9 @@
 	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$fecha_ingreso_mostrar</td>
 	<td>$nombre_proveedor</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td></tr>";
 	echo "</table>";
-	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras from preingreso_detalle_almacenes i, material_apoyo m
+	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, 
+	DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, 
+	m.codigo_barras from preingreso_detalle_almacenes i, material_apoyo m
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by m.descripcion_material";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 

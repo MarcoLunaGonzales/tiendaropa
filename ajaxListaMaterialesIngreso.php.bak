@@ -18,27 +18,30 @@ $cantAux1=0;
 if($globalTipoFuncionario==2){
 	$sqlAux1="select count(*) from proveedores_marcas 
 where cod_proveedor in (select cod_proveedor from funcoionarios_proveedores where codigo_funcionario=".$global_usuario.") ";
-echo $sqlAux1;
 $respAux1=mysqli_query($enlaceCon,$sqlAux1);
 $cantAux1=mysqli_num_rows($respAux1);
 }	
 
 
-	$sql="select m.codigo_material, m.descripcion_material, m.cantidad_presentacion 
-	    from material_apoyo m where estado=1 
-		and m.codigo_material ";
+	$sql="select ma.codigo_material, ma.descripcion_material, ma.cantidad_presentacion, ma.color,ma.talla, s.nombre,g.nombre,m.nombre, ma.codigo2 
+	    from material_apoyo ma
+		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
+		left join grupos g on (s.cod_grupo=g.codigo)
+		left join marcas m on (ma.cod_marca=m.codigo)
+		where ma.estado=1 
+		";
 	if($globalTipoFuncionario==2 && $cantAux1>0){
-		$sql=$sql." and m.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
+		$sql=$sql." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
 	}
-	$sql=$sql." and m.cod_marca not in ($itemsNoUtilizar)";
+	$sql=$sql." and ma.cod_marca not in ($itemsNoUtilizar)";
 	if($nombreItem!=""){
-		$sql=$sql. " and descripcion_material like '%$nombreItem%'";
+		$sql=$sql. " and ma.descripcion_material like '%$nombreItem%'";
 	}
 	if($codTipo!=0){
-		$sql=$sql. " and cod_grupo = '$codTipo' ";
+		$sql=$sql. " and ma.cod_grupo = '$codTipo' ";
 	}
 	$sql=$sql." order by 2";
-	//echo $sql;
+
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);
@@ -48,6 +51,12 @@ $cantAux1=mysqli_num_rows($respAux1);
 			$nombre=$dat[1];
 			$nombre=addslashes($nombre);
 			$cantidadPresentacion=$dat[2];
+			$talla=$dat[3];
+			$color=$dat[4];
+			$nombre_subgrupo=$dat[5];
+			$nombre_grupo=$dat[6];
+			$nombre_marca=$dat[7];
+			$codigo2=$dat[8];
 			
 			//SACAMOS EL PRECIO
 			$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
@@ -73,7 +82,7 @@ $cantAux1=mysqli_num_rows($respAux1);
 				}
 			}
 			
-			echo "<tr><td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombre\", $cantidadPresentacion, $costoItem)'>$nombre</a></div></td><td><div class='textograndenegro'>-</a></div></td></tr>";
+			echo "<tr><td><div class='textoform'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2</strong>$nombre $talla $color ($nombre_marca)\", $cantidadPresentacion, $costoItem)'><strong>$codigo2</strong>$nombre $talla $color ($nombre_marca)</a></div></td><td><div class='textograndenegro'>-</a></div></td></tr>";
 		}
 	}else{
 		echo "<tr><td colspan='3'>Sin Resultados en la busqueda.</td></tr>";
