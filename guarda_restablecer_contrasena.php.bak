@@ -33,20 +33,21 @@ $nuevafecha = date ( 'Y-m-d' , $nuevafecha );
 
 
 $error_encontrado="";
-if (validar_clave($contrasena, $error_encontrado)){
+if (validar_clave($_GET['contrasena'], $error_encontrado)){
 	
 	$txtUpd="UPDATE usuarios_sistema set contrasena='$contrasena'
 	where codigo_funcionario='$codigo_funcionario'";
-	$sql_update=mysqli_query($txtUpd);
+	echo $txtUpd;
+	//$sql_update=mysqli_query($enlaceCon,$txtUpd);
 	
-	echo "<script language='Javascript'>
+	/*echo "<script language='Javascript'>
 	alert('Los datos fueron modificados correctamente.');
 	location.href='navegador_funcionarios.php?cod_ciudad=$cod_territorio';
-	</script>";
-} else{
-	echo "<script language='Javascript'>
+	</script>";*/
+}else{
+	/*echo "<script language='Javascript'>
 	alert('".$error_encontrado."');
 	history.go(-1);
-	</script>";
+	</script>";*/
 }
 ?>
