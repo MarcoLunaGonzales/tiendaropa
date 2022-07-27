@@ -270,9 +270,12 @@ while($dat1=mysqli_fetch_array($resp1))
 			</table>
 			
 			<?php
-			$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
-				lote, fecha_vencimiento
-				from `ingreso_detalle_almacenes` id, `material_apoyo` m where
+					$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
+				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca
+				from `preingreso_detalle_almacenes` id, 
+				`material_apoyo` m
+				left join marcas mar on (m.cod_marca= mar.codigo)
+				where
 				id.`cod_material`=m.`codigo_material` and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;
@@ -284,6 +287,10 @@ while($dat1=mysqli_fetch_array($resp1))
 				$precioNeto=$datDetalle[4];
 				$loteMaterial=$datDetalle[5];
 				$fechaVencimiento=$datDetalle[6];
+				$codigo2=$datDetalle[7];
+				$color=$datDetalle[8];
+				$talla=$datDetalle[9];
+				$nombreMarca=$datDetalle[10];
 				$num=$indiceMaterial;
 				
 				//SACAMOS EL PRECIO
@@ -320,11 +327,10 @@ while($dat1=mysqli_fetch_array($resp1))
 	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" accesskey="B"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 
-<td width="35%" align="center">
+<td width="35%" align="left">
 <input type="hidden" name="material<?php echo $num;?>" id="material<?php echo $num;?>" value="<?=$codMaterial;?>">
-<div id="cod_material<?php echo $num;?>" class='textograndenegro'><?=$nombreMaterial;?></div>
+<div id="cod_material<?php echo $num;?>" class='textoform'><strong><?=$codigo2;?></strong> <?=$nombreMaterial;?> <?=$color;?> <?=$talla;?><strong><? echo " (".$nombreMarca.")";?></strong></div>
 </td>
-
 <td align="center" width="10%">
 <input type="number" class="inputnumber" min="1" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="<?=$cantidadMaterial;?>" step="0.01" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
 </td>

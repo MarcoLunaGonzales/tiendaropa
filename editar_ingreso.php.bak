@@ -1,7 +1,14 @@
 <?php
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
 
-	require("conexionmysqli.php");
-	
+$globalAlmacen=$_COOKIE['global_almacen'];
+$globalAgencia=$_COOKIE['global_agencia'];
+
+if($fecha=="")
+{   $fecha=date("d/m/Y");
+}
+	require("conexionmysqli.php");	
 	$codIngresoEditar=$_GET["codIngreso"];
 	$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$codIngresoEditar;	
 	$num_materiales=0;
@@ -263,9 +270,12 @@ while($dat1=mysqli_fetch_array($resp1))
 			</table>
 			
 			<?php
-			$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
-				lote, fecha_vencimiento
-				from `ingreso_detalle_almacenes` id, `material_apoyo` m where
+					$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
+				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca
+				from `preingreso_detalle_almacenes` id, 
+				`material_apoyo` m
+				left join marcas mar on (m.cod_marca= mar.codigo)
+				where
 				id.`cod_material`=m.`codigo_material` and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;
@@ -277,6 +287,10 @@ while($dat1=mysqli_fetch_array($resp1))
 				$precioNeto=$datDetalle[4];
 				$loteMaterial=$datDetalle[5];
 				$fechaVencimiento=$datDetalle[6];
+				$codigo2=$datDetalle[7];
+				$color=$datDetalle[8];
+				$talla=$datDetalle[9];
+				$nombreMarca=$datDetalle[10];
 				$num=$indiceMaterial;
 				
 				//SACAMOS EL PRECIO

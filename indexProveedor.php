@@ -68,6 +68,7 @@ include("datosUsuario.php");
 			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>
 			<li><a href="navegador_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>			
 		<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
+		<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
 
 
 </div>			

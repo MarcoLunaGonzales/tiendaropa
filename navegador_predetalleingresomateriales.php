@@ -37,6 +37,7 @@
 	echo "<tr><th>Nro</th><th>&nbsp;</th><th>&nbsp;</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
 	$indice=1;
 	$totalCantProd=0;
+	$totalPrecioNeto=0;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
@@ -51,7 +52,7 @@
 		$totalValorItem=$cantidad_unitaria*$precioNeto;
 		
 		$cantidad_unitaria=redondear2($cantidad_unitaria);
-		
+		$totalPrecioNeto=$totalPrecioNeto+$precioNeto;
 		$totalCantProd=$totalCantProd+$cantidad_unitaria;
 		$sql_nombre_material="select ma.descripcion_material,s.nombre,g.nombre,m.nombre, ma.codigo2
 		from material_apoyo ma
@@ -85,11 +86,12 @@
 			echo "<td align='center' >$cantidad_unitaria</td>";
 		}
 		echo "<td align='center'>$loteProducto</td>
-		<td align='center'>$precioNeto</td><td align='center'>$totalValorItem</td></tr>";
+		<td align='right'>$precioNeto</td>
+		<td align='center'>$totalValorItem</td></tr>";
 		$indice++;
 	}
 	echo "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align='right'><strong>Total Productos</strong></td>
-	<td align='center'><strong>$totalCantProd</strong></td><td colspan='4'>&nbsp;</td><tr>";
+	<td align='center'><strong>$totalCantProd</strong></td><td>&nbsp;</td><td align='right'><strong>$totalPrecioNeto</strong></td><td colspan='2'>&nbsp;</td><tr>";
 	echo "</table>";
 	
 	echo "<center><a href='javascript:window.print();'><IMG border='no'
