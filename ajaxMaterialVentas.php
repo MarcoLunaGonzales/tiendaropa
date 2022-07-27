@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <?php 
 
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 	$num=$_GET['codigo'];
 	$cod_precio=0;
 	if(isset($_GET["cod_precio"])){

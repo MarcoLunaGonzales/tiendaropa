@@ -528,16 +528,6 @@ QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 3);
 <!-- <img src="<?=$fileName?>" style="margin: 0px;padding: 0;"> -->
 <?php
 
-$sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
-$respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
-$codigoPrecio=mysqli_result($respGlosa,0,0);
-$txtGlosaDescuento="";
-$sql1="SELECT glosa_factura from tipos_preciogeneral where codigo=$codigoPrecio and glosa_estado=1";
-$resp1=mysqli_query($enlaceCon,$sql1);
-while($filaDesc=mysqli_fetch_array($resp1)){    
-        $txtGlosaDescuento=iconv('utf-8', 'windows-1252', $filaDesc[0]);        
-}
-
 
 //CAMPAÑAS APLICADAS
 ?>
