@@ -223,8 +223,17 @@ function validar(f){
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
-	if(cantidadItems>0){
-		
+	var tipoSalida=document.getElementById("tipoSalida").value;
+	var almacenSalida=document.getElementById("almacen").value;
+	//alert(tipoSalida+"  almacen: "+almacenSalida);
+	if(tipoSalida==1000){
+		if(almacenSalida==0 || almacenSalida==""){
+			alert("Debe seleccionar un almacen de destino.");
+			return(false);
+		}
+	}
+
+	if(cantidadItems>0){	
 		var item="";
 		var cantidad="";
 		var stock="";
@@ -328,7 +337,7 @@ else
 </td>
 
 <td align='center'>
-	<select name='almacen' id='almacen' class='texto' required>
+	<select name='almacen' id='almacen' class='texto'>
 		<option value=''>-----</option>
 <?php
 	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen not in ($global_almacen) order by nombre_almacen";

@@ -117,7 +117,7 @@ class SyncTest
 						$respVeri=mysqli_query($enlaceCon,$sqlVeri);
 						$estadoVeri=mysqli_result($respVeri,0,0);	
 						if($estadoVeri==0){
-							$sqlInsert="INSERT INTO siat_sincronizarlistaleyendasfactura (codigoActividad,descripcionLeyenda,created_at) VALUES ('$li->codigoActividad','$li->descripcionLeyenda',NOW())";
+							$sqlInsert="INSERT INTO siat_sincronizarlistaleyendasfactura (codigoActividad,descripcionLeyenda,created_at,estado) VALUES ('$li->codigoActividad','$li->descripcionLeyenda',NOW(),1)";
 							mysqli_query($enlaceCon,$sqlInsert);							
 						}
 					}

@@ -8,13 +8,6 @@ require("funciones.php");
 require("funciones_inventarios.php");
 require("enviar_correo/php/send-email_anulacion.php");
 
-
-//PARA KIDSPLACE ROPA
-//$codigoActividadSIAT=475100;
-//PARA FARMACIA
-// $codigoActividadSIAT=477300;
-
-
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
@@ -22,8 +15,6 @@ $errorProducto="";
 $totalFacturaMonto=0;
 
 $tipoSalida=$_POST['tipoSalida'];
-
-//echo "TIPO SALIDA: ".$tipoSalida;
 
 $tipoDoc=$_POST['tipoDoc'];
 if(!isset($_POST['no_venta'])){
@@ -448,14 +439,14 @@ if($sql_inserta==1){
 			}
 
 		}else if($tipoDoc==2){
-			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
-			$banderaCorreo=obtenerValorConfiguracion(10);
+			/*PARA EL CASO DE NR NO ENVIAR CORREO EN NINGUN CASO*/
+			$banderaCorreo=0;
 			if($banderaCorreo==1 || $banderaCorreo==2){
 				header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 			    $respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
 		    }else{
 				echo "<script type='text/javascript' language='javascript'>
-				location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
+				location.href='formatoNotaRemision.php?codVenta=$codigo';
 				</script>";		
 			}
 		}else if($tipoDoc==4){
