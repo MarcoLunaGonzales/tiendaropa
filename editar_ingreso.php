@@ -203,6 +203,7 @@ function validar(f){
 $sqlIngreso="select i.`nro_correlativo`, i.`fecha`, i.`cod_tipoingreso`, i.`nota_entrega`, i.`nro_factura_proveedor`, 
 		i.`observaciones` from `ingreso_almacenes` i where i.`cod_ingreso_almacen` = $codIngresoEditar" ;
 $respIngreso=mysqli_query($enlaceCon,$sqlIngreso);
+
 while($datIngreso=mysqli_fetch_array($respIngreso)){
 	$nroCorrelativo=$datIngreso[0];
 	$fechaIngreso=$datIngreso[1];
@@ -272,11 +273,12 @@ while($dat1=mysqli_fetch_array($resp1))
 			<?php
 					$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
 				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca
-				from `preingreso_detalle_almacenes` id, 
+				from `ingreso_detalle_almacenes` id, 
 				`material_apoyo` m
 				left join marcas mar on (m.cod_marca= mar.codigo)
 				where
 				id.`cod_material`=m.`codigo_material` and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
+				
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;
 			while($datDetalle=mysqli_fetch_array($respDetalle)){
