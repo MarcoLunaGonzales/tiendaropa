@@ -24,8 +24,6 @@ $siat_tokenDelegado='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJOYXZpYTAxNS
 
 
 
-
-
 	// $siat_nombreSistema='SISTEMA COMERCIAL';
 	// $siat_codigoSistema='720F3D79F78914E5071CB36';
 	// $siat_tipo='PROPIO';

@@ -2,7 +2,8 @@
 <head>
 	<meta charset="utf-8" />
 	<title>MinkaSoftware</title> 
-	    <link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
+	
+	<link rel="shortcut icon" href="imagenes/icon_farma.ico" type="image/x-icon">
 	<link type="text/css" rel="stylesheet" href="menuLibs/css/demo.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
@@ -26,18 +27,6 @@
      <link rel="stylesheet" href="dist/css/demo.css" />
      <link rel="stylesheet" href="dist/mmenu.css" />
 	 <link rel="stylesheet" href="dist/demo.css" />
-	<!--link type="text/css" rel="stylesheet" href="menuLibs/css/demo.css" />
-	<link type="text/css" rel="stylesheet" href="menuLibs/dist/jquery.mmenu.css" />
-    <link type="text/css" rel="stylesheet" href="stilos.css" />
-	<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="menuLibs/dist/jquery.mmenu.js"></script>
-	<script type="text/javascript">
-		$(function() {
-			$('nav#menu').mmenu();
-		});
-		
-</script--> 
-
 		
 </head>
 <body>
