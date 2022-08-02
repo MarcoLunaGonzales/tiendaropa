@@ -55,6 +55,7 @@ if($sql_inserta==1){
     if($valorExcel=="1"){
       include "subirDatosExcel.php";
       //fin de if
+	  //echo "holaaa".$mensaje;
 	echo "<script language='Javascript'>
 		alert('".$mensaje."');
 	location.href='navegador_ingresomateriales.php';
