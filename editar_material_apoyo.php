@@ -118,7 +118,7 @@ echo "<input type='hidden' name='codProducto' id='codProducto' value='$codProduc
 
 echo "<center><table class='texto'>";
 
-echo "<tr><th align='left'>Nombre</th>";
+echo "<tr><th align='left'>Nombre de Producto</th>";
 echo "<td align='left'>
 	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' value='$nombreProductoX' required>
 	</td>
@@ -130,27 +130,9 @@ echo "<td align='left'>
 
 echo "<tr><th align='left'>Código de Barras</th>";
 echo "<td align='left'>
-	<input type='text' class='texto' name='codigo_barras' size='40' value='$codigoBarrasX' required>
-	</td>";
-	
-echo "<th align='left'>Proveedor</th>";
-$sql1="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
-$resp1=mysqli_query($enlaceCon,$sql1);
-echo "<td>
-		<select name='codLinea' id='codLinea' required onChange='ajaxMarca(this);'>
-		<option value=''></option>";
-		while($dat1=mysqli_fetch_array($resp1))
-		{	$codLinea=$dat1[0];
-			$nombreLinea=$dat1[1];
-			if($codLineaX==$codLinea){
-				echo "<option value='$codLinea' selected>$nombreLinea</option>";
-			}else{
-				echo "<option value='$codLinea'>$nombreLinea</option>";
-			}
-		}
-		echo "</select>
-</td>";
+	<input type='text' class='texto' name='codigo_barras' size='40' value='$codigoBarrasX' >
+	</td>";	
+echo "<td></td><td></td>";
 echo "</tr>";
 
 echo "<tr><th>Tipo</th>";
@@ -168,8 +150,7 @@ echo "<td>
 //echo "</tr>";
 
 echo "<th>Marca</th>";
-$sqlMarca="select codigo, nombre from marcas where estado=1 and codigo in( select codigo from proveedores_marcas where cod_proveedor=$proveedor)
- order by nombre asc";
+$sqlMarca="select codigo, nombre from marcas where estado=1  order by nombre asc";
  $respMarca=mysqli_query($enlaceCon,$sqlMarca);
  if(mysqli_num_rows($respMarca)<=0){
 	 $sqlMarca="select codigo, nombre from marcas where estado=1 order by nombre asc";

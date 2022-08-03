@@ -8,7 +8,7 @@ $codProducto=$_POST['codProducto'];
 $nombreProducto=$_POST['material'];
 $nombreProducto = strtoupper($nombreProducto);
 
-$codLinea=$_POST['codLinea'];
+//$codLinea=$_POST['codLinea'];
 $codGrupo=$_POST['cod_grupo'];
 $codTipo=$_POST['cod_tipo'];
 $observaciones=$_POST['observaciones'];
@@ -22,7 +22,8 @@ $codMarca=$_POST['cod_marca'];
 $codSubGrupo=$_POST['cod_subgrupo'];
 $codigo2=$_POST['codigo2'];
 
-$sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', cod_linea_proveedor='$codLinea', 
+$sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', 
+
 cod_grupo='$codGrupo', observaciones='$observaciones', cod_unidad='$codUnidad', codigo_barras='$codigoBarras', color='$color',
 talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo',codigo2='$codigo2' where codigo_material='$codProducto'";
 //echo $sql_inserta;

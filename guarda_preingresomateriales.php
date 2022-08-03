@@ -125,17 +125,17 @@ if($sql_inserta==1){
 		}
 	  }
 	  //fin de if
-	  /*echo "<script language='Javascript'>
+	  echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_preingreso.php';
-		</script>";	*/
+		</script>";	
     }
     	
 }else{
-	/*echo "<script language='Javascript'>
+	echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_prengreso.php';
-		</script>";	*/
+		</script>";	
 }
 
 ?>

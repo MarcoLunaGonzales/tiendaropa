@@ -191,9 +191,11 @@ if($filasErroneas>0){
 		
       }
       if($sql_inserta2==1){
+		  echo ".";
         $mensaje='Los datos fueron insertados correctamente.';
       	//showAlertSuccessError(true,"../".$urlOficial);	
       }else{
+		  echo ".";
         $mensaje='EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.';
         borrarIngresoAlmacen($enlaceCon,$codigo);
 	     //showAlertSuccessError(false,"../".$urlOficial);

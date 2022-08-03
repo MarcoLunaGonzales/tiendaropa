@@ -58,33 +58,20 @@ echo "<h1>Adicionar Producto</h1>";
 
 echo "<center><table class='texto'>";
 
-echo "<tr><th align='left'>Nombre</th>";
+echo "<tr><th align='left'>Nombre Producto</th>";
 echo "<td align='left'>
 	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' required>
-	</td> <th align='left'>Codigo Externo</th>
+	</td> <th align='left'>Codigo Proveedor</th>
 	<td align='left'><input type='text' class='texto' name='codigo2' id='codigo2' size='20' style='text-transform:uppercase;'> </td>
 	</tr>";
 
 echo "<tr><th align='left'>Código de Barras</th>";
 echo "<td align='left'>
-	<input type='text' class='texto' name='codigo_barras' size='40' required>
+	<input type='text' class='texto' name='codigo_barras' size='40' >
 	</td>";
 	
-echo "<th align='left'>Proveedor</th>";
-$sql1="select pl.cod_linea_proveedor, CONCAT(p.nombre_proveedor,' - ',pl.nombre_linea_proveedor) from proveedores p, proveedores_lineas pl 
-where p.cod_proveedor=pl.cod_proveedor and pl.estado=1 order by 2;";
-$resp1=mysqli_query($enlaceCon,$sql1);
-echo "<td>
-		<select name='codLinea' id='codLinea' required onChange='ajaxMarca(this);'>
-		<option value=''></option>";
-		while($dat1=mysqli_fetch_array($resp1))
-		{	$codLinea=$dat1[0];
-			$nombreLinea=$dat1[1];
-			
-		echo "<option value='$codLinea'>$nombreLinea</option>";
-		}
-		echo "</select>
-</td>";
+
+echo "<td></td><td></td>";
 echo "</tr>";
 
 echo "<tr><th>Tipo</th>";
@@ -103,9 +90,27 @@ echo "<td>
 
 echo "<th>Marca</th>";
 
-echo "<td>
-<div id='divMarca'></div>
-</td>";
+echo "<td>";
+
+
+
+$sqlMarca="select codigo, nombre from marcas where estado=1  order by nombre asc";
+ $respMarca=mysqli_query($enlaceCon,$sqlMarca);
+ if(mysqli_num_rows($respMarca)<=0){
+	 $sqlMarca="select codigo, nombre from marcas where estado=1 order by nombre asc";
+	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+}
+
+
+echo "<select name='cod_marca' id='cod_marca' class='texto' required>";
+echo "<option value=''>---</option>";
+while($datMarca=mysqli_fetch_array($respMarca)){
+	$codigoX=$datMarca[0];
+	$nombreX=$datMarca[1];
+	echo "<option value='$codigoX'>$nombreX $codigoX</option>";
+}
+echo "</select></td>";
+
 echo "</tr>";
 
 echo "<tr><th>Grupo</th>";

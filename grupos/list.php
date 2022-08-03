@@ -100,7 +100,7 @@ echo "<script language='Javascript'>
 		<td>$abreviatura</td>
 		<td><a href='listDetalle.php?codigo=$codigo'>Ir a SubGrupos</a>";
 			
-		$sqlSubGrupo="SELECT codigo,nombre, abreviatura FROM `subgrupos` where estado=1 and cod_grupo=".$codigo;
+		$sqlSubGrupo="SELECT codigo,nombre, abreviatura FROM `subgrupos` where estado=1 and cod_grupo=".$codigo." order by nombre asc ";
 		$respSubGrupo=mysqli_query($enlaceCon,$sqlSubGrupo);
 		echo "<table style='border-spacing: 0;'>";
 		while($datSubGrupo=mysqli_fetch_array($respSubGrupo)){

@@ -3,11 +3,11 @@ DATABASE_DRIVER = mysql
 DATABASE_ENCODING = utf8
 
 [ parametros de conexion bd mysql ]
-DATABASE_HOST = localhost
+DATABASE_HOST = www.minkafacturacion.online
 DATABASE_PORT = 3306
 DATABASE_NAME = u766635384_altar
 DATABASE_USER = u766635384_minkauserbd
-DATABASE_PASSWORD = 4879531Gabriela
+DATABASE_PASSWORD = 4868422Marco$
 DATABASE_DESCRIPTION = DB LOCAL
 
 [ parametros de conexion envio de correos ]

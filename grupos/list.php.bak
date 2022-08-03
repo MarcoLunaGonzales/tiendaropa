@@ -82,7 +82,7 @@ echo "<script language='Javascript'>
 	</div> <br> <br>";
 	
 	
-	echo "<center><table >";
+	echo "<center><table class='texto'>";
 	echo "<tr>
 	<th>&nbsp;</th>
 	<th>Nombre</th>
