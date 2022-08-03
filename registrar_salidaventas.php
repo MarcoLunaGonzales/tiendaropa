@@ -9,20 +9,9 @@ require "conexionmysqli.inc";
         <link  rel="icon"   href="imagenes/card.png" type="image/png" />
         <link href="assets/style.css" rel="stylesheet" />
 		    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
-        <!--script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
+		    <!--script type="text/javascript" src="dist/js/functionsGeneral.js"></script-->
 				<script type="text/javascript" src="functionsGeneral.js"></script>
-        <link rel="stylesheet" type="text/css" href="dist/bootstrap/bootstrap.css"/>
-        <link rel="stylesheet" type="text/css" href="dist/bootstrap/dataTables.bootstrap4.min.css"/>
-        <script type="text/javascript" src="dist/bootstrap/jquery-3.5.1.js"></script>
-        <script type="text/javascript" src="dist/bootstrap/jquery.dataTables.min.js"></script>
-        <script type="text/javascript" src="dist/bootstrap/dataTables.bootstrap4.min.js"></script>
-        <link rel="stylesheet" href="dist/selectpicker/dist/css/bootstrap-select.css">
-        <link rel="stylesheet" type="text/css" href="dist/css/micss.css"/>
-        <link rel="stylesheet" type="text/css" href="dist/demo.css"/>
-        <link rel="stylesheet" type="text/css" href="assets/css/demo.css"/>
-        <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.css" /-->
+
         <style type="text/css">
         	body{
               zoom: 86%;
@@ -949,6 +938,7 @@ function validar(f, ventaDebajoCosto){
 			console.log("valor i: "+i);
 			console.log("objeto materiales: "+document.getElementById("materiales"+i));
 			if(document.getElementById("materiales"+i)!=null){
+				console.log("entro a materiales");
 				item=parseFloat(document.getElementById("materiales"+i).value);
 				cantidad=parseFloat(document.getElementById("cantidad_unitaria"+i).value);
 				
@@ -959,10 +949,9 @@ function validar(f, ventaDebajoCosto){
 				}else{
 					stock=parseFloat(document.getElementById("stock"+i).value);
 				}
-				
 				descuento=parseFloat(document.getElementById("descuentoProducto"+i).value);
 				precioUnit=parseFloat(document.getElementById("precio_unitario"+i).value);				
-				var costoUnit=parseFloat(document.getElementById("costoUnit"+i).value);
+				//var costoUnit=parseFloat(document.getElementById("costoUnit"+i).value);
 		
 				console.log("materiales"+i+" valor: "+item);
 				console.log("stock: "+stock+" cantidad: "+cantidad+ "precio: "+precioUnit);
@@ -972,10 +961,10 @@ function validar(f, ventaDebajoCosto){
 					return(false);
 				}
 				//alert(costoUnit+" "+precioUnit);
-				if(costoUnit>precioUnit && ventaDebajoCosto==0){
+				/*if(costoUnit>precioUnit && ventaDebajoCosto==0){
 					alert('No puede registrar una venta a perdida!!!!');
 					return(false);
-				}
+				}*/
 				if(stock<cantidad){
 					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
 					return(false);
@@ -1485,7 +1474,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</td>	
 	<td colspan="2">
 		<div id='divRazonSocial'>
-          <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razon social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);' pattern='[A-Z a-z 0-9 Ññ.-&]+'>          
+          <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razon social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);' pattern='[A-Za-z0-9Ññ.& ]+'>          
         </div>
         <span class="input-group-btn" style="position:absolute;width:10px !important;">
             <a href="#" onclick="ajaxVerificarNitCliente(); return false;" class="btn btn-info btn-sm" style="position:absolute;right: 100%;"><i class="material-icons">refresh</i> Verificar Nit</a>
@@ -1702,8 +1691,8 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
-	        <input type='submit' class='boton' value='Guardar' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
-					<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';>
+	        <input type='submit' class='boton' value='Guardar Venta' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
+					<!--input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';-->
 					
 					<a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>
 
@@ -1932,7 +1921,6 @@ if($banderaErrorFacturacion==0){
 
 
 <!--<script src="dist/selectpicker/dist/js/bootstrap-select.js"></script>-->
- <script type="text/javascript" src="dist/js/functionsGeneral.js"></script>
 
 
  <div id="dosificar_factura_sucursal" style="position: fixed;width:100%;height:100%;background: rgba(0, 0, 0,0.7);top:0;z-index: 9999999;color:#FFC300;" class="d-none"> 	

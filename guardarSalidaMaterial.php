@@ -197,9 +197,6 @@ do {
 		if(isset($_POST['fecha_emision'])){
 			$fechaEmit=$_POST['fecha_emision'];	
 			$horaEmit=$_POST['hora_emision'];	
-
-			// $sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fechaEmit' and cuis='$cuis' LIMIT 1";	
-
 			$sqlCufd="SELECT codigo,cufd,codigo_control from siat_cufd where cod_ciudad='$globalSucursal' and cuis='$cuis' and  created_at between '$fechaEmit 00:00:00' and '$fechaEmit $horaEmit:00' order by created_at desc limit 1";
 		}else{
 			$sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fecha' and cuis='$cuis' LIMIT 1";	
@@ -284,10 +281,6 @@ if($sql_inserta==1){
 		$codMaterial=$_POST["materiales$i"];
 		if($codMaterial!=0){
 
-			// if(isset($_POST['cantidad_unitaria$i'])){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
-			// if(isset($_POST['precio_unitario$i'])){	$precioUnitario=$_POST['precio_unitario$i']; }else{ $precioUnitario=0;	}
-			// if(isset($_POST['descuentoProducto$i'])){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
-			
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
@@ -295,7 +288,6 @@ if($sql_inserta==1){
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
 			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
-			
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			if($banderaValidacionStock==1){
@@ -418,7 +410,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					   location.href='navegadorVentas.php'; 
+					   location.href='formatoFacturaOnLine.php?codVenta=$codigo'; 
 					});
 					</script>";
 				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
@@ -430,7 +422,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					    location.href='navegadorVentas.php';
+					    location.href='formatoFacturaOnLine.php?codVenta=$codigo';
 					});
 					</script>";
 				// echo "<script type='text/javascript' language='javascript'>
