@@ -63,9 +63,12 @@ function listaMateriales(f){
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
+			var codMarca=f.itemMarca.value;
+	var codBarraCod2=f.itemCodBarraCod2.value;
 	contenedor = document.getElementById('divListaMateriales');
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem,true);
+	//ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem,true);
+	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -201,7 +204,11 @@ function validar(f){
 <?php
 
 $sqlIngreso="select i.`nro_correlativo`, i.`fecha`, i.`cod_tipoingreso`, i.`nota_entrega`, i.`nro_factura_proveedor`, 
-		i.`observaciones` from `ingreso_almacenes` i where i.`cod_ingreso_almacen` = $codIngresoEditar" ;
+		i.`observaciones`, p.`nombre_proveedor`
+		from `ingreso_almacenes` i 
+		left join  `proveedores` p on (i.`cod_proveedor`=p.`cod_proveedor`) 
+		where i.`cod_ingreso_almacen` = $codIngresoEditar" ;
+		
 $respIngreso=mysqli_query($enlaceCon,$sqlIngreso);
 
 while($datIngreso=mysqli_fetch_array($respIngreso)){
@@ -211,6 +218,7 @@ while($datIngreso=mysqli_fetch_array($respIngreso)){
 	$notaEntrega=$datIngreso[3];
 	$nroFacturaProv=$datIngreso[4];
 	$obsIngreso=$datIngreso[5];
+	$nombreProveedor=$datIngreso[6];
 }
 
 ?>
@@ -242,9 +250,11 @@ while($dat1=mysqli_fetch_array($resp1))
 ?>
 </select></td>
 <td align="center"><input type="text" class="texto" name="nro_factura" value="<?php echo $nroFacturaProv; ?>" id="nro_factura"></td></tr>
-<tr><th colspan="4">Observaciones</th></tr>
+<tr><th>Proveedor</th><th colspan="3">Observaciones</th></tr>
 <tr>
-<td colspan="4" align="center"><input type="text" class="texto" name="observaciones" value="<?php echo $obsIngreso; ?>" size="100"></td></tr>
+<td  align="center"><?php echo $nombreProveedor;?></td>
+<td colspan="4" align="center"><input type="text" class="texto" name="observaciones" value="<?php echo $obsIngreso; ?>" size="100"></td>
+</tr>
 </table><br>
 
 		<fieldset id="fiel" style="width:98%;border:0;" >
@@ -272,7 +282,7 @@ while($dat1=mysqli_fetch_array($resp1))
 			
 			<?php
 					$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
-				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca
+				id.lote, id.fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca,m.codigo_barras
 				from `ingreso_detalle_almacenes` id, 
 				`material_apoyo` m
 				left join marcas mar on (m.cod_marca= mar.codigo)
@@ -293,6 +303,7 @@ while($dat1=mysqli_fetch_array($resp1))
 				$color=$datDetalle[8];
 				$talla=$datDetalle[9];
 				$nombreMarca=$datDetalle[10];
+				$codBarra=$datDetalle[11];
 				$num=$indiceMaterial;
 				
 				//SACAMOS EL PRECIO
@@ -331,7 +342,7 @@ while($dat1=mysqli_fetch_array($resp1))
 
 <td width="35%" align="left">
 <input type="hidden" name="material<?php echo $num;?>" id="material<?php echo $num;?>" value="<?=$codMaterial;?>">
-<div id="cod_material<?php echo $num;?>" class='textoform'><strong><?=$codigo2;?></strong> <?=$nombreMaterial;?> <?=$color;?> <?=$talla;?><strong><? echo " (".$nombreMarca.")";?></strong></div>
+<div id="cod_material<?php echo $num;?>" class='textoform'><strong><?=$codigo2;?><?=$codBarra;?></strong> <?=$nombreMaterial;?> <?=$color;?> <?=$talla;?><strong><? echo " (".$nombreMarca.")";?></strong></div>
 </td>
 <td align="center" width="10%">
 <input type="number" class="inputnumber" min="1" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="<?=$cantidadMaterial;?>" step="0.01" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
@@ -387,9 +398,9 @@ echo "<div class='divBotones'>
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center; height:445px; overflow-y: scroll;">
 		<table align='center' class="texto">
-			<tr><th>Linea</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="textogranderojo" style="width:300px">
+			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="texto" style="width:120px">
 			<?php
 			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
 			where g.estado=1 order by 2;";
@@ -403,8 +414,27 @@ echo "<div class='divBotones'>
 			?>
 			</select>
 			</td>
+			<td><select class="texto" name='itemMarca' style="width:120px">
+			<?php
+			$sqlMarca="select m.codigo, m.nombre from marcas m
+			where m.estado=1 order by 2;";
+			echo $sqlMarca;
+			$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+			echo "<option value='0'>--</option>";
+			while($datMarca=mysqli_fetch_array($respMarca)){
+				$codMarca=$datMarca[0];
+				$nombreMarca=$datMarca[1];
+				echo "<option value=$codMarca> $codMarca - $nombreMarca</option>";
+			}
+			?>
+
+			</select>
+			</td>
 			<td>
-				<input type='text' name='itemNombreMaterial' id="itemNombreMaterial" class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+				<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' style="width:120px" class="texto" onkeypress="return pressEnter(event, this.form);">
+			</td>	
+			<td>
+				<input type='text' name='itemNombreMaterial' id="itemNombreMaterial" class="texto" onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>
 				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">

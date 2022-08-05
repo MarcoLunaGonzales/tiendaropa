@@ -309,7 +309,7 @@ echo "</table><br>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'></center>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"'></center>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_preingreso.php\"'></center>
 </div>";
 
 echo "</div>";
@@ -329,9 +329,9 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center; height:445px; overflow-y: scroll;">
 		<table align='center' class="texto">
-			<tr><th>Grupo</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="textogranderojo" style="width:300px">
+			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="texto" style="width:120px">
 			<?php
 			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
 			where g.estado=1 order by 2;";
@@ -345,8 +345,27 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			?>
 			</select>
 			</td>
+			<td><select class="texto" name='itemMarca' style="width:120px">
+			<?php
+			$sqlMarca="select m.codigo, m.nombre from marcas m
+			where m.estado=1 order by 2;";
+			echo $sqlMarca;
+			$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+			echo "<option value='0'>--</option>";
+			while($datMarca=mysqli_fetch_array($respMarca)){
+				$codMarca=$datMarca[0];
+				$nombreMarca=$datMarca[1];
+				echo "<option value=$codMarca> $codMarca - $nombreMarca</option>";
+			}
+			?>
+
+			</select>
+			</td>
 			<td>
-				<input type='text' name='itemNombreMaterial' id="itemNombreMaterial" class="textogranderojo"  onkeypress="return pressEnter(event, this.form);">
+				<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' style="width:120px" class="texto" onkeypress="return pressEnter(event, this.form);">
+			</td>	
+			<td>
+				<input type='text' name='itemNombreMaterial' id="itemNombreMaterial" class="texto"  onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>
 				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">

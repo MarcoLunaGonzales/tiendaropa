@@ -35,6 +35,9 @@ function listaMateriales(f){
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
+	
+	var codMarca=f.itemMarca.value;
+	var codBarraCod2=f.itemCodBarraCod2.value;
 	contenedor = document.getElementById('divListaMateriales');
 
 	var arrayItemsUtilizados=new Array();	
@@ -48,7 +51,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -171,7 +174,7 @@ function mas(obj) {
 		}
 		//fin validacion
 		console.log("bandera: "+banderaItems0);
-
+  
 		if(banderaItems0==0){
 			num++;
 			cantidad_items++;
@@ -407,12 +410,13 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Grupo</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select class="textogranderojo" name='itemTipoMaterial' style="width:300px">
+			<td><select class="texto" name='itemTipoMaterial' style="width:120px">
 			<?php
-			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
+			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";
+			echo $sqlTipo;
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
@@ -424,8 +428,27 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 
 			</select>
 			</td>
+			<td><select class="texto" name='itemMarca' style="width:120px">
+			<?php
+			$sqlMarca="select m.codigo, m.nombre from marcas m
+			where m.estado=1 order by 2;";
+			echo $sqlMarca;
+			$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+			echo "<option value='0'>--</option>";
+			while($datMarca=mysqli_fetch_array($respMarca)){
+				$codMarca=$datMarca[0];
+				$nombreMarca=$datMarca[1];
+				echo "<option value=$codMarca> $codMarca - $nombreMarca</option>";
+			}
+			?>
+
+			</select>
+			</td>
 			<td>
-				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+				<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' style="width:120px" class="texto" onkeypress="return pressEnter(event, this.form);">
+			</td>			
+			<td>
+				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' style="width:180px" class="texto" onkeypress="return pressEnter(event, this.form);">
 			</td>
 			<td>
 				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">

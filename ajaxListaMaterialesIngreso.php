@@ -2,11 +2,14 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Producto</th><th>Stock</th></tr>
+<th>Cod</th><th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Precio</th></tr>
 <?php
 require("conexionmysqli.php");
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
+$codMarca=$_GET['codMarca'];
+$codBarraCod2=$_GET['codBarraCod2'];
+
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $global_usuario=$_COOKIE['global_usuario'];
@@ -17,13 +20,14 @@ $itemsNoUtilizar="0";
 $cantAux1=0;
 if($globalTipoFuncionario==2){
 	$sqlAux1="select count(*) from proveedores_marcas 
-where cod_proveedor in (select cod_proveedor from funcoionarios_proveedores where codigo_funcionario=".$global_usuario.") ";
+where cod_proveedor in (select cod_proveedor from funcionarios_proveedores where codigo_funcionario=".$global_usuario.") ";
 $respAux1=mysqli_query($enlaceCon,$sqlAux1);
 $cantAux1=mysqli_num_rows($respAux1);
 }	
 
 
-	$sql="select ma.codigo_material, ma.descripcion_material, ma.cantidad_presentacion, ma.color,ma.talla, s.nombre,g.nombre,m.nombre, ma.codigo2 
+	$sql="select ma.codigo_material, ma.descripcion_material, ma.cantidad_presentacion, ma.color,ma.talla, s.nombre,g.nombre,m.nombre, ma.codigo2,
+		ma.codigo_barras
 	    from material_apoyo ma
 		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
 		left join grupos g on (s.cod_grupo=g.codigo)
@@ -34,6 +38,20 @@ $cantAux1=mysqli_num_rows($respAux1);
 		$sql=$sql." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
 	}
 	$sql=$sql." and ma.cod_marca not in ($itemsNoUtilizar)";
+	
+	if($codBarraCod2!=""){
+		$sql=$sql. " and (ma.codigo_barras like '%$codBarraCod2%' or  ma.codigo2 like '%$codBarraCod2%')";
+	}
+	if($codMarca!=0){
+		$sql=$sql. " and ma.cod_marca='$codMarca' ";
+	}
+	if($nombreItem!=""){
+		$sql=$sql. " and ma.descripcion_material like '%$nombreItem%'";
+	}
+	if($codTipo!=0){
+		$sql=$sql. " and ma.cod_grupo = '$codTipo' ";
+	}
+	
 	if($nombreItem!=""){
 		$sql=$sql. " and ma.descripcion_material like '%$nombreItem%'";
 	}
@@ -41,7 +59,7 @@ $cantAux1=mysqli_num_rows($respAux1);
 		$sql=$sql. " and ma.cod_grupo = '$codTipo' ";
 	}
 	$sql=$sql." order by 2";
-
+	
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);
@@ -57,6 +75,7 @@ $cantAux1=mysqli_num_rows($respAux1);
 			$nombre_grupo=$dat[6];
 			$nombre_marca=$dat[7];
 			$codigo2=$dat[8];
+			$codigoBarras=$dat[9];
 			
 			//SACAMOS EL PRECIO
 			$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
@@ -82,7 +101,16 @@ $cantAux1=mysqli_num_rows($respAux1);
 				}
 			}
 			
-			echo "<tr><td align='left'><div class='textoform'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2</strong>$nombre $talla $color ($nombre_marca)\", $cantidadPresentacion, $costoItem)'><strong>$codigo2</strong>$nombre $talla $color ($nombre_marca)</a></div></td><td><div class='textograndenegro'>-</a></div></td></tr>";
+			echo "<tr>
+			<td>$codigo2 $codigoBarras</td>
+			<td align='left'>
+			<div class='texto'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2 $codigoBarras</strong>$nombre $talla $color ($nombre_marca)\", $cantidadPresentacion, $costoItem)'>$nombre </a></div></td>
+			<td>$nombre_marca</td>
+			<td>$talla</td>
+			<td>$color</td>
+		
+			<td>$costoItem</td>
+			</tr>";
 		}
 	}else{
 		echo "<tr><td colspan='3'>Sin Resultados en la busqueda.</td></tr>";

@@ -525,8 +525,8 @@ if($sql_inserta==1){
 }else{
 		echo "<script type='text/javascript' language='javascript'>
 			alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-			
-		</script>";//location.href='navegador_salidamateriales.php';
+			location.href='navegador_salidamateriales.php';
+		</script>";
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 // require("estilos_administracion.inc");
 
 function validar_clave($clave,&$error_clave){
@@ -33,18 +33,33 @@ $nuevafecha = date ( 'Y-m-d' , $nuevafecha );
 
 
 $error_encontrado="";
-if (validar_clave($_GET['contrasena'], $error_encontrado)){
+
+if (validar_clave($_GET['contrasena'],$error_encontrado)){
 	
-	$txtUpd="UPDATE usuarios_sistema set contrasena='$contrasena'
-	where codigo_funcionario='$codigo_funcionario'";
-	echo $txtUpd;
-	//$sql_update=mysqli_query($enlaceCon,$txtUpd);
+	$txtUpd="UPDATE usuarios_sistema set contrasena='$contrasena' where codigo_funcionario='".$_GET['codigo_funcionario']."'";
 	
+$sql_update=mysqli_query($enlaceCon,$txtUpd);
+
+		echo "<script language='Javascript'>
+			Swal.fire('Los datos fueron modificados correctamente.')
+		    .then(() => {
+				location.href='navegador_funcionarios.php?cod_ciudad='".$_GET['cod_territorio']."'
+		    });
+		</script>";
 	/*echo "<script language='Javascript'>
 	alert('Los datos fueron modificados correctamente.');
 	location.href='navegador_funcionarios.php?cod_ciudad=$cod_territorio';
 	</script>";*/
 }else{
+	
+
+		echo "<script language='Javascript'>
+			Swal.fire('".$error_encontrado."')
+		    .then(() => {
+				history.go(-1);
+		    });
+		</script>";
+		
 	/*echo "<script language='Javascript'>
 	alert('".$error_encontrado."');
 	history.go(-1);

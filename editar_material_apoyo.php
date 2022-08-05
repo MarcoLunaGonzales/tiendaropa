@@ -195,7 +195,7 @@ echo "<td>
 echo "<th>Sub-Grupo</th>";
 echo "<td>
 <div id='divSubGrupo'>";
-$sql="select codigo, nombre from subgrupos where cod_grupo in ($codGrupoX)";
+$sql="select codigo, nombre from subgrupos where cod_grupo in ($codGrupoX) order by nombre asc";
 $resp=mysqli_query($enlaceCon,$sql);
 
 echo "<select name='cod_subgrupo' class='texto' id='cod_subgrupo' required>";

@@ -131,9 +131,7 @@ echo "<td align='left'>
 echo "<tr><th align='left'>Código de Barras</th>";
 echo "<td align='left'>
 	<input type='text' class='texto' name='codigo_barras' size='40' value='$codigoBarrasX' >
-	</td>";
-	
-
+	</td>";	
 echo "<td></td><td></td>";
 echo "</tr>";
 
