@@ -80,6 +80,7 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$tipoPago=$datDatosVenta[7];
 }
 
+$y=-3;
 $pdf->SetXY(0,$y+3);		$pdf->Cell(0,0,$nombre1,0,0,"C");
 $pdf->SetXY(0,$y+6);		$pdf->Cell(0,0,$nombre2,0,0,"C");
 
