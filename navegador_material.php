@@ -1,5 +1,5 @@
 <?php
-	require("conexionmysqli.php");
+	require("conexionmysqli2.inc");
 	require('estilos.inc');
 	require("funciones.php");
 
@@ -126,7 +126,7 @@ echo "<script language='Javascript'>
 	$grupo=$_GET['grupo'];
     
 
-	echo "<h1>Registro de Productos</h1>";
+	echo "<h3 align='center'>Registro de Productos</h3>";
 
 	echo "<form method='post' action=''>";
 	

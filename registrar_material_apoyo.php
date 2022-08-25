@@ -48,7 +48,7 @@ function ajaxMarca(dato){
 
 </script>
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 require('estilos.inc');
 
 echo "<form enctype='multipart/form-data' action='guarda_material_apoyo.php' method='post' name='form1'>";
