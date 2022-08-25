@@ -49,7 +49,7 @@ function ajaxMarca(dato){
 
 </head>
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require('estilos.inc');
 require('funciones.php');
 
@@ -124,7 +124,7 @@ echo "<td align='left'>
 	</td>
 	<th align='left'>Codigo Externo</th>
 	<td align='left'>
-	<input type='text' class='texto' name='codigo2' size='40' style='text-transform:uppercase;' value='$codigo2X' required>
+	<input type='text' class='texto' name='codigo2' size='40' style='text-transform:uppercase;' value='$codigo2X' >
 	</td>
 	</tr>";
 

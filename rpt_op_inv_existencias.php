@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 echo "<script language='JavaScript'>
 		function pressEnter(e, f){
@@ -149,6 +149,7 @@ echo"<form method='post' action=''>";
 	echo "<td><select name='rpt_ordenar' class='texto'>";
 	echo "<option value='1'>Producto</option>";
 	echo "<option value='2'>Grupo y Producto</option>";
+	echo "<option value='3'>Marca Grupo y Producto</option>";
 	echo "</tr>";
 	
 	echo "<tr><th align='left'>Formato:</th>";

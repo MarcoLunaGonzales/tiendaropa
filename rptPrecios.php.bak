@@ -171,7 +171,7 @@ function ajaxBuscarItems(f){
 		$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
 		$numFilas=mysqli_num_rows($respPrecio);
 		if($numFilas==1){
-			$datPrecio=mysql_fetch_array($respPrecio);
+			$datPrecio=mysqli_fetch_array($respPrecio);
 			$precio0=$datPrecio[0];
 			//$precio0=mysql_result($respPrecio,0,0);
 			$precio0=redondear2($precio0);

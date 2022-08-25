@@ -1,6 +1,7 @@
 <?php
 
-require("conexionmysqli2.inc");
+
+require("conexionmysqli.inc");
 require('funciones.php');
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
@@ -324,6 +325,7 @@ $txtnroingreso="";
 $fecha1="";
 $fecha2="";
 
+$fecha_sistema="";
 if(isset($_GET["txtnroingreso"])){
     $txtnroingreso = $_GET["txtnroingreso"];
 }
@@ -333,12 +335,14 @@ if(isset($_GET["fecha1"])){
 if(isset($_GET["fecha2"])){
     $fecha2 = $_GET["fecha2"];    
 }
+if(!isset($fecha_sistema)){
 
+}
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 
-echo "<h1>Listado de Ventas</h1>";
+echo "<h1>Notas de Remision</h1>";
 echo "<table class='texto' cellspacing='0' width='90%'>
 <tr><th>Leyenda:</th>
 <th>Ventas Registradas</th><td bgcolor='#f9e79f' width='5%'></td>
@@ -350,7 +354,7 @@ echo "<div class='divBotones'>
         <input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
         <input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>      
         <input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
-    </div>";
+    </div><br><br>";
         
 echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Vendedor</th>

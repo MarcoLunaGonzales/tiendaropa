@@ -18,7 +18,7 @@ echo "<script language='JavaScript'>
 			return(true);
 		}
 		</script>";
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 $fecha_rptdefault=date("d/m/Y");
 echo "<table align='center' class='textotit'><tr><th>Reporte Precios</th></tr></table><br>";

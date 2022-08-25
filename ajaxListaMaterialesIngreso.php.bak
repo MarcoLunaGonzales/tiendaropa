@@ -2,9 +2,10 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Cod</th><th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Precio</th></tr>
+<th>Cod</th><th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Precio Compra</th><th>Precio Venta</th></tr>
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
+require("funciones.php");
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
 $codMarca=$_GET['codMarca'];
@@ -14,6 +15,8 @@ $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
 $global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
+
+
 $codProveedor=$_GET['codProveedor'];
 //$itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $itemsNoUtilizar="0";
@@ -76,6 +79,21 @@ $cantAux1=mysqli_num_rows($respAux1);
 			$nombre_marca=$dat[7];
 			$codigo2=$dat[8];
 			$codigoBarras=$dat[9];
+						/// SACAMOS PRECIO DE VENTA
+			///////////////
+					$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo and p.cod_ciudad='".$global_agencia."'";
+					$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
+					$numFilas=mysqli_num_rows($respPrecio);
+					if($numFilas==1){
+						$datPrecio=mysqli_fetch_array($respPrecio);
+						$precio0=$datPrecio[0];
+						
+						$precio0=redondear2($precio0);
+					}else{
+						$precio0=0;
+						$precio0=redondear2($precio0);
+					}
+			///////////////
 			
 			//SACAMOS EL PRECIO
 			$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
@@ -100,16 +118,17 @@ $cantAux1=mysqli_num_rows($respAux1);
 					//$costoItem=mysql_result($respCosto,0,0);
 				}
 			}
-			
+
 			echo "<tr>
 			<td>$codigo2 $codigoBarras</td>
 			<td align='left'>
-			<div class='texto'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2 $codigoBarras</strong>$nombre $talla $color ($nombre_marca)\", $cantidadPresentacion, $costoItem)'><strong>$codigo2 $codigoBarras</strong>$nombre </a></div></td><td><div class='textograndenegro'>-</a></div></td>
+			<div class='texto'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2 $codigoBarras</strong>$nombre $talla $color ($nombre_marca)\", $cantidadPresentacion, $costoItem, $precio0)'>$nombre </a></div></td>
 			<td>$nombre_marca</td>
 			<td>$talla</td>
 			<td>$color</td>
 		
 			<td>$costoItem</td>
+			<td>$precio0</td>
 			</tr>";
 		}
 	}else{

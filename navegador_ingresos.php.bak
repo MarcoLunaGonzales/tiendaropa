@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 ?>
@@ -128,7 +128,7 @@ echo "<h1>Ingreso de Productos</h1>";
 echo "<table border='1' cellspacing='0' class='textomini'><tr><th>LEYENDA:</th>
 <th>INGRESOS ANULADOS</th><td bgcolor='#ff8080' width='10%'></td><th>INGRESOS CON MOVIMIENTO</th><td bgcolor='#ffff99' width='10%'></td>
 <th>INGRESOS SIN MOVIMIENTO</th><td bgcolor='' width='10%'>&nbsp;</td>
-<td><a  onclick='ShowBuscar()'><img src='imagenes/buscar_header.jpg' border='0' width='30' heigth='30' title='Buscar'></a></td></tr></table><br>";
+<td><a  onclick='ShowBuscar()'><img src='imagenes/buscar_header.jpg' border='0'  title='Buscar'></a></td></tr></table><br>";
 
 
 
