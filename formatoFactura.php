@@ -323,8 +323,8 @@ if(obtenerValorConfiguracion($enlaceCon,14)==1){
 
 $tamanoLargo=200+($nroItems*3)-3;
 
-$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
-$pdf->SetMargins(0,0,0);
+//$pdf=new FPDF('P','mm',array(76,$tamanoLargo));
+//$pdf->SetMargins(0,0,0);
 $pdf->AddPage(); 
 $pdf->SetFont('Arial','',8);
 
