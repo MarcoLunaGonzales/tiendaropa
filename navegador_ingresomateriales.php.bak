@@ -286,7 +286,14 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
 	<td>&nbsp;$proveedor</td>
 	<td>&nbsp;$obs_ingreso</td>
-	<td align='center'>
+	<td>&nbsp;$usuReg<br>$created_date</td>";
+	if(empty($usuMod)){
+	echo "<td>&nbsp</td>";
+	}else{
+		echo "<td>&nbsp;$usuMod<br>$modified_date</td>";
+    }				
+	 
+	 echo "	<td align='center'>
 		<a target='_BLANK' href='navegador_detalleingresomateriales.php?codigo_ingreso=$codigo'><img src='imagenes/detalles.png' border='0' width='30' heigth='30' title='Ver Detalles del Ingreso'></a>
 	</td>
 	<td align='center'>

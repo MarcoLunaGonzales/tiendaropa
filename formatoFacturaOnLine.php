@@ -110,10 +110,12 @@ $nitTxt=mysqli_result($respConf,0,1);
 
 // $sqlDatosFactura="select '' as nro_autorizacion, '', f.codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.fecha, '%d/%m/%Y') from facturas_venta f
 // 	where f.cod_venta=$codigoVenta";
-$sqlDatosFactura="select '' as nro_autorizacion, '', '' as codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y') from salida_almacenes f
-	where f.cod_salida_almacenes=$codigoVenta";
+$sqlDatosFactura="select '' as nro_autorizacion, '', '' as codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y') 
+from salida_almacenes f
+where f.cod_salida_almacenes=$codigoVenta";
 //echo $sqlDatosFactura;
 $respDatosFactura=mysqli_query($enlaceCon,$sqlDatosFactura);
+
 $nroAutorizacion=mysqli_result($respDatosFactura,0,0);
 $fechaLimiteEmision=mysqli_result($respDatosFactura,0,1);
 $codigoControl=mysqli_result($respDatosFactura,0,2);
@@ -126,8 +128,11 @@ $cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
 
 
-
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,(SELECT cufd from siat_cufd where codigo=s.siat_codigocufd) as cufd,siat_cuf,siat_complemento,s.siat_codigoPuntoVenta,s.siat_codigotipoemision,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, 
+s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,
+(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,
+(SELECT cufd from siat_cufd where codigo=s.siat_codigocufd) as cufd,siat_cuf,siat_complemento,s.siat_codigoPuntoVenta,
+s.siat_codigotipoemision,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -279,10 +284,8 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$cantUnit=$datDetalle[1];
 	$nombreMat=$datDetalle[2];
 	$precioUnit=$datDetalle[3];
-	$descUnit=$datDetalle[4];
-	//$montoUnit=$datDetalle[5];
-	$montoUnit=($cantUnit*$precioUnit)-$descUnit;
-	
+	$descUnit=$datDetalle[4];	
+	$montoUnit=($cantUnit*$precioUnit)-$descUnit;	
 	//recalculamos el precio unitario para mostrar en la factura.
 	//$precioUnitFactura=$montoUnit/$cantUnit;
 	$precioUnitFactura=($cantUnit*$precioUnit)/$cantUnit;
@@ -304,7 +307,8 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 
 	?>
     <table width="100%"><tr class="arial-7"><td align="left"  width="15%">(<?=$codInterno?>)</td><td colspan="3" align="left"><?=$nombreMat?></td></tr>
-    <tr class="arial-8"><td align="left"  width="15%"><?="$cantUnit"?></td><td align="right" width="25%"><?="$precioUnitFactura"?></td><td align="right"  width="25%"><?="$descUnit"?></td><td align="right"  width="35%"><?="$montoUnitProdDesc"?></td></tr></table>
+    <tr class="arial-8"><td align="left"  width="15%"><?="$cantUnit"?></td><td align="right" width="25%"><?="$precioUnitFactura"?></td>
+	<td align="right"  width="25%"><?="$descUnit"?></td><td align="right"  width="35%"><?="$montoUnitProdDesc"?></td></tr></table>
 	<?php
 	//$montoTotal=$montoTotal+$montoUnitProd;	 ESTE ERA OFICIAL
 	$montoTotal=$montoTotal+$montoUnitProdDesc;

@@ -1,6 +1,7 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos.inc");
+require("funciones.php");
 ?>
 
 <html>
@@ -85,13 +86,16 @@ function Hidden(){
 }
 
 
-function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem){
+function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioVenta){
 	var numRegistro=f.materialActivo.value;
 	
 	document.getElementById('material'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	document.getElementById('ultimoCosto'+numRegistro).value=costoItem;
+	document.getElementById('precio'+numRegistro).value=costoItem;
+	document.getElementById('precioVenta'+numRegistro).value=precioVenta;
 	document.getElementById('divUltimoCosto'+numRegistro).innerHTML="["+costoItem+"]";
+	document.getElementById('divPVenta'+numRegistro).innerHTML="["+precioVenta+"]";
 	
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -104,15 +108,25 @@ function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem){
 }
 		
 function cambiaCosto(f, fila){
+		
 	var cantidad=document.getElementById('cantidad_unitaria'+fila).value;
-	var precioFila=document.getElementById('precio'+fila).value;
+	 var precioFila=document.getElementById('precio'+fila).value;
+
 	var ultimoCosto=document.getElementById('ultimoCosto'+fila).value;
+
 	console.log(cantidad+" "+ultimoCosto);
 	var calculoCosto=parseFloat(cantidad)*parseFloat(ultimoCosto);
 	var calculoPrecioTotal=parseFloat(cantidad)*parseFloat(precioFila);	
 	if(calculoCosto=="NaN"){
 		calculoCosto.value=0;
 	}
+	
+	if(document.getElementById('swCambiarPrecioVenta').value==1){
+	  	document.getElementById('precioVenta'+fila).value=precioFila; 
+	}
+	
+
+	
 	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]["+calculoCosto+"]";
 	document.getElementById('divPrecioTotal'+fila).innerHTML=calculoPrecioTotal;
 	
@@ -200,6 +214,7 @@ function validar2(f){
 	</script>
 <?php
 
+//echo "valor de configuracion=".obtenerValorConfiguracion($enlaceCon,7);
 
 if($fecha=="")
 {   $fecha=date("d/m/Y");
@@ -277,7 +292,7 @@ echo "</table><br>";
 			<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 				<tr>
 					<td align="center" colspan="6">
-						<input class="boton" type="button" value="Nuevo Item (+)" onclick="mas(this)" accesskey="A"/>
+						<input class="boton" type="button" value="Buscar Producto (+)" onclick="mas(this)" accesskey="A"/>
 					</td>
 				</tr>
 				<tr>
@@ -290,8 +305,9 @@ echo "</table><br>";
 					<td width="35%" align="center">Producto</td>
 					<td width="10%" align="center">Cantidad</td>
 					<td width="10%" align="center">Lote</td>
-					<td width="10%" align="center">Precio[u]</td>
-					<td width="10%" align="center">PrecioTotal</td>
+					<td width="10%" align="center">P. Compra[u]</td>
+					<td width="10%" align="center">P. Venta[u]</td>
+					<td width="10%" align="center">Precio Total</td>
 					<td width="10%" align="center">&nbsp;</td>
 				</tr>
 			</table>
@@ -373,7 +389,10 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 	</div>
 </div>
 <input type='hidden' name='materialActivo' value="0">
+
 <input type='hidden' name='cantidad_material' value="0">
+
+<input type='hidden' id='swCambiarPrecioVenta' name='swCambiarPrecioVenta' value="<?php echo obtenerValorConfiguracion($enlaceCon,7);?>">
 
 </form>
 </body>

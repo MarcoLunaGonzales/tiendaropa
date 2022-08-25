@@ -1,7 +1,8 @@
 <?php
 
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
+require("funciones.php");
 
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
@@ -117,6 +118,9 @@ function cambiaCosto(f, fila){
 	var calculoPrecioTotal=parseFloat(cantidad)*parseFloat(precioFila);	
 	if(calculoCosto=="NaN"){
 		calculoCosto.value=0;
+	}
+	if(document.getElementById('swCambiarPrecioVenta').value==1){
+	  	document.getElementById('precioVenta'+fila).value=precioFila; 
 	}
 	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]["+calculoCosto+"]";
 	document.getElementById('divPrecioTotal'+fila).innerHTML=calculoPrecioTotal;
@@ -272,7 +276,8 @@ while($dat1=mysqli_fetch_array($resp1))
 					<td width="35%" align="center">Producto</td>
 					<td width="10%" align="center">Cantidad</td>
 					<td width="10%" align="center">Lote</td>
-					<td width="10%" align="center">Precio[u]</td>
+					<td width="10%" align="center">P. Compra[u]</td>
+					<td width="10%" align="center">P. Venta[u]</td>
 					<td width="10%" align="center">PrecioTotal</td>
 					<td width="10%" align="center">&nbsp;</td>
 				</tr>
@@ -280,7 +285,7 @@ while($dat1=mysqli_fetch_array($resp1))
 			
 			<?php
 			$sqlDetalle="select id.`cod_material`, m.`descripcion_material`, id.`cantidad_unitaria`, id.`precio_bruto`, id.`precio_neto`, 
-				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca
+				lote, fecha_vencimiento,m.codigo2, m.color,m.talla, mar.nombre as nombreMarca, id.precio_venta
 				from `preingreso_detalle_almacenes` id, 
 				`material_apoyo` m
 				left join marcas mar on (m.cod_marca= mar.codigo)
@@ -300,12 +305,30 @@ while($dat1=mysqli_fetch_array($resp1))
 				$color=$datDetalle[8];
 				$talla=$datDetalle[9];
 				$nombreMarca=$datDetalle[10];
+				$precioVenta=$datDetalle[11];
 				$num=$indiceMaterial;
+				/// SACAMOS PRECIO DE VENTA
 				
+					$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codMaterial and p.cod_ciudad='".$global_agencia."'";
+					//echo $sqlPrecio;
+					$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
+					$numFilasPrecio=mysqli_num_rows($respPrecio);
+					if($numFilasPrecio==1){
+						$datPrecio=mysqli_fetch_array($respPrecio);
+						$precio0=$datPrecio[0];
+						
+						$precio0=redondear2($precio0);
+					}else{
+						$precio0=0;
+						$precio0=redondear2($precio0);
+					}
+			///////////////
 				//SACAMOS EL PRECIO
-				$sqlUltimoCosto="select id.precio_bruto from preingreso_almacenes i, preingreso_detalle_almacenes id
+				$sqlUltimoCosto=" select id.precio_bruto
+				from preingreso_almacenes i, preingreso_detalle_almacenes id
 				where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.ingreso_anulado=0 and 
-				id.cod_material='$codMaterial' and i.cod_almacen='$globalAlmacen' ORDER BY i.cod_ingreso_almacen desc limit 0,1";
+				id.cod_material='$codMaterial' and i.cod_almacen='$globalAlmacen' 
+				ORDER BY i.cod_ingreso_almacen desc limit 0,1";
 				$respUltimoCosto=mysqli_query($enlaceCon,$sqlUltimoCosto);
 				$numFilas=mysqli_num_rows($respUltimoCosto);
 				$costoItem=0;
@@ -355,7 +378,11 @@ onchange='cambiaCosto(this.form,<?=$num;?>)' onkeyup='cambiaCosto(this.form,<?=$
 <input type="hidden" id='ultimoCosto<?php echo $num;?>' name='ultimoCosto<?php echo $num;?>' value='<?=$costoItem;?>'>
 <div id='divUltimoCosto<?php echo $num;?>'><?=$precioBruto*$cantidadMaterial;?></div>
 </td>
-
+<td align="center" width="10%">
+<input type="number" class="inputnumber" value="<?=$precioVenta;?>" id="precioVenta<?php echo $num;?>" name="precioVenta<?php echo $num;?>" size="5" min="0.1" step="0.01"  
+ <?php if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";}?>  required><br>
+<div id='divPVenta<?php echo $num;?>'><?=$precio0?></div>
+</td>
 <td align="center" width="10%">
 <div id='divPrecioTotal<?php echo $num;?>'><?=$precioBruto*$cantidadMaterial;?></div>
 </td>
@@ -427,6 +454,7 @@ echo "<div class='divBotones'>
 </div>
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">
+<input type='hidden' id='swCambiarPrecioVenta' name='swCambiarPrecioVenta' value="<?php echo obtenerValorConfiguracion($enlaceCon,7);?>">
 
 </form>
 </body>

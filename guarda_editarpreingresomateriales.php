@@ -32,11 +32,13 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 		$lote=$_POST["lote$i"];
 		//$fechaVenc=$_POST["fechaVenc$i"];
 		$precioBruto=$_POST["precio$i"];
+		$precioVenta=$_POST["precioVenta$i"];
 		
 		$fechaVenc=UltimoDiaMes($fechaVenc);
 		
-		$consulta="insert into preingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-		values($codIngreso,'$cod_material',$cantidad,$cantidad,'$lote','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto')";
+		$consulta="insert into preingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, 
+		costo_promedio, precio_neto, precio_venta) 
+		values($codIngreso,'$cod_material',$cantidad,$cantidad,'$lote','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioVenta')";
 		
 		//echo "bbb:$consulta";
 		$sql_inserta2 = mysqli_query($enlaceCon,$consulta);

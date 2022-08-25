@@ -32,6 +32,7 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 		$lote=$_POST["lote$i"];
 		//$fechaVenc=$_POST["fechaVenc$i"];
 		$precioBruto=$_POST["precio$i"];
+		$precioVenta=$_POST["precioVenta$i"];
 		
 		$fechaVenc=UltimoDiaMes($fechaVenc);
 		
@@ -47,15 +48,15 @@ $modifiedBy=$_COOKIE['global_usuario'];
 $modifiedDate=date("Y-m-d H:i:s");
 
 $consulta=" update preingreso_almacenes set modified_by='".$modifiedBy."', modified_date='".$modifiedDate."' where cod_ingreso_almacen=".$codIngreso;
-echo $consulta;
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
-	/*echo "<script language='Javascript'>
+	echo "<script language='Javascript'>
 			Swal.fire('Los datos fueron modificados correctamente.')
 		    .then(() => {
 				 location.href='navegador_preingreso.php';
 		    });
-		</script>";*/
+		</script>";
 		
 /*echo "<script language='Javascript'>
     alert('Los datos fueron modificados correctamente.');

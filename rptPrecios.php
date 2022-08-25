@@ -78,7 +78,7 @@ function ajaxBuscarItems(f){
 </script>
 <?php
 
-	require("conexionmysqli.php");
+	require("conexionmysqli.inc");
 	require("estilos_reportes_almacencentral.php");
 	require("funciones.php");
 	require("funcion_nombres.php");

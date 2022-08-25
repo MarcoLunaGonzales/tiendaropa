@@ -1,6 +1,7 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
+require("funciones.php");
 
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalAgencia=$_COOKIE['global_agencia'];
@@ -114,11 +115,15 @@ function cambiaCosto(f, fila){
 	var cantidad=document.getElementById('cantidad_unitaria'+fila).value;
 	var precioFila=document.getElementById('precio'+fila).value;
 	var ultimoCosto=document.getElementById('ultimoCosto'+fila).value;
+	
 	console.log(cantidad+" "+ultimoCosto);
 	var calculoCosto=parseFloat(cantidad)*parseFloat(ultimoCosto);
 	var calculoPrecioTotal=parseFloat(cantidad)*parseFloat(precioFila);	
 	if(calculoCosto=="NaN"){
 		calculoCosto.value=0;
+	}	
+	if(document.getElementById('swCambiarPrecioVenta').value==1){
+	  	document.getElementById('precioVenta'+fila).value=precioFila; 
 	}
 	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]["+calculoCosto+"]";
 	document.getElementById('divPrecioTotal'+fila).innerHTML=calculoPrecioTotal;
@@ -261,7 +266,7 @@ while($dat1=mysqli_fetch_array($resp1))
 			<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 				<tr>
 					<td align="center" colspan="6">
-						<input class="boton" type="button" value="Nuevo Item (+)" onclick="mas(this)" />
+						<input class="boton" type="button" value="Buscar Producto(+)" onclick="mas(this)" />
 					</td>
 				</tr>
 				<tr>
@@ -274,8 +279,9 @@ while($dat1=mysqli_fetch_array($resp1))
 					<td width="35%" align="center">Producto</td>
 					<td width="10%" align="center">Cantidad</td>
 					<td width="10%" align="center">Lote</td>
-					<td width="10%" align="center">Precio[u]</td>
-					<td width="10%" align="center">PrecioTotal</td>
+					<td width="10%" align="center">P. Compra[u]</td>
+					<td width="10%" align="center">P. Venta[u]</td>
+					<td width="10%" align="center">Precio Total</td>
 					<td width="10%" align="center">&nbsp;</td>
 				</tr>
 			</table>
@@ -305,6 +311,23 @@ while($dat1=mysqli_fetch_array($resp1))
 				$nombreMarca=$datDetalle[10];
 				$codBarra=$datDetalle[11];
 				$num=$indiceMaterial;
+				
+				/// SACAMOS PRECIO DE VENTA
+				
+					$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codMaterial and p.cod_ciudad='".$globalAgencia."'";
+					//echo $sqlPrecio;
+					$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
+					$numFilasPrecio=mysqli_num_rows($respPrecio);
+					if($numFilasPrecio==1){
+						$datPrecio=mysqli_fetch_array($respPrecio);
+						$precio0=$datPrecio[0];
+						
+						$precio0=redondear2($precio0);
+					}else{
+						$precio0=0;
+						$precio0=redondear2($precio0);
+					}
+			///////////////
 				
 				//SACAMOS EL PRECIO
 				$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
@@ -358,7 +381,11 @@ onchange='cambiaCosto(this.form,<?=$num;?>)' onkeyup='cambiaCosto(this.form,<?=$
 <input type="hidden" id='ultimoCosto<?php echo $num;?>' name='ultimoCosto<?php echo $num;?>' value='<?=$costoItem;?>'>
 <div id='divUltimoCosto<?php echo $num;?>'><?=$precioBruto*$cantidadMaterial;?></div>
 </td>
-
+<td align="center" width="10%">
+<input type="number" class="inputnumber" value="<?=$precio0;?>" id="precioVenta<?php echo $num;?>" name="precioVenta<?php echo $num;?>" size="5" min="0.1" step="0.01"  
+ <?php if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";}?>  required><br>
+<div id='divPVenta<?php echo $num;?>'><?=$precio0;?></div>
+</td>
 <td align="center" width="10%">
 <div id='divPrecioTotal<?php echo $num;?>'><?=$precioBruto*$cantidadMaterial;?></div>
 </td>
@@ -449,6 +476,7 @@ echo "<div class='divBotones'>
 </div>
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">
+<input type='hidden' id='swCambiarPrecioVenta' name='swCambiarPrecioVenta' value="<?php echo obtenerValorConfiguracion($enlaceCon,7);?>">
 
 </form>
 </body>

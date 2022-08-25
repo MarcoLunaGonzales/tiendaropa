@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("funciones.php");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
