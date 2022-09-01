@@ -1,9 +1,5 @@
 <?php
-<<<<<<< HEAD
 	require("conexionmysqli2.inc");
-=======
-	require("conexionmysqli.inc");
->>>>>>> 71a3d40c23464fc4ab3b74eb85e745730d5a24ef
 	require('estilos.inc');
 	require("funciones.php");
 

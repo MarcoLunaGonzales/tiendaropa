@@ -22,28 +22,28 @@ $globalAgencia=$_COOKIE['global_agencia'];
 			$nombre=addslashes($nombre);
 			$cantidadPresentacion=$dat[2];			
 			
-			/*//SACAMOS EL PRECIO
-			$sqlUltimoCosto="select id.precio_bruto from ingreso_almacenes i, ingreso_detalle_almacenes id
-			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.ingreso_anulado=0 and 
-			id.cod_material='$codigo' and i.cod_almacen='$globalAlmacen' ORDER BY i.cod_ingreso_almacen desc limit 0,1";
-			$respUltimoCosto=mysqli_query($enlaceCon, $sqlUltimoCosto);
-			$numFilas=mysqli_num_rows($respUltimoCosto);
+			//SACAMOS EL PRECIO
+			$precioItem=0;
 			$costoItem=0;
-			if($numFilas>0){
-				$costoItem=mysql_result($respUltimoCosto,0,0);
-			}else{
-				//SACAMOS EL COSTO REGISTRADO EN LA TABLA DE PRECIOS
-				$sqlCosto="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='0' 
-				and cod_ciudad='$globalAgencia'";
-				$respCosto=mysqli_query($enlaceCon, $sqlCosto);
-				$numFilas2=mysqli_num_rows($respCosto);
-				if($numFilas2>0){
-					$costoItem=mysql_result($respCosto,0,0);
-				}
+			$sqlPrecio="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' 
+			and cod_ciudad='$globalAgencia'";
+			$respPrecio=mysqli_query($enlaceCon, $sqlPrecio);
+			$numFilas2=mysqli_num_rows($respPrecio);
+			if($numFilas2>0){
+				$precioItem=mysqli_result($respPrecio,0,0);
 			}
-			*/
-			$costoItem=0;
+			//SACAMOS EL COSTO REGISTRADO EN LA TABLA DE PRECIOS
+			$sqlCosto="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='0' 
+			and cod_ciudad='$globalAgencia'";
+			$respCosto=mysqli_query($enlaceCon, $sqlCosto);
+			$numFilas2=mysqli_num_rows($respCosto);
+			if($numFilas2>0){
+				$costoItem=mysqli_result($respCosto,0,0);
+			}
 
+			$precioItem=round($precioItem);
+			$costoItem=round($costoItem);
+			
 			$sqlGrupo="select g.codigo from grupos g where estado=1 and g.codigo = '$grupo'";
 	        $respGrupo=mysqli_query($enlaceCon, $sqlGrupo);
 	        $envioGrupo=-1;
@@ -53,7 +53,7 @@ $globalAgencia=$_COOKIE['global_agencia'];
 		    $marcaProducto=obtieneMarcaProducto($enlaceCon, $dat[4]);
 			$tallaProducto=$dat[6];
 			$colorProducto=$dat[5];
-			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$envioGrupo."#####".$marcaProducto."#####".$tallaProducto."#####".$colorProducto;
+			echo "1#####".$codigo."#####".$nombre."#####".$cantidadPresentacion."#####".$costoItem."#####".$envioGrupo."#####".$marcaProducto."#####".$tallaProducto."#####".$colorProducto."#####".$precioItem;
 		}
 	}else{
 		echo "0#####_#####_#####_#####_#####_#####_#####_#####_";

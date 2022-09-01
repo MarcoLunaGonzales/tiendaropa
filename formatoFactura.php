@@ -20,7 +20,7 @@ $datNro=mysqli_fetch_array($respNro);
 $nroItems=$datNro[0];
 //$nroItems=mysqli_result($respNro,0,0);
 
-$tamanoLargo=225+($nroItems*3)-3;
+$tamanoLargo=235+($nroItems*3)-3;
 
 $pdf=new FPDF('P','mm',array(76,$tamanoLargo));
 $pdf->SetMargins(0,0,0);
