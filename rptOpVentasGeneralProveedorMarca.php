@@ -1,20 +1,20 @@
 <script language='JavaScript'>
 function envia_formulario(f)
 {	var rpt_territorio,fecha_ini, fecha_fin, rpt_ver;
-	//var rpt_marca=new Array();
+	var rpt_marca=new Array();
 	var rpt_tipoPago=new Array();
 	rpt_territorio=f.rpt_territorio.value;
 	
 	fecha_ini=f.exafinicial.value;
 	fecha_fin=f.exaffinal.value;
-	/*var k=0;
+	var k=0;
 			for(m=0;m<=f.rpt_marca.options.length-1;m++)
 			{	if(f.rpt_marca.options[m].selected)
 				{	rpt_marca[k]=f.rpt_marca.options[m].value;
 					k++;
 				}
 			}
-	*/
+	
 	var i=0;
 			for(j=0;j<=f.rpt_tipoPago.options.length-1;j++)
 			{	if(f.rpt_tipoPago.options[j].selected)
@@ -22,10 +22,10 @@ function envia_formulario(f)
 					i++;
 				}
 			}
-	//alert("tipo_pago="+rpt_tipoPago);
+	alert("marcas="+rpt_marca+"tipo_pago="+rpt_tipoPago);
 	var forms = f;
     if(forms.checkValidity()){
-		window.open('rptVentasGeneral.php?rpt_territorio='+rpt_territorio+'&rpt_tipoPago='+rpt_tipoPago+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
+		window.open('rptVentasGeneral.php?rpt_territorio='+rpt_territorio+'&rpt_marca='+rpt_marca+'&rpt_tipoPago='+rpt_tipoPago+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
 		return(true);    
 	} else{
         alert("Debe seleccionar todos los campos del reporte.");
@@ -64,7 +64,24 @@ echo"<form method='post' action=''>";
 		}
 	}
 	echo "</select></td></tr>";
-	
+	echo "<tr><th align='left'>Marcas</th><td>
+	<select name='rpt_marca' id='rpt_marca' class='texto' size='10' multiple>
+	<option value='-1'>TODOS</option>";
+	$sqlMarca="select codigo, nombre from marcas where estado=1";
+		if($globalTipoFuncionario==2){
+		if($cantFuncProv>0){
+			$sqlMarca= $sqlMarca." and codigo in( select codigo from proveedores_marcas where cod_proveedor in
+			( select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario))";
+		}
+	}
+	$sqlMarca= $sqlMarca."  order by 2";
+	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+	while($datMarca=mysqli_fetch_array($respMarca))
+	{	$codigoMarca=$datMarca[0];
+		$nombreMarca=$datMarca[1];
+		echo "<option value='$codigoMarca' selected>$nombreMarca</option>";
+	}
+	echo "</select></td></tr>";
 	echo "<tr><th align='left'>Tipo Pago</th><td>
 	<select name='rpt_tipoPago' id='rpt_tipoPago' class='texto' size='10' multiple>
 	<option value='-1'>TODOS</option>";

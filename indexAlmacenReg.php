@@ -129,6 +129,7 @@ include("datosUsuario.php");
 				</ul>	
 			</li-->
 						<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
+						<li><a href="listaRecibos.php" target="contenedorPrincipal">Recibos</a></li>
 
 			<li><span>Reportes</span>
 				<ul>
@@ -159,7 +160,8 @@ include("datosUsuario.php");
 						<ul>
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
 							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ranking de Ventas x Item</a></li>
-							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
+							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento y Producto</a></li>
+							<li><a href="rptOpVentasMarcasDet.php" target="contenedorPrincipal">Ventas x Marcas Detallado</a></li>
 							<li><a href="rptOpVentasxPersona.php" target="contenedorPrincipal">Ventas x Vendedor Resumido</a></li>
 							<li><a href="rptOpVentasxPersonaDetalle.php" target="contenedorPrincipal">Ventas x Vendedor Detallado</a></li>
 						</ul>	

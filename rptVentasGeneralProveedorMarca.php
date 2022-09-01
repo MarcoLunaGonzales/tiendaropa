@@ -11,8 +11,6 @@ $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
 $respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
 $cantFuncProv=mysqli_num_rows($respFuncProv);
-
-
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=($fecha_ini);
 $fecha_finconsulta=($fecha_fin);
@@ -20,10 +18,32 @@ $fecha_finconsulta=($fecha_fin);
 $rpt_territorio=$_GET['rpt_territorio'];
 $rptMarca=$_GET["rpt_marca"];
 $rptTipoPago=$_GET["rpt_tipoPago"];
-
-$cadenaTipoPagos="TODOS";	
+echo "marcaAA".$rptMarca;
+echo "tipoPago".$rptTipoPago."<br>";;
+if($rptMarca=="-1"){
+	 $rptMarca=""; $swMarca=0;	 
+	$sqlMarca="select codigo from marcas where estado= 1";
+		if($globalTipoFuncionario==2){
+		if($cantFuncProv>0){
+			$sqlMarca= $sqlMarca." and codigo in( select codigo from proveedores_marcas where cod_proveedor in
+			( select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario))";
+		}
+	}
+	echo $sqlMarca ;
+	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
+	while($datMarca=mysqli_fetch_array($respMarca))
+	{
+		if($swMarca==0){
+			$rptMarca=$datMarca[0];
+			$swMarca=1;
+		}else{
+			$rptMarca=$rptMarca.",";
+			$rptMarca=$rptMarca.$datMarca[0];
+		}
+	}
+	echo "marcaAA".$rptMarca."<br>";
+}	
 if($rptTipoPago=="-1"){
-	$cadenaTipoPagos="TODOS";
 	$rptTipoPago=""; $swTipoPago=0;	 
 	$sqlTipoPago="select cod_tipopago, nombre_tipopago from tipos_pago where estado=1  order by cod_tipopago asc";
 	$respTipoPago=mysqli_query($enlaceCon,$sqlTipoPago);
@@ -38,50 +58,36 @@ if($rptTipoPago=="-1"){
 		}
 	}
 	echo "rptTipoPago".$rptTipoPago."<br>";;
-}else{
-	$swCadenaTipoPago=0;	
-	$sqlTipoPago="select cod_tipopago, nombre_tipopago from tipos_pago where estado=1 and cod_tipopago in(".$rptTipoPago.")	order by cod_tipopago asc";
-	$respTipoPago=mysqli_query($enlaceCon,$sqlTipoPago);
-	while($datTipoPago=mysqli_fetch_array($respTipoPago)){	
-		if($swCadenaTipoPago==0){
-			$cadenaTipoPagos=$datTipoPago[1];
-			$swCadenaTipoPago=1;
-		}else{
-			$cadenaTipoPagos=$cadenaTipoPagos.";";
-			$cadenaTipoPagos=$cadenaTipoPagos.$datTipoPago[1];
-		}
-		
-	}
-
-	
 }
-
+$globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
+$sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
+$respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
+$cantFuncProv=mysqli_num_rows($respFuncProv);
 
 $fecha_reporte=date("d/m/Y");
 
 $nombre_territorio=nombreTerritorio($enlaceCon,$rpt_territorio);
-echo "<table align='center'  >
-<tr class='textotit' align='center' ><th  colspan='2'  >REPORTE DE VENTAS X DOCUMENTO Y PRODUCTO</th></tr>
-	<tr ><th>Territorio:</th><td> $nombre_territorio </td> </tr>
-	<tr><th>De: $fecha_ini A:</th> <td>$fecha_fin</td></tr>
-	<tr><th>Tipos de Pago: </th><td>$cadenaTipoPagos</td></tr>
-	<tr><th>Fecha Reporte:</th> <td>$fecha_reporte</td></tr>	
-	</table>";
+
+echo "<table align='center' class='textotit' width='70%'><tr><td align='center'>Reporte Ventas x Documento
+	<br>Territorio: $nombre_territorio <br> De: $fecha_ini A: $fecha_fin
+	<br>Fecha Reporte: $fecha_reporte</tr></table>";
 
 $sql="select concat(s.`fecha`,' ',s.hora_salida)as fecha,  
 	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, s.`razon_social`, s.`observaciones`, 
-	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),s.`nro_correlativo`, s.`monto_final`, s.cod_salida_almacenes,
-	(select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago) as nombreTipoPago,cod_chofer
+	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),s.`nro_correlativo`, s.`monto_final`, s.cod_salida_almacenes
 	from `salida_almacenes` s 
 	where s.`cod_tiposalida`=1001 
 	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
 	$sql=$sql." and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
-	
+	if(!empty($rptMarca)){
+	$sql=$sql." and s.cod_salida_almacenes in(SELECT sda.cod_salida_almacen FROM `salida_detalle_almacenes` sda 
+	inner join material_apoyo ma on (sda.cod_material=ma.codigo_material and ma.cod_marca in( $rptMarca))) ";
+	}
 if(!empty($rptTipoPago)){
 	$sql=$sql." and s.cod_tipopago  in( $rptTipoPago) ";
 	}
 $sql.=" order by s.fecha, s.hora_salida, s.nro_correlativo";
-// echo $sql;
+ echo $sql;
 
 $resp=mysqli_query($enlaceCon,$sql);
 
@@ -91,9 +97,7 @@ echo "<br><table align='center' class='texto' width='70%'>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Documento</th>
-<th>Tipo Pago</th>
 <th>Monto</th>
-<th>Responsable</th>
 <th>
 	<table width='100%'>
 	<tr>
@@ -108,7 +112,7 @@ echo "<br><table align='center' class='texto' width='70%'>
 </tr>";
 
 $totalVenta=0;
-
+$totalFactVentaX=0;
 while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
@@ -117,12 +121,6 @@ while($datos=mysqli_fetch_array($resp)){
 	$datosDoc=$datos[4]."-".$datos[5];
 	$montoVenta=$datos[6];
 	$codSalida=$datos[7];
-	$nombreTipoPago=$datos[8];
-	$cod_funcionario=$datos[9];
-	$sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
-$respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
-$datResponsable=mysqli_fetch_array($respResponsable);
-$nombreFuncionario=$datResponsable[0];
 	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
@@ -139,7 +137,10 @@ $nombreFuncionario=$datResponsable[0];
 	and m.cod_marca=mar.codigo
 	and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio') 
 	and	s.cod_salida_almacenes='$codSalida' ";
-
+	if(!empty($rptMarca)){
+		$sqlX=$sqlX." and m.cod_marca in ($rptMarca)";						
+	}
+	
 	$sqlX=$sqlX." group by m.`codigo_material` order by 2 desc;";
 	//echo $sqlX;
 	
@@ -152,7 +153,7 @@ $nombreFuncionario=$datResponsable[0];
 	while($datosX=mysqli_fetch_array($respX)){	
 		$codItem=$datosX[0];
 		$nombreItem=$datosX[1];
-		$montoVentaProd=$datosX[2];
+		$montoVenta=$datosX[2];
 		$cantidad=$datosX[3];
 		
 		$descuentoVenta=$datosX[4];
@@ -165,26 +166,27 @@ $nombreFuncionario=$datResponsable[0];
 		$codigo2=$datosX[10];
 		
 		if($descuentoVenta>0){
-			$porcentajeVentaProd=($montoVentaProd/$montoNota);
+			$porcentajeVentaProd=($montoVenta/$montoNota);
 			$descuentoAdiProducto=($descuentoVenta*$porcentajeVentaProd);
-			$montoVentaProd=$montoVentaProd-$descuentoAdiProducto;
+			$montoVenta=$montoVenta-$descuentoAdiProducto;
 		}
 		
-		$montoPtr=number_format($montoVentaProd,2,".",",");
+		$montoPtr=number_format($montoVenta,2,".",",");
 		$cantidadFormat=number_format($cantidad,0,".",",");
 		
-		$totalVentaX=$totalVentaX+$montoVentaProd;
-				
+		$totalVentaX=$totalVentaX+$montoVenta;
+		$totalFactVentaX=$totalFactVentaX+$montoVenta;
+		
 		$tablaDetalle.="<tr>
 		<td>$codItem $codigo2</td>
 		<td>$nombreMarca $nombreItem</td>
 		<td>$colorItem/$tallaItem</td>
 		<td>$cantidadFormat</td>
-		<td align='right'>$montoPtr</td>		
+		<td>$montoPtr</td>		
 		</tr>";
 	}
 	$totalPtr=number_format($totalVentaX,2,".",",");
-	if(($montoVenta-$totalVentaX)>0 || ($montoVenta-$totalVentaX)<0){
+	if($montoVenta-$totalVentaX>0 || $montoVenta-$totalVentaX<0){
 		$colorObs="#ff0000";
 	}else{
 		$colorObs="#ffffff";
@@ -193,8 +195,8 @@ $nombreFuncionario=$datResponsable[0];
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><strong>Total:</strong></td>
-		<td bgcolor='$colorObs' align='right'><strong>$totalPtr</strong></td>
+		<th>Total:</th>
+		<th bgcolor='$colorObs'>$totalPtr</th>
 	<tr></table>";
 
 	
@@ -203,53 +205,27 @@ $nombreFuncionario=$datResponsable[0];
 	<td>$nombreCliente</td>
 	<td>$razonSocial</td>
 	<td>$datosDoc</td>
-	<td>$nombreTipoPago</td>	
-	<td align='right'>$montoVentaFormat</td>
-		<td>$nombreFuncionario</td>
-	
+	<td>$montoVentaFormat</td>
 	<td>$tablaDetalle</td>
 	</tr>";
 }
 $totalVentaFormat=number_format($totalVenta,2,".",",");
-
-$sql2="select cod_tipopago, sum(s.`monto_final`)
-	from `salida_almacenes` s 
-	where s.`cod_tiposalida`=1001 
-	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
-	$sql2=$sql2." and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
-	
-if(!empty($rptTipoPago)){
-	$sql2=$sql2." and s.cod_tipopago  in( $rptTipoPago) ";
-	}
-$sql2.=" group by cod_tipopago order by cod_tipopago asc";
-// echo $sql2;
-
-$resp2=mysqli_query($enlaceCon,$sql2);
-while($datos2=mysqli_fetch_array($resp2)){	
-	$tipoPago=$datos2[0];
-	$sqlTipoPago2="select cod_tipopago, nombre_tipopago from tipos_pago where cod_tipopago=".$tipoPago;
-	$respTipoPago2=mysqli_query($enlaceCon,$sqlTipoPago2);
-	while($datTipoPago2=mysqli_fetch_array($respTipoPago2)){	
-		$nombreTipoPago2=$datTipoPago2[1];
-	}
-	$montoTipoPago=$datos2[1];
-	$montoTipoPagoFormat=number_format($montoTipoPago,2,".",",");
-	echo "<tr>
-	<td>-</td>
-	<td>-</td>
-	<td>-</td>
-	<td>-</td>
-	<td><strong>$nombreTipoPago2</strong></td>
-	<td align='right'><strong>$montoTipoPagoFormat</strong></td>
-</tr>";
-}
+$totalFactVentaXFormato=number_format($totalFactVentaX,2,".",",");
 echo "<tr>
 	<td>-</td>
 	<td>-</td>
 	<td>-</td>
 	<td>-</td>
-	<td><strong>Total Monto Venta(s)</strong></td>
-	<td align='right'><strong>$totalVentaFormat</strong></td>
+	<th>Total Marca(s)</th>
+	<th align='right'>$totalFactVentaXFormato</th>
+</tr>";
+echo "<tr>
+	<td>-</td>
+	<td>-</td>
+	<td>-</td>
+	<td>-</td>
+	<th>Total Monto Venta(s)</th>
+	<th align='right'>$totalVentaFormat</th>
 </tr>";
 echo "</table></br>";
 

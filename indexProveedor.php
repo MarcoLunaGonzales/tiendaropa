@@ -65,10 +65,10 @@ include("datosUsuario.php");
 		<div id="panel-menu">
 		<ul>
 
-			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>
-			<li><a href="navegador_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>			
+		<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>
+		<li><a href="navegador_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>			
 		<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
-		<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
+		<li><a href="rptOpVentasMarcasDet.php" target="contenedorPrincipal">Ventas x Marcas Detallado</a></li>
 		<li><a href="grupos/listaGrupos.php" target="contenedorPrincipal">Codigos de SubGrupos</a></li>
 
 
