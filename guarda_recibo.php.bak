@@ -38,7 +38,7 @@ mysqli_query($enlaceCon,$consulta);
 
 
 	<script language='Javascript'>
-		alert("Los datos fueron insertados correctamente.");
+
 		location.href="listaRecibos.php";
 	</script>	
     

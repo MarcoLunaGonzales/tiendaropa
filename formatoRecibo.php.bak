@@ -133,25 +133,27 @@ $pdf->SetXY(4,$y+3);		$pdf->Cell(68,0,"RECIBO NRO. ".$id_recibo, 0,0,"C");
 $pdf->SetFont('Arial','',8);
 $pdf->SetXY(4,$y+7);		$pdf->Cell(68,0,utf8_decode("(Sin Derecho a Crédito Fiscal)"),0,0,"C");
 $pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$y+11);		$pdf->Cell(68,0,utf8_decode("CLIENTE: ").utf8_decode($nombre_recibo),0,0,"C");
-$pdf->SetXY(4,$y+15);		$pdf->Cell(68,0,utf8_decode("Nro Contacto: ").utf8_decode($cel_recibo),0,0,"C");
-$pdf->SetXY(4,$y+19);		$pdf->Cell(68,0,utf8_decode("FECHA: ").$fecha_recibo_mostrar,0,0,"C");
+$pdf->SetXY(4,$y+11);		$pdf->Cell(68,0,utf8_decode("Cliente: ").utf8_decode($nombre_recibo),0,0,"C");
+$pdf->SetXY(4,$y+15);		$pdf->Cell(68,0,utf8_decode("Telf. Cliente: ").utf8_decode($cel_recibo),0,0,"C");
+$pdf->SetXY(4,$y+19);		$pdf->Cell(68,0,utf8_decode("Fecha: ").$fecha_recibo_mostrar,0,0,"C");
+$pdf->SetXY(4,$y+23);		$pdf->Cell(68,0,utf8_decode("Tipo Pago: ").$nombre_tipopago,0,0,"C");
 $pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$y+22);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetFont('Arial','',8);
-
-$pdf->SetXY(4,$y+26);		$pdf->MultiCell(68,3,utf8_decode($direccionTxt), 0,"C");
-$pdf->SetXY(4,$y+34);		$pdf->Cell(68,0,"Telefono:  ".$telefonoTxt,0,0,"C");
-$pdf->SetXY(4,$y+38);		$pdf->Cell(68,0,$ciudadTxt,0,0,"C");
-$pdf->SetXY(4,$y+42);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
-$pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$y+46);		$pdf->Cell(15,0,"DETALLE:",0,0,"L");
+$pdf->SetXY(4,$y+25);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
 $pdf->SetFont('Arial','',8);
 
-$pdf->SetXY(4,$y+50);		$pdf->MultiCell(68,3,utf8_decode($desc_recibo), 0,"L");
-$pdf->SetXY(4,$y+58);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(4,$y+30);		$pdf->MultiCell(68,3,utf8_decode($direccionTxt), 0,"C");
+$pdf->SetXY(4,$y+38);		$pdf->Cell(68,0,"Telefono:  ".$telefonoTxt,0,0,"C");
+$pdf->SetXY(4,$y+42);		$pdf->Cell(68,0,$ciudadTxt,0,0,"C");
+$pdf->SetXY(4,$y+46);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
 $pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$y+62);		$pdf->Cell(68,0,"Monto Recibido:".$monto_recibo,0,0,"R");
+$pdf->SetXY(4,$y+52);		$pdf->Cell(15,0,"DETALLE:",0,0,"L");
+$pdf->SetFont('Arial','',8);
+
+$pdf->SetXY(4,$y+56);		$pdf->MultiCell(68,3,utf8_decode($desc_recibo), 0,"L");
+$auxY=$pdf->GetY();
+$pdf->SetXY(4,$auxY+2);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetFont('Arial','B',8);
+$pdf->SetXY(4,$auxY+6);		$pdf->Cell(68,0,"Monto Recibido:".$monto_recibo,0,0,"R");
 $arrayDecimal=explode('.', $monto_recibo);
 if(count($arrayDecimal)>1){
 	list($montoEntero, $montoDecimal) = explode('.', $monto_recibo);
@@ -165,11 +167,11 @@ if($montoDecimal==""){
 $txtMonto=NumeroALetras::convertir($montoEntero);
 /////////////////////
 
-$pdf->SetXY(4,$y+66);		$pdf->MultiCell(68,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
+$pdf->SetXY(4,$auxY+10);		$pdf->MultiCell(68,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
 $pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$y+70);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
-$pdf->SetXY(4,$y+74);		$pdf->Cell(68,0,"Cajero(a): $usuReg",0,0,"C");
-$pdf->SetXY(4,$y+78);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
+$pdf->SetXY(4,$auxY+14);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
+$pdf->SetXY(4,$auxY+18);		$pdf->Cell(68,0,"Responsable: $usuReg",0,0,"C");
+$pdf->SetXY(4,$auxY+22);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
 
 	/*	
 	$pdf->SetXY(4,$y+$yyy);		$pdf->MultiCell(68,3,utf8_decode("($codInterno) $nombreMat"),"C");

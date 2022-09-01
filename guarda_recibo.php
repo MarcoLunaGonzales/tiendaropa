@@ -31,7 +31,7 @@ $fecha=date("Y-m-d");
 $consulta="insert into recibos (id_recibo,fecha_recibo,cod_ciudad,nombre_recibo,desc_recibo,
 monto_recibo,created_by,created_date,cel_recibo,recibo_anulado,cod_tipopago) 
 values(".$id_recibo.",'".$fecha."',".$global_agencia.",'".$nombre."','".$desc_recibo."',".$monto.",".$createdBy.",'".$createdDate."','".$nro_contacto."',0,".$tipoPago.")";
-echo $consulta;
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
 ?>
