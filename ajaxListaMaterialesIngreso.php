@@ -119,6 +119,9 @@ $cantAux1=mysqli_num_rows($respAux1);
 				}
 			}
 
+			$costoItem=round($costoItem);
+			$precio0=round($precio0);
+
 			echo "<tr>
 			<td>$codigo2 $codigoBarras</td>
 			<td align='left'>

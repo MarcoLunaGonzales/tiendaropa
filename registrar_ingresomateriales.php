@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("estilos.inc");
 require("funciones.php");
 ?>
@@ -108,9 +108,9 @@ function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioV
 }
 		
 function cambiaCosto(f, fila){
-		
+	console.log("ingresando cambiaCosto: "+f+" fila:"+fila);
 	var cantidad=document.getElementById('cantidad_unitaria'+fila).value;
-	 var precioFila=document.getElementById('precio'+fila).value;
+	var precioFila=document.getElementById('precio'+fila).value;
 
 	var ultimoCosto=document.getElementById('ultimoCosto'+fila).value;
 
@@ -123,11 +123,8 @@ function cambiaCosto(f, fila){
 	
 	if(document.getElementById('swCambiarPrecioVenta').value==1){
 	  	document.getElementById('precioVenta'+fila).value=precioFila; 
-	}
-	
-
-	
-	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]["+calculoCosto+"]";
+	}	
+	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]";
 	document.getElementById('divPrecioTotal'+fila).innerHTML=calculoPrecioTotal;
 	
 }
