@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.inc");
+require("conexionmysqli2.inc");
 require("estilos.inc");
 
 //recogemos variables

@@ -367,7 +367,7 @@ if($sql_inserta==1){
 						</script>";	
 				}else{
 					$mensaje="transacción Existosa :)";	
-					$url="location.href='formatoFacturaOnLine.php?codVenta=$codigo';";				
+					$url="location.href='formatoFactura.php?codVenta=$codigo';";				
 					
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
@@ -410,7 +410,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					   location.href='formatoFacturaOnLine.php?codVenta=$codigo'; 
+					   location.href='formatoFactura.php?codVenta=$codigo'; 
 					});
 					</script>";
 				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
@@ -422,7 +422,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					    location.href='formatoFacturaOnLine.php?codVenta=$codigo';
+					    location.href='formatoFactura.php?codVenta=$codigo';
 					});
 					</script>";
 				// echo "<script type='text/javascript' language='javascript'>
