@@ -92,6 +92,7 @@ function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioV
 	document.getElementById('material'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	document.getElementById('ultimoCosto'+numRegistro).value=costoItem;
+	document.getElementById('precio'+numRegistro).value=costoItem;
 	document.getElementById('precioVenta'+numRegistro).value=precioVenta;
 	document.getElementById('divUltimoCosto'+numRegistro).innerHTML="["+costoItem+"]";
 	document.getElementById('divPVenta'+numRegistro).innerHTML="["+precioVenta+"]";
@@ -170,6 +171,7 @@ function enviar_form(f)
 	}
 
 function pressEnter(e, f){
+	alert("hola");
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
 		document.getElementById('itemNombreMaterial').focus();

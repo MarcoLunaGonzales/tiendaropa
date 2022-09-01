@@ -168,6 +168,7 @@ function enviar_form(f)
 	}
 
 function pressEnter(e, f){
+	
 	tecla = (document.all) ? e.keyCode : e.which;
 	if (tecla==13){
 		document.getElementById('itemNombreMaterial').focus();

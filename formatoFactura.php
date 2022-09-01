@@ -145,7 +145,7 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 $sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
 $respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
 $datResponsable=mysqli_fetch_array($respResponsable);
-$nombreFuncionario=$datResponsable[0];//$nombreFuncionario=mysqli_result($respResponsable,0,0);
+$nombreFuncionario=$datResponsable[0];
 
 
 if($siat_codigotipoemision==2){
