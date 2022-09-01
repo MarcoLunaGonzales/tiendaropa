@@ -29,8 +29,8 @@ $global_agencia=$_COOKIE['global_agencia'];
 ?>
 <form id='guarda_recibo' action='guarda_recibo.php' method='post' name='form1' >
 <table border='0' class='textotit' align='center'><tr><th>Registro de Recibo</th></tr></table><br>
-<table border='0' class='texto' cellspacing='0' align='center'  style='border:#ccc 1px solid;'>
-<tr><th>Nro de Recibo</th><th>Fecha</th><th>Monto</th><th>Tipo Pago</th></tr>
+<table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">
+<tr><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Monto Recibido</th><th>Tipo Pago</th></tr>
 <tr>
 <?php
 $sql="select id_recibo from recibos where cod_ciudad=".$global_agencia." order by id_recibo desc";
@@ -69,7 +69,7 @@ else
 	</td>
 </tr>
 
-<tr><th colspan="2">A Nombre</th><th colspan="2">Nro de Contacto</th></tr>
+<tr><th colspan="2">Cliente</th><th colspan="2">Telefono Cliente</th></tr>
 <tr>
 <td align="left" colspan="2"><input type="text" class="texto" name="nombre" size="80"  id="nombre" required></td>
 <td align="left" colspan="2"><input type="text" class="texto" name="nro_contacto"  size="60" id="nro_contacto" required></td>
