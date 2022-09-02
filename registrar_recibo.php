@@ -16,7 +16,9 @@ require("funciones.php");
 function validar(f)
 {   f.submit();
 }
-
+function cancelar(f)
+{  location.href="listaRecibos.php";
+}
 	</script>
 <?php
 
@@ -85,7 +87,7 @@ else
 
 <div class="divBotones">
 <input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);"></center>
-<input type="button" class="boton2" value="Cancelar" onClick="location.href=listaRecibos.php"></center>
+<input type="button" class="boton2" value="Cancelar" onClick="cancelar(this.form);"></center>
 </div>
 </div>
 
