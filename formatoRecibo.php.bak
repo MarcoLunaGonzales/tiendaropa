@@ -16,7 +16,24 @@ $cod_ciudad=$_COOKIE["global_agencia"];
 
 
 $tamanoLargo=120+(1*3)-3;
+class PDF extends PDF_Rotate
+{
+	function Header()
+	{
+		/* Put the watermark */
+		$this->SetFont('Arial','B',50);
+		$this->SetTextColor(255,192,203);
+		$this->RotatedText(35,190,'Students Tutorial Invoice',45);
+	}
 
+	function RotatedText($x, $y, $txt, $angle)
+	{
+		/* Text rotated around its origin */
+		$this->Rotate($angle,$x,$y);
+		$this->Text($x,$y,$txt);
+		$this->Rotate(0);
+	}
+}
 $pdf=new FPDF('P','mm',array(76,$tamanoLargo));
 $pdf->SetMargins(0,0,0);
 $pdf->AddPage(); 
@@ -138,7 +155,7 @@ $pdf->SetXY(4,$y+15);		$pdf->Cell(68,0,utf8_decode("Telf. Cliente: ").utf8_decod
 $pdf->SetXY(4,$y+19);		$pdf->Cell(68,0,utf8_decode("Fecha: ").$fecha_recibo_mostrar,0,0,"C");
 $pdf->SetXY(4,$y+23);		$pdf->Cell(68,0,utf8_decode("Tipo Pago: ").$nombre_tipopago,0,0,"C");
 $pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$y+25);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(4,$y+26);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
 $pdf->SetFont('Arial','',8);
 
 $pdf->SetXY(4,$y+30);		$pdf->MultiCell(68,3,utf8_decode($direccionTxt), 0,"C");

@@ -50,7 +50,8 @@ function HiddenBuscar(){
 }
 		
 function funOk(codReg,funOkConfirm)
-{   $.get("programas/ingresos/frmConfirmarCodigoIngreso.php","codigo="+codReg, function(inf1) {
+{   
+	$.get("programas/recibos/frmConfirmarCodigoRecibo.php","codigo="+codReg, function(inf1) {
         dlgAC("#pnldlgAC","Codigo de confirmacion",inf1,function(){
             var cad1=$("input#idtxtcodigo").val();
             var cad2=$("input#idtxtclave").val();
@@ -72,45 +73,26 @@ function funOk(codReg,funOkConfirm)
     });
 }
 
-function funModif(codReg,funOkConfirm)
-{   $.get("programas/ingresos/frmModificarIngreso.php","codigo="+codReg, function(inf1) {
-        dlgAC("#pnldlgAC","Modificar Tipo de Ingreso y Proveedor",inf1,function(){
-            var cad1=$("select[id=combotipoingreso]").val();
-            var cad2=$("select[id=comboproveedor]").val();
-            if(cad1!="" && cad2!="") {
-                dlgEsp.setVisible(true);
-				//alert ("combotipoingreso="+cad1+"&comboproveedor="+cad2+"&codigo="+codReg);
-                $.get("programas/ingresos/guardarModifTipoProveIngreso.php","combotipoingreso="+cad1+"&comboproveedor="+cad2+"&codigo="+codReg, function(inf2) {
-                    dlgEsp.setVisible(false);
-                    funOkConfirm();
-                });
-            } else {
-                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Debe seleccionar datos.</div>",function(){},function(){});
-            }
-        },function(){});
-    });
-}
 
 
-function ajaxBuscarIngresos(f){
+function ajaxBuscarRecibos(f){
 	
-	var fechaIniBusqueda, fechaFinBusqueda, notaIngreso, verBusqueda, global_almacen, provBusqueda;
+	var fechaIniBusqueda, fechaFinBusqueda, cliente, detalle, global_almacen;
 	
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	
-	notaIngreso=document.getElementById("notaIngreso").value;
+	cliente=document.getElementById("cliente").value;
 	
-	global_almacen=document.getElementById("global_almacen").value;
-	
-	provBusqueda=document.getElementById("provBusqueda").value;
+	detalle=document.getElementById("detalle").value;
+
 	
 	var contenedor;
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxNavIngresos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&notaIngreso="+notaIngreso+"&global_almacen="+global_almacen+"&provBusqueda="+provBusqueda,true);
+	ajax.open("GET", "ajaxBuscarRecibos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&cliente="+cliente+"&detalle="+detalle,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -137,27 +119,27 @@ function editar_recibo(f)
 {   var i;
     var j=0;
     var j_cod_registro;
-    var fecha_registro;
+    //var fecha_registro;
     for(i=0;i<=f.length-1;i++)
     {   if(f.elements[i].type=='checkbox')
         {   if(f.elements[i].checked==true)
             {   j_cod_registro=f.elements[i].value;
-                fecha_registro=f.elements[i-1].value;
+               /// fecha_registro=f.elements[i-1].value;
                 j=j+1;
             }
         }
     }
     if(j>1)
-    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    {   alert('Debe seleccionar solamente un registro para editalo.');
     }
     else
     {   if(j==0)
-        {   alert('Debe seleccionar un registro para anularlo.');
+        {   alert('Debe seleccionar un registro para editarlo.');
         }
         else
-        {      //location.href='editar_ingresomateriales.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=1&valor_inicial=1';
+        {     
                 funOk(j_cod_registro,function(){
-                    location.href='editar_ingreso.php?codIngreso='+j_cod_registro+'';
+                    location.href='editar_recibo.php?idRecibo='+j_cod_registro+'';
                 });
         }
     }
@@ -166,12 +148,12 @@ function anular_recibo(f)
 {   var i;
     var j=0;
     var j_cod_registro;
-    var fecha_registro;
+    //var fecha_registro;
     for(i=0;i<=f.length-1;i++)
     {   if(f.elements[i].type=='checkbox')
         {   if(f.elements[i].checked==true)
             {   j_cod_registro=f.elements[i].value;
-                fecha_registro=f.elements[i-1].value;
+               // fecha_registro=f.elements[i-1].value;
                 j=j+1;
             }
         }
@@ -186,7 +168,7 @@ function anular_recibo(f)
         else
         {   //window.open('anular_ingreso.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=2','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=280,height=150');
                 funOk(j_cod_registro,function(){
-                    location.href='anular_ingreso.php?codigo_registro='+j_cod_registro+'';
+                    location.href='anular_recibo.php?idRecibo='+j_cod_registro+'';
                 });
         }
     }
@@ -199,9 +181,10 @@ function anular_recibo(f)
   $global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $global_agencia=$_COOKIE['global_agencia'];
-echo "<form method='post' action='navegador_ingresomateriales.php'>";
-echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
-echo "<input type='hidden' name='global_almacen' id='global_almacen' value='$global_almacen'>";
+
+echo "<form method='post' action='listaRecibos.php'>";
+
+
 
 $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
@@ -287,10 +270,22 @@ while ($dat = mysqli_fetch_array($resp)) {
 			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
 		}
 	////////////
+	  $color_fondo = "";
+	if ($recibo_anulado == 1) {
+        $color_fondo = "#ff8080";
+        
+    }
 
 ?>	
-   <tr>
-	<td><input type="checkbox" name="id_recibo" value="$id_recibo"></td>
+   <tr style="background-color: <?=$color_fondo;?>;">
+	<td><?php 
+	if ($recibo_anulado == 0) {
+	?>	
+		<input type="checkbox" name="id_recibo" id="id_recibo" value="<?=$id_recibo;?>">
+	<?php 
+	}
+	?>	
+	</td>
 	<td><?=$id_recibo;?></td>
 	<td><?=$fecha_recibo_mostrar;?></td>
 	<td><?=$nombre_recibo;?></td>
@@ -320,7 +315,7 @@ echo "</form>";
 
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
-		<h2 align='center' class='texto'>Buscar Ingresos</h2>
+		<h2 align='center' class='texto'>Buscar Recibos</h2>
 		<table align='center' class='texto'>
 			<tr>
 				<td>Fecha Ini(dd/mm/aaaa)</td>
@@ -335,34 +330,20 @@ echo "</form>";
 				</td>
 			</tr>
 			<tr>
-				<td>Nota de Ingreso</td>
+				<td>Nombre Cliente</td>
 				<td>
-				<input type='text' name='notaIngreso' id="notaIngreso" class='texto'>
+				<input type='text' name='cliente' id="cliente" class='texto'>
 				</td>
 			</tr>			
-			<tr>
-				<td>Proveedor:</td>
+						<tr>
+				<td>Detalle</td>
 				<td>
-					<select name="ProvBusqueda" class="texto" id="provBusqueda">
-						<option value="0">Todos</option>
-					<?php
-						$sqlProv="select cod_proveedor, nombre_proveedor from proveedores order by 2";
-						$respProv=mysqli_query($enlaceCon,$sqlProv);
-						while($datProv=mysqli_fetch_array($respProv)){
-							$codProvBus=$datProv[0];
-							$nombreProvBus=$datProv[1];
-					?>
-							<option value="<?php echo $codProvBus;?>"><?php echo $nombreProvBus;?></option>
-					<?php
-						}
-					?>
-					</select>
-				
+				<input type='text' name='detalle' id="detalle" class='texto'>
 				</td>
-			</tr>			
+			</tr>		
 		</table>	
 		<center><br>
-			<input type='button' value='Buscar' class='boton' onClick="ajaxBuscarIngresos(this.form)">
+			<input type='button' value='Buscar' class='boton' onClick="ajaxBuscarRecibos(this.form)">
 			<input type='button' value='Cancelar' class='boton2' onClick="HiddenBuscar();">
 			
 		</center>

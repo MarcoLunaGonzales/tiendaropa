@@ -11,7 +11,7 @@ $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
 $respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
 $cantFuncProv=mysqli_num_rows($respFuncProv);
-
+$global_agencia=$_COOKIE['global_agencia'];
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=($fecha_ini);
@@ -252,6 +252,143 @@ echo "<tr>
 	<td align='right'><strong>$totalVentaFormat</strong></td>
 </tr>";
 echo "</table></br>";
+?>
+<br><table align='center' class='textomediano' width='70%'>
+<tr><th colspan='7'>DETALLES RECIBO</th></tr>
+<tr>
+<th>Fecha</th>
+<th>Cliente</th>
+<th>Observaciones</th>
+<th>TipoPago</th>
+<th>Documento</th>
+<th>Monto [Bs]</th>
+</tr>
+<?php
+$consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
+r.nombre_recibo,r.desc_recibo,r.monto_recibo,
+r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
+from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
+inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
+where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+$consulta = $consulta." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+if(!empty($rptTipoPago)){
+	$consulta=$consulta." and r.cod_tipopago  in( $rptTipoPago) ";
+	}
+$consulta=$consulta." order by r.id_recibo DESC,r.cod_ciudad desc ";
+
+$resp = mysqli_query($enlaceCon,$consulta);
+$totalRecibo=0;
+while ($dat = mysqli_fetch_array($resp)) {
+	$id_recibo= $dat['id_recibo'];
+	$fecha_recibo= $dat['fecha_recibo'];
+	$vector_fecha_recibo=explode("-",$fecha_recibo);
+	$fecha_recibo_mostrar=$vector_fecha_recibo[2]."/".$vector_fecha_recibo[1]."/".$vector_fecha_recibo[0];
+	$cod_ciudad= $dat['cod_ciudad'];
+	$descripcion= $dat['descripcion'];
+	$nombre_recibo= $dat['nombre_recibo'];
+	$desc_recibo= $dat['desc_recibo'];
+	$monto_recibo= $dat['monto_recibo'];
+	$created_by= $dat['created_by'];
+	$modified_by= $dat['modified_by'];
+	$created_date= $dat['created_date'];
+	$modified_date= $dat['modified_date'];
+	$cel_recibo = $dat['cel_recibo'];
+	$recibo_anulado= $dat['recibo_anulado'];
+	$cod_tipopago= $dat['cod_tipopago'];
+	$nombre_tipopago= $dat['nombre_tipopago'];
+	$created_date_mostrar="";
+	$totalRecibo=$totalRecibo+$monto_recibo;
+	// formatoFechaHora
+	if(!empty($created_date)){
+		$vector_created_date = explode(" ",$created_date);
+		$fechaReg=explode("-",$vector_created_date[0]);
+		$created_date_mostrar = $fechaReg[2]."/".$fechaReg[1]."/".$fechaReg[0]." ".$vector_created_date[1];
+	}
+	// fin formatoFechaHora
+	$modified_date= $dat['modified_date'];
+	$cel_recibo = $dat['cel_recibo'];
+	$modified_date_mostrar="";
+	// formatoFechaHora
+	if(!empty($modified_date)){
+		$vector_modified_date = explode(" ",$modified_date);
+		$fechaEdit=explode("-",$vector_modified_date[0]);
+		$modified_date_mostrar = $fechaEdit[2]."/".$fechaEdit[1]."/".$fechaEdit[0]." ".$vector_modified_date[1];
+	}
+	// fin formatoFechaHora
+	
+	/////	
+		$sqlRegUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$created_by;
+		$respRegUsu=mysqli_query($enlaceCon,$sqlRegUsu);
+		$usuReg =" ";
+		while($datRegUsu=mysqli_fetch_array($respRegUsu)){
+			$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
+		}
+	//////
+		$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
+		$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
+		$usuMod ="";
+		while($datModUsu=mysqli_fetch_array($respModUsu)){
+			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
+		}
+	?>
+	<td><?=$fecha_recibo_mostrar;?></td>
+	
+	
+	<td><?=$nombre_recibo;?></td>
+	<td><?=$desc_recibo;?></td>
+	<td><?=$nombre_tipopago;?></td>
+	<td>REC-<?=$id_recibo;?></td>
+	
+	
+	<td align='right'><?=$monto_recibo;?></td>
+	</tr>
+<?php
+}
+$totMontoTipopago=0;
+$sql2="select r.cod_tipopago,sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+$sql2 = $sql2." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+if(!empty($rptTipoPago)){
+	$sql2=$sql2." and r.cod_tipopago  in( $rptTipoPago) ";
+	}
+$sql2 = $sql2."group by r.cod_tipopago order by r.cod_tipopago asc";
+
+$resp2 = mysqli_query($enlaceCon,$sql2);
+while ($dat2 = mysqli_fetch_array($resp2)) {
+	$tipopago= $dat2[0];
+	$totMontoTipopago= $dat2[1];
+	$sql3=" select nombre_tipopago from tipos_pago where cod_tipopago=".$tipopago;
+	
+	$resp3 = mysqli_query($enlaceCon,$sql3);	
+	while ($dat3 = mysqli_fetch_array($resp3)) {
+		$descTipopago=$dat3[0];
+	}
+	$totMontoTipopagoF=number_format($totMontoTipopago,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	
+	<td align="right"><strong><?=$descTipopago;?></strong></td>
+	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
+<tr>
+
+<?php
+}
+$totalReciboF=number_format($totalRecibo,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	
+	<td align="right"><strong>Total Recibos:</strong></td>
+	<td align="right"><strong><?=$totalReciboF;?></strong></td>
+<tr>
+</table>
+<?php 
 
 
 include("imprimirInc.php");
