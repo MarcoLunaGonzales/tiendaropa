@@ -2,6 +2,8 @@
 $estilosVenta=0; //para no ejecutar las librerias js css
 
 require("conexionmysqli.php");
+require("funciones.php");
+
 $usuario = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
 $contrasena = str_replace("'", "''", $contrasena);
@@ -43,41 +45,51 @@ if ($num_filas != 0) {
 	setcookie("global_almacen",$global_almacen);
 	setcookie("globalGestion", $globalGestion);
 	setcookie("globalTipoFuncionario", $cod_tipofuncionario);
-	if($cod_tipofuncionario==1){
-		// funcionario Interno
+
+	//VARIABLE PARA EL CLIENTE KIDSPLACE, ALTAR, ETC. -> 1 kidsplace 2 altar
+	$idClienteConfiguracion=obtenerValorConfiguracion($enlaceCon,0);
+
+
+	if($idClienteConfiguracion==1){
 		if($cod_cargo==1000 || $cod_cargo==1001 || $cod_cargo==1002){
-			header("location:indexAlmacenReg.php");
+			header("location:indexAlmacenRegKP.php");
 		}
 		if($cod_cargo==1016 || $cod_cargo==1017){
-			header("location:indexAlmacenVentas.php");
+			header("location:indexAlmacenVentasKP.php");
 		}
-	
-		if($cod_cargo==1000||$cod_cargo==1001){
-			setcookie("global_admin_cargo", 1);
-		}else{
-			setcookie("global_admin_cargo", 0);
-		}
-		
-    }
-	if($cod_tipofuncionario==2){
-		   // funcionario Externo
-		$sqlFunProv="select cod_proveedor from funcionarios_proveedores where codigo_funcionario=".$usuario;
-		//echo $sqlFunProv;
-		$respFunProv=mysqli_query($enlaceCon,$sqlFunProv);
-		$numProv=mysqli_num_rows($respFunProv);
-		//echo $numProv;
-		if($numProv>0){
-			header("location:indexProveedor.php");
-		}else{
-			 echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
-        <form action='problemas_ingreso.php' method='post' name='formulario'>
-        <h1>Usted es un Usuario de Tipo Externo y debe estar vinculado a un Proveedor, por favor consulte con el Administrador.</h1>
-        </form>";
+	}else{  //POR AQUI INGRESA A ALTAR Y A OTROS
+		if($cod_tipofuncionario==1){
+			// funcionario Interno
+			if($cod_cargo==1000 || $cod_cargo==1001 || $cod_cargo==1002){
+				header("location:indexAlmacenReg.php");
+			}
+			if($cod_cargo==1016 || $cod_cargo==1017){
+				header("location:indexAlmacenVentas.php");
+			}
+	    }
+		if($cod_tipofuncionario==2){
+			   // funcionario Externo
+			$sqlFunProv="select cod_proveedor from funcionarios_proveedores where codigo_funcionario=".$usuario;
+			//echo $sqlFunProv;
+			$respFunProv=mysqli_query($enlaceCon,$sqlFunProv);
+			$numProv=mysqli_num_rows($respFunProv);
+			//echo $numProv;
+			if($numProv>0){
+				header("location:indexProveedor.php");
+			}else{
+				 echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
+	        <form action='problemas_ingreso.php' method='post' name='formulario'>
+	        <h1>Usted es un Usuario de Tipo Externo y debe estar vinculado a un Proveedor, por favor consulte con el Administrador.</h1>
+	        </form>";
+			}
 		}
 	}
-	
 		
-	
+	if($cod_cargo==1000||$cod_cargo==1001){
+		setcookie("global_admin_cargo", 1);
+	}else{
+		setcookie("global_admin_cargo", 0);
+	}
 
 } else {
     echo "<link href='stilos.css' rel='stylesheet' type='text/css'>
