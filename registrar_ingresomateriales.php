@@ -221,7 +221,7 @@ if($fecha=="")
 echo "<form id='guarda_ingresomateriales' action='guarda_ingresomateriales.php' method='post' name='form1' enctype='multipart/form-data'>";
 echo "<table border='0' class='textotit' align='center'><tr><th>Registrar Ingreso de Materiales</th></tr></table><br>";
 echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%' style='border:#ccc 1px solid;'>";
-echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura</th></tr>";
+echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura o Nota de Ingreso</th></tr>";
 echo "<tr>";
 $sql="select nro_correlativo from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
 $resp=mysqli_query($enlaceCon,$sql);

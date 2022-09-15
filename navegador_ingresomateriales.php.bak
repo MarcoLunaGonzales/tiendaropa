@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 ?>
@@ -338,7 +338,7 @@ echo "</form>";
 				</td>
 			</tr>
 			<tr>
-				<td>Nota de Ingreso</td>
+				<td>Factura o Nota de Ingreso</td>
 				<td>
 				<input type='text' name='notaIngreso' id="notaIngreso" class='texto'>
 				</td>

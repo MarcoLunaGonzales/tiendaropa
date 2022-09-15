@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexionmysqli.php');
+require('conexionmysqli.inc');
 require('funcion_nombres.php');
 require('funciones.php');
 
@@ -12,6 +12,7 @@ $variableAdmin=$_GET["variableAdmin"];
 if($variableAdmin!=1){
 	$variableAdmin=0;
 }
+$global_agencia=$_COOKIE['global_agencia'];
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=$fecha_ini;
@@ -49,10 +50,11 @@ $sql="select s.`fecha`,
 	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),
 	s.`nro_correlativo`, s.`monto_final`, s.cod_tipopago, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago), 
 	s.hora_salida
-	from `salida_almacenes` s where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
+	from `salida_almacenes` s 
+	where s.`cod_tiposalida`=1001 and s.salida_anulada=0 and
 	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')
 	and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_iniconsulta'";
-
+ 
 if($variableAdmin==1){
 	$sql.=" and s.cod_tipo_doc in (1,2,3)";
 }else{
@@ -63,7 +65,7 @@ $sql.=" order by s.fecha, s.hora_salida";
 $resp=mysqli_query($enlaceCon,$sql);
 
 echo "<br><table align='center' class='textomediano' width='70%'>
-<tr><th colspan='7'>Detalle de Ingresos</th></tr>
+<tr><th colspan='7'>Detalle de Ventas</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Cliente</th>
@@ -75,8 +77,7 @@ echo "<br><table align='center' class='textomediano' width='70%'>
 </tr>";
 
 $totalVenta=0;
-$totalEfectivo=0;
-$totalTarjeta=0;
+
 while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
@@ -91,14 +92,7 @@ while($datos=mysqli_fetch_array($resp)){
 	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
-	if($codTipoPago==1){
-		$totalEfectivo+=$montoVenta;
-	}else{
-		$totalTarjeta+=$montoVenta;
-	}
-	$totalEfectivoF=number_format($totalEfectivo,2,".",",");
-	$totalTarjetaF=number_format($totalTarjeta,2,".",",");
-	
+
 	echo "<tr>
 	<td>$fechaVenta $horaVenta</td>
 	<td>$nombreCliente</td>
@@ -109,38 +103,262 @@ while($datos=mysqli_fetch_array($resp)){
 	<td align='right'>$montoVentaFormat</td>
 	</tr>";
 }
+
+
 $totalVentaFormat=number_format($totalVenta,2,".",",");
+
+$sql2=" select  s.cod_tipopago, sum(s.monto_final) from salida_almacenes s ";
+$sql2.=" where s.cod_tiposalida=1001 and s.salida_anulada=0  ";
+$sql2.=" and s.cod_almacen in (select a.cod_almacen from almacenes a where a.cod_ciudad='".$rpt_territorio."')";
+$sql2.=" and s.fecha BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+if($variableAdmin==1){
+	$sql2.=" and s.cod_tipo_doc in (1,2,3)";
+}else{
+	$sql2.=" and s.cod_tipo_doc in (1)";
+}
+$sql2.=" group by s.cod_tipopago order by s.cod_tipopago asc";
+
+$resp2 = mysqli_query($enlaceCon,$sql2);
+while ($dat2 = mysqli_fetch_array($resp2)) {
+	$tipopago= $dat2[0];
+	$totMontoTipopago= $dat2[1];
+	$sql3=" select nombre_tipopago from tipos_pago where cod_tipopago=".$tipopago;
+	
+	$resp3 = mysqli_query($enlaceCon,$sql3);	
+	while ($dat3 = mysqli_fetch_array($resp3)) {
+		$descTipopago=$dat3[0];
+	}
+	$totMontoTipopagoF=number_format($totMontoTipopago,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td align="right"><strong><?=$descTipopago;?></strong></td>
+	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
+<tr>
+
+<?php
+}
+?>
+<?php
 echo "<tr>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
-	<th>Total Efectivo:</th>
-	<th align='right'>$totalEfectivoF</th>
-<tr>";
-echo "<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<th>Total Tarjeta Deb/Cred:</th>
-	<th align='right'>$totalTarjetaF</th>
-<tr>";
-echo "<tr>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<td>&nbsp;</td>
-	<th>Total Ingresos:</th>
-	<th align='right'>$totalVentaFormat</th>
+	<td align='right'><strong>Total Ventas</strong></td>
+	<td align='right'><strong>$totalVentaFormat</strong></td>
 <tr>";
 echo "</table></br>";
+?>
+<br><table align='center' class='textomediano' width='70%'>
+<tr><th colspan='7'>Detalle de Recibos</th></tr>
+<tr>
+<th>Fecha</th>
+<th>Cliente</th>
+<th>Observaciones</th>
+<th>TipoPago</th>
+<th>Documento</th>
+<th>Monto [Bs]</th>
+</tr>
+<?php
+$consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
+r.nombre_recibo,r.desc_recibo,r.monto_recibo,
+r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
+from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
+inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
+where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+$consulta = $consulta." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+$consulta=$consulta." order by r.id_recibo DESC,r.cod_ciudad desc ";
+
+$resp = mysqli_query($enlaceCon,$consulta);
+$totalRecibo=0;
+while ($dat = mysqli_fetch_array($resp)) {
+	$id_recibo= $dat['id_recibo'];
+	$fecha_recibo= $dat['fecha_recibo'];
+	$vector_fecha_recibo=explode("-",$fecha_recibo);
+	$fecha_recibo_mostrar=$vector_fecha_recibo[2]."/".$vector_fecha_recibo[1]."/".$vector_fecha_recibo[0];
+	$cod_ciudad= $dat['cod_ciudad'];
+	$descripcion= $dat['descripcion'];
+	$nombre_recibo= $dat['nombre_recibo'];
+	$desc_recibo= $dat['desc_recibo'];
+	$monto_recibo= $dat['monto_recibo'];
+	$created_by= $dat['created_by'];
+	$modified_by= $dat['modified_by'];
+	$created_date= $dat['created_date'];
+	$modified_date= $dat['modified_date'];
+	$cel_recibo = $dat['cel_recibo'];
+	$recibo_anulado= $dat['recibo_anulado'];
+	$cod_tipopago= $dat['cod_tipopago'];
+	$nombre_tipopago= $dat['nombre_tipopago'];
+	$created_date_mostrar="";
+	$totalRecibo=$totalRecibo+$monto_recibo;
+	// formatoFechaHora
+	if(!empty($created_date)){
+		$vector_created_date = explode(" ",$created_date);
+		$fechaReg=explode("-",$vector_created_date[0]);
+		$created_date_mostrar = $fechaReg[2]."/".$fechaReg[1]."/".$fechaReg[0]." ".$vector_created_date[1];
+	}
+	// fin formatoFechaHora
+	$modified_date= $dat['modified_date'];
+	$cel_recibo = $dat['cel_recibo'];
+	$modified_date_mostrar="";
+	// formatoFechaHora
+	if(!empty($modified_date)){
+		$vector_modified_date = explode(" ",$modified_date);
+		$fechaEdit=explode("-",$vector_modified_date[0]);
+		$modified_date_mostrar = $fechaEdit[2]."/".$fechaEdit[1]."/".$fechaEdit[0]." ".$vector_modified_date[1];
+	}
+	// fin formatoFechaHora
+	
+	/////	
+		$sqlRegUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$created_by;
+		$respRegUsu=mysqli_query($enlaceCon,$sqlRegUsu);
+		$usuReg =" ";
+		while($datRegUsu=mysqli_fetch_array($respRegUsu)){
+			$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
+		}
+	//////
+		$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
+		$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
+		$usuMod ="";
+		while($datModUsu=mysqli_fetch_array($respModUsu)){
+			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
+		}
+	?>
+	<td><?=$fecha_recibo_mostrar;?></td>
+	
+	
+	<td><?=$nombre_recibo;?></td>
+	<td><?=$desc_recibo;?></td>
+	<td><?=$nombre_tipopago;?></td>
+	<td>REC-<?=$id_recibo;?></td>
+	
+	
+	<td align='right'><?=$monto_recibo;?></td>
+	</tr>
+<?php
+}
+$totMontoTipopago=0;
+$sql2="select r.cod_tipopago,sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+$sql2 = $sql2." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+$sql2 = $sql2."group by r.cod_tipopago order by r.cod_tipopago asc";
+
+$resp2 = mysqli_query($enlaceCon,$sql2);
+while ($dat2 = mysqli_fetch_array($resp2)) {
+	$tipopago= $dat2[0];
+	$totMontoTipopago= $dat2[1];
+	$sql3=" select nombre_tipopago from tipos_pago where cod_tipopago=".$tipopago;
+	
+	$resp3 = mysqli_query($enlaceCon,$sql3);	
+	while ($dat3 = mysqli_fetch_array($resp3)) {
+		$descTipopago=$dat3[0];
+	}
+	$totMontoTipopagoF=number_format($totMontoTipopago,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	
+	<td align="right"><strong><?=$descTipopago;?></strong></td>
+	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
+<tr>
+
+<?php
+}
+$totalReciboF=number_format($totalRecibo,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	
+	<td align="right"><strong>Total Recibos:</strong></td>
+	<td align="right"><strong><?=$totalReciboF;?></strong></td>
+<tr>
+</table>
 
 
+<table align='center' class='textomediano' width='70%'>
+<tr><th colspan="4">TOTALES DE VENTAS Y RECIBOS POR TIPO DE PAGO</th></tr>
+<tr><th>&nbsp;</th><th>&nbsp;</th>
+	<th>Tipo Pago</th><th>Monto [Bs]</th></tr>";
+<?php
 
+$totalIngresos=0;
+$sql5=" select cod_tipopago, nombre_tipopago from tipos_pago tp where estado=1 order by cod_tipopago asc";
+$resp5 = mysqli_query($enlaceCon,$sql5);
+$totalMontoxTipoPago=0;
+$totalMontoxTipoPagoEfectivo=0;
+while ($dat5 = mysqli_fetch_array($resp5)) {
+	$totMontoRecxTipoPago=0;
+	$cod_tipopago=$dat5['cod_tipopago'];
+	$nombre_tipopago=$dat5['nombre_tipopago'];
+	$sql6="select sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+	$sql6 = $sql6." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."' and r.cod_tipopago=".$cod_tipopago;
+	//echo $sql6;
+	$resp6 = mysqli_query($enlaceCon,$sql6);
+	
+	while ($dat6 = mysqli_fetch_array($resp6)) {
+		$totMontoRecxTipoPago=$dat6[0];
+	}
+
+	$totMontoVentasxTipoPago=0;
+	
+	$sql7=" select  sum(s.monto_final) from salida_almacenes s ";
+	$sql7.=" where s.cod_tiposalida=1001 and s.salida_anulada=0  ";
+	$sql7.=" and s.cod_almacen in (select a.cod_almacen from almacenes a where a.cod_ciudad='".$rpt_territorio."')";
+	$sql7.=" and s.fecha BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."' and s.cod_tipopago=".$cod_tipopago;
+	if($variableAdmin==1){
+		$sql7.=" and s.cod_tipo_doc in (1,2,3)";
+	}else{
+		$sql7.=" and s.cod_tipo_doc in (1)";
+	}
+	//echo $sql7;
+	$resp7 = mysqli_query($enlaceCon,$sql7);
+	while ($dat7 = mysqli_fetch_array($resp7)) {
+		$totMontoVentasxTipoPago=$dat7[0];
+	}
+	$totalMontoxTipoPago=$totMontoRecxTipoPago+$totMontoVentasxTipoPago;
+	$totalMontoxTipoPagoF=number_format($totalMontoxTipoPago,2,".",",");
+	// Asuminedo que el Tipo de Pago 1 es Efectivo
+	if($cod_tipopago==1){
+		
+		$totalMontoxTipoPagoEfectivo= $totMontoRecxTipoPago+$totMontoVentasxTipoPago;
+	}
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+
+	
+	<td align="right"><?=$nombre_tipopago;?></td>
+	<td align="right"><?=$totalMontoxTipoPagoF;?></td>
+</tr>
+
+<?php
+ $totalIngresos=$totalIngresos+$totalMontoxTipoPago;
+}
+$totalIngresosF=number_format($totalIngresos,2,".",",");
+?>
+<tr>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+
+	
+	<td align="right"><strong>TOTAL INGRESOS</strong></td>
+	<td align="right"><strong><?=$totalIngresosF;?></strong></td>
+</tr>
+
+</table>
+<?php
 
 echo "<br><center><table class='textomediano'>";
 echo "<tr><th colspan='4'>Detalle de Gastos</th></tr>";
@@ -179,11 +397,12 @@ echo "<tr>
 <th align='right'>$totalGastos</th>
 </tr>";
 echo "</table></center><br>";
-
-$saldoCajaChica=$montoCajaChica+$totalVenta-$totalGastos;
+?>
+<?php
+$saldoCajaChica=$montoCajaChica+$totalVenta+$totalRecibo-$totalGastos;
 $saldoCajaChicaF=number_format($saldoCajaChica,2,".",",");
 
-$saldoCajaChica2=$montoCajaChica+$totalEfectivo-$totalGastos;
+$saldoCajaChica2=$montoCajaChica+$totalMontoxTipoPagoEfectivo-$totalGastos;
 $saldoCajaChica2F=number_format($saldoCajaChica2,2,".",",");
 
 
