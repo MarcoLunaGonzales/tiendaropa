@@ -17,7 +17,7 @@ function validar(f)
 {   f.submit();
 }
 function cancelar(f)
-{   f.submit();
+{  location.href="listaRecibos.php";
 }
 	</script>
 <?php

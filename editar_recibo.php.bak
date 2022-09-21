@@ -77,7 +77,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <?php	$codTipopago=$datTipoPago[0];
 		$nombreTipopago=$datTipoPago[1];
 	?>
-		<option value="$codTipopago"  <?php if($codTipopago==$cod_tipopago){echo "selected";}?>><?=$nombreTipopago;?></option>
+		<option value="<?=$codTipopago;?>"  <?php if($codTipopago==$cod_tipopago){echo "selected";}?>><?=$nombreTipopago;?></option>
 		
 <?php	}?>
 	</select>

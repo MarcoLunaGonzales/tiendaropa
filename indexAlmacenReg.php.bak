@@ -129,7 +129,7 @@ include("datosUsuario.php");
 				</ul>	
 			</li-->
 						<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
-						<li><a href="listaRecibos.php" target="_blank">Recibos</a></li>
+						<li><a href="listaRecibos.php" target="contenedorPrincipal">Recibos</a></li>
 
 			<li><span>Reportes</span>
 				<ul>

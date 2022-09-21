@@ -270,11 +270,11 @@ r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo
 from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
 where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
-$consulta = $consulta." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+$consulta = $consulta." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_finconsulta."'";
 if(!empty($rptTipoPago)){
 	$consulta=$consulta." and r.cod_tipopago  in( $rptTipoPago) ";
 	}
-$consulta=$consulta." order by r.id_recibo DESC,r.cod_ciudad desc ";
+$consulta=$consulta." order by r.id_recibo asc,r.cod_ciudad desc ";
 
 $resp = mysqli_query($enlaceCon,$consulta);
 $totalRecibo=0;
@@ -346,7 +346,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 }
 $totMontoTipopago=0;
 $sql2="select r.cod_tipopago,sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
-$sql2 = $sql2." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+$sql2 = $sql2." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_finconsulta."'";
 if(!empty($rptTipoPago)){
 	$sql2=$sql2." and r.cod_tipopago  in( $rptTipoPago) ";
 	}
