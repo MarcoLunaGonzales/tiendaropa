@@ -14,7 +14,7 @@ require("funciones.php");
 <script>
 
 function validar(f)
-{   f.submit();
+{    return(true);
 }
 function cancelar(f)
 {  location.href="listaRecibos.php";
