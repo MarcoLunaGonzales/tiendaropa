@@ -45,7 +45,7 @@ if(!empty($detalle)){
 	$consulta=$consulta." and r.desc_recibo like '%".$detalle."%' ";
 } 
 	$consulta=$consulta." order by r.id_recibo DESC,r.cod_ciudad desc ";
-echo "consulta=".$consulta;
+
 $resp = mysqli_query($enlaceCon,$consulta);
 while ($dat = mysqli_fetch_array($resp)) {
 	$id_recibo= $dat['id_recibo'];

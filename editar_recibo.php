@@ -54,7 +54,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 	}
 
 ?>
-<form id='guarda_recibo' action='guarda_editarRecibo.php' method='post' name='form1' >
+<form id="guarda_editarRecibo" action="guarda_editarRecibo.php" method="post" name="form1" >
 <input type="hidden" name="idReciboEditar" id="idReciboEditar" value="<?=$idReciboEditar;?>">
 <table border='0' class='textotit' align='center'><tr><th>Edicion de Recibo</th></tr></table><br>
 <table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">

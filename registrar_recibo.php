@@ -52,7 +52,7 @@ else
 <input type="text" align="left" disabled="true" class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
 <img id="imagenFecha" src="imagenes/fecha.bmp">
 </td>
-<td align="left"><input type="number" class="texto" name="monto"  id="monto" required>
+<td align="left"><input type="number" class="texto" name="monto"  id="monto" required></td>
 <td>
 	<select name="tipoPago" id="tipoPago" class="texto"  >
 <?php	

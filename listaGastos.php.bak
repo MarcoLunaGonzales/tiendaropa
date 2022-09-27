@@ -51,13 +51,13 @@ function HiddenBuscar(){
 		
 function funOk(codReg,funOkConfirm)
 {   
-	$.get("programas/recibos/frmConfirmarCodigoRecibo.php","codigo="+codReg, function(inf1) {
+	$.get("programas/gastos/frmConfirmarCodigoGasto.php","codigo="+codReg, function(inf1) {
         dlgAC("#pnldlgAC","Codigo de confirmacion",inf1,function(){
             var cad1=$("input#idtxtcodigo").val();
             var cad2=$("input#idtxtclave").val();
             if(cad1!="" && cad2!="") {
                 dlgEsp.setVisible(true);
-                $.get("programas/ingresos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
+                $.get("programas/gastos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
                     inf2=xtrim(inf2);
                     dlgEsp.setVisible(false);
                     if(inf2=="" || inf2=="OK") {
@@ -75,15 +75,18 @@ function funOk(codReg,funOkConfirm)
 
 
 
-function ajaxBuscarRecibos(f){
+function ajaxBuscarGastos(f){
 	
-	var fechaIniBusqueda, fechaFinBusqueda, cliente, detalle, global_almacen;
+	var fechaIniBusqueda, fechaFinBusqueda, tipoGasto, grupoGasto,tipoPago, proveedor, detalle, global_almacen;
 	
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	
-	cliente=document.getElementById("cliente").value;
+	tipoGasto=document.getElementById("tipoGasto").value;
+	grupoGasto=document.getElementById("grupoGasto").value;
+	tipoPago=document.getElementById("tipoPago").value;
+	proveedor=document.getElementById("proveedor").value;
 	
 	detalle=document.getElementById("detalle").value;
 
@@ -92,7 +95,7 @@ function ajaxBuscarRecibos(f){
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxBuscarRecibos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&cliente="+cliente+"&detalle="+detalle,true);
+	ajax.open("GET", "ajaxBuscarGastos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&tipoGasto="+tipoGasto+"&grupoGasto="+grupoGasto+"&tipoPago="+tipoPago+"&proveedor="+proveedor+"&detalle="+detalle,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -105,7 +108,7 @@ function ajaxBuscarRecibos(f){
 
 
 function registrar_gasto()
-{   location.href='registrar_recibo.php';
+{   location.href='registrar_gasto.php';
 }
 
 
@@ -134,7 +137,7 @@ function editar_gasto(f)
         else
         {     
                 funOk(j_cod_registro,function(){
-                    location.href='editar_recibo.php?idRecibo='+j_cod_registro+'';
+                    location.href='editar_gasto.php?idGasto='+j_cod_registro+'';
                 });
         }
     }
@@ -163,7 +166,7 @@ function anular_gasto(f)
         else
         {   //window.open('anular_ingreso.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=2','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=280,height=150');
                 funOk(j_cod_registro,function(){
-                    location.href='anular_recibo.php?idRecibo='+j_cod_registro+'';
+                    location.href='anular_gasto.php?idGasto='+j_cod_registro+'';
                 });
         }
     }
@@ -174,20 +177,10 @@ function anular_gasto(f)
 <form method='post' action='listaGastos.php'>
 
 <?php
-  $global_usuario=$_COOKIE['global_usuario'];
+
+$global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $global_agencia=$_COOKIE['global_agencia'];
-
-
-
-
-
-$consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
-r.nombre_recibo,r.desc_recibo,r.monto_recibo,
-r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
-from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
-inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
-where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC ";
 
 ?>
 <h1>GASTOS</h1>
@@ -210,11 +203,13 @@ where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC ";
 <table class='texto'>
 <tr>
 <th>&nbsp;</th>
+<th>Tipo</th>
 <th>Nro Gasto</th>
 <th>Fecha</th>
-<th>Tipo Gasto</th>
-<th>Detalle Gasto</th>
+<th>Forma Pago</th>
 <th>Monto</th>
+<th>Grupo Gasto</th>
+<th>Detalle</th>
 <th>&nbsp;</th>
 <th>Registrado Por</th>
 <th>Modificado Por</th>
@@ -222,12 +217,15 @@ where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC ";
 </tr>
 <?php
 $consulta="select g.cod_gasto,g.descripcion_gasto,g.cod_tipogasto,tg.nombre_tipogasto,g.fecha_gasto,g.monto,g.cod_ciudad,
-g.created_by,g.modified_by,g.created_date,g.modified_date,g.gasto_anulado,g.cod_proveedor, p.nombre_proveedor
+g.created_by,g.modified_by,g.created_date,g.modified_date,g.gasto_anulado,g.cod_proveedor, p.nombre_proveedor,g.cod_grupogasto, gg.nombre_grupogasto,
+g.cod_tipopago, tp.nombre_tipopago
 from gastos g
 inner join tipos_gasto tg on (g.cod_tipogasto=tg.cod_tipogasto)
+inner join grupos_gasto gg on (g.cod_grupogasto=gg.cod_grupogasto)
+inner join tipos_pago tp on (g.cod_tipopago=tp.cod_tipopago)
 left  join proveedores p on (g.cod_proveedor=p.cod_proveedor)
 where g.cod_ciudad=".$global_agencia." order by g.cod_gasto desc";
-echo "consulta=".$consulta;
+//echo "consulta=".$consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 while ($dat = mysqli_fetch_array($resp)) {
 	$cod_gasto= $dat['cod_gasto'];
@@ -246,6 +244,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$gasto_anulado= $dat['gasto_anulado'];
 	$cod_proveedor= $dat['cod_proveedor'];
 	$nombre_proveedor= $dat['nombre_proveedor'];
+	$cod_grupogasto= $dat['cod_grupogasto'];
+	$nombre_grupogasto= $dat['nombre_grupogasto'];
+	$cod_tipopago= $dat['cod_tipopago'];
+	$nombre_tipopago= $dat['nombre_tipopago'];
 
 	$created_date_mostrar="";
 	// formatoFechaHora
@@ -296,16 +298,19 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}
 	?>	
 	</td>
+	<td><?=$nombre_tipogasto;?></td>
 	<td><?=$cod_gasto;?></td>
 	<td><?=$fecha_gasto_mostrar;?></td>
-	<td><?=$nombre_tipogasto;?></td>
-	<td><?=$descripcion_gasto;?></td>
+	<td><?=$nombre_tipopago;?></td>
 	<td><?=$monto;?></td>
+	<td><?=$nombre_grupogasto;?></td>
+	<td><?=$descripcion_gasto;?></td>
+	
 	<td><?=$nombre_proveedor;?></td>
 	<td><?=$usuReg;?><br><?=$created_date_mostrar;?></td>
 	<td><?=$usuMod;?><br><?=$modified_date_mostrar;?></td>	
 	
-	<td><a href="formatoRecibo.php?idRecibo=<?=$id_recibo;?>" target="_BLANK">Ver Recibo</a>
+	<td><a href="formatoGasto.php?idGasto=<?=$cod_gasto;?>" target="_BLANK">Ver Gasto</a>
 	</tr>
 <?php	
 }
@@ -322,12 +327,12 @@ while ($dat = mysqli_fetch_array($resp)) {
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
 </div>
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
-		<h2 align='center' class='texto'>Buscar Recibos</h2>
+		<h2 align='center' class='texto'>Buscar Gastos</h2>
 		<table align='center' class='texto'>
 			<tr>
 				<td>Fecha Ini(dd/mm/aaaa)</td>
@@ -342,12 +347,83 @@ while ($dat = mysqli_fetch_array($resp)) {
 				</td>
 			</tr>
 			<tr>
-				<td>Nombre Cliente</td>
+				<td>Tipo Gasto</td>
 				<td>
-				<input type='text' name='cliente' id="cliente" class='texto'>
+					<select name="tipoGasto" id="tipoGasto" class="texto"  >
+					<option value="" >--</option>
+					<?php	
+						$sqlTipoGasto="select cod_tipogasto, nombre_tipogasto from tipos_gasto where estado=1  order by cod_tipogasto asc";
+						$respTipoGasto=mysqli_query($enlaceCon,$sqlTipoGasto);
+						while($datTipoGasto=mysqli_fetch_array($respTipoGasto)){	
+					?>
+					<?php	$codTipogasto=$datTipoGasto[0];
+							$nombreTipogasto=$datTipoGasto[1];
+					?>
+					<option value="<?=$codTipogasto;?>" ><?=$nombreTipogasto;?></option>
+		
+				<?php	}?>
+					</select>
+			</td>
+			</tr>		
+						<tr>
+				<td>Grupo Gasto</td>
+				<td>
+				<select name="grupoGasto" id="grupoGasto" class="texto"  >
+				<option value="" >--</option>
+				<?php	
+					$sqlGrupoGasto="select cod_grupogasto, nombre_grupogasto from grupos_gasto where estado=1  order by cod_grupogasto asc";
+					$respGrupoGasto=mysqli_query($enlaceCon,$sqlGrupoGasto);
+					while($datGrupoGasto=mysqli_fetch_array($respGrupoGasto)){	
+				?>
+				<?php	$codGrupoGasto=$datGrupoGasto[0];
+						$nombreGrupoGasto=$datGrupoGasto[1];
+				?>
+						<option value="<?=$codGrupoGasto;?>" ><?=$nombreGrupoGasto;?></option>
+		
+				<?php	}?>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Proveedor</td>
+				<td>
+					<select name="proveedor" id="proveedor" class="texto"  >
+						<option value="" >--</option>
+					<?php	
+						$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";
+						$resp3=mysqli_query($enlaceCon,$sql3);
+						while($dat3=mysqli_fetch_array($resp3)){	
+					?>
+					<?php	$codProveedor=$dat3[0];
+							$nombreProveedor=$dat3[1];
+					?>
+					<option value="<?=$codProveedor;?>" ><?=$nombreProveedor;?></option>
+		
+				<?php	}?>
+				</select>
+				</td>
+			</tr>		
+			<tr>
+				<td>Forma Pago</td>
+				<td>
+					
+					<select name="tipoPago" id="tipoPago" class="texto"  >
+					<option value="" >--</option>
+					<?php	
+						$sqlTipoPago="select cod_tipopago, nombre_tipopago from tipos_pago where estado=1  order by cod_tipopago asc";
+						$respTipoPago=mysqli_query($enlaceCon,$sqlTipoPago);
+						while($datTipoPago=mysqli_fetch_array($respTipoPago)){	
+					?>
+					<?php	$codTipopago=$datTipoPago[0];
+							$nombreTipopago=$datTipoPago[1];
+					?>
+					<option value="<?=$codTipopago;?>" ><?=$nombreTipopago;?></option>
+		
+					<?php	}?>
+					</select>
 				</td>
 			</tr>			
-						<tr>
+			<tr>
 				<td>Detalle</td>
 				<td>
 				<input type='text' name='detalle' id="detalle" class='texto'>
@@ -355,7 +431,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 			</tr>		
 		</table>	
 		<center><br>
-			<input type='button' value='Buscar' class='boton' onClick="ajaxBuscarRecibos(this.form)">
+			<input type='button' value='Buscar' class='boton' onClick="ajaxBuscarGastos(this.form)">
 			<input type='button' value='Cancelar' class='boton2' onClick="HiddenBuscar();">
 			
 		</center>

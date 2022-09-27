@@ -12,6 +12,7 @@ $variableAdmin=$_GET["variableAdmin"];
 if($variableAdmin!=1){
 	$variableAdmin=0;
 }
+$global_agencia=$_COOKIE['global_agencia'];
 
 //desde esta parte viene el reporte en si
 $fecha_iniconsulta=$fecha_ini;
@@ -357,29 +358,101 @@ $totalIngresosF=number_format($totalIngresos,2,".",",");
 </tr>
 
 </table>
+
+<br><center><table class='textomediano'>
+<tr><th colspan='4'>Detalle de Gastos</th></tr>
+<tr>
+<th>Tipo</th>
+<th>Nro</th>
+<th>Fecha</th>
+<th>Proveedor</th>
+<th>Grupo</th>
+<th>Detalle</th>
+<th>Forma Pago</th>
+<th>>Monto [Bs]</th>
+</tr>
+	
 <?php
 
-echo "<br><center><table class='textomediano'>";
-echo "<tr><th colspan='4'>Detalle de Gastos</th></tr>";
-echo "<tr><th>Fecha</th><th>Tipo</th>
-	<th>Descripcion</th><th>Monto [Bs]</th></tr>";
 
-$consulta = "select g.cod_gasto, g.descripcion_gasto, 
-	(select nombre_tipogasto from tipos_gasto where cod_tipogasto=g.cod_tipogasto)tipogasto, 
-	DATE_FORMAT(g.fecha_gasto, '%d/%m/%Y'), monto, estado from gastos g where fecha_gasto='$fecha_iniconsulta' 
-	and g.estado=1 order by g.cod_gasto";
-	
+
+$sqlGasto="select g.cod_gasto,g.descripcion_gasto,g.cod_tipogasto,tg.nombre_tipogasto,g.fecha_gasto,g.monto,g.cod_ciudad,
+g.created_by,g.modified_by,g.created_date,g.modified_date,g.gasto_anulado,g.cod_proveedor, p.nombre_proveedor,g.cod_grupogasto, gg.nombre_grupogasto,
+g.cod_tipopago, tp.nombre_tipopago
+from gastos g
+inner join tipos_gasto tg on (g.cod_tipogasto=tg.cod_tipogasto)
+inner join grupos_gasto gg on (g.cod_grupogasto=gg.cod_grupogasto)
+inner join tipos_pago tp on (g.cod_tipopago=tp.cod_tipopago)
+left  join proveedores p on (g.cod_proveedor=p.cod_proveedor)
+where  g.cod_gasto=".$idGasto." and  g.cod_ciudad=".$cod_ciudad." 
+and g.fecha_gasto BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'
+order by g.cod_gasto asc ";
+
+echo $consulta;
+$totalGastos=0;	
 $resp = mysqli_query($enlaceCon,$consulta);
-$totalGastos=0;
+
 while ($dat = mysqli_fetch_array($resp)) {
-	$codGasto = $dat[0];
-	$descripcionGasto= $dat[1];
-	$tipoGasto=$dat[2];
-	$fechaGasto = $dat[3];
-	$montoGasto = $dat[4];
-	$totalGastos=$totalGastos+$montoGasto;
-	$codEstado=$dat[5];	
-	$montoGasto=redondear2($montoGasto);
+	$cod_gasto= $dat['cod_gasto'];
+	$descripcion_gasto= $dat['descripcion_gasto'];
+	$cod_tipogasto= $dat['cod_tipogasto'];
+	$nombre_tipogasto= $dat['nombre_tipogasto'];
+	$fecha_gasto= $dat['fecha_gasto'];	
+	$vector_fecha_gasto=explode("-",$fecha_gasto);
+	$fecha_gasto_mostrar=$vector_fecha_gasto[2]."/".$vector_fecha_gasto[1]."/".$vector_fecha_gasto[0];
+	$monto= $dat['monto'];
+	$cod_ciudad= $dat['cod_ciudad'];
+	$created_by= $dat['created_by'];
+	$modified_by= $dat['modified_by'];
+	$created_date= $dat['created_date'];
+	$modified_date= $dat['modified_date'];
+	$gasto_anulado= $dat['gasto_anulado'];
+	$cod_proveedor= $dat['cod_proveedor'];
+	$nombre_proveedor= $dat['nombre_proveedor'];
+	$cod_grupogasto= $dat['cod_grupogasto'];
+	$nombre_grupogasto= $dat['nombre_grupogasto'];
+	$cod_tipopago= $dat['cod_tipopago'];
+	$nombre_tipopago= $dat['nombre_tipopago'];
+
+	$created_date_mostrar="";
+	// formatoFechaHora
+	if(!empty($created_date)){
+		$vector_created_date = explode(" ",$created_date);
+		$fechaReg=explode("-",$vector_created_date[0]);
+		$created_date_mostrar = $fechaReg[2]."/".$fechaReg[1]."/".$fechaReg[0]." ".$vector_created_date[1];
+	}
+	// fin formatoFechaHora
+
+	$modified_date_mostrar="";
+	// formatoFechaHora
+	if(!empty($modified_date)){
+		$vector_modified_date = explode(" ",$modified_date);
+		$fechaEdit=explode("-",$vector_modified_date[0]);
+		$modified_date_mostrar = $fechaEdit[2]."/".$fechaEdit[1]."/".$fechaEdit[0]." ".$vector_modified_date[1];
+	}
+	// fin formatoFechaHora
+	
+	/////	
+		$sqlRegUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$created_by;
+		$respRegUsu=mysqli_query($enlaceCon,$sqlRegUsu);
+		$usuReg =" ";
+		while($datRegUsu=mysqli_fetch_array($respRegUsu)){
+			$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
+		}
+	//////
+	$usuMod ="";
+	 if(!empty($modified_by)){
+		$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
+		$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
+		$usuMod ="";
+		while($datModUsu=mysqli_fetch_array($respModUsu)){
+			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
+		}
+	}
+	
+	$totalGastos=$totalGastos+$monto;
+
+	$monto=redondear2($monto);
 
 	echo "<tr>
 	<td align='center'>$fechaGasto</td>
