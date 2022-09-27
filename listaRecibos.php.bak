@@ -57,7 +57,7 @@ function funOk(codReg,funOkConfirm)
             var cad2=$("input#idtxtclave").val();
             if(cad1!="" && cad2!="") {
                 dlgEsp.setVisible(true);
-                $.get("programas/ingresos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
+                $.get("programas/recibos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
                     inf2=xtrim(inf2);
                     dlgEsp.setVisible(false);
                     if(inf2=="" || inf2=="OK") {
@@ -181,7 +181,7 @@ function anular_recibo(f)
   $global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $global_agencia=$_COOKIE['global_agencia'];
-$global_almacen=$_COOKIE['global_almacen'];
+
 echo "<form method='post' action='listaRecibos.php'>";
 
 

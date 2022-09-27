@@ -10,7 +10,7 @@ include('phpqrcode/qrlib.php');
 //header("Content-Type: text/html; charset=iso-8859-1 ");
 mysqli_query($enlaceCon,"SET NAMES utf8");
 
-$idRecibo=$_GET["idRecibo"];
+$idGasto=$_GET["idGasto"];
 $cod_ciudad=$_COOKIE["global_agencia"];
 
 
@@ -62,33 +62,41 @@ $respConf=mysqli_query($enlaceCon,$sqlConf);
 $datConf=mysqli_fetch_array($respConf);
 $nitTxt=$datConf[1];//$nitTxt=mysql_result($respConf,0,1);
 
-$sqlRecibo = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
-r.nombre_recibo,r.desc_recibo,r.monto_recibo,
-r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
-from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
-inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
-where r.id_recibo=".$idRecibo." and r.cod_ciudad=".$cod_ciudad." order by r.id_recibo DESC,r.cod_ciudad desc";
-//echo "consulta=".$sqlRecibo;
 
-$respRecibo=mysqli_query($enlaceCon,$sqlRecibo);
-while ($dat = mysqli_fetch_array($respRecibo)) {
-	$id_recibo= $dat['id_recibo'];
-	$fecha_recibo= $dat['fecha_recibo'];
-	$vector_fecha_recibo=explode("-",$fecha_recibo);
-	$fecha_recibo_mostrar=$vector_fecha_recibo[2]."/".$vector_fecha_recibo[1]."/".$vector_fecha_recibo[0];
+
+$sqlGasto="select g.descripcion_gasto,g.cod_tipogasto,tg.nombre_tipogasto,g.fecha_gasto,g.monto,g.cod_ciudad,
+g.created_by,g.modified_by,g.created_date,g.modified_date,g.gasto_anulado,g.cod_proveedor, p.nombre_proveedor,g.cod_grupogasto, gg.nombre_grupogasto,
+g.cod_tipopago, tp.nombre_tipopago
+from gastos g
+inner join tipos_gasto tg on (g.cod_tipogasto=tg.cod_tipogasto)
+inner join grupos_gasto gg on (g.cod_grupogasto=gg.cod_grupogasto)
+inner join tipos_pago tp on (g.cod_tipopago=tp.cod_tipopago)
+left  join proveedores p on (g.cod_proveedor=p.cod_proveedor)
+where  g.cod_gasto=".$idGasto." and  g.cod_ciudad=".$cod_ciudad." order by g.cod_gasto desc";
+//echo "consulta=".$consulta;
+$respGasto = mysqli_query($enlaceCon,$sqlGasto);
+while ($dat = mysqli_fetch_array($respGasto)) {
+	
+	$descripcion_gasto= $dat['descripcion_gasto'];
+	$cod_tipogasto= $dat['cod_tipogasto'];
+	$nombre_tipogasto= $dat['nombre_tipogasto'];
+	$fecha_gasto= $dat['fecha_gasto'];	
+	$vector_fecha_gasto=explode("-",$fecha_gasto);
+	$fecha_gasto_mostrar=$vector_fecha_gasto[2]."/".$vector_fecha_gasto[1]."/".$vector_fecha_gasto[0];
+	$monto= $dat['monto'];
 	$cod_ciudad= $dat['cod_ciudad'];
-	$descripcion= $dat['descripcion'];
-	$nombre_recibo= $dat['nombre_recibo'];
-	$desc_recibo= $dat['desc_recibo'];
-	$monto_recibo= $dat['monto_recibo'];
 	$created_by= $dat['created_by'];
 	$modified_by= $dat['modified_by'];
 	$created_date= $dat['created_date'];
 	$modified_date= $dat['modified_date'];
-	$cel_recibo = $dat['cel_recibo'];
-	$recibo_anulado= $dat['recibo_anulado'];
+	$gasto_anulado= $dat['gasto_anulado'];
+	$cod_proveedor= $dat['cod_proveedor'];
+	$nombre_proveedor= $dat['nombre_proveedor'];
+	$cod_grupogasto= $dat['cod_grupogasto'];
+	$nombre_grupogasto= $dat['nombre_grupogasto'];
 	$cod_tipopago= $dat['cod_tipopago'];
 	$nombre_tipopago= $dat['nombre_tipopago'];
+
 	$created_date_mostrar="";
 	// formatoFechaHora
 	if(!empty($created_date)){
@@ -97,8 +105,7 @@ while ($dat = mysqli_fetch_array($respRecibo)) {
 		$created_date_mostrar = $fechaReg[2]."/".$fechaReg[1]."/".$fechaReg[0]." ".$vector_created_date[1];
 	}
 	// fin formatoFechaHora
-	$modified_date= $dat['modified_date'];
-	$cel_recibo = $dat['cel_recibo'];
+
 	$modified_date_mostrar="";
 	// formatoFechaHora
 	if(!empty($modified_date)){
@@ -129,36 +136,40 @@ while ($dat = mysqli_fetch_array($respRecibo)) {
 $y=5;
 $incremento=3;
 $pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$y+3);		$pdf->Cell(68,0,"RECIBO NRO. ".$id_recibo, 0,0,"C");
-$pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$y+7);		$pdf->Cell(68,0,utf8_decode("(Sin Derecho a Crédito Fiscal)"),0,0,"C");
+$pdf->SetXY(4,$y+3);		$pdf->Cell(68,0,"PAGO NRO. ".$idGasto, 0,0,"C");
+
 $pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$y+11);		$pdf->Cell(68,0,utf8_decode("Cliente: ").utf8_decode($nombre_recibo),0,0,"C");
-$pdf->SetXY(4,$y+15);		$pdf->Cell(68,0,utf8_decode("Telf. Cliente: ").utf8_decode($cel_recibo),0,0,"C");
-$pdf->SetXY(4,$y+19);		$pdf->Cell(68,0,utf8_decode("Fecha: ").$fecha_recibo_mostrar,0,0,"C");
-$pdf->SetXY(4,$y+23);		$pdf->Cell(68,0,utf8_decode("Tipo Pago: ").$nombre_tipopago,0,0,"C");
+
+$pdf->SetXY(4,$y+7);		$pdf->Cell(68,0,utf8_decode("Fecha: ").$fecha_gasto_mostrar,0,0,"C");
+
 $pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$y+26);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(4,$y+11);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
 $pdf->SetFont('Arial','',8);
 
-$pdf->SetXY(4,$y+30);		$pdf->MultiCell(68,3,utf8_decode($direccionTxt), 0,"C");
-$pdf->SetXY(4,$y+38);		$pdf->Cell(68,0,"Telefono:  ".$telefonoTxt,0,0,"C");
-$pdf->SetXY(4,$y+42);		$pdf->Cell(68,0,$ciudadTxt,0,0,"C");
-$pdf->SetXY(4,$y+46);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+$pdf->SetXY(4,$y+15);		$pdf->MultiCell(68,3,utf8_decode($direccionTxt), 0,"C");
+$pdf->SetXY(4,$y+23);		$pdf->Cell(68,0,"Telefono:  ".$telefonoTxt,0,0,"C");
+$pdf->SetXY(4,$y+27);		$pdf->Cell(68,0,$ciudadTxt,0,0,"C");
+$pdf->SetXY(4,$y+31);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
+
+$pdf->SetXY(4,$y+35);		$pdf->Cell(68,0,utf8_decode("Tipo: ").utf8_decode($nombre_tipogasto),0,0,"C");
+$pdf->SetXY(4,$y+39);		$pdf->Cell(68,0,utf8_decode("Grupo: ").utf8_decode($nombre_grupogasto),0,0,"C");
+$pdf->SetXY(4,$y+43);		$pdf->Cell(68,0,utf8_decode("Proveedor: ").utf8_decode($nombre_proveedor),0,0,"C");
+$pdf->SetXY(4,$y+47);		$pdf->Cell(68,0,utf8_decode("Forma Pago: ").$nombre_tipopago,0,0,"C");
 $pdf->SetFont('Arial','B',8);
+
 $pdf->SetXY(4,$y+52);		$pdf->Cell(15,0,"DETALLE:",0,0,"L");
 $pdf->SetFont('Arial','',8);
 
-$pdf->SetXY(4,$y+56);		$pdf->MultiCell(68,3,utf8_decode($desc_recibo), 0,"L");
+$pdf->SetXY(4,$y+56);		$pdf->MultiCell(68,3,utf8_decode($descripcion_gasto), 0,"L");
 $auxY=$pdf->GetY();
 $pdf->SetXY(4,$auxY+2);		$pdf->Cell(68,0,"---------------------------------------------------------------------------", 0,0,"C");
 $pdf->SetFont('Arial','B',8);
-$pdf->SetXY(4,$auxY+6);		$pdf->Cell(68,0,"Monto Recibido:".$monto_recibo,0,0,"R");
-$arrayDecimal=explode('.', $monto_recibo);
+$pdf->SetXY(4,$auxY+6);		$pdf->Cell(68,0,"Monto Pagado:".$monto,0,0,"R");
+$arrayDecimal=explode('.', $monto);
 if(count($arrayDecimal)>1){
-	list($montoEntero, $montoDecimal) = explode('.', $monto_recibo);
+	list($montoEntero, $montoDecimal) = explode('.', $monto);
 }else{
-	list($montoEntero,$montoDecimal)=array($monto_recibo,0);
+	list($montoEntero,$montoDecimal)=array($monto,0);
 }
 
 if($montoDecimal==""){

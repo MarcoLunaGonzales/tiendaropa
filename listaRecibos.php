@@ -57,7 +57,7 @@ function funOk(codReg,funOkConfirm)
             var cad2=$("input#idtxtclave").val();
             if(cad1!="" && cad2!="") {
                 dlgEsp.setVisible(true);
-                $.get("programas/ingresos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
+                $.get("programas/recibos/validacionCodigoConfirmar.php","codigo="+cad1+"&clave="+cad2, function(inf2) {
                     inf2=xtrim(inf2);
                     dlgEsp.setVisible(false);
                     if(inf2=="" || inf2=="OK") {
@@ -108,12 +108,7 @@ function registrar_recibo()
 {   location.href='registrar_recibo.php';
 }
 
-function editarIngresoTipoProv(codigoIngreso)
-{   funModif(codigoIngreso,function(){
-		alert("Se modicaron los Datos!");
-		location.href='navegador_ingresomateriales.php';
-	});
-}
+
 
 function editar_recibo(f)
 {   var i;

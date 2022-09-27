@@ -168,10 +168,13 @@ $txtMonto=NumeroALetras::convertir($montoEntero);
 /////////////////////
 
 $pdf->SetXY(4,$auxY+10);		$pdf->MultiCell(68,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
+
+$auxY=$pdf->GetY();
 $pdf->SetFont('Arial','',8);
-$pdf->SetXY(4,$auxY+14);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
-$pdf->SetXY(4,$auxY+18);		$pdf->Cell(68,0,"Responsable: $usuReg",0,0,"C");
-$pdf->SetXY(4,$auxY+22);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
+$pdf->SetXY(4,$auxY+2);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
+$pdf->SetXY(4,$auxY+6);		$pdf->Cell(68,0,"Responsable: $usuReg",0,0,"C");
+$pdf->SetXY(4,$auxY+10);		$pdf->Cell(68,0,"---------------------------------------------------------------------------",0,0,"C");
+
 
 	/*	
 	$pdf->SetXY(4,$y+$yyy);		$pdf->MultiCell(68,3,utf8_decode("($codInterno) $nombreMat"),"C");
