@@ -77,14 +77,15 @@ function funOk(codReg,funOkConfirm)
 
 function ajaxBuscarRecibos(f){
 	
-	var fechaIniBusqueda, fechaFinBusqueda, cliente, detalle, global_almacen;
+	var fechaIniBusqueda, fechaFinBusqueda, cliente,tipoRecibo, proveedor, detalle, global_almacen;
 	
 	fechaIniBusqueda=document.getElementById("fechaIniBusqueda").value;
 	
 	fechaFinBusqueda=document.getElementById("fechaFinBusqueda").value;
 	
 	cliente=document.getElementById("cliente").value;
-	
+	tipoRecibo=document.getElementById("tipoRecibo").value;
+	proveedor=document.getElementById("proveedor").value;
 	detalle=document.getElementById("detalle").value;
 
 	
@@ -92,7 +93,7 @@ function ajaxBuscarRecibos(f){
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxBuscarRecibos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&cliente="+cliente+"&detalle="+detalle,true);
+	ajax.open("GET", "ajaxBuscarRecibos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&cliente="+cliente+"&tipoRecibo="+tipoRecibo+"&proveedor="+proveedor+"&detalle="+detalle,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -183,36 +184,44 @@ echo "<form method='post' action='listaRecibos.php'>";
 
 $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
-r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
-from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
+r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
+r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor
+from recibos r 
+inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
+inner join tipos_recibo tr on(r.cod_tiporecibo=tr.cod_tiporecibo)
+left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
 where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC,r.cod_ciudad desc";
 //echo "consulta=".$consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
-echo "<h1>RECIBOS</h1>";
+?>
 
-echo "<table border='1' cellspacing='0' class='textomini'><tr><th>LEYENDA:</th><th>Recibos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>RECIBOS UTILIZADOS</th><td bgcolor='#ffff99' width='10%'></td><th>RECIBOS UTILIZADOS</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
+<h1>RECIBOS</h1>
+<table border='1' cellspacing='0' class='textomini'><tr><th>LEYENDA:</th><th>Recibos Anulados</th><td bgcolor='#ff8080' width='10%'></td><th>RECIBOS UTILIZADOS</th><td bgcolor='#ffff99' width='10%'></td><th>RECIBOS UTILIZADOS</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 
-echo "<div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
+<div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
 <input type='button' value='Editar' class='boton' onclick='editar_recibo(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_recibo(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
 
-echo "<br><div id='divCuerpo'>";
-echo "<br><center><table class='texto'>";
-echo "<tr>
+<br><div id='divCuerpo'>
+<br><center><table class='texto'>
+<tr>
 <th>&nbsp;</th>
+<th>Tipo Recibo</th>
 <th>Recibo</th>
 <th>Fecha</th>
+<th>Forma Pago</th>
+<th>Monto</th>
 <th>Contacto</th>
 <th>Nro de Contacto</th>
 <th>Descripcion</th>
-<th>Monto</th>
-<th>Tipo Pago</th>
+<th>&nbsp;</th>
 <th>Registrado Por</th>
 <th>Modificado Por</th>
-<th></th>
-</tr>";
+<th>&nbsp;</th>
+</tr>
+<?php
 while ($dat = mysqli_fetch_array($resp)) {
 	$id_recibo= $dat['id_recibo'];
 	$fecha_recibo= $dat['fecha_recibo'];
@@ -231,6 +240,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$recibo_anulado= $dat['recibo_anulado'];
 	$cod_tipopago= $dat['cod_tipopago'];
 	$nombre_tipopago= $dat['nombre_tipopago'];
+	$cod_tiporecibo= $dat['cod_tiporecibo'];
+	$nombre_tiporecibo= $dat['nombre_tiporecibo'];
+	$cod_proveedor= $dat['cod_proveedor'];
+	$nombre_proveedor= $dat['nombre_proveedor'];
 	$created_date_mostrar="";
 	// formatoFechaHora
 	if(!empty($created_date)){
@@ -281,13 +294,15 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}
 	?>	
 	</td>
+	<td><?=$nombre_tiporecibo;?></td>	
 	<td><?=$id_recibo;?></td>
 	<td><?=$fecha_recibo_mostrar;?></td>
+	<td><?=$nombre_tipopago;?></td>
+	<td><?=$monto_recibo;?></td>
 	<td><?=$nombre_recibo;?></td>
 	<td><?=$cel_recibo;?></td>
 	<td><?=$desc_recibo;?></td>
-	<td><?=$monto_recibo;?></td>
-	<td><?=$nombre_tipopago;?></td>
+	<td><?=$nombre_proveedor;?></td>		
 	<td><?=$usuReg;?><br><?=$created_date_mostrar;?></td>
 	<td><?=$usuMod;?><br><?=$modified_date_mostrar;?></td>	
 	
@@ -295,20 +310,20 @@ while ($dat = mysqli_fetch_array($resp)) {
 	</tr>
 <?php	
 }
-echo "</table></center><br>";
-echo "</div>";
+?>
+</table></center><br>
+</div>
 
-echo "<div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
+<div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
 <input type='button' value='Editar' class='boton' onclick='editar_recibo(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_recibo(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
-echo "</form>";
-?>
+</form>
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 450px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
+<div id="divProfileData" style="background-color:#FFF; width:750px; height:400px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<h2 align='center' class='texto'>Buscar Recibos</h2>
 		<table align='center' class='texto'>
@@ -324,6 +339,44 @@ echo "</form>";
 				<input type='text' name='fechaFinBusqueda' id="fechaFinBusqueda" class='texto'>
 				</td>
 			</tr>
+			<tr>
+				<td>Tipo Recibo</td>
+				<td>
+					<select name="tipoRecibo" id="tipoRecibo" class="texto"  >
+					<option value="" >--</option>
+					<?php	
+						$sqlTipoRecibo="select cod_tiporecibo, nombre_tiporecibo from tipos_recibo where estado=1  order by cod_tiporecibo asc";
+						$respTipoRecibo=mysqli_query($enlaceCon,$sqlTipoRecibo);
+						while($datTipoRecibo=mysqli_fetch_array($respTipoRecibo)){	
+					?>
+					<?php	$codTiporecibo=$datTipoRecibo[0];
+							$nombreTiporecibo=$datTipoRecibo[1];
+					?>
+					<option value="<?=$codTiporecibo;?>" ><?=$nombreTiporecibo;?></option>
+		
+				<?php	}?>
+					</select>
+			</td>
+			</tr>	
+<tr>
+				<td>Proveedor</td>
+				<td>
+					<select name="proveedor" id="proveedor" class="texto"  >
+						<option value="" >--</option>
+					<?php	
+						$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";
+						$resp3=mysqli_query($enlaceCon,$sql3);
+						while($dat3=mysqli_fetch_array($resp3)){	
+					?>
+					<?php	$codProveedor=$dat3[0];
+							$nombreProveedor=$dat3[1];
+					?>
+					<option value="<?=$codProveedor;?>" ><?=$nombreProveedor;?></option>
+		
+				<?php	}?>
+				</select>
+				</td>
+			</tr>					
 			<tr>
 				<td>Nombre Cliente</td>
 				<td>

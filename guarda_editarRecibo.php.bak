@@ -11,9 +11,16 @@ $idReciboEditar=$_POST["idReciboEditar"];
 
 $monto=$_POST['monto'];
 $tipoPago=$_POST['tipoPago'];
+$tipoRecibo=$_POST['tipoRecibo'];
 $nombre=$_POST['nombre'];
 $nro_contacto=$_POST['nro_contacto'];
 $desc_recibo=$_POST['desc_recibo'];
+$proveedor=$_POST['proveedor'];
+//echo "proveedor=".$proveedor;
+if(empty($proveedor)){
+	$proveedor=NULL;
+	//echo "entro if proveedor=".$proveedor;
+}
 
 $modifiedBy=$_COOKIE['global_usuario'];
 $modifiedDate=date("Y-m-d H:i:s");
@@ -32,7 +39,7 @@ $consulta.=" modified_by='".$modifiedBy."',";
 $consulta.=" modified_date='".$modifiedDate."' ";
 $consulta.=" where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";
 
-echo $consulta;
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
 ?>
@@ -40,7 +47,7 @@ mysqli_query($enlaceCon,$consulta);
 
 	<script language='Javascript'>
 
-		//location.href="listaRecibos.php";
+		location.href="listaRecibos.php";
 	</script>	
     
 

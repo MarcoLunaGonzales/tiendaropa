@@ -63,19 +63,19 @@ if($variableAdmin==1){
 $sql.=" order by s.fecha, s.hora_salida";
 	
 $resp=mysqli_query($enlaceCon,$sql);
-
-echo "<br><table align='center' class='textomediano' width='70%'>
+?>
+<br><table align='center' class='textomediano' width='70%'>
 <tr><th colspan='7'>Detalle de Ventas</th></tr>
 <tr>
 <th>Fecha</th>
 <th>Cliente</th>
 <th>Razon Social</th>
 <th>Observaciones</th>
-<th>TipoPago</th>
 <th>Documento</th>
+<th>Forma Pago</th>
 <th>Monto [Bs]</th>
-</tr>";
-
+</tr>
+<?php
 $totalVenta=0;
 
 while($datos=mysqli_fetch_array($resp)){	
@@ -92,16 +92,17 @@ while($datos=mysqli_fetch_array($resp)){
 	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
-
-	echo "<tr>
-	<td>$fechaVenta $horaVenta</td>
-	<td>$nombreCliente</td>
-	<td>$razonSocial</td>
-	<td>$obsVenta</td>
-	<td>$nombreTipoPago</td>
-	<td>$datosDoc</td>
-	<td align='right'>$montoVentaFormat</td>
-	</tr>";
+?>
+	<tr>
+	<td><?=$fechaVenta." ".$horaVenta;?></td>
+	<td><?=$nombreCliente;?></td>
+	<td><?=$razonSocial;?></td>
+	<td><?=$obsVenta;?></td>
+	<td><?=$datosDoc;?></td>
+	<td><?=$nombreTipoPago;?></td>	
+	<td align='right'><?=$montoVentaFormat;?></td>
+	</tr>
+<?php	
 }
 
 
@@ -158,19 +159,24 @@ echo "</table></br>";
 <br><table align='center' class='textomediano' width='70%'>
 <tr><th colspan='7'>Detalle de Recibos</th></tr>
 <tr>
+<th>Tipo</th>
+<th>Nro</th>
 <th>Fecha</th>
 <th>Cliente</th>
-<th>Observaciones</th>
-<th>TipoPago</th>
-<th>Documento</th>
+<th>Detalle</th>
+<th>&nbsp;</th>
+<th>Forma Pago</th>
 <th>Monto [Bs]</th>
 </tr>
 <?php
 $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
-r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago
+r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
+r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor
 from recibos r inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
+inner join tipos_recibo tr on(r.cod_tiporecibo=tr.cod_tiporecibo)
+left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
 where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
 $consulta = $consulta." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
 $consulta=$consulta." order by r.id_recibo DESC,r.cod_ciudad desc ";
@@ -195,6 +201,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$recibo_anulado= $dat['recibo_anulado'];
 	$cod_tipopago= $dat['cod_tipopago'];
 	$nombre_tipopago= $dat['nombre_tipopago'];
+	$cod_tiporecibo= $dat['cod_tiporecibo'];
+	$nombre_tiporecibo= $dat['nombre_tiporecibo'];
+	$cod_proveedor= $dat['cod_proveedor'];
+	$nombre_proveedor= $dat['nombre_proveedor'];
 	$created_date_mostrar="";
 	$totalRecibo=$totalRecibo+$monto_recibo;
 	// formatoFechaHora
@@ -230,21 +240,22 @@ while ($dat = mysqli_fetch_array($resp)) {
 			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
 		}
 	?>
+	<td><?=$nombre_tiporecibo;?></td>
+	<td>REC-<?=$id_recibo;?></td>
 	<td><?=$fecha_recibo_mostrar;?></td>
 	
 	
 	<td><?=$nombre_recibo;?></td>
 	<td><?=$desc_recibo;?></td>
-	<td><?=$nombre_tipopago;?></td>
-	<td>REC-<?=$id_recibo;?></td>
-	
-	
+	<td><?=$nombre_proveedor;?></td>
+	<td><?=$nombre_tipopago;?></td>	
 	<td align='right'><?=$monto_recibo;?></td>
 	</tr>
 <?php
 }
+
 $totMontoTipopago=0;
-$sql2="select r.cod_tipopago,sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0";
+$sql2="select r.cod_tipopago,sum(r.monto_recibo)  from recibos r where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0 ";
 $sql2 = $sql2." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
 $sql2 = $sql2."group by r.cod_tipopago order by r.cod_tipopago asc";
 
@@ -265,7 +276,8 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>
-	
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>	
 	<td align="right"><strong><?=$descTipopago;?></strong></td>
 	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
 <tr>
@@ -289,7 +301,7 @@ $totalReciboF=number_format($totalRecibo,2,".",",");
 <table align='center' class='textomediano' width='70%'>
 <tr><th colspan="4">TOTALES DE VENTAS Y RECIBOS POR TIPO DE PAGO</th></tr>
 <tr><th>&nbsp;</th><th>&nbsp;</th>
-	<th>Tipo Pago</th><th>Monto [Bs]</th></tr>";
+	<th>Forma Pago</th><th>Monto [Bs]</th></tr>";
 <?php
 
 $totalIngresos=0;
@@ -360,16 +372,16 @@ $totalIngresosF=number_format($totalIngresos,2,".",",");
 </table>
 
 <br><center><table class='textomediano'>
-<tr><th colspan='4'>Detalle de Gastos</th></tr>
+<tr><th colspan='8'>Detalle de Gastos</th></tr>
 <tr>
 <th>Tipo</th>
 <th>Nro</th>
 <th>Fecha</th>
-<th>Proveedor</th>
+<th>&nbsp;</th>
 <th>Grupo</th>
 <th>Detalle</th>
 <th>Forma Pago</th>
-<th>>Monto [Bs]</th>
+<th>Monto [Bs]</th>
 </tr>
 	
 <?php
@@ -384,13 +396,13 @@ inner join tipos_gasto tg on (g.cod_tipogasto=tg.cod_tipogasto)
 inner join grupos_gasto gg on (g.cod_grupogasto=gg.cod_grupogasto)
 inner join tipos_pago tp on (g.cod_tipopago=tp.cod_tipopago)
 left  join proveedores p on (g.cod_proveedor=p.cod_proveedor)
-where  g.cod_gasto=".$idGasto." and  g.cod_ciudad=".$cod_ciudad." 
+where    g.cod_ciudad=".$global_agencia." 
 and g.fecha_gasto BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'
 order by g.cod_gasto asc ";
 
-echo $consulta;
+//echo $sqlGasto;
 $totalGastos=0;	
-$resp = mysqli_query($enlaceCon,$consulta);
+$resp = mysqli_query($enlaceCon,$sqlGasto);
 
 while ($dat = mysqli_fetch_array($resp)) {
 	$cod_gasto= $dat['cod_gasto'];
@@ -453,23 +465,52 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$totalGastos=$totalGastos+$monto;
 
 	$monto=redondear2($monto);
+?>
 
-	echo "<tr>
-	<td align='center'>$fechaGasto</td>
-	<td align='center'>$tipoGasto</td>
-	<td align='center'>$descripcionGasto</td>
-	<td align='right'>$montoGasto</td>
-	</tr>";
+	<tr>
+	<td align='center'><?=$nombre_tipogasto;?></td>
+	<td align='center'><?=$cod_gasto;?></td>
+	<td align='center'><?=$fecha_gasto_mostrar;?></td>
+	<td align='right'><?=$nombre_proveedor;?></td>
+	<td align='right'><?=$nombre_grupogasto;?></td>
+	<td align='right'><?=$descripcion_gasto;?></td>
+	<td align='right'><?=$nombre_tipopago;?></td>
+	<td align='right'><?=$monto;?></td>
+	</tr>
+<?php
 }
 $totalGastos=redondear2($totalGastos);
-echo "<tr>
-<td align='center'>-</td>
-<td align='center'>-</td>
-<th>Total Gastos</th>
-<th align='right'>$totalGastos</th>
-</tr>";
-echo "</table></center><br>";
+$totMontoGastoTipopago=0;
+$sql2="select g.cod_tipopago,sum(g.monto)  from gastos g where g.cod_ciudad=".$global_agencia." and g.gasto_anulado=0 ";
+$sql2 = $sql2." AND g.fecha_gasto BETWEEN '".$fecha_iniconsulta."' and '".$fecha_iniconsulta."'";
+$sql2 = $sql2."group by g.cod_tipopago order by g.cod_tipopago asc";
+//echo $sql2 ;
+$resp2 = mysqli_query($enlaceCon,$sql2);
+while ($dat2 = mysqli_fetch_array($resp2)) {
+	$tipopago= $dat2[0];
+	$totMontoTipopago= $dat2[1];
+	$sql3=" select nombre_tipopago from tipos_pago where cod_tipopago=".$tipopago;
+	
+	$resp3 = mysqli_query($enlaceCon,$sql3);	
+	while ($dat3 = mysqli_fetch_array($resp3)) {
+		$descTipopago=$dat3[0];
+	}
+	$totMontoTipopagoF=number_format($totMontoTipopago,2,".",",");
 ?>
+<tr>
+	<td colspan="6">&nbsp;</td>
+	<td align="right"><strong><?=$descTipopago;?></strong></td>
+	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
+</tr>
+<?php
+}
+?>
+<tr>
+<td colspan="6">&nbsp;</td>
+<td align="right"><strong>TOTAL GASTOS</strong></td>
+<td align="right"><strong><?=$totalGastos;?></strong></td>
+</tr>
+</table></center><br>
 <?php
 $saldoCajaChica=$montoCajaChica+$totalVenta+$totalRecibo-$totalGastos;
 $saldoCajaChicaF=number_format($saldoCajaChica,2,".",",");

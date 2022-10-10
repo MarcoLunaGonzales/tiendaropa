@@ -32,7 +32,7 @@ $global_almacen=$_COOKIE['global_almacen'];
 $idReciboEditar=$_GET["idRecibo"];
 
 	$sql=" select fecha_recibo,nombre_recibo,
-desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago 
+desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor
 from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";	
 	 
 
@@ -51,6 +51,8 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 		$cel_recibo=$dat['cel_recibo'];
 		$recibo_anulado=$dat['recibo_anulado'];
 		$cod_tipopago=$dat['cod_tipopago'];
+		$cod_tiporecibo=$dat['cod_tiporecibo'];
+		$cod_proveedor=$dat['cod_proveedor'];
 	}
 
 ?>
@@ -58,14 +60,27 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <input type="hidden" name="idReciboEditar" id="idReciboEditar" value="<?=$idReciboEditar;?>">
 <table border='0' class='textotit' align='center'><tr><th>Edicion de Recibo</th></tr></table><br>
 <table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">
-<tr><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Monto Recibido</th><th>Tipo Pago</th></tr>
+<tr><th>Tipo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
 <tr>
-
+<td>
+	<select name="tipoRecibo" id="tipoRecibo" class="texto"  >
+<?php	
+	$sqlTipoRecibo="select cod_tiporecibo, nombre_tiporecibo from tipos_recibo where estado=1  order by cod_tiporecibo asc";
+	$respTipoRecibo=mysqli_query($enlaceCon,$sqlTipoRecibo);
+	while($datTipoRecibo=mysqli_fetch_array($respTipoRecibo))
+	{	
+?>
+<?php	$codTiporecibo=$datTipoRecibo[0];
+		$nombreTiporecibo=$datTipoRecibo[1];
+	?>
+		<option value="<?=$codTiporecibo;?>" <?php if($codTiporecibo==$cod_tiporecibo){echo "selected";}?> ><?=$nombreTiporecibo;?></option>
+		
+<?php	}?>
+	</select>
+	</td>
 <td align="center"><?=$idReciboEditar;?></td>
 
 <td align="left"><?=$fecha_recibo_mostrar;?></td>
-
-<td align="left"><input type="number" class="texto" name="monto"  id="monto"  value="<?=$monto_recibo;?>" required>
 <td>
 	<select name="tipoPago" id="tipoPago" class="texto"  >
 <?php	
@@ -82,20 +97,36 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <?php	}?>
 	</select>
 	</td>
+<td align="left"><input type="number" class="texto" name="monto"  id="monto"  value="<?=$monto_recibo;?>" required>
+
 </tr>
 
-<tr><th colspan="2">Cliente</th><th colspan="2">Telefono Cliente</th></tr>
+<tr><th >Cliente</th><th >Telefono Cliente</th><th colspan="2" >Detalle</th><th>Proveedor</th></tr>
 <tr>
-<td align="left" colspan="2"><input type="text" class="texto" name="nombre" size="80"  id="nombre" value="<?=$nombre_recibo;?>" required></td>
-<td align="left" colspan="2"><input type="text" class="texto" name="nro_contacto"  size="60" id="nro_contacto" value="<?=$cel_recibo;?>" required></td>
+<td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" value="<?=$nombre_recibo;?>" required></td>
+<td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" value="<?=$cel_recibo;?>" required></td>
+<td colspan="2" ><input type='text' class='texto' name='desc_recibo' value="<?=$desc_recibo;?>" size='60'></td>
+<td>
+	<select name="proveedor" id="proveedor" class="texto"  >
+	<option value="" >NINGUNO</option>
+<?php	
+	$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";
+	$resp3=mysqli_query($enlaceCon,$sql3);
+	while($dat3=mysqli_fetch_array($resp3))
+	{	
+?>
+<?php	$codProveedor=$dat3[0];
+		$nombreProveedor=$dat3[1];
+	?>
+		<option value="<?=$codProveedor;?>" <?php if($codProveedor==$cod_proveedor){echo "selected";}?>  ><?=$nombreProveedor;?></option>
+		
+<?php	}?>
+	</select>
+	</td>
 
-</td>
 </tr>
-<tr><th colspan="4">Detalle</th></tr>
-<td colspan="4" ><input type='text' class='texto' name='desc_recibo' value="<?=$desc_recibo;?>" size='150'></td>
 
-</tr>
-</table>"
+</table>
 
 
 <div class="divBotones">
