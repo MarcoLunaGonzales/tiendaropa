@@ -16,10 +16,17 @@ $id_recibo=$dat[0];
 
 
 $monto=$_POST['monto'];
+$tipoRecibo=$_POST['tipoRecibo'];
 $tipoPago=$_POST['tipoPago'];
 $nombre=$_POST['nombre'];
 $nro_contacto=$_POST['nro_contacto'];
 $desc_recibo=$_POST['desc_recibo'];
+$proveedor=$_POST['proveedor'];
+//echo "proveedor=".$proveedor;
+if(empty($proveedor)){
+	$proveedor=NULL;
+	//echo "entro if proveedor=".$proveedor;
+}
 
 $createdBy=$_COOKIE['global_usuario'];
 $createdDate=date("Y-m-d H:i:s");
@@ -29,8 +36,9 @@ $fecha=date("Y-m-d");
 
 
 $consulta="insert into recibos (id_recibo,fecha_recibo,cod_ciudad,nombre_recibo,desc_recibo,
-monto_recibo,created_by,created_date,cel_recibo,recibo_anulado,cod_tipopago) 
-values(".$id_recibo.",'".$fecha."',".$global_agencia.",'".$nombre."','".$desc_recibo."',".$monto.",".$createdBy.",'".$createdDate."','".$nro_contacto."',0,".$tipoPago.")";
+monto_recibo,created_by,created_date,cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor) 
+values(".$id_recibo.",'".$fecha."',".$global_agencia.",'".$nombre."','".$desc_recibo."',".$monto.",".$createdBy.",
+'".$createdDate."','".$nro_contacto."',0,".$tipoPago.",'".$tipoRecibo."','".$proveedor."')";
 //echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
