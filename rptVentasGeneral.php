@@ -575,7 +575,8 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 <td align="right"><strong><?=$totalGastos;?></strong></td>
 </tr>
 </table></center><br>
-<center><table class='textomediano'>
+<center>
+<table class='textomediano'>
 <tr><th colspan='5'>TOTALES POR TIPO DE PAGO</th></tr>
 <tr>
 <th>&nbsp;</th>
@@ -656,7 +657,7 @@ $totGTO=0;
 </tr>
 
 </table>
-
+</center>
 <?php 
 
 
