@@ -310,9 +310,6 @@ function mostrarBusqueda(){
 	document.getElementById('itemNombreMaterial').value='';	
 	document.getElementById('itemNombreMaterial').focus();		
 }
-
-
-
 function Hidden(){
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -398,7 +395,7 @@ function Hidden(){
 			</tr>
 		</table>
 		<div class="div-center">
-             <input type='button' class='boton-verde' value='Buscar Producto' id="btnBusqueda" onClick="cambiar_vista(this.form)">
+             <input type='button' class='boton-verde' value='Buscar Producto' id="btnBusqueda" onClick="javascript:cambiar_vista(this.form);">
 		</div>
 	
 	</div>
