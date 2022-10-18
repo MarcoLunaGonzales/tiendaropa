@@ -22,7 +22,8 @@ $fecha_finconsulta=($fecha_fin);
 $rpt_territorio=$_GET['rpt_territorio'];
 $rptMarca=$_GET["rpt_marca"];
 $rptTipoPago=$_GET["rpt_tipoPago"];
-
+//echo "marcaAA".$rptMarca;
+//echo "tipoPago".$rptTipoPago."<br>";
 $cadenaMarcas="TODOS";	
 if($rptMarca=="-1"){
 	 $rptMarca=""; $swMarca=0;	 
@@ -252,13 +253,119 @@ while($datos=mysqli_fetch_array($resp)){
 ?>	
 
 		<tr>
-		<td align="right" colspan="13"><strong>TOTAL <?php echo $descMarcaAnteriorPivote;?></strong></td>
+		<td align="right" colspan="13"><strong>TOTAL  VENTA <?php echo $descMarcaAnteriorPivote;?></strong></td>
 		<td align="right"><strong><?php echo $totalMarcaProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaDescProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaVentaProd;?></strong></td>			
 		</tr>
 		
+	<?php
+	  ////Recibos de la Marca
+	$totalRecMarca=0;
+	$sqlRecMar = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
+	r.nombre_recibo,r.desc_recibo,r.monto_recibo,
+	r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
+	r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor, r.cod_salida_almacen,
+	r.cod_estadorecibo, er.nombre_estado
+	from recibos r 
+	inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
+	inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
+	inner join tipos_recibo tr on(r.cod_tiporecibo=tr.cod_tiporecibo)
+	left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
+	left  join estados_recibo er on (r.cod_estadorecibo=er.cod_estado)
+	where r.cod_ciudad=".$global_agencia." and r.recibo_anulado=0 ";
+	$sqlRecMar = $sqlRecMar." AND r.fecha_recibo BETWEEN '".$fecha_iniconsulta."' and '".$fecha_finconsulta."'";
+	$sqlRecMar = $sqlRecMar." and r.cod_proveedor in (select cod_proveedor from proveedores_marcas where codigo=".$codMarcaAnteriorPivote.")";
+	$sqlRecMar=$sqlRecMar." order by r.id_recibo asc,r.cod_ciudad desc ";
 	
+
+	$respRecMar = mysqli_query($enlaceCon,$sqlRecMar);
+	$totalRecibo=0;
+	while ($datRecMar = mysqli_fetch_array($respRecMar)) {
+	
+		$id_recibo= $datRecMar['id_recibo'];
+		$fecha_recibo= $datRecMar['fecha_recibo'];
+		$vector_fecha_recibo=explode("-",$fecha_recibo);
+		$fecha_recibo_mostrar=$vector_fecha_recibo[2]."/".$vector_fecha_recibo[1]."/".$vector_fecha_recibo[0];
+		$cod_ciudad= $datRecMar['cod_ciudad'];
+		$descripcion= $datRecMar['descripcion'];
+		$nombre_recibo= $datRecMar['nombre_recibo'];
+		$desc_recibo= $datRecMar['desc_recibo'];
+		$monto_recibo= $datRecMar['monto_recibo'];
+		$created_by= $datRecMar['created_by'];
+		$modified_by= $datRecMar['modified_by'];
+		$created_date= $datRecMar['created_date'];
+		$modified_date= $datRecMar['modified_date'];
+		$cel_recibo = $datRecMar['cel_recibo'];
+		$recibo_anulado= $datRecMar['recibo_anulado'];
+		$cod_tipopago= $datRecMar['cod_tipopago'];
+		$nombre_tipopago= $datRecMar['nombre_tipopago'];
+		$cod_tiporecibo= $datRecMar['cod_tiporecibo'];
+		$nombre_tiporecibo= $datRecMar['nombre_tiporecibo'];
+		$cod_proveedor= $datRecMar['cod_proveedor'];
+		$nombre_proveedor= $datRecMar['nombre_proveedor'];
+		$cod_salida_almacen= $datRecMar['cod_salida_almacen'];
+		$cod_estadorecibo= $datRecMar['cod_estadorecibo'];
+		$nombre_estadorecibo= $datRecMar['nombre_estado'];
+		$created_date_mostrar="";
+		$totalRecMarca=$totalRecMarca+$monto_recibo;
+
+	// formatoFechaHora
+	if(!empty($created_date)){
+		$vector_created_date = explode(" ",$created_date);
+		$fechaReg=explode("-",$vector_created_date[0]);
+		$created_date_mostrar = $fechaReg[2]."/".$fechaReg[1]."/".$fechaReg[0]." ".$vector_created_date[1];
+	}
+	// fin formatoFechaHora
+
+	$modified_date_mostrar="";
+	// formatoFechaHora
+	if(!empty($modified_date)){
+		$vector_modified_date = explode(" ",$modified_date);
+		$fechaEdit=explode("-",$vector_modified_date[0]);
+		$modified_date_mostrar = $fechaEdit[2]."/".$fechaEdit[1]."/".$fechaEdit[0]." ".$vector_modified_date[1];
+	}
+	// fin formatoFechaHora
+	
+	/////	
+		$sqlRegUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$created_by;
+		$respRegUsu=mysqli_query($enlaceCon,$sqlRegUsu);
+		$usuReg =" ";
+		while($datRegUsu=mysqli_fetch_array($respRegUsu)){
+			$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
+		}
+	//////
+		$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
+		$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
+		$usuMod ="";
+		while($datModUsu=mysqli_fetch_array($respModUsu)){
+			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
+		}
+	?>
+	<tr>
+			<td><?=$nombre_proveedor;?><br/><?=$nombre_tiporecibo;?></td>
+			<td><?=$fecha_recibo_mostrar;?></td>
+			<td><?=$nombre_recibo;?></td>
+			<td><?=$desc_recibo;?></td>
+			<td>REC-<?=$id_recibo;?></td>
+			<td><?=$nombre_tipopago;?></td>
+			<td align='right'><?=$monto_recibo;?></td>
+			<td align='right'>&nbsp;</td>
+			<td><?=$usuReg;?><br><?=$created_date_mostrar;?></td>
+			<td><?=$usuMod;?><br><?=$modified_date_mostrar;?></td>	
+			<td colspan="5">&nbsp;</td>
+			<td align='right'><?=$monto_recibo;?></td>
+	</tr>
+	<?php
+	}
+	
+	?>
+		<tr>
+			<td align='right' colspan="13"><STRONG>TOTAL RECIBOS <?php echo $descMarcaAnteriorPivote;?> </strong></td>
+			<td align='right'>&nbsp;</td>
+			<td align='right'>&nbsp;</td>
+			<td align='right'><STRONG><?=$totalRecMarca;?></strong></td>
+	</tr>
 
 <?php 			
 			$totalMarcaProd=0;
@@ -312,7 +419,7 @@ $totalVentaDescFormato=number_format($totalVentaDesc,2,".",",");
 $totalVentaCobradoFormato=number_format($totalVentaCobrado,2,".",",");
  ?>
 <tr>
-		<td align="right" colspan="13"><strong>TOTAL <?php echo $descMarcaPivote;?></strong></td>
+		<td align="right" colspan="13"><strong>TOTAL VENTA <?php echo $descMarcaPivote;?></strong></td>
 		<td align="right"><strong><?php echo $totalMarcaProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaDescProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaVentaProd;?></strong></td>		
