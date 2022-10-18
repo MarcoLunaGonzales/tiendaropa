@@ -242,6 +242,8 @@ while($datos2=mysqli_fetch_array($resp2)){
 	<td>-</td>
 	<td>-</td>
 	<td>-</td>
+	<td>-</td>	
+	<td>-</td>
 	<td>-</td>
 	<td><strong>$nombreTipoPago2</strong></td>
 	<td align='right'><strong>$montoTipoPagoFormat</strong></td>

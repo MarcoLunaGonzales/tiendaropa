@@ -254,7 +254,7 @@ echo "<tr>
 	<td>-</td>
 	<td>-</td>
 	<td>-</td>
-		<td>-</td>
+	<td>-</td>
 	<td>-</td>
 
 	<td><strong>Total Monto Venta(s)</strong></td>
