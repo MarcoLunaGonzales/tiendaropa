@@ -633,9 +633,9 @@ $totGTO=0;
 		}
 		/////////////////////////////////
 		if($codTP<>4){
-		$totVTA=$totVTA+$totalVTATP;
-		$totREC=$totREC+$totalRECTP;
-		$totGTO=$totGTO+$totalGTOTP;
+			$totVTA=$totVTA+$totalVTATP;
+			$totREC=$totREC+$totalRECTP;
+			$totGTO=$totGTO+$totalGTOTP;
 		}
 ?>
 <tr>
@@ -652,7 +652,7 @@ $totGTO=0;
 <td align="right">&nbsp;</td>
 <td align="right"><strong><?=$totVTA;?></strong></td>
 <td align="right"><strong><?=$totREC;?></strong></td>
-<td align="right"><strong><?=$$totGTO;?></strong></td>
+<td align="right"><strong><?=$totGTO;?></strong></td>
 <td align="right"><strong><?=($totVTA+$totREC-$totGTO);?></strong></td>
 </tr>
 

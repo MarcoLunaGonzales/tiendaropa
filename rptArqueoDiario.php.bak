@@ -523,21 +523,7 @@ $totGTO=0;
 </table>
 </center>
 <?php
-$saldoCajaChica=$montoCajaChica+$totalVenta+$totalRecibo-$totalGastos;
-$saldoCajaChicaF=number_format($saldoCajaChica,2,".",",");
 
-$saldoCajaChica2=$montoCajaChica+$totalMontoxTipoPagoEfectivo-$totalGastos;
-$saldoCajaChica2F=number_format($saldoCajaChica2,2,".",",");
-
-?>
-<br><center><table class='textomediano'>
-<tr><th>Saldo Inicial Caja Chica + Ingresos - Gastos   ---->  </th>
-<th align='right'><?=$saldoCajaChicaF;?></th>
-</tr>
-<tr><th>Saldo Inicial Caja Chica + Ingresos Efectivo - Gastos   ---->  </th>
-<th align='right'><?=$saldoCajaChica2F;?></th>
-</tr>
-</table></center><br>
 
 
 

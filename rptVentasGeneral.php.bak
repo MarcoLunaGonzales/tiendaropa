@@ -575,7 +575,8 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 <td align="right"><strong><?=$totalGastos;?></strong></td>
 </tr>
 </table></center><br>
-<center><table class='textomediano'>
+<center>
+<table class='textomediano'>
 <tr><th colspan='5'>TOTALES POR TIPO DE PAGO</th></tr>
 <tr>
 <th>&nbsp;</th>
@@ -632,9 +633,9 @@ $totGTO=0;
 		}
 		/////////////////////////////////
 		if($codTP<>4){
-		$totVTA=$totVTA+$totalVTATP;
-		$totREC=$totREC+$totalRECTP;
-		$totGTO=$totGTO+$totalGTOTP;
+			$totVTA=$totVTA+$totalVTATP;
+			$totREC=$totREC+$totalRECTP;
+			$totGTO=$totGTO+$totalGTOTP;
 		}
 ?>
 <tr>
@@ -656,7 +657,7 @@ $totGTO=0;
 </tr>
 
 </table>
-
+</center>
 <?php 
 
 

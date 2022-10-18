@@ -22,8 +22,7 @@ $fecha_finconsulta=($fecha_fin);
 $rpt_territorio=$_GET['rpt_territorio'];
 $rptMarca=$_GET["rpt_marca"];
 $rptTipoPago=$_GET["rpt_tipoPago"];
-//echo "marcaAA".$rptMarca;
-//echo "tipoPago".$rptTipoPago."<br>";
+
 $cadenaMarcas="TODOS";	
 if($rptMarca=="-1"){
 	 $rptMarca=""; $swMarca=0;	 
