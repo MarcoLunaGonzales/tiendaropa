@@ -501,10 +501,7 @@ if($view==1){
 }   
 $consulta = $consulta."ORDER BY s.fecha desc, s.hora_salida desc limit 0, 70 ";
 
-//echo $consulta;
-//
-$resp = mysqli_query($enlaceCon,$consulta);
-    
+$resp = mysqli_query($enlaceCon,$consulta);    
     
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];

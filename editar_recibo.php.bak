@@ -32,7 +32,7 @@ $global_almacen=$_COOKIE['global_almacen'];
 $idReciboEditar=$_GET["idRecibo"];
 
 	$sql=" select fecha_recibo,nombre_recibo,
-desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor
+desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor, resta_ventas_proveedor
 from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";	
 	 
 
@@ -53,6 +53,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 		$cod_tipopago=$dat['cod_tipopago'];
 		$cod_tiporecibo=$dat['cod_tiporecibo'];
 		$cod_proveedor=$dat['cod_proveedor'];
+		$resta_ventas_proveedor=$dat['resta_ventas_proveedor'];
 	}
 
 ?>
@@ -106,10 +107,32 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" value="<?=$nombre_recibo;?>" required></td>
 <td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" value="<?=$cel_recibo;?>" required></td>
 <td colspan="2" ><input type='text' class='texto' name='desc_recibo' value="<?=$desc_recibo;?>" size='60'></td>
-
+<td>
+	<select name="proveedor" id="proveedor" class="texto"  >
+	<option value="" >NINGUNO</option>
+<?php	
+	$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";
+	$resp3=mysqli_query($enlaceCon,$sql3);
+	while($dat3=mysqli_fetch_array($resp3))
+	{	
+?>
+<?php	$codProveedor=$dat3[0];
+		$nombreProveedor=$dat3[1];
+	?>
+		<option value="<?=$codProveedor;?>" <?php if($codProveedor==$cod_proveedor){echo "selected";}?>  ><?=$nombreProveedor;?></option>
+		
+<?php	}?>
+	</select>
+	</td>
 
 </tr>
-
+<tr>
+<th>Restar de Venta Proveedor</th> 
+<th colspan="5">
+ SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1"  >&nbsp;&nbsp;&nbsp;&nbsp;
+ NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" checked> 
+</th>
+</tr>
 </table>
 
 

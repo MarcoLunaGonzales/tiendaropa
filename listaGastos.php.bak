@@ -275,12 +275,15 @@ while ($dat = mysqli_fetch_array($resp)) {
 			$usuReg =$datRegUsu['nombres'][0].$datRegUsu['paterno'];		
 		}
 	//////
+	$usuMod ="";
+	 if(!empty($modified_by)){
 		$sqlModUsu=" select nombres,paterno  from funcionarios where codigo_funcionario=".$modified_by;
 		$respModUsu=mysqli_query($enlaceCon,$sqlModUsu);
 		$usuMod ="";
 		while($datModUsu=mysqli_fetch_array($respModUsu)){
 			$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
 		}
+	}
 	////////////
 	  $color_fondo = "";
 	if ($gasto_anulado == 1) {

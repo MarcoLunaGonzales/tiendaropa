@@ -30,7 +30,8 @@ if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
 <th>Contacto</th>
 <th>Nro de Contacto</th>
 <th>Descripcion</th>
-<th>&nbsp;</th>
+<th>Proveedor</th>
+<th>Resta Venta<br>Proveedor</th>
 <th>Registrado Por</th>
 <th>Modificado Por</th>
 <th>&nbsp;</th>
@@ -42,7 +43,7 @@ $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
 r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
 r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor, r.cod_salida_almacen,
-r.cod_estadorecibo, er.nombre_estado
+r.cod_estadorecibo, er.nombre_estado,r.resta_ventas_proveedor
 from recibos r 
 inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
@@ -93,6 +94,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$cod_salida_almacen= $dat['cod_salida_almacen'];
 	$cod_estadorecibo= $dat['cod_estadorecibo'];
 	$nombre_estadorecibo= $dat['nombre_estado'];
+	$resta_ventas_proveedor= $dat['resta_ventas_proveedor'];
 	//Datos de la Venta///
 	
 	$sqlVenta = " SELECT s.fecha, s.hora_salida, s.nro_correlativo, s.cod_tipo_doc, td.abreviatura, razon_social, nit,
@@ -209,8 +211,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 	</div>
 		
 	</td>
+	<td>
 		<?php 	if ($recibo_anulado == 0) { ?>
-		<td>
+		
 		<div id="divEstadoRecibo<?php echo $id_recibo;?>"><?=$nombre_estadorecibo;?>
 		<?php if ($cod_estadorecibo == 1) {?>
 		<a  onclick='cerrarRecibo(<?=$id_recibo;?>)' >Cerrar Recibo</a>
@@ -219,8 +222,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 
 	?>
 		</div>
-		</td>
+		
 		<?php 	}?>
+		</td>
 	</tr>
 <?php	
 }

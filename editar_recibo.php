@@ -32,7 +32,7 @@ $global_almacen=$_COOKIE['global_almacen'];
 $idReciboEditar=$_GET["idRecibo"];
 
 	$sql=" select fecha_recibo,nombre_recibo,
-desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor
+desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor, resta_ventas_proveedor
 from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";	
 	 
 
@@ -53,6 +53,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 		$cod_tipopago=$dat['cod_tipopago'];
 		$cod_tiporecibo=$dat['cod_tiporecibo'];
 		$cod_proveedor=$dat['cod_proveedor'];
+		$resta_ventas_proveedor=$dat['resta_ventas_proveedor'];
 	}
 
 ?>
@@ -125,7 +126,13 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 	</td>
 
 </tr>
-
+<tr>
+<th>Restar de Venta Proveedor</th> 
+<th colspan="5">
+ SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1" <?php if($resta_ventas_proveedor=="1"){ echo "checked";} ?>  >&nbsp;&nbsp;&nbsp;&nbsp;
+ NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" <?php if($resta_ventas_proveedor=="0"){ echo "checked";} ?>> 
+</th>
+</tr>
 </table>
 
 
