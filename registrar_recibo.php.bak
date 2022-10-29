@@ -93,7 +93,7 @@ else
 <tr>
 <td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" required></td>
 <td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" required></td>
-<td colspan="2" ><input type='text' class='texto' name='desc_recibo' size='50'></td>
+<td colspan="2" ><input type='text' class='texto' name='desc_recibo' size='60'></td>
 <td>
 	<select name="proveedor" id="proveedor" class="texto"  >
 	<option value="" >NINGUNO</option>
@@ -112,11 +112,16 @@ else
 	</select>
 </td>
 
-
-</td>
+</tr>
+<tr>
+<th>Restar de Venta Proveedor</th> 
+<tH colspan="5">
+ SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1"  >&nbsp;&nbsp;&nbsp;&nbsp;
+ NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" checked> 
+</tH>
 </tr>
 
-</table>"
+</table>
 
 
 <div class="divBotones">

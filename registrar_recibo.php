@@ -112,11 +112,16 @@ else
 	</select>
 </td>
 
-
-</td>
+</tr>
+<tr>
+<th>Restar de Venta Proveedor</th> 
+<th colspan="5">
+ SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1"  >&nbsp;&nbsp;&nbsp;&nbsp;
+ NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" checked> 
+</th>
 </tr>
 
-</table>"
+</table>
 
 
 <div class="divBotones">

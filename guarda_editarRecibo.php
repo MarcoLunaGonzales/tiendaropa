@@ -16,6 +16,7 @@ $nombre=$_POST['nombre'];
 $nro_contacto=$_POST['nro_contacto'];
 $desc_recibo=$_POST['desc_recibo'];
 $proveedor=$_POST['proveedor'];
+$restarVentaProv=$_POST['restarVentaProv'];
 //echo "proveedor=".$proveedor;
 if(empty($proveedor)){
 	$proveedor=NULL;
@@ -38,7 +39,8 @@ $consulta.=" cod_tipopago='".$tipoPago."',";
 $consulta.=" cod_tiporecibo='".$tipoRecibo."',";
 $consulta.=" cod_proveedor='".$proveedor."',";
 $consulta.=" modified_by='".$modifiedBy."',";
-$consulta.=" modified_date='".$modifiedDate."' ";
+$consulta.=" modified_date='".$modifiedDate."', ";
+$consulta.=" resta_ventas_proveedor='".$restarVentaProv."' ";
 $consulta.=" where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";
 
 //echo $consulta;

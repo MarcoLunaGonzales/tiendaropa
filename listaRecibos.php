@@ -42,6 +42,7 @@ function ShowBuscar(){
 	document.getElementById('divProfileData').style.visibility='visible';
 	document.getElementById('divProfileDetail').style.visibility='visible';
 }
+
 function ShowBuscarVenta(idRec){
 	document.getElementById('divRecuadroExt2').style.visibility='visible';
 	document.getElementById('divProfileData2').style.visibility='visible';
@@ -295,7 +296,7 @@ $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
 r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
 r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor, r.cod_salida_almacen,
-r.cod_estadorecibo, er.nombre_estado
+r.cod_estadorecibo, er.nombre_estado, r.resta_ventas_proveedor
 from recibos r 
 inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
@@ -327,7 +328,8 @@ $resp = mysqli_query($enlaceCon,$consulta);
 <th>Contacto</th>
 <th>Nro de Contacto</th>
 <th>Descripcion</th>
-<th>&nbsp;</th>
+<th>Proveedor</th>
+<th>Resta Venta<br>Proveedor</th>
 <th>Registrado Por</th>
 <th>Modificado Por</th>
 <th>&nbsp;</th>
@@ -360,6 +362,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$cod_salida_almacen= $dat['cod_salida_almacen'];
 	$cod_estadorecibo= $dat['cod_estadorecibo'];
 	$nombre_estadorecibo= $dat['nombre_estado'];
+	$resta_ventas_proveedor= $dat['resta_ventas_proveedor'];
 	//Datos de la Venta///
 	
 	$sqlVenta = " SELECT s.fecha, s.hora_salida, s.nro_correlativo, s.cod_tipo_doc, td.abreviatura, razon_social, nit,
@@ -452,6 +455,18 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td><?=$cel_recibo;?></td>
 	<td><?=$desc_recibo;?></td>
 	<td><?=$nombre_proveedor;?></td>		
+	<td>
+	<?php    
+
+		if($resta_ventas_proveedor=="0"){
+			echo "NO";
+		}
+		if($resta_ventas_proveedor=="1"){
+			echo "SI";
+		}
+		
+		?>
+	</td>
 	<td><?=$usuReg;?><br><?=$created_date_mostrar;?></td>
 	<td><?=$usuMod;?><br><?=$modified_date_mostrar;?></td>		
 	<td><a href="formatoRecibo.php?idRecibo=<?=$id_recibo;?>" target="_BLANK">Ver Recibo</a></td>

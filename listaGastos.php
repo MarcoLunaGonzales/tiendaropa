@@ -313,7 +313,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td><?=$usuReg;?><br><?=$created_date_mostrar;?></td>
 	<td><?=$usuMod;?><br><?=$modified_date_mostrar;?></td>	
 	
-	<td><a href="formatoGasto.php?idGasto=<?=$cod_gasto;?>" target="_BLANK">Ver Gasto</a>
+	<td><a href="formatoGasto.php?idGasto=<?=$cod_gasto;?>" target="_BLANK">Ver Gasto</a></td>
 	</tr>
 <?php	
 }

@@ -126,6 +126,10 @@ while($datos=mysqli_fetch_array($resp)){
 $respResponsable=mysqli_query($enlaceCon,$sqlResponsable);
 $datResponsable=mysqli_fetch_array($respResponsable);
 $nombreFuncionario=$datResponsable[0];
+
+	/////// Verificar si la Factura esta relacionada con un recibo///
+		$sqlRec=" select  from recibos where cod_salida_almacen=".$codSalida;
+	/////////
 	
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	
