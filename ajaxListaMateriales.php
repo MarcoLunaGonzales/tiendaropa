@@ -9,8 +9,14 @@ require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
-$codMarca=$_GET['codMarca'];
-$codBarraCod2=$_GET['codBarraCod2'];
+$codMarca="";
+$codBarraCod2="";
+if(isset($_GET['codMarca'])){
+	$codMarca=$_GET['codMarca'];	
+}
+if(isset($_GET['codBarraCod2'])){
+	$codBarraCod2=$_GET['codBarraCod2'];
+}
 $globalAlmacen=$_COOKIE['global_almacen'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $globalAgencia=$_COOKIE["global_agencia"];

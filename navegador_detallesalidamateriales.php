@@ -80,7 +80,7 @@
 	$pesoTotal=0;
 	
 	$costoTotal=0;
-
+	$montoUnitario=0;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$nombre_material=$dat_detalle[1];

@@ -5,6 +5,11 @@ require('funciones.php');
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 ?>
 <html>
     <head>
@@ -496,7 +501,7 @@ if($view==1){
 }   
 $consulta = $consulta."ORDER BY s.fecha desc, s.hora_salida desc limit 0, 70 ";
 
-echo $consulta;
+//echo $consulta;
 //
 $resp = mysqli_query($enlaceCon,$consulta);
     
@@ -727,7 +732,6 @@ echo "</form>";
                         }
                     ?>
                     </select>
-                
                 </td>
             </tr>           
             <tr>
@@ -736,9 +740,9 @@ echo "</form>";
                     <select name="tipoVentaBusqueda" class="texto" id="tipoVentaBusqueda">
                         <option value="0">Todos</option>
                     <?php
-                        $sqlClientes="select c.`cod_tipopago`, c.`nombre_tipopago` from tipos_pago c order by 2";
+                        $sqlClientes="select c.cod_tipopago, c.nombre_tipopago from tipos_pago c order by 2";
                         $respClientes=mysqli_query($enlaceCon,$sqlClientes);
-                        while($datClientes=mysql_fetch_array($respClientes)){
+                        while($datClientes=mysqli_fetch_array($respClientes)){
                             $codCliBusqueda=$datClientes[0];
                             $nombreCliBusqueda=$datClientes[1];
                     ?>
@@ -747,7 +751,6 @@ echo "</form>";
                         }
                     ?>
                     </select>
-                
                 </td>
             </tr>
             <tr>
@@ -762,8 +765,8 @@ echo "</form>";
             </tr>           
         </table>    
         <center>
-            <input type='button' value='Buscar' onClick="ajaxBuscarVentas(this.form)">
-            <input type='button' value='Cancelar' onClick="HiddenBuscar()">
+            <input type='button' class="boton" value='Buscar' onClick="ajaxBuscarVentas(this.form)">
+            <input type='button' class="boton2" value='Cancelar' onClick="HiddenBuscar()">
             
         </center>
     </div>

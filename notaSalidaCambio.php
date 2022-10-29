@@ -1,10 +1,14 @@
 <?php
+
 require("fpdf.php");
-require("conexion.inc");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
-date_default_timezone_set('America/La_Paz');
+/* error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+*/
 
+date_default_timezone_set('America/La_Paz');
 
 class PDF extends FPDF
 { 	
@@ -13,12 +17,12 @@ class PDF extends FPDF
 	{
 		$codigoVenta=$_GET['codVenta'];
 		$sqlEmp="select cod_empresa, nombre, nit, direccion, ciudad from datos_empresa";
-		$respEmp=mysql_query($sqlEmp);
+		$respEmp=mysqli_query($enlaceCon, $sqlEmp);
 
-		$nombreEmpresa=mysql_result($respEmp,0,1);
-		$nitEmpresa=mysql_result($respEmp,0,2);
-		$direccionEmpresa=mysql_result($respEmp,0,3);
-		$ciudadEmpresa=mysql_result($respEmp,0,4);
+		$nombreEmpresa=mysqli_result($respEmp,0,1);
+		$nitEmpresa=mysqli_result($respEmp,0,2);
+		$direccionEmpresa=mysqli_result($respEmp,0,3);
+		$ciudadEmpresa=mysqli_result($respEmp,0,4);
 	
 		//datos documento				
 		$sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
@@ -30,8 +34,8 @@ class PDF extends FPDF
 			(select v.placa from vehiculos v where v.codigo=s.cod_vehiculo) as placa
 			from `salida_almacenes` s, `tipos_docs` t
 				where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_tipo_doc`=t.`codigo`";
-		$respDatosVenta=mysql_query($sqlDatosVenta);
-		while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
+		$respDatosVenta=mysqli_query($enlaceCon, $sqlDatosVenta);
+		while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 			$fechaVenta=$datDatosVenta[0];
 			$nombreTipoDoc=$datDatosVenta[1];
 			$nombreCliente=$datDatosVenta[2];
@@ -133,12 +137,12 @@ $sql_detalle="select m.codigo_barras, m.`descripcion_material`,
 	s.cod_salida_almacenes='$codigoVenta'
 	group by m.`codigo_material` order by 2 desc;";
 	
-$resp_detalle=mysql_query($sql_detalle);
+$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
 $montoUnitarioTotal=0;
-while($dat_detalle=mysql_fetch_array($resp_detalle))
+while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {	$codItem=$dat_detalle[0];
 		$nombreItem=$dat_detalle[1];
 		$montoVenta=$dat_detalle[2];
@@ -163,11 +167,7 @@ while($dat_detalle=mysql_fetch_array($resp_detalle))
 
 	$pdf->Cell(0,0,$codItem,0,0);
 	$pdf->SetX(40);
-<<<<<<< HEAD
 	$pdf->Cell(0,0,utf8_decode($nombreItem),0,0);
-=======
-	$pdf->Cell(0,0,$nombreItem,0,0);
->>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
 	$pdf->SetX(165);
@@ -203,13 +203,13 @@ $pdf->ln(5);
 	and ii.cod_cambio='$codigoVenta'
 	group by m.`codigo_material` order by 2 desc;";
 	
-$resp_detalle=mysql_query($sql_detalle);
+$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 $indice=1;
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
 $montoUnitarioTotal=0;
-	while($dat_detalle=mysql_fetch_array($resp_detalle))
+	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$codItem=$dat_detalle[0];
 		$nombreItem=$dat_detalle[1];
 		$montoVenta=$dat_detalle[2];
@@ -235,11 +235,7 @@ $montoUnitarioTotal=0;
 
 		$pdf->Cell(0,0,$codItem,0,0);
 	$pdf->SetX(40);
-<<<<<<< HEAD
 	$pdf->Cell(0,0,utf8_decode($nombreItem),0,0);
-=======
-	$pdf->Cell(0,0,$nombreItem,0,0);
->>>>>>> fa73857d749ed2032248cb8f08cdb257652af16c
 	$pdf->SetX(140);
 	$pdf->Cell(15,0,$colorItem."/".$tallaItem,0,0,"R");
 	$pdf->SetX(165);
@@ -273,12 +269,12 @@ $codigoVenta=$_GET['codVenta'];
 	s.cod_cambio='$codigoVenta'
 	group by m.`codigo_material` order by 2 desc;";
 	
-$resp_detalle=mysql_query($sql_detalle);
+$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 $montoTotal=0;
 $pesoTotal=0;
 $pesoTotalqq=0;
 $montoUnitarioTotal=0;
-while($dat_detalle=mysql_fetch_array($resp_detalle))
+while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {	$codItem=$dat_detalle[0];
 		$nombreItem=$dat_detalle[1];
 		$montoVenta=$dat_detalle[2];

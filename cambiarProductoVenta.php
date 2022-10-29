@@ -1,3 +1,11 @@
+<?php
+
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
+require("funciones.php");
+
+
+?>
 <html>
     <head>
         <title>Busqueda</title>
@@ -595,10 +603,10 @@ function buscarItemAumentoMonto(){
 		
 <?php
 echo "</head><body onLoad='funcionInicio();'>";
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
-require("funciones.php");
-if($fecha==""){   
+
+$banderaErrorFacturacion=0;
+
+if(isset($fecha)==""){   
 	$fecha=date("Y-m-d");
 }
 
@@ -744,13 +752,13 @@ if($tipoDocDefault==2){
 	$nitDefault="";
 }
 ?>
-<tr>
+<!--tr>
 	<th style="background:#2874A6;">Fecha </th>
     <th style="background:#2874A6;">Tipo Precio</th>
     <th style="background:#2874A6;">Tipo Pago</th>
 	<th style="background:#2874A6;">Vendedor Actual</th>
 	<th colspan="2" style="background:#2874A6;">Observaciones</th>
-</tr>
+</tr-->
 <tr>	
 	<td align='left'>
 	<input type='text' class='texto' value='<?php echo $fecha?>' id='fecha' size='20' name='fecha' readonly>
@@ -813,8 +821,6 @@ if($tipoDocDefault==2){
 </tr>
 
 </table>
-<br>
-
 	<input type="hidden" name="codVenta" value="<?=$codigoVenta?>">
 	<h2>Productos a Cambiar</h2>
 <div id='divCuerpo'><center>
@@ -887,12 +893,9 @@ while($datosX=mysqli_fetch_array($resp_detalle))
        	 <td colspan="5"><b>Total Vendido</b></td>
 	     <td><b><?=number_format($montoUnitarioTotal,2,'.','')?></b></td>
       </tr>
-</table></center><br>
+</table></center>
 </div>
 
-
-
-<br>
 
 <input type="hidden" id="ventas_codigo"><!--para validar la funcion mas desde ventas-->
 <div class="codigo-barras div-center">
@@ -903,7 +906,7 @@ while($datosX=mysqli_fetch_array($resp_detalle))
 	<table align="center" class="texto" width="100%" id="data0">
 	<tr>
 		<td align="center" colspan="9">
-			<b>Detalle de la Venta    </b><input class="boton" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/>
+			<b>Detalle del Cambio</b><input class="boton" type="button" value="Adicionar Item (+)" onclick="mas(this)" accesskey="a"/>
 		</td>
 	</tr>
 
