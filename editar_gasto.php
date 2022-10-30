@@ -102,7 +102,7 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 	</td>
 	
 
-<td align="left"><input type="number"  name="monto" value="<?=$monto;?>"  id="monto" required></td>
+<td align="left"><input type="number" step="0.01"  name="monto" value="<?=$monto;?>"  id="monto" required></td>
 </tr>
 <tr><th>Grupo Gasto</th><th colspan="3">Descripcion de Gasto </th> <th >Proveedor</th></tr>
 <tr>

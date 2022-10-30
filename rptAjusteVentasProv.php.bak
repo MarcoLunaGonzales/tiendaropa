@@ -693,7 +693,7 @@ $totalEgresoProveeedor=$totalEgresoProveeedor+$totalGastoProveedor;
 		</tr>
 	
 <?php
-$totalaPagar=$totalaPagar+($totalIngresoProveeedor-$totalEgresoProveeedor);
+$totalaPagar=$totalaPaga+($totalIngresoProveeedor-$totalEgresoProveeedor);
 
 	}
 
