@@ -87,7 +87,7 @@ else
 	</td>
 	
 
-<td align="left"><input type="number" class="texto" name="monto"  id="monto" required></td>
+<td align="left"><input type="number"  name="monto"  id="monto" required></td>
 </tr>
 <tr><th>Grupo Gasto</th><th colspan="3">Descripcion de Gasto </th> <th >Proveedor</th></tr>
 <tr>

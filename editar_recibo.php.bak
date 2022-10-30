@@ -129,8 +129,8 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <tr>
 <th>Restar de Venta Proveedor</th> 
 <th colspan="5">
- SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1"  >&nbsp;&nbsp;&nbsp;&nbsp;
- NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" checked> 
+ SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1" <?php if($resta_ventas_proveedor=="1"){ echo "checked";} ?>  >&nbsp;&nbsp;&nbsp;&nbsp;
+ NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" <?php if($resta_ventas_proveedor=="0"){ echo "checked";} ?>> 
 </th>
 </tr>
 </table>

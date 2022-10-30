@@ -115,10 +115,10 @@ else
 </tr>
 <tr>
 <th>Restar de Venta Proveedor</th> 
-<tH colspan="5">
+<th colspan="5">
  SI<input type="radio" name="restarVentaProv" id="restarVentaProv" value="1"  >&nbsp;&nbsp;&nbsp;&nbsp;
  NO<input type="radio" name="restarVentaProv" id="restarVentaProv" value="0" checked> 
-</tH>
+</th>
 </tr>
 
 </table>

@@ -124,7 +124,7 @@ $respProvMarcas=mysqli_query($enlaceCon,$sqlProvMarcas);
 	$totalVentaProd=0;
 	$totalVentaDesc=0;
 	$totalVentaCobrado=0;
-
+$totalaPagar=0;
 while ($datProvMarcas = mysqli_fetch_array($respProvMarcas)) {
 	
 	$codProveedor=$datProvMarcas['cod_proveedor'];
@@ -134,7 +134,7 @@ while ($datProvMarcas = mysqli_fetch_array($respProvMarcas)) {
 	
 	$totalIngresoProveeedor=0;
 ?>
-<tr><td colspan="15" bgcolor='#FBE7B7'  ><strong><?=$nombreProveedor;?> MARCA:<?=$nombreMarca;?><strong></td></tr>
+<tr><td colspan="15"  ><strong><?=$nombreProveedor;?> MARCA:<?=$nombreMarca;?><strong></td></tr>
 <?php
 
 	$sql=" select mar.nombre, concat(s.fecha,' ',s.hora_salida)as fecha,c.nombre_cliente,
@@ -275,7 +275,7 @@ while ($datProvMarcas = mysqli_fetch_array($respProvMarcas)) {
 	$totalIngresoProveeedor=$totalIngresoProveeedor+$totalMarcaVentaProd;
 	?>
 	<tr>
-		<td align="right" colspan="12"><strong>TOTAL VENTA <?php echo $nombreProveedor;?></strong></td>
+		<td align="right" colspan="12"><strong>Ingreso por Ventas <?php echo $nombreProveedor;?></strong></td>
 		<td align="right"><strong><?php echo $totalMarcaProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaDescProd;?></strong></td>		
 		<td align="right"><strong><?php echo $totalMarcaVentaProd;?></strong></td>		
@@ -404,13 +404,13 @@ while ($datProvMarcas = mysqli_fetch_array($respProvMarcas)) {
 	$totalIngresoProveeedor=$totalIngresoProveeedor+$totalRecProveedor;
 	?>
 		<tr>
-			<td align='right' colspan="12"><STRONG>TOTAL RECIBOS <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12"><STRONG>Ingreso por Recibos <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=$totalRecProveedor;?></strong></td>
 		</tr>
 		<tr bgcolor='#d3ffce'  >
-			<td align='right' colspan="12" ><STRONG>TOTAL INGRESO <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12" ><STRONG>Total Ingresos <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=$totalIngresoProveeedor;?></strong></td>
@@ -541,7 +541,7 @@ $totalEgresoProveeedor=0;
 	$totalEgresoProveeedor=$totalEgresoProveeedor+$totalRecEgresoProveedor;
 	?>
 		<tr >
-			<td align='right' colspan="12"><STRONG>TOTAL EGRESO RECIBOS <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12"><STRONG>Egreso por Recibos <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=$totalRecEgresoProveedor;?></strong></td>
@@ -565,7 +565,7 @@ where g.cod_ciudad=".$global_agencia." and g.cod_tipogasto=2 and g.cod_proveedor
 	if($numGasto==0){
 		?>
 		<tr>
-			<td align='right' colspan="12"><STRONG>TOTAL GASTOS <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12"><STRONG>Egreso por Gastos <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=$totalGastoProveedor;?></strong></td>
@@ -680,25 +680,27 @@ $totalEgresoProveeedor=$totalEgresoProveeedor+$totalGastoProveedor;
 ?>	
 
 		<tr bgcolor="F6D2CA">
-			<td align='right' colspan="12"><STRONG>TOTAL EGRESO <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12"><STRONG>Total Egresos <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=$totalEgresoProveeedor;?></strong></td>
 		</tr>	
 				<tr bgcolor="#F8FBB7">
-			<td align='right' colspan="12"><STRONG>MONTO A FAVOR DE <?php echo $nombreProveedor;?> </strong></td>
+			<td align='right' colspan="12"><STRONG>Monto a Pagar a <?php echo $nombreProveedor;?> </strong></td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'>&nbsp;</td>
 			<td align='right'><STRONG><?=($totalIngresoProveeedor-$totalEgresoProveeedor);?></strong></td>
 		</tr>
 	
 <?php
+$totalaPagar=$totalaPaga+($totalIngresoProveeedor-$totalEgresoProveeedor);
 
 	}
 
 		$totalVentaProdFormato=number_format($totalVentaProd,2,".",",");
 		$totalVentaDescFormato=number_format($totalVentaDesc,2,".",",");
 		$totalVentaCobradoFormato=number_format($totalVentaCobrado,2,".",",");
+		$totalaPagarF=number_format($totalaPagar,2,".",",");
 ?>
 <tr>
 	
@@ -707,6 +709,13 @@ $totalEgresoProveeedor=$totalEgresoProveeedor+$totalGastoProveedor;
 		<td align="right"><strong><?php echo $totalVentaDescFormato;?></strong></td>		
 		<td align="right"><strong><?php echo $totalVentaCobradoFormato;?></strong></td>		
 		</tr>	
+<tr>
+	
+		<td colspan="12" align="right"><strong>Total a Pagar </strong></td>
+		<td align="right">&nbsp;</td>		
+		<td align="right">&nbsp;</td>		
+		<td align="right"><strong><?php echo $totalaPagarF;?></strong></td>		
+		</tr>			
 </table>		
 </body>
 </html>

@@ -85,7 +85,7 @@ else
 <?php	}?>
 	</select>
 	</td>
-<td align="left"><input type="number" class="texto" name="monto"  id="monto" required></td>
+<td align="left"><input type="number" step="0.01"  class="texto" name="monto"  id="monto" required></td>
 
 </tr>
 
