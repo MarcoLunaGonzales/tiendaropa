@@ -2,6 +2,13 @@
 require("conexionmysqli.inc");
 require("estilos.inc");
 require("funciones.php");
+
+/*require('conexionmysqli.inc');
+require('estilos_reportes_almacencentral.php');
+require('function_formatofecha.php');
+
+require('funcion_nombres.php');*/
+
 ?>
 
 <html>
@@ -32,7 +39,7 @@ $global_agencia=$_COOKIE['global_agencia'];
 <form id='guarda_recibo' action='guarda_recibo.php' method='post' name='form1' >
 <table border='0' class='textotit' align='center'><tr><th>Registro de Recibo</th></tr></table><br>
 <table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">
-<tr><th>Tipo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
+<tr><th>Tipo Recibo</th><th>Grupo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
 <tr>
 <td>
 	<select name="tipoRecibo" id="tipoRecibo" class="texto"  >
@@ -50,7 +57,22 @@ $global_agencia=$_COOKIE['global_agencia'];
 <?php	}?>
 	</select>
 	</td>
-
+<td>
+	<select name="grupoRecibo" id="grupoRecibo" class="texto"  >
+<?php	
+	$sqlGrupoRecibo="select cod_gruporecibo, nombre_gruporecibo from grupos_recibo where estado=1  order by cod_gruporecibo asc";
+	$respGrupoRecibo=mysqli_query($enlaceCon,$sqlGrupoRecibo);
+	while($datGrupoRecibo=mysqli_fetch_array($respGrupoRecibo))
+	{	
+?>
+<?php	$codGrupoRecibo=$datGrupoRecibo[0];
+		$nombreGrupoRecibo=$datGrupoRecibo[1];
+	?>
+		<option value="<?=$codGrupoRecibo;?>" ><?=$nombreGrupoRecibo;?></option>
+		
+<?php	}?>
+	</select>
+	</td>
 <?php
 $sql="select id_recibo from recibos where cod_ciudad=".$global_agencia." order by id_recibo desc";
 $resp=mysqli_query($enlaceCon,$sql);
@@ -85,16 +107,16 @@ else
 <?php	}?>
 	</select>
 	</td>
-<td align="left"><input type="number" class="texto" name="monto"  id="monto" required></td>
+<td align="left"><input type="number" step="0.01"  class="texto" name="monto"  id="monto" required></td>
 
 </tr>
 
-<tr><th>Cliente</th><th>Telefono Cliente</th><th colspan="2">Detalle</th><th>Proveedor</th></tr>
+<tr><th>Cliente</th><th>Telefono Cliente</th><th colspan="2">Detalle</th><th colspan="2">Proveedor</th></tr>
 <tr>
 <td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" required></td>
 <td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" required></td>
 <td colspan="2" ><input type='text' class='texto' name='desc_recibo' size='60'></td>
-<td>
+<td colspan="2">
 	<select name="proveedor" id="proveedor" class="texto"  >
 	<option value="" >NINGUNO</option>
 <?php	
@@ -102,8 +124,7 @@ else
 	$resp3=mysqli_query($enlaceCon,$sql3);
 	while($dat3=mysqli_fetch_array($resp3))
 	{	
-?>
-<?php	$codProveedor=$dat3[0];
+		$codProveedor=$dat3[0];
 		$nombreProveedor=$dat3[1];
 	?>
 		<option value="<?=$codProveedor;?>" ><?=$nombreProveedor;?></option>

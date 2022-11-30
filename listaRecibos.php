@@ -296,13 +296,14 @@ $consulta = " select r.id_recibo,r.fecha_recibo,r.cod_ciudad,ciu.descripcion,
 r.nombre_recibo,r.desc_recibo,r.monto_recibo,
 r.created_by,r.modified_by,r.created_date,r.modified_date, r.cel_recibo,r.recibo_anulado,r.cod_tipopago, tp.nombre_tipopago,
 r.cod_tiporecibo, tr.nombre_tiporecibo, r.cod_proveedor, p.nombre_proveedor, r.cod_salida_almacen,
-r.cod_estadorecibo, er.nombre_estado, r.resta_ventas_proveedor
+r.cod_estadorecibo, er.nombre_estado, r.resta_ventas_proveedor,gr.nombre_gruporecibo
 from recibos r 
 inner join ciudades ciu on (r.cod_ciudad=ciu.cod_ciudad)
 inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
 inner join tipos_recibo tr on(r.cod_tiporecibo=tr.cod_tiporecibo)
 left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
 left  join estados_recibo er on (r.cod_estadorecibo=er.cod_estado)
+left join grupos_recibo gr on (r.cod_gruporecibo=gr.cod_gruporecibo) 
 where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC,r.cod_ciudad desc";
 //echo "consulta=".$consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
@@ -326,7 +327,7 @@ $resp = mysqli_query($enlaceCon,$consulta);
 <th>Forma Pago</th>
 <th>Monto</th>
 <th>Contacto</th>
-<th>Nro de Contacto</th>
+<th>Grupo de Recibo</th>
 <th>Descripcion</th>
 <th>Proveedor</th>
 <th>Resta Venta<br>Proveedor</th>
@@ -363,6 +364,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$cod_estadorecibo= $dat['cod_estadorecibo'];
 	$nombre_estadorecibo= $dat['nombre_estado'];
 	$resta_ventas_proveedor= $dat['resta_ventas_proveedor'];
+	$nombre_gruporecibo= $dat['nombre_gruporecibo'];
 	//Datos de la Venta///
 	
 	$sqlVenta = " SELECT s.fecha, s.hora_salida, s.nro_correlativo, s.cod_tipo_doc, td.abreviatura, razon_social, nit,
@@ -452,7 +454,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	<td><?=$nombre_tipopago;?></td>
 	<td><?=$monto_recibo;?></td>
 	<td><?=$nombre_recibo;?></td>
-	<td><?=$cel_recibo;?></td>
+	<td><?=$nombre_gruporecibo;?></td>
 	<td><?=$desc_recibo;?></td>
 	<td><?=$nombre_proveedor;?></td>		
 	<td>

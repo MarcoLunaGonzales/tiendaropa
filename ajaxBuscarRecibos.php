@@ -28,7 +28,7 @@ if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
 <th>Forma Pago</th>
 <th>Monto</th>
 <th>Contacto</th>
-<th>Nro de Contacto</th>
+<th>Grupo de Recibo</th>
 <th>Descripcion</th>
 <th>Proveedor</th>
 <th>Resta Venta<br>Proveedor</th>
@@ -50,6 +50,7 @@ inner join tipos_pago tp on(r.cod_tipopago=tp.cod_tipopago)
 inner join tipos_recibo tr on(r.cod_tiporecibo=tr.cod_tiporecibo)
 left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
 left  join estados_recibo er on (r.cod_estadorecibo=er.cod_estado)
+left join grupos_recibo gr on (r.cod_gruporecibo=gr.cod_gruporecibo) 
 where r.cod_ciudad=".$global_agencia." ";
 if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
 	$consulta = $consulta." AND '$fechaIniBusqueda'<=r.fecha_recibo AND r.fecha_recibo<='$fechaFinBusqueda' ";
@@ -95,6 +96,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$cod_estadorecibo= $dat['cod_estadorecibo'];
 	$nombre_estadorecibo= $dat['nombre_estado'];
 	$resta_ventas_proveedor= $dat['resta_ventas_proveedor'];
+	$nombre_gruporecibo= $dat['nombre_gruporecibo'];
 	//Datos de la Venta///
 	
 	$sqlVenta = " SELECT s.fecha, s.hora_salida, s.nro_correlativo, s.cod_tipo_doc, td.abreviatura, razon_social, nit,

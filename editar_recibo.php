@@ -32,7 +32,8 @@ $global_almacen=$_COOKIE['global_almacen'];
 $idReciboEditar=$_GET["idRecibo"];
 
 	$sql=" select fecha_recibo,nombre_recibo,
-desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor, resta_ventas_proveedor
+desc_recibo,monto_recibo,created_by,modified_by,created_date,modified_date, cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor, resta_ventas_proveedor,
+cod_gruporecibo
 from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";	
 	 
 
@@ -54,6 +55,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 		$cod_tiporecibo=$dat['cod_tiporecibo'];
 		$cod_proveedor=$dat['cod_proveedor'];
 		$resta_ventas_proveedor=$dat['resta_ventas_proveedor'];
+		$cod_gruporecibo=$dat['cod_gruporecibo'];
 	}
 
 ?>
@@ -61,7 +63,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <input type="hidden" name="idReciboEditar" id="idReciboEditar" value="<?=$idReciboEditar;?>">
 <table border='0' class='textotit' align='center'><tr><th>Edicion de Recibo</th></tr></table><br>
 <table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">
-<tr><th>Tipo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
+<tr><th>Tipo Recibo</th><th>Grupo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
 <tr>
 <td>
 	<select name="tipoRecibo" id="tipoRecibo" class="texto"  >
@@ -75,6 +77,22 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 		$nombreTiporecibo=$datTipoRecibo[1];
 	?>
 		<option value="<?=$codTiporecibo;?>" <?php if($codTiporecibo==$cod_tiporecibo){echo "selected";}?> ><?=$nombreTiporecibo;?></option>
+		
+<?php	}?>
+	</select>
+	</td>
+	<td>
+	<select name="grupoRecibo" id="grupoRecibo" class="texto"  >
+<?php	
+	$sqlGrupoRecibo="select cod_gruporecibo, nombre_gruporecibo from grupos_recibo where estado=1  order by cod_gruporecibo asc";
+	$respGrupoRecibo=mysqli_query($enlaceCon,$sqlGrupoRecibo);
+	while($datGrupoRecibo=mysqli_fetch_array($respGrupoRecibo))
+	{	
+?>
+<?php	$codGrupoRecibo=$datGrupoRecibo[0];
+		$nombreGrupoRecibo=$datGrupoRecibo[1];
+	?>
+		<option value="<?=$codGrupoRecibo;?>" <?php if($codGrupoRecibo==$cod_gruporecibo){echo "selected";}?> ><?=$nombreGrupoRecibo;?></option>
 		
 <?php	}?>
 	</select>
@@ -102,12 +120,12 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 
 </tr>
 
-<tr><th >Cliente</th><th >Telefono Cliente</th><th colspan="2" >Detalle</th><th>Proveedor</th></tr>
+<tr><th >Cliente</th><th >Telefono Cliente</th><th colspan="2" >Detalle</th><th colspan="2">Proveedor</th></tr>
 <tr>
 <td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" value="<?=$nombre_recibo;?>" required></td>
 <td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" value="<?=$cel_recibo;?>" required></td>
 <td colspan="2" ><input type='text' class='texto' name='desc_recibo' value="<?=$desc_recibo;?>" size='60'></td>
-<td>
+<td colspan="2">
 	<select name="proveedor" id="proveedor" class="texto"  >
 	<option value="" >NINGUNO</option>
 <?php	

@@ -43,7 +43,7 @@ $consulta.=" modified_date='".$modifiedDate."', ";
 $consulta.=" resta_ventas_proveedor='".$restarVentaProv."' ";
 $consulta.=" where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_agencia."'";
 
-echo $consulta;
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
 ?>
@@ -51,7 +51,7 @@ mysqli_query($enlaceCon,$consulta);
 
 	<script language='Javascript'>
 
-		//location.href="listaRecibos.php";
+		location.href="listaRecibos.php";
 	</script>	
     
 

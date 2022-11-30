@@ -73,25 +73,34 @@ echo "<table align='center'  >
 	<tr><th>Fecha Reporte:</th> <td>$fecha_reporte</td></tr>	
 	</table>";
 
-$sql="select concat(s.`fecha`,' ',s.hora_salida)as fecha,  
-	(select c.nombre_cliente from clientes c where c.`cod_cliente`=s.cod_cliente) as cliente, s.`razon_social`, s.`observaciones`, 
-	(select t.`abreviatura` from `tipos_docs` t where t.`codigo`=s.cod_tipo_doc),s.`nro_correlativo`, s.`monto_final`, s.cod_salida_almacenes,
-	(select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago) as nombreTipoPago,s.cod_chofer,	
-	(select count(*) from recibos r where r.cod_salida_almacen=s.cod_salida_almacenes and s.cod_almacen in (select cod_almacen from almacenes where cod_ciudad=1)) as num_recibos
-	from `salida_almacenes` s 
-	where s.`cod_tiposalida`=1001 
-	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
-	$sql=$sql." and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
+$sql="select concat(s.fecha,' ',s.hora_salida)as fecha,
+c.nombre_cliente,
+s.razon_social, s.observaciones,
+t.abreviatura,
+s.nro_correlativo,
+s.monto_final, s.cod_salida_almacenes,
+tp.nombre_tipopago,s.cod_chofer,
+(select count(*) from recibos r where r.cod_salida_almacen=s.cod_salida_almacenes 
+and s.cod_almacen in (select cod_almacen from almacenes where cod_ciudad=".$rpt_territorio.")) as num_recibos,
+tp.contabiliza
+from salida_almacenes s 
+left join tipos_pago tp on (tp.cod_tipopago=s.cod_tipopago)
+left join clientes c  on (c.`cod_cliente`=s.cod_cliente)
+left join tipos_docs t on(t.codigo=s.cod_tipo_doc)
+where s.cod_tiposalida=1001 and s.salida_anulada=0 
+and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
+$sql=$sql." and s.`fecha` BETWEEN '".$fecha_iniconsulta."' and '".$fecha_finconsulta."' ";
+
 	
 if(!empty($rptTipoPago)){
 	$sql=$sql." and s.cod_tipopago  in( $rptTipoPago) ";
 	}
 $sql.=" order by s.fecha, s.hora_salida, s.nro_correlativo";
- //echo $sql;
+// echo $sql;
 
 $resp=mysqli_query($enlaceCon,$sql);
 ?>
-<br><table align='center' class='texto' width='70%'>
+<br><table align='center' width='70%' border="1">
 <tr>
 <th>Fecha</th>
 <th>Cliente</th>
@@ -100,23 +109,25 @@ $resp=mysqli_query($enlaceCon,$sql);
 <th>Forma Pago</th>
 <th>Monto</th>
 <th>Responsable</th>
-
 <th>
-	<table width='100%'>
+	<table width='100%' >
 	<tr>
-		<th width='50%'>Codigo</th>
-		<th width='50%'>Producto</th>
-		<th width='50%'>Color/Talla</th>
-		<th width='25%'>Cantidad</th>
-		<th width='25%'>Monto</th>
+		<th >Codigo</th>
+		<th>Producto</th>
+		<th>Color/Talla</th>
+		<th>Cantidad</th>
+		<th>Monto</th>
 	</tr>
 	</table>
 </th>
+<th>&nbsp;</th>
 </tr>
 <?php
 $totalVenta=0;
 $totalVentaRecibo=0;
+$totalVentaNoContabiliza=0;
 $cadenaRecibo="";
+$fondoRecibos="#ffffff";
 while($datos=mysqli_fetch_array($resp)){	
 	$fechaVenta=$datos[0];
 	$nombreCliente=$datos[1];
@@ -128,6 +139,7 @@ while($datos=mysqli_fetch_array($resp)){
 	$nombreTipoPago=$datos[8];
 	$cod_funcionario=$datos[9];
 	$numRecibos=$datos[10];
+	$contabiliza=$datos[11];
 	
 	
 	$sqlResponsable="select CONCAT(SUBSTRING_INDEX(nombres,' ', 1),' ',SUBSTR(paterno, 1,1),'.') from funcionarios where codigo_funcionario='".$cod_funcionario."'";
@@ -153,17 +165,22 @@ while($datos=mysqli_fetch_array($resp)){
 			$cadenaRecibo.="REC-".$datRecVenta['id_recibo']." ".$fecha_recibo_mostrar." <strong>".$datRecVenta['monto_recibo']." Bs</strong><br>";
 		}
 	}
-	
+
 	$montoVentaFormat=number_format($montoVenta,2,".",",");
 	if($numRecibos>0){
 		$fondoRecibos="#c4d4e9";
 		$totalVentaRecibo=$totalVentaRecibo+$montoVenta;
 		
 	}else{
-		$totalVenta=$totalVenta+$montoVenta;
+	
 		$fondoRecibos="#ffffff";
+		
 	}
 	
+	if($contabiliza==0){
+		$totalVentaNoContabiliza=$totalVentaNoContabiliza+$montoVenta;
+	}
+		$totalVenta=$totalVenta+$montoVenta;
 	
 	$sqlX="select m.codigo_barras, m.`descripcion_material`, 
 	(sum(sd.monto_unitario)-sum(sd.descuento_unitario))montoVenta, sum(sd.cantidad_unitaria), s.descuento, s.monto_total, m.color, m.talla, 
@@ -182,7 +199,7 @@ while($datos=mysqli_fetch_array($resp)){
 	
 	$respX=mysqli_query($enlaceCon,$sqlX);
 
-	$tablaDetalle="<table width='100%'>";
+	$tablaDetalle="<table  border='1'>";
 	
 	$totalVentaX=0;
 	
@@ -232,26 +249,39 @@ while($datos=mysqli_fetch_array($resp)){
 		<td>&nbsp;</td>
 		<td><strong>Total:</strong></td>
 		<td bgcolor='$colorObs' align='right'><strong>$totalPtr</strong></td>
-	<tr></table>";
+	<tr>
+	</table>";
 
+?>
 
-	echo "<tr bgcolor='".$fondoRecibos."'>
-	<td>$fechaVenta</td>
-	<td>$nombreCliente</td>
-	<td>$razonSocial</td>
-	<td>$datosDoc</td>
-	<td>$nombreTipoPago</td>	
-	<td align='right'><strong>$montoVentaFormat</strong><br>$cadenaRecibo</td>
-	<td>$nombreFuncionario</td> ";	
-	echo "<td>$tablaDetalle</td></tr>";
+	<tr bgcolor='<?php if($contabiliza==0){echo "#fddeda"; }else{ echo $fondoRecibos;}?>'>
+	<td><?=$fechaVenta."-".$contabiliza;?></td>
+	<td><?=$nombreCliente;?></td>
+	<td><?=$razonSocial;?></td>
+	<td><?=$datosDoc;?></td>
+	<td><?=$nombreTipoPago;?></td>	
+	<td align='right'><strong><?=$montoVentaFormat;?></strong><br><?=$cadenaRecibo;?></td>
+	<td><?=$nombreFuncionario;?></td> 
+	<td><?=$tablaDetalle;?></td>
+	<th>&nbsp;</th>
+	</tr>
+<?php
 }
-$totalVentaFormat=number_format($totalVenta,2,".",",");
-
+?>
+<tr >
+	<td colspan="4">&nbsp;</td>
+	<td align='center'><strong>Forma de Pago</strong></td>	
+	<td align='center'><strong>Ventas</strong></td>
+	<td align='center'><strong>Ventas Pagadas con Recibo</strong></td>
+	<td align='center'><strong>Ventas que no<br> Generan Ingreso Monetario</strong></td>
+	<td align='center'><strong>Total Ingreso<br> por Ventas</strong></td>
+	
+</tr>
+<?php
 $sql2="select cod_tipopago, sum(s.`monto_final`)
 	from `salida_almacenes` s 
 	where s.`cod_tiposalida`=1001 
-	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
-	$sql2=$sql2." and s.cod_salida_almacenes not in (select r.cod_salida_almacen  from recibos r where  r.cod_ciudad=".$rpt_territorio." and r.cod_salida_almacen is not null)";
+	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";		
 	$sql2=$sql2." and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";
 	
 if(!empty($rptTipoPago)){
@@ -263,42 +293,75 @@ $sql2.=" group by cod_tipopago order by cod_tipopago asc";
 $resp2=mysqli_query($enlaceCon,$sql2);
 while($datos2=mysqli_fetch_array($resp2)){	
 	$tipoPago=$datos2[0];
-	$sqlTipoPago2="select cod_tipopago, nombre_tipopago from tipos_pago where cod_tipopago=".$tipoPago;
+	$sqlTipoPago2="select cod_tipopago, nombre_tipopago,contabiliza from tipos_pago where cod_tipopago=".$tipoPago;
 	$respTipoPago2=mysqli_query($enlaceCon,$sqlTipoPago2);
 	while($datTipoPago2=mysqli_fetch_array($respTipoPago2)){	
 		$nombreTipoPago2=$datTipoPago2[1];
+		$contabiliza2=$datTipoPago2[2];
 	}
 	$montoTipoPago=$datos2[1];
 	$montoTipoPagoFormat=number_format($montoTipoPago,2,".",",");
-
-	echo "<tr>
-	<td>-</td>
-	<td>-</td>
+	//////////////////////
+	$sql4="select cod_tipopago, sum(s.`monto_final`)
+	from `salida_almacenes` s 
+	where s.`cod_tiposalida`=1001 
+	and s.salida_anulada=0 and	s.`cod_almacen` in (select a.`cod_almacen` from `almacenes` a where a.`cod_ciudad`='$rpt_territorio')";	
+	$sql4.=" and s.cod_salida_almacenes  in (select r.cod_salida_almacen  from recibos r where  r.cod_ciudad=".$rpt_territorio." and r.cod_salida_almacen is not null)";
+	$sql4.=" and s.`fecha` BETWEEN '$fecha_iniconsulta' and '$fecha_finconsulta' ";	
+	$sql4.=" and s.cod_tipopago  in( $tipoPago) ";
+	$sql4.=" group by cod_tipopago order by cod_tipopago asc";
+	$resp4=mysqli_query($enlaceCon,$sql4);
+	$montoPagadoRec=0;
+	while($dat4=mysqli_fetch_array($resp4)){
+		$montoPagadoRec=$dat4[1];
+	}
+	$montoPagadoRecFormat=number_format($montoPagadoRec,2,".",",");
+	////////////////////////
+	$montoNOContabiliza=0;
+	if($contabiliza2==0){
+		$montoNOContabiliza=$montoTipoPago;
+	}
+	$montoRealTipoPago= $montoTipoPago-$montoPagadoRec-$montoNOContabiliza;
+	$montoRealTipoPagoFormat=number_format($montoRealTipoPago,2,".",",");
+?>
+	<tr >
 	<td>-</td>
 	<td>-</td>	
 	<td>-</td>
-
 	<td>-</td>
-	<td><strong>$nombreTipoPago2</strong></td>
-	<td align='right'><strong>$montoTipoPagoFormat</strong></td>
-</tr>";
+	<td><?=$nombreTipoPago2;?></td>
+	<td align='right'><?=$montoTipoPagoFormat;?></td>
+	<td align='right'><?=$montoPagadoRecFormat;?></td>
+	<td align='right'><?=$montoNOContabiliza;?></td>
+	<td align='right'><?=$montoRealTipoPagoFormat;?></td>
+</tr>
+<?php
 }
-echo "<tr>
-	<td>-</td>
-	<td>-</td>
-	<td>-</td>
-	<td>-</td>
 
-	<td>-</td>
-	<td>-</td>
-
-	<td><strong>Total Monto Venta(s)</strong></td>
-	<td align='right'><strong>$totalVentaFormat</strong><BR/>(Monto FACT Pagadas con Recibos:$totalVentaRecibo)</td>
-</tr>";
-echo "</table></br>";
+$totalVentaFormat=number_format($totalVenta,2,".",",");
+$totalVentaReciboFormat=number_format($totalVentaRecibo,2,".",",");
+$totalVentaNoContabilizaFormat=number_format($totalVentaNoContabiliza,2,".",",");
+$montoRealVenta=($totalVenta-$totalVentaRecibo-$totalVentaNoContabiliza);
+$montoRealVentaFormat=number_format($montoRealVenta,2,".",",");
 ?>
-<br><table align='center' class='textomediano' width='70%'>
-<tr><th colspan='11'>DETALLES RECIBO</th></tr>
+<tr>
+	<td>-</td>
+	<td>-</td>
+	<td>-</td>
+	<td>-</td>
+
+
+	<td><strong>TOTALES</strong></td>
+	<td align='right' title="Total Ventas"><strong><?=$totalVentaFormat;?></strong></td>
+	<td align='right' title="Total Ventas Pagadas con Recibo"><strong><?=$totalVentaReciboFormat;?></strong></td>
+	<td align='right' title="Total Ventas Pagadas con Recibo"><strong><?=$totalVentaNoContabilizaFormat;?></strong></td>
+	<td align='right'title="Monto Ventas" bgcolor="#BDFBB7" ><strong><?=$montoRealVentaFormat;?></strong></td>
+	
+</tr>
+</table></br>
+
+<br><table align='center' border="1" width='70%'>
+<tr><th colspan='12'>DETALLES RECIBO</th></tr>
 <tr>
 <th>Tipo Recibo</th>
 <th>Documento</th>
@@ -310,7 +373,8 @@ echo "</table></br>";
 <th>Resta Venta</th>
 <th>Responsable</th>
 <th>FormaPago</th>
-<th>Monto [Bs]</th>
+<th>Monto Ingresado [Bs]</th>
+<th>Monto que <br>Debe ser Restado de Ventas </th>
 
 </tr>
 <?php
@@ -466,9 +530,9 @@ while ($dat = mysqli_fetch_array($resp)) {
 	</td>
 	<td><?=$usuReg ;?></td>
 	<td><?=$nombre_tipopago;?></td>
-		
-	
-	<td align='right'><?=$monto_recibo;?></td>
+			
+	<td align='right'><?php if($resta_ventas_proveedor=="0"){echo $monto_recibo;}else{echo "<center>-</center>";}?></td>
+	<td align='right'><?php if($resta_ventas_proveedor=="1"){echo $monto_recibo;}else{echo "<center>-</center>";}?></td>
 	
 	</tr>
 <?php
@@ -504,7 +568,7 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>		
 	<td>&nbsp;</td>	
-		<td>&nbsp;</td>		
+	<td>&nbsp;</td>		
 	<td align="right"><strong><?=$descTipopago;?></strong></td>
 	<td align="right"><strong><?=$totMontoTipopagoF;?></strong></td>
 
@@ -513,6 +577,7 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 <?php
 }
 $totalReciboF=number_format($totalRecibo,2,".",",");
+$totalReciboRestaVentasF=number_format($totalReciboRestaVentas,2,".",",");
 ?>
 <tr>
 	<td>&nbsp;</td>
@@ -524,13 +589,14 @@ $totalReciboF=number_format($totalRecibo,2,".",",");
 	<td>&nbsp;</td>
 	<td>&nbsp;</td>		
 		<td>&nbsp;</td>		
-	<td align="right"><strong>Total Recibos:</strong></td>
-	<td align="right"><strong><?=$totalReciboF;?></strong><br>(Monto a Restar de Ventas:<?=$totalReciboRestaVentas?>)</td>
+	<td align="right"><strong>TOTAL RECIBOS:</strong></td>
+	<td align="right" bgcolor="#BDFBB7"><strong><?=$totalReciboF;?></strong></td>
+	<td align="right"><strong><?=$totalReciboRestaVentasF;?></strong></td>
 
 <tr>
 </table>
-<br><center><table class='textomediano'>
-<tr><th colspan='8'>Detalle de Gastos</th></tr>
+<br><center><table border="1">
+<tr><th colspan='8'>Gastos</th></tr>
 <tr>
 <th>Tipo</th>
 <th>Nro</th>
@@ -677,11 +743,11 @@ while ($dat2 = mysqli_fetch_array($resp2)) {
 <tr>
 <td colspan="6">&nbsp;</td>
 <td align="right"><strong>TOTAL GASTOS</strong></td>
-<td align="right"><strong><?=$totalGastos;?></strong></td>
+<td align="right" bgcolor="#BDFBB7"><strong><?=$totalGastos;?></strong></td>
 </tr>
 </table></center><br>
 <center>
-<table class='textomediano'>
+<table border="1">
 <tr><th colspan='7'>TOTALES POR TIPO DE PAGO</th></tr>
 <tr>
 <th>&nbsp;</th>
@@ -697,11 +763,12 @@ $totVTA=0;
 $totREC=0;
 $totGTO=0;
 
-	$sqlTP="select cod_tipopago, nombre_tipopago  from tipos_pago  where estado=1 order by cod_tipopago asc";
+	$sqlTP="select cod_tipopago, nombre_tipopago,contabiliza  from tipos_pago  where estado=1 order by cod_tipopago asc";
 	$respTP = mysqli_query($enlaceCon,$sqlTP);
 	while ($datTP = mysqli_fetch_array($respTP)) {
 		$codTP=$datTP['cod_tipopago'];
 		$nombreTP=$datTP['nombre_tipopago'];
+		$contabilizaTP=$datTP['contabiliza'];
 		/////////////////VENTAS/////////
 		$totalVTATP=0;
 		$sqlVTA="select cod_tipopago, sum(s.`monto_final`)
@@ -740,7 +807,8 @@ $totGTO=0;
 			$totalGTOTP= $datGTO[1];
 		}
 		/////////////////////////////////
-		if($codTP<>4){
+		
+		if($contabilizaTP==1){
 			$totVTA=$totVTA+$totalVTATP;
 			$totREC=$totREC+$totalRECTP;
 			$totGTO=$totGTO+$totalGTOTP;
@@ -750,10 +818,10 @@ $totGTO=0;
 <td align="right"><?=$nombreTP;?></td>
 <td align="right"><?=$totalVTATP;?></td>
 <td align="right"><?=$totalRECTP;?></td>
-<td align="right"><?=($totalVTATP+$totalRECTP);?></td>
+<td align="right" bgcolor="#DEFBB7"><?php if($contabilizaTP==1){ echo($totalVTATP+$totalRECTP);}else {echo "0";}?></td>
 <td align="right"><?=$totalGTOTP;?></td>
-<td align="right"><?=$totalGTOTP;?></td>
-<td align="right"><?=($totalVTATP+$totalRECTP-$totalGTOTP);?></td>
+<td align="right" bgcolor="#DEFBB7"><?=$totalGTOTP;?></td>
+<td align="right" ><?php if($contabilizaTP==1){ echo($totalVTATP+$totalRECTP-$totalGTOTP);}else{ echo "0";}?></td>
 </tr>
 <?php
 }
@@ -762,10 +830,10 @@ $totGTO=0;
 <td align="right">&nbsp;</td>
 <td align="right"><strong><?=$totVTA;?></strong></td>
 <td align="right"><strong><?=$totREC;?></strong></td>
-<td align="right"><strong><?=($totVTA+$totREC);?></strong></td>
+<td align="right" bgcolor="#DEFBB7"><strong><?=($totVTA+$totREC);?></strong></td>
 <td align="right"><strong><?=$totGTO;?></strong></td>
-<td align="right"><strong><?=$totGTO;?></strong></td>
-<td align="right"><strong><?=($totVTA+$totREC-$totGTO);?></strong></td>
+<td align="right"bgcolor="#DEFBB7"><strong><?=$totGTO;?></strong></td>
+<td align="right" bgcolor="#BDFBB7"><strong><?=($totVTA+$totREC-$totGTO);?></strong></td>
 </tr>
 
 </table>
