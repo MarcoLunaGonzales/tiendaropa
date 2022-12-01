@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 require("estilos.inc");
 
 //recogemos variables
@@ -49,8 +49,10 @@ $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 $sqlDel="delete from precios where codigo_material=$codigo";
 $respDel=mysqli_query($enlaceCon,$sqlDel);
 $sqlInsertPrecio="insert into precios values($codigo, 0,$costoProducto,'$globalAgencia')";
+//echo $sqlInsertPrecio;
 $respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 $sqlInsertPrecio="insert into precios values($codigo, 1,$precioProducto,'$globalAgencia')";
+//echo $sqlInsertPrecio;
 $respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 
 if($resp_inserta){

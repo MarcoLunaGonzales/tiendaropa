@@ -1,17 +1,28 @@
 <?php
-require("conexion.inc");
+require("conexionmysqli2.inc");
 require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 $flagSuccessIngresos=0;
 $flagSuccessSalidas=0;
 $codigoVenta=$_POST["codVenta"];
-$sql = "select nro_factura from facturas_venta where cod_venta=$codigoVenta";
-$resp = mysql_query($sql);
-$numeroFacturaAnteriorVenta=mysql_result($resp,0,0);
+
+$sql = "select nro_correlativo from salida_almacenes where cod_salida_almacenes='$codigoVenta'";
+$resp = mysqli_query($enlaceCon, $sql);
+$numeroFacturaAnteriorVenta=0;
+if($datX=mysqli_fetch_array($resp)){
+	$numeroFacturaAnteriorVenta=$datX[0];	
+}
+
+
 $cantidad_material=0;
-$observacionesCambio="POR CAMBIO DE ITEM FACTURA :".$numeroFacturaAnteriorVenta;
+$observacionesCambio="POR CAMBIO DE ITEM F/NR :".$numeroFacturaAnteriorVenta;
 //datos documento				
 $sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_salida) as fecha, t.`abreviatura`, 
 			(select cl.nombre_cliente from clientes cl where s.cod_cliente=cl.cod_cliente) as nombre_cliente,
@@ -23,8 +34,8 @@ $sqlDatosVenta="select concat((DATE_FORMAT(s.fecha, '%d/%m/%Y')),' ',s.hora_sali
 			s.cod_cliente
 			from `salida_almacenes` s, `tipos_docs` t
 				where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_tipo_doc`=t.`codigo`";
-$respDatosVenta=mysql_query($sqlDatosVenta);
-while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
+$respDatosVenta=mysqli_query($enlaceCon, $sqlDatosVenta);
+while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 			$fechaVenta=$datDatosVenta[0];
 			$nombreTipoDoc=$datDatosVenta[1];
 			$nombreCliente=$datDatosVenta[2];
@@ -40,28 +51,43 @@ while($datDatosVenta=mysql_fetch_array($respDatosVenta)){
 }
 
 $sql = "select valor_configuracion from configuraciones where id_configuracion=-1;";
-$resp = mysql_query($sql);
-$numeroFacturaVenta=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon, $sql);
+$numeroFacturaVenta=mysqli_result($resp,0,0);
 
 $sql = "select valor_configuracion from configuraciones where id_configuracion=-2;";
-$resp = mysql_query($sql);
-$proveedorVenta=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon, $sql);
+$proveedorVenta=mysqli_result($resp,0,0);
 
 if(!empty($_POST['codigo_producto'])) {
 	$cantidad_material=count($_POST['codigo_producto']);
 }
 
+if(!isset($_POST['no_venta'])){
+   $almacenDestino=2;
+   $almacenOrigen=$global_almacen;
+}else{
+   $almacenDestino=$_POST['almacen'];
+   $almacenOrigen=$global_almacen;
+}
+
+$cod_tipopreciogeneral=0;
+$cod_tipoVenta2=1;
+$cod_tipodelivery=0;
+$monto_bs=0;
+$monto_usd=0;
+$tipo_cambio=0;
+$created_at=date("Y-m-d H:i:s");
 
 
 
 /////////////////////////REGISTRAR INGRESOS
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order by cod_ingreso_almacen desc";
-$resp = mysql_query($sql);
-$codigo=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon, $sql);
+$codigo=mysqli_result($resp,0,0);
 $codigoIngresoGeneral=$codigo;
 $sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
-$resp = mysql_query($sql);
-$nro_correlativo=mysql_result($resp,0,0);
+$resp = mysqli_query($enlaceCon, $sql);
+$nro_correlativo=mysqli_result($resp,0,0);
 $codSalida=0;
 $hora_sistema = date("H:i:s");
 
@@ -81,7 +107,7 @@ nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nr
 cod_proveedor,created_by,modified_by,created_date,modified_date) 
 values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$codSalida','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
 
-$sql_inserta = mysql_query($consulta);
+$sql_inserta = mysqli_query($enlaceCon, $consulta);
 
 $montoTotalCambio=0;
 if($sql_inserta==1){
@@ -92,12 +118,12 @@ if($sql_inserta==1){
 
       	$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento,sum(s.cantidad_unitaria), s.precio_unitario, sum(s.`descuento_unitario`), sum(s.`monto_unitario`), sum(ss.`descuento`) from salida_detalle_almacenes s, material_apoyo m, `salida_almacenes` ss where s.cod_salida_almacen='$codigoVenta' and s.cod_material=m.codigo_material and ss.`cod_salida_almacenes`=s.`cod_salida_almacen` and m.codigo_material=$cod_material group by s.cod_material order by s.orden_detalle";
 	
-        $resp_detalle=mysql_query($sql_detalle);
+        $resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
         $montoTotal=0;
         $pesoTotal=0;
         $pesoTotalqq=0;
         $montoUnitarioTotal=0;
-        while($dat_detalle=mysql_fetch_array($resp_detalle))
+        while($dat_detalle=mysqli_fetch_array($resp_detalle))
         {	$cod_material=$dat_detalle[0];
             $cantidad=$dat_detalle[4];
 			$precioBruto=$dat_detalle[5];
@@ -110,14 +136,17 @@ if($sql_inserta==1){
 			$precioUnitario=$precioBruto;			
 			$costo=$precioUnitario;			
 			$sql_costos="SELECT precio FROM precios where cod_precio=0 and codigo_material=$cod_material limit 1";
-            $resp_costos=mysql_query($sql_costos);
-            while($dat_costos=mysql_fetch_array($resp_costos)){	
+            $resp_costos=mysqli_query($enlaceCon, $sql_costos);
+            while($dat_costos=mysqli_fetch_array($resp_costos)){	
             	$costo=$dat_costos[0];
             }	
 			$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
 			values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
-			$respConsulta=mysql_query($consulta);
+			
+			//echo $consulta."<br>";
+
+			$respConsulta=mysqli_query($enlaceCon, $consulta);
 		}
 	  }
 	  //fin de if
@@ -167,30 +196,30 @@ $hora=date("H:i:s");
 
 //SACAMOS LA CONFIGURACION PARA EL DOCUMENTO POR DEFECTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=1";
-$respConf=mysql_query($sqlConf);
-$tipoDocDefault=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon, $sqlConf);
+$tipoDocDefault=mysqli_result($respConf,0,0);
 
 //SACAMOS LA CONFIGURACION PARA EL CLIENTE POR DEFECTO
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=2";
-$respConf=mysql_query($sqlConf);
-$clienteDefault=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon, $sqlConf);
+$clienteDefault=mysqli_result($respConf,0,0);
 
 //SACAMOS LA CONFIGURACION PARA CONOCER SI LA FACTURACION ESTA ACTIVADA
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=3";
-$respConf=mysql_query($sqlConf);
-$facturacionActivada=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon, $sqlConf);
+$facturacionActivada=mysqli_result($respConf,0,0);
 
 $sqlConf="select valor_configuracion from configuraciones where id_configuracion=4";
-$respConf=mysql_query($sqlConf);
-$banderaValidacionStock=mysql_result($respConf,0,0);
+$respConf=mysqli_query($enlaceCon, $sqlConf);
+$banderaValidacionStock=mysqli_result($respConf,0,0);
 
 
 $sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
-$resp=mysql_query($sql);
-$codigo=mysql_result($resp,0,0);
+$resp=mysqli_query($enlaceCon, $sql);
+$codigo=mysqli_result($resp,0,0);
 $codigoSalidaGeneral=$codigo;
 
-$vectorNroCorrelativo=numeroCorrelativo($tipoDoc);
+$vectorNroCorrelativo=numeroCorrelativo($enlaceCon, $tipoDoc);
 $nro_correlativo=$vectorNroCorrelativo[0];
 $cod_dosificacion=$vectorNroCorrelativo[2];
 
@@ -198,9 +227,9 @@ if($facturacionActivada==1 && $tipoDoc==1){
 		//SACAMOS DATOS DE LA DOSIFICACION PARA INSERTAR EN LAS FACTURAS EMITIDAS
 	$sqlDatosDosif="select d.nro_autorizacion, d.llave_dosificacion 
 		from dosificaciones d where d.cod_dosificacion='$cod_dosificacion'";
-	$respDatosDosif=mysql_query($sqlDatosDosif);
-	$nroAutorizacion=mysql_result($respDatosDosif,0,0);
-	$llaveDosificacion=mysql_result($respDatosDosif,0,1);
+	$respDatosDosif=mysqli_query($enlaceCon, $sqlDatosDosif);
+	$nroAutorizacion=mysqli_result($respDatosDosif,0,0);
+	$llaveDosificacion=mysqli_result($respDatosDosif,0,1);
 	include 'controlcode/sin/ControlCode.php';
 	$controlCode = new ControlCode();
 	$code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
@@ -217,22 +246,17 @@ if($facturacionActivada==1 && $tipoDoc==1){
 $sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
+		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2,monto_cancelado_bs,monto_cancelado_usd,tipo_cambio,cod_delivery,
+			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta')";
-$sql_inserta=mysql_query($sql_inserta);
+		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta','$usuarioVendedor','$created_at','0','0','0','0','0','0','0','0','0','','0','0','0','0')";
+
+//echo $sql_inserta."<br>";
+
+$sql_inserta=mysqli_query($enlaceCon, $sql_inserta);
 
 if($sql_inserta==1){
-	
-	/*if($facturacionActivada==1){
-		//insertamos la factura
-		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 
-		codigo_control, cod_venta) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
-		'$code','$codigo')";
-		//echo $sqlInsertFactura;
-		$respInsertFactura=mysql_query($sqlInsertFactura);	
-	}*/
 
 	$montoTotalVentaDetalle=0;
 	for($i=1;$i<=$cantidad_material;$i++)
@@ -251,9 +275,9 @@ if($sql_inserta==1){
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			if($banderaValidacionStock==1){
 				//echo "descontando aca";
-				$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+				$respuesta=descontar_inventarios($enlaceCon, $codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
 			}else{
-				$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
+				$respuesta=insertar_detalleSalidaVenta($enlaceCon, $codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
 			}
 	
 			if($respuesta!=1){
@@ -268,15 +292,12 @@ if($sql_inserta==1){
 	//ACTUALIZAMOS EL PRECIO CON EL DETALLE
 	$sqlUpdMonto="update salida_almacenes set monto_total='$montoTotalVentaDetalle', monto_final='$montoTotalConDescuento' 
 				where cod_salida_almacenes='$codigo'";
-	$respUpdMonto=mysql_query($sqlUpdMonto);
+	$respUpdMonto=mysqli_query($enlaceCon, $sqlUpdMonto);
 	if($facturacionActivada==1){
 		$sqlUpdMonto="update facturas_venta set importe='$montoTotalConDescuento' 
 					where cod_venta='$codigo'";
-		$respUpdMonto=mysql_query($sqlUpdMonto);
+		$respUpdMonto=mysqli_query($enlaceCon, $sqlUpdMonto);
 	}
-
-
-
 	
 if($montoTotalConDescuento>$montoTotalCambio){	   
 	//insertar NOTA DE REMISION
@@ -284,23 +305,27 @@ if($montoTotalConDescuento>$montoTotalCambio){
     $tipoDoc=2;//$_POST['tipoDoc'];
     $totalVenta=$montoTotalConDescuento-$montoTotalCambio;       	
 $sql="SELECT IFNULL(max(cod_salida_almacenes)+1,1) FROM salida_almacenes";
-$resp=mysql_query($sql);
-$codigo=mysql_result($resp,0,0);
+$resp=mysqli_query($enlaceCon, $sql);
+$codigo=mysqli_result($resp,0,0);
 $codigoSalidaGeneralNota=$codigo;
 
-$vectorNroCorrelativo=numeroCorrelativo($tipoDoc);
+$vectorNroCorrelativo=numeroCorrelativo($enlaceCon, $tipoDoc);
 $nro_correlativo=$vectorNroCorrelativo[0];
 $cod_dosificacion=$vectorNroCorrelativo[2];
 
-$observaciones="POR CAMBIO DE ITEM FACTURA :".$numeroFacturaAnteriorVenta;
-$sql_inserta="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
-		`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
-		`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-		`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
+$observaciones="POR CAMBIO DE ITEM F/NR :".$numeroFacturaAnteriorVenta;
+$sql_inserta="INSERT INTO `salida_almacenes`(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
+		cod_tipo_doc, fecha, hora_salida, territorio_destino, 
+		almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
+		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2,monto_cancelado_bs,monto_cancelado_usd,tipo_cambio,cod_delivery,
+			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda)
 		values ('$codigo', '$almacenOrigen', '$tipoSalida', '2', '$fecha', '$hora', '0', '$almacenDestino', 
 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '0', '$totalVenta', '$razonSocial', 
-		'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','1')";
-$sql_inserta=mysql_query($sql_inserta);
+		'$nitCliente','$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','1','$usuarioVendedor','$created_at','0','0','0','0','0','0','0','0','0','','0','0','0','0')";
+
+//echo $sql_inserta;
+
+$sql_inserta=mysqli_query($enlaceCon, $sql_inserta);
 
   if($sql_inserta==1){
   	for($i=1;$i<=$cantidad_material;$i++)
@@ -319,9 +344,9 @@ $sql_inserta=mysql_query($sql_inserta);
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			if($banderaValidacionStock==1){
 				//echo "descontando aca";
-				$respuesta=descontar_inventarios($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+				$respuesta=descontar_inventarios($enlaceCon, $codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
 			}else{
-				$respuesta=insertar_detalleSalidaVenta($codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
+				$respuesta=insertar_detalleSalidaVenta($enlaceCon, $codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
 			}
 	
 			if($respuesta!=1){
@@ -334,7 +359,7 @@ $sql_inserta=mysql_query($sql_inserta);
 			
 	 }			
 	 $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoVenta where cod_salida_almacenes=$codigoSalidaGeneralNota";
-     $sql_inserta = mysql_query($consulta);
+     $sql_inserta = mysqli_query($enlaceCon, $consulta);
     }//Fin Nota de Remisión
 
 	$flagSuccessSalidas=1;	
@@ -345,13 +370,13 @@ if($flagSuccessIngresos==0){
   $mensajeAlert.="Ocurrio un error al guardar los datos de Ingreso, ";
 }else{	
   $consulta="UPDATE salida_almacenes SET cod_cambio=$codigoVenta where cod_salida_almacenes=$codigoSalidaGeneral";
-  $sql_inserta = mysql_query($consulta);
+  $sql_inserta = mysqli_query($enlaceCon, $consulta);
 }
 if($flagSuccessSalidas==0){
   $mensajeAlert.="Ocurrio un error al guardar los datos de la Venta, "; 
 }else{
   $consulta2="UPDATE ingreso_almacenes SET cod_cambio=$codigoVenta where cod_ingreso_almacen=$codigoIngresoGeneral";
-  $sql_inserta2 = mysql_query($consulta2);	
+  $sql_inserta2 = mysqli_query($enlaceCon, $consulta2);	
 }
 
 if($mensajeAlert==""){

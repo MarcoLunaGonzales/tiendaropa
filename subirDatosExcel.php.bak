@@ -181,9 +181,10 @@ if($filasErroneas>0){
        $mensaje='Filas Repetidas';
        borrarIngresoAlmacen($enlaceCon,$codigo);  
     }else{
+		$sql_inserta2=0;
 		$banderaInsercionDetalle=0;
       for ($ins=0; $ins<count($sqlInserts)+1 ; $ins++) { 
-		echo $sqlInserts[$ins]."<br>";
+		//echo $sqlInserts[$ins]."<br>";
         		if(!empty($sqlInserts[$ins])){ 
 			$sql_inserta2 = mysqli_query($enlaceCon,$sqlInserts[$ins]);
 		}

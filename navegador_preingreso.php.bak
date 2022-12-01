@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 ?>
@@ -246,7 +246,8 @@ echo "<div id='divCuerpo'>";
 echo "<br><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Pre Ingreso</th><th>Nro.Factura</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
-<th>Observaciones</th><th>Registro</th>
+<th>Observaciones</th>
+<th>Registro</th>
 <th>Ult. Edicion</th>
 <th>&nbsp;</th><th>&nbsp;</th><th>Nro Ingreso</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {

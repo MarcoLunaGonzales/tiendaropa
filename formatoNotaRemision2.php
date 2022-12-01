@@ -147,6 +147,7 @@ $respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 $yyy=36;
 
 $montoTotal=0;
+$abrevMat="";
 while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$codInterno=$datDetalle[0];
 	$cantUnit=$datDetalle[1];

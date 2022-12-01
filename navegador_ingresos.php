@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 ?>
@@ -102,6 +102,7 @@ function editarIngresoTipoProv(codigoIngreso)
 <?php
   $global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
+$global_agencia=$_COOKIE['global_agencia'];
 echo "<form method='post' action='navegador_ingresomateriales.php'>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 echo "<input type='hidden' name='global_almacen' id='global_almacen' value='$global_almacen'>";

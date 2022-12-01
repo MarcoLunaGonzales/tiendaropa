@@ -1,7 +1,7 @@
 <?php
 require('estilos_reportes_almacencentral.php');
 require('function_formatofecha.php');
-require('conexionmysqli.php');
+require('conexionmysqli.inc');
 require('funcion_nombres.php');
 
 $fecha_ini=$_GET['fecha_ini'];

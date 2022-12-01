@@ -18,7 +18,9 @@ $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 echo "<br/><center><table class='texto' width='100%'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Pre Ingreso</th><th>Nro.Factura</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
-<th>Observaciones</th><th>&nbsp;</th><th>&nbsp;</th><th>Nro. Ingreso</th></tr>";
+<th>Observaciones</th><th>Registro</th>
+<th>Ult. Edicion</th>
+<th>&nbsp;</th><th>&nbsp;</th><th>Nro. Ingreso</th></tr>";
 $sqlFuncProv="select * from funcionarios_proveedores where codigo_funcionario=$global_usuario";
 $respFuncProv=mysqli_query($enlaceCon,$sqlFuncProv);
 $cantFuncProv=mysqli_num_rows($respFuncProv);

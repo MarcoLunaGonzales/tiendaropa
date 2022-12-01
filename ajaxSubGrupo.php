@@ -2,7 +2,7 @@
 require("conexionmysqli.php");
 $codGrupo=$_GET['cod_grupo'];
 
-$sql="select codigo, nombre from subgrupos where cod_grupo in ($codGrupo)";
+$sql="select codigo, nombre from subgrupos where cod_grupo in ($codGrupo) order  by nombre asc";
 $resp=mysqli_query($enlaceCon,$sql);
 
 echo "<select name='cod_subgrupo' class='texto' id='cod_subgrupo' required>";

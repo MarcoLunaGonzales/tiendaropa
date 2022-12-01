@@ -1,6 +1,6 @@
 <?php
 
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
@@ -67,24 +67,20 @@ if($sql_inserta==1){
 		if($cod_material!=0){
 			$cantidad=$_POST["cantidad_unitaria$i"];
 			$precioBruto=$_POST["precio$i"];
+			$precioVenta=$_POST["precioVenta$i"];
 			$lote=$_POST["lote$i"];
-			
-			//$fechaVencimiento=$_POST["fechaVenc$i"];
-			//$fechaVencimiento=UltimoDiaMes($fechaVencimiento);
+
 			$fechaVencimiento='1900-01-01';
 
-			//$precioUnitario=$precioBruto/$cantidad;			
+		
 			$precioUnitario=$precioBruto;			
 			$costo=$precioUnitario;
-			
+			$precioBruto=$_POST["precio$i"];
 			$consulta="insert into preingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
-			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-			values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo')";
-			
-			//echo "det:$consulta";
-			
+			precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta) 
+			values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo','$precioVenta')";						
 			$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
-			
+			/*
 			$sqlMargen="select p.margen_precio from material_apoyo m, proveedores_lineas p
 				where m.cod_linea_proveedor=p.cod_linea_proveedor and m.codigo_material='$cod_material'";
 			$respMargen=mysqli_query($enlaceCon,$sqlMargen);
@@ -93,49 +89,27 @@ if($sql_inserta==1){
 			if($numFilasMargen>0){
 				$datMargen=mysqli_fetch_array($respMargen);
 				$porcentajeMargen=$datMargen[0];
-				//$porcentajeMargen=mysql_result($respMargen,0,0);			
+						
 			}		
 			$precioItem=$costo+($costo*($porcentajeMargen/100));
-		
-			/*
-			//SACAMOS EL ULTIMO PRECIO REGISTRADO
-			$sqlPrecioActual="select precio from precios where codigo_material='$cod_material' and cod_precio=1";
-			$respPrecioActual=mysql_query($sqlPrecioActual);
-			$numFilasPrecios=mysql_num_rows($respPrecioActual);
-			$precioActual=0;
-			if($numFilasPrecios>0){
-				$precioActual=mysql_result($respPrecioActual,0,0);
-			}
-			
-			//echo "precio +margen: ".$precioItem." precio actual: ".$precioActual;
-			//SI NO EXISTE EL PRECIO LO INSERTA CASO CONTRARIO VERIFICA QUE EL PRECIO DEL INGRESO SEA MAYOR AL ACTUAL PARA HACER EL UPDATE
-			if($numFilasPrecios==0){
-				$sqlPrecios="insert into precios (codigo_material, cod_precio, precio) values('$cod_material','1','$precioItem')";
-				$respPrecios=mysql_query($sqlPrecios);
-			}else{
-				if($precioItem>$precioActual){
-					$sqlPrecios="update precios set precio='$precioItem' where codigo_material='$cod_material' and cod_precio=1";
-					$respPrecios=mysql_query($sqlPrecios);
-				}
-			}
-			*/
-			
+				
 			$aa=recalculaCostos($enlaceCon,$cod_material,$global_almacen);
+			*/
 			
 		}
 	  }
 	  //fin de if
-	  /*echo "<script language='Javascript'>
+	  echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_preingreso.php';
-		</script>";	*/
+		</script>";	
     }
     	
 }else{
-	/*echo "<script language='Javascript'>
+	echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_prengreso.php';
-		</script>";	*/
+		</script>";	
 }
 
 ?>

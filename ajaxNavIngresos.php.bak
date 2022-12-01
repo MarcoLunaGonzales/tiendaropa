@@ -10,11 +10,13 @@ $notaIngreso=$_GET['notaIngreso'];
 $global_almacen=$_GET['global_almacen'];
 $provBusqueda=$_GET['provBusqueda'];
 
+
+if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
 $fechaIniBusqueda=formateaFechaVista($fechaIniBusqueda);
 $fechaFinBusqueda=formateaFechaVista($fechaFinBusqueda);
-
+}
 echo "<br/><center><table class='texto' width='100%'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
 <th>Observaciones</th>
 <th>Observaciones</th>
@@ -32,17 +34,17 @@ $consulta = "
     AND i.cod_almacen='$global_almacen'";
 
 if($notaIngreso!="")
-   {$consulta = $consulta."AND i.nota_entrega='$notaIngreso' ";
+   {$consulta = $consulta." AND i.nota_entrega='$notaIngreso' ";
    }
-if($fechaIniBusqueda!="--" && $fechaFinBusqueda!="--")
-   {$consulta = $consulta."AND '$fechaIniBusqueda'<=i.fecha AND i.fecha<='$fechaFinBusqueda' ";
+if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
+	$consulta = $consulta." AND '$fechaIniBusqueda'<=i.fecha AND i.fecha<='$fechaFinBusqueda' ";
    }
 if($provBusqueda!=0){
-	$consulta=$consulta." and cod_proveedor='$provBusqueda' ";
+	$consulta=$consulta." and i.cod_proveedor='$provBusqueda' ";
 }   
-$consulta = $consulta."ORDER BY i.nro_correlativo DESC";
+$consulta = $consulta." ORDER BY i.nro_correlativo DESC";
+echo $consulta;
 
-//
 $resp = mysqli_query($enlaceCon,$consulta);
 	
 while ($dat = mysqli_fetch_array($resp)) {
@@ -78,27 +80,38 @@ while ($dat = mysqli_fetch_array($resp)) {
 	$datAux=mysqli_fetch_array($respAux);
 
     echo "<input type='hidden' name='fecha_ingreso$nro_correlativo' value='$fecha_ingreso_mostrar'>";
-    $sql_verifica_movimiento = "select s.cod_salida_almacenes from salida_almacenes s, salida_detalle_ingreso sdi
-                where s.cod_salida_almacenes=sdi.cod_salida_almacen and s.salida_anulada=0 and sdi.cod_ingreso_almacen='$codigo'";
+
+	 $sql_verifica_movimiento = "select * from salida_almacenes s, salida_detalle_almacenes sd, ingreso_almacenes i
+		where s.cod_salida_almacenes=sd.cod_salida_almacen  and sd.cod_ingreso_almacen=i.cod_ingreso_almacen and s.salida_anulada=0 and i.cod_ingreso_almacen='$codigo'";
+		
     $resp_verifica_movimiento = mysqli_query($enlaceCon,$sql_verifica_movimiento);
+	
     $num_filas_movimiento = mysqli_num_rows($resp_verifica_movimiento);
-    if ($num_filas_movimiento != 0) {
+	
+    if ($num_filas_movimiento > 0) {
         $color_fondo = "#ffff99";
-           $chkbox = "";
+        $chkbox = "";
     }
     if ($anulado == 1) {
-      $color_fondo = "#ff8080";
+        $color_fondo = "#ff8080";
         $chkbox = "";
     }
     if ($num_filas_movimiento == 0 and $anulado == 0) {
         $color_fondo = "";
         $chkbox = "<input type='checkbox' name='codigo' value='$codigo'>";
     }
-    echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo</td><td align='center'>&nbsp;$nota_entrega</td>
+    echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo $num_filas_movimiento</td><td align='center'>&nbsp;$nota_entrega</td>
 	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
 	<td>&nbsp;$proveedor</td>
-	<td>&nbsp;$obs_ingreso</td><td align='center'>
-	<a target='_BLANK' href='navegador_detalleingresomateriales.php?codigo_ingreso=$codigo'>
+	<td>&nbsp;$obs_ingreso</td>
+	<td>&nbsp;$usuReg<br>$created_date</td>";
+	if(empty($usuMod)){
+	echo "<td>&nbsp</td>";
+	}else{
+		echo "<td>&nbsp;$usuMod<br>$modified_date</td>";
+    }				
+	 
+	 echo "	<td align='center'>	<a target='_BLANK' href='navegador_detalleingresomateriales.php?codigo_ingreso=$codigo'>
 	<img src='imagenes/detalles.png' border='0' title='Ver Detalles del Ingreso' width='40'></a></td>
 	<td align='center'>
 		<a href='#' onclick='javascript:editarIngresoTipoProv($codigo)' > 

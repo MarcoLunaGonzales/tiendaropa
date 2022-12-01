@@ -1,3 +1,9 @@
+<?php
+require('conexionmysqli.php');
+require("estilos_almacenes.inc");
+//require('estilos_reportes_almacencentral.php');
+
+?>
 <script language='JavaScript'>
 function envia_formulario(f)
 {	var rpt_territorio,fecha_ini, fecha_fin, rpt_ver;
@@ -16,19 +22,16 @@ function envia_formulario(f)
 </script>
 <?php
 
-require("conexion.inc");
-require("estilos_almacenes.inc");
-
 $fecha_rptdefault=date("d/m/Y");
-echo "<table align='center' class='textotit'><tr><th>Ranking de Ventas x Item</th></tr></table><br>";
+echo "<h1>Ranking de Ventas x Item</h1><br>";
 echo"<form method='post' action=''>";
 
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto' required>";
 	$sql="select cod_ciudad, descripcion from ciudades order by descripcion";
-	$resp=mysql_query($sql);
+	$resp=mysqli_query($enlaceCon, $sql);
 	echo "<option value=''></option>";
-	while($dat=mysql_fetch_array($resp))
+	while($dat=mysqli_fetch_array($resp))
 	{	$codigo_ciudad=$dat[0];
 		$nombre_ciudad=$dat[1];
 		echo "<option value='$codigo_ciudad'>$nombre_ciudad</option>";

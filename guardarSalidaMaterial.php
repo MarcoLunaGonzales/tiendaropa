@@ -8,13 +8,6 @@ require("funciones.php");
 require("funciones_inventarios.php");
 require("enviar_correo/php/send-email_anulacion.php");
 
-
-//PARA KIDSPLACE ROPA
-//$codigoActividadSIAT=475100;
-//PARA FARMACIA
-// $codigoActividadSIAT=477300;
-
-
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
@@ -22,8 +15,6 @@ $errorProducto="";
 $totalFacturaMonto=0;
 
 $tipoSalida=$_POST['tipoSalida'];
-
-//echo "TIPO SALIDA: ".$tipoSalida;
 
 $tipoDoc=$_POST['tipoDoc'];
 if(!isset($_POST['no_venta'])){
@@ -206,9 +197,6 @@ do {
 		if(isset($_POST['fecha_emision'])){
 			$fechaEmit=$_POST['fecha_emision'];	
 			$horaEmit=$_POST['hora_emision'];	
-
-			// $sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fechaEmit' and cuis='$cuis' LIMIT 1";	
-
 			$sqlCufd="SELECT codigo,cufd,codigo_control from siat_cufd where cod_ciudad='$globalSucursal' and cuis='$cuis' and  created_at between '$fechaEmit 00:00:00' and '$fechaEmit $horaEmit:00' order by created_at desc limit 1";
 		}else{
 			$sqlCufd="select codigo,cufd,codigo_control FROM siat_cufd where cod_ciudad='$globalSucursal' and estado=1 and fecha='$fecha' and cuis='$cuis' LIMIT 1";	
@@ -293,10 +281,6 @@ if($sql_inserta==1){
 		$codMaterial=$_POST["materiales$i"];
 		if($codMaterial!=0){
 
-			// if(isset($_POST['cantidad_unitaria$i'])){	$cantidadUnitaria=$_POST['cantidad_unitaria$i']; }else{ $cantidadUnitaria=0;	}
-			// if(isset($_POST['precio_unitario$i'])){	$precioUnitario=$_POST['precio_unitario$i']; }else{ $precioUnitario=0;	}
-			// if(isset($_POST['descuentoProducto$i'])){	$descuentoProducto=$_POST['descuentoProducto$i']; }else{ $descuentoProducto=0;	}
-			
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
@@ -304,7 +288,6 @@ if($sql_inserta==1){
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
 			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
-			
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			if($banderaValidacionStock==1){
@@ -384,7 +367,7 @@ if($sql_inserta==1){
 						</script>";	
 				}else{
 					$mensaje="transacción Existosa :)";	
-					$url="location.href='formatoFacturaOnLine.php?codVenta=$codigo';";				
+					$url="location.href='formatoFactura.php?codVenta=$codigo';";				
 					
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
@@ -427,7 +410,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					   location.href='navegadorVentas.php'; 
+					   location.href='formatoFactura.php?codVenta=$codigo'; 
 					});
 					</script>";
 				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
@@ -439,7 +422,7 @@ if($sql_inserta==1){
 				    html: '".$texto_correo."',
 				    type: 'success'
 					}).then(function() {
-					    location.href='navegadorVentas.php';
+					    location.href='formatoFactura.php?codVenta=$codigo';
 					});
 					</script>";
 				// echo "<script type='text/javascript' language='javascript'>
@@ -448,14 +431,14 @@ if($sql_inserta==1){
 			}
 
 		}else if($tipoDoc==2){
-			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
-			$banderaCorreo=obtenerValorConfiguracion(10);
+			/*PARA EL CASO DE NR NO ENVIAR CORREO EN NINGUN CASO*/
+			$banderaCorreo=0;
 			if($banderaCorreo==1 || $banderaCorreo==2){
 				header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 			    $respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
 		    }else{
 				echo "<script type='text/javascript' language='javascript'>
-				location.href='formatoNotaRemisionOficial.php?codVenta=$codigo';
+				location.href='formatoNotaRemision.php?codVenta=$codigo';
 				</script>";		
 			}
 		}else if($tipoDoc==4){
@@ -542,8 +525,8 @@ if($sql_inserta==1){
 }else{
 		echo "<script type='text/javascript' language='javascript'>
 			alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-			
-		</script>";//location.href='navegador_salidamateriales.php';
+			location.href='navegador_salidamateriales.php';
+		</script>";
 }
 
 ?>

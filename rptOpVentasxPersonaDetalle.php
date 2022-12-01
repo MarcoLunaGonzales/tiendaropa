@@ -64,7 +64,7 @@ function envia_formulario(f)
 </script>
 <?php
 
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $fecha_rptdefault=date("d/m/Y");

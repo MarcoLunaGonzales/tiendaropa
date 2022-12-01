@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require('function_formatofecha.php');
 require("estilos_almacenes.inc");
 ?>
@@ -223,7 +223,7 @@ echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' nam
 
 echo "<br><div id='divCuerpo'>";
 echo "<br><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Nro.Factura</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
 <th>Proveedor</th>
 <th>Observaciones</th>
 <th>Registro</th>
@@ -338,7 +338,7 @@ echo "</form>";
 				</td>
 			</tr>
 			<tr>
-				<td>Nota de Ingreso</td>
+				<td>Factura o Nota de Ingreso</td>
 				<td>
 				<input type='text' name='notaIngreso' id="notaIngreso" class='texto'>
 				</td>

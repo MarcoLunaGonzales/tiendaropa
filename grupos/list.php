@@ -98,17 +98,17 @@ echo "<script language='Javascript'>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$nombre</td>
 		<td>$abreviatura</td>
-		<td><a href='listDetalle.php?codigo=$codigo'>Ir a SubGrupos</a>";
+		<td><a href='listDetalle.php?codigo=$codigo'>Ir a SubGrupos</a></br>";
 			
-		$sqlSubGrupo="SELECT codigo,nombre, abreviatura FROM `subgrupos` where estado=1 and cod_grupo=".$codigo;
+		$sqlSubGrupo="SELECT codigo,nombre, abreviatura FROM `subgrupos` where estado=1 and cod_grupo=".$codigo." order by nombre asc ";
 		$respSubGrupo=mysqli_query($enlaceCon,$sqlSubGrupo);
-		echo "<table style='border-spacing: 0;'>";
+		
 		while($datSubGrupo=mysqli_fetch_array($respSubGrupo)){
 			$codigoSub=$datSubGrupo[0];
 			$nombreSub=$datSubGrupo[1];
-			echo "<tr><td>$codigoSub</td><td>$nombreSub</td></tr>";
+		echo "<strong>$codigoSub </strong>$nombreSub</br>";
 		}
-		echo "</table>";
+	
 		
 		
 		echo"</td></tr>";

@@ -24,7 +24,11 @@ require('conexionmysqli.php');
 require('funciones.php');
 require('funcion_nombres.php');
 require('NumeroALetras.php');
-include('phpqrcode/qrlib.php'); 
+include('phpqrcode/qrlib.php');
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 
 
 
@@ -45,26 +49,6 @@ include('phpqrcode/qrlib.php');
 $cod_ciudad=$_COOKIE["global_agencia"];
 $codigoVenta=$_GET["codVenta"];
 
-
-
-
-$sqlInsert="select count(*) from `cantidad_impresiones` s where s.`cod_salida_almacen`=$codigoVenta";
-$respInsert=mysqli_query($enlaceCon,$sqlInsert);
-$nroItemsImp=mysqli_result($respInsert,0,0);
-
-
-$nroImpresionesNew=(int)$nroImpresiones+1;
-if($nroItemsImp>0){
-	$sqlInsertImp="UPDATE cantidad_impresiones SET nro_impresion='$nroImpresionesNew' where cod_salida_almacen='$codigoVenta'";
-}else{	
-	$sqlInsertImp="INSERT INTO cantidad_impresiones (cod_salida_almacen,nro_impresion) VALUES('$codigoVenta','$nroImpresionesNew')";
-}
-mysqli_query($enlaceCon,$sqlInsertImp);
-
-$cod_chofer=$_COOKIE["global_usuario"];
-$fecha_impresion=date("Y-m-d H:i:s");
-$sqlImpresionesDetalle="INSERT INTO cantidad_impresiones_detalle (cod_salida_almacen,cod_chofer,fecha_impresion,nro_impresiones) VALUES('$codigoVenta','$cod_chofer','$fecha_impresion','$nroImpresionesNew')";
-mysqli_query($enlaceCon,$sqlImpresionesDetalle);
 
 
 //consulta cuantos items tiene el detalle
@@ -126,10 +110,12 @@ $nitTxt=mysqli_result($respConf,0,1);
 
 // $sqlDatosFactura="select '' as nro_autorizacion, '', f.codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.fecha, '%d/%m/%Y') from facturas_venta f
 // 	where f.cod_venta=$codigoVenta";
-$sqlDatosFactura="select '' as nro_autorizacion, '', '' as codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y') from salida_almacenes f
-	where f.cod_salida_almacenes=$codigoVenta";
+$sqlDatosFactura="select '' as nro_autorizacion, '', '' as codigo_control, f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y') 
+from salida_almacenes f
+where f.cod_salida_almacenes=$codigoVenta";
 //echo $sqlDatosFactura;
 $respDatosFactura=mysqli_query($enlaceCon,$sqlDatosFactura);
+
 $nroAutorizacion=mysqli_result($respDatosFactura,0,0);
 $fechaLimiteEmision=mysqli_result($respDatosFactura,0,1);
 $codigoControl=mysqli_result($respDatosFactura,0,2);
@@ -142,8 +128,11 @@ $cod_funcionario=$_COOKIE["global_usuario"];
 //datos documento
 
 
-
-$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,(SELECT cufd from siat_cufd where codigo=s.siat_codigocufd) as cufd,siat_cuf,siat_complemento,s.siat_codigoPuntoVenta,s.siat_codigotipoemision,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
+$sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre`, c.`nombre_cliente`, s.`nro_correlativo`, 
+s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,s.cod_tipopago,s.cod_tipo_doc,s.fecha,
+(SELECT cod_ciudad from almacenes where cod_almacen=s.cod_almacen)as cod_ciudad,s.cod_cliente,
+(SELECT cufd from siat_cufd where codigo=s.siat_codigocufd) as cufd,siat_cuf,siat_complemento,s.siat_codigoPuntoVenta,
+s.siat_codigotipoemision,(SELECT descripcionLeyenda from siat_sincronizarlistaleyendasfactura where codigo=s.siat_cod_leyenda) as leyenda
 		from `salida_almacenes` s, `tipos_docs` t, `clientes` c
 		where s.`cod_salida_almacenes`='$codigoVenta' and s.`cod_cliente`=c.`cod_cliente` and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -295,10 +284,8 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$cantUnit=$datDetalle[1];
 	$nombreMat=$datDetalle[2];
 	$precioUnit=$datDetalle[3];
-	$descUnit=$datDetalle[4];
-	//$montoUnit=$datDetalle[5];
-	$montoUnit=($cantUnit*$precioUnit)-$descUnit;
-	
+	$descUnit=$datDetalle[4];	
+	$montoUnit=($cantUnit*$precioUnit)-$descUnit;	
 	//recalculamos el precio unitario para mostrar en la factura.
 	//$precioUnitFactura=$montoUnit/$cantUnit;
 	$precioUnitFactura=($cantUnit*$precioUnit)/$cantUnit;
@@ -320,7 +307,8 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 
 	?>
     <table width="100%"><tr class="arial-7"><td align="left"  width="15%">(<?=$codInterno?>)</td><td colspan="3" align="left"><?=$nombreMat?></td></tr>
-    <tr class="arial-8"><td align="left"  width="15%"><?="$cantUnit"?></td><td align="right" width="25%"><?="$precioUnitFactura"?></td><td align="right"  width="25%"><?="$descUnit"?></td><td align="right"  width="35%"><?="$montoUnitProdDesc"?></td></tr></table>
+    <tr class="arial-8"><td align="left"  width="15%"><?="$cantUnit"?></td><td align="right" width="25%"><?="$precioUnitFactura"?></td>
+	<td align="right"  width="25%"><?="$descUnit"?></td><td align="right"  width="35%"><?="$montoUnitProdDesc"?></td></tr></table>
 	<?php
 	//$montoTotal=$montoTotal+$montoUnitProd;	 ESTE ERA OFICIAL
 	$montoTotal=$montoTotal+$montoUnitProdDesc;
@@ -435,37 +423,11 @@ QRcode::png($codeContents, $fileName,QR_ECLEVEL_L, 4);
 <!-- <div style="margin: 0px;padding: 0;position: absolute;left:0;width: 100px;"><label class="arial-12"><?=$txt3?></label><br>
 <img src="<?=$fileName?>" style="margin: 0px;padding: 0;"> -->
 <div style="width:97%"><label class="arial-7"><?=$txt3?></label><br><br><label class="arial-7">"<?=$txtLeyendaFin?>"</label><br></div>
-<?php
 
-$sqlGlosa="select cod_tipopreciogeneral from `salida_almacenes` s where s.`cod_salida_almacenes`=$codigoVenta";
-$respGlosa=mysqli_query($enlaceCon,$sqlGlosa);
-$codigoPrecio=mysqli_result($respGlosa,0,0);
-$txtGlosaDescuento="";
-$sql1="SELECT glosa_factura from tipos_preciogeneral where codigo=$codigoPrecio and glosa_estado=1";
-$resp1=mysqli_query($enlaceCon,$sql1);
-while($filaDesc=mysqli_fetch_array($resp1)){	
-	    $txtGlosaDescuento=iconv('utf-8', 'windows-1252', $filaDesc[0]);		
-}
-if($txtGlosaDescuento!=""){
-	?><label class="arial-12"><?="--------------------------------------------------------"?></label><br>
-	<div style="width:80%"><label class="arial-7"><?=$txtGlosaDescuento?></label><br></div><?php
-}
-
-//CAMPAÑAS APLICADAS
-$fechaHoraFactura=$fecha_salida." ".$hora_salida;
-$datosCampana=obtenerCampanaAprobadaFechaFactura($codigoVenta,$fechaHoraFactura,$cod_ciudad_salida);
-$glosaCampana=$datosCampana[1];
-$glosaCampana=iconv('utf-8', 'windows-1252', $glosaCampana);
-if($glosaCampana!=""&&$datosCampana[0]>0&&$cod_cliente!=146){
-	?><label class="arial-12"><?=""?></label><br>
-	<div style="width:80%"><label class="arial-7"><?=$glosaCampana.": ".$datosCampana[2]?></label><br></div><?php
-}
-
-?>
 </center>
 </div>
 </body>
 <script type="text/javascript">
  javascript:window.print();
- setTimeout(function () { window.location.href="registrar_salidaventas.php?file=<?=$fileName?>";}, 1000);
+ setTimeout(function () { window.location.href="registrar_salidaventas.php";}, 1000);
 </script>

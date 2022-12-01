@@ -107,7 +107,7 @@ function soloMasVentas(obj){
 			fi.appendChild(contenedor);
 			var div_material;
 			div_material=document.getElementById("div"+num);			
-			var cod_precio=document.getElementById("tipoPrecio").value;			
+			var cod_precio=1;
 			ajax=nuevoAjax();
 			ajax.open("GET","ajaxMaterialVentas.php?codigo="+num+"&cod_precio="+cod_precio,true);
 			ajax.onreadystatechange=function(){
@@ -136,7 +136,7 @@ function soloMas(obj) {
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
-					setMaterialesSolo(obj[1],obj[2],obj[3],obj[4]);
+					setMaterialesSolo(obj[1],obj[2]+"(<small>"+obj[6]+" "+obj[8]+" "+obj[7]+"</small>)",obj[3],obj[4],obj[9]);
 				}
 			}		
 			ajax.send(null);
@@ -192,23 +192,24 @@ function setMaterialesSoloSalidas(cod, nombreMat){
 	$('#cod_material'+numRegistro).html(nombreMat);
 	$("#input_codigo_barras").focus();
 	actStock(numRegistro);
-    $("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
-	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
+  /*$("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
+	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );*/
 	
 }
 
 
-function setMaterialesSolo(cod, nombreMat, cantidadPresentacion,costoItem){	
+function setMaterialesSolo(cod, nombreMat, cantidadPresentacion, costoItem, precioItem){	
 	var numRegistro=$('input[name=materialActivo]').val();
-	console.log(numRegistro);
+	console.log(numRegistro+" "+costoItem+" "+precioItem);
 	$('#material'+numRegistro).val(cod);
 	$('#cod_material'+numRegistro).html(nombreMat);
 	$('#ultimoCosto'+numRegistro).val(costoItem);
 	$('#divUltimoCosto'+numRegistro).html("["+costoItem+"]");
-	$("#input_codigo_barras").focus();	
-    
-    $("#fiel").animate({ scrollTop: $("#fiel")[0].scrollHeight}, 1000);
-	$("#fiel").scrollTop( $("#fiel").prop('scrollHeight') );
+	$('#precioVenta'+numRegistro).val(precioItem);
+	$('#precio'+numRegistro).val(costoItem);
+	document.getElementById('divPrecioTotal'+numRegistro).innerHTML=precioItem;
+	document.getElementById('divUltimoCosto'+numRegistro).innerHTML="["+costoItem+"]";
+	$("#input_codigo_barras").focus();
 
 }
 

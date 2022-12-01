@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 
 $global_almacen=$_COOKIE["global_almacen"];
@@ -51,9 +51,12 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 $sql="update salida_almacenes set salida_anulada=1, estado_salida=3 where cod_salida_almacenes='$codigo_registro'";
 $resp=mysqli_query($enlaceCon,$sql);
 
-echo "<script language='Javascript'>
-		alert('El registro fue anulado.');
-		location.href='navegador_salidamateriales.php';
+		echo "<script language='Javascript'>
+			Swal.fire('El registro fue anulado.')
+		    .then(() => {
+				location.href='navegador_salidamateriales.php';	
+		    });
 		</script>";
+
 
 ?>
