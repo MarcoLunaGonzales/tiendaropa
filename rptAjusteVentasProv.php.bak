@@ -558,7 +558,8 @@ inner join tipos_gasto tg on (g.cod_tipogasto=tg.cod_tipogasto)
 inner join grupos_gasto gg on (g.cod_grupogasto=gg.cod_grupogasto)
 inner join tipos_pago tp on (g.cod_tipopago=tp.cod_tipopago)
 left  join proveedores p on (g.cod_proveedor=p.cod_proveedor)
-where g.cod_ciudad=".$global_agencia." and g.cod_tipogasto=2 and g.cod_proveedor=".$codProveedor." and gasto_anulado=0 order by g.cod_gasto desc";
+where g.cod_ciudad=".$global_agencia." and g.cod_proveedor=".$codProveedor." and gasto_anulado=0 order by g.cod_gasto desc";
+//and g.cod_tipogasto=2 
 
 	$respGasto = mysqli_query($enlaceCon,$consultaGasto);
 	$numGasto=mysqli_num_rows($respGasto);

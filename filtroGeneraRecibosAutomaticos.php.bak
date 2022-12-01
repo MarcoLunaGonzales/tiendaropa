@@ -15,7 +15,7 @@ function envia_formulario(f)
 			}
 	
 	
-
+alert("hola");
 	var forms = f;
     if(forms.checkValidity()){
 		 location.href='generaRecibosAutomaticos.php?rpt_gruporecibo='+rpt_gruporecibo+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin;
