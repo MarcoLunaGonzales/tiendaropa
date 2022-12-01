@@ -1474,8 +1474,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		</div>
 		<!-- style="font-size: 20px;color:#9D09BB"-->		
 	</div>
-	<input type='hidden' name='complemento' id='complemento' value='' class="form-control" placeholder="COMPLEMENTO" style="text-transform:uppercase;position:absolute;width:160px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();" > 
-	
+	<input type='hidden' name='complemento' id='complemento' value='' class="form-control" placeholder="COMPLEMENTO" style="text-transform:uppercase;position:absolute;width:160px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();">
 	</td>	
 	<td colspan="2">
 		<div id='divRazonSocial'>

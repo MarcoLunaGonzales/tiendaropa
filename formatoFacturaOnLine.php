@@ -20,7 +20,7 @@
 </style>
 <?php
 $estilosVenta=1;
-require('conexionmysqli.inc');
+require('conexionmysqli.php');
 require('funciones.php');
 require('funcion_nombres.php');
 require('NumeroALetras.php');

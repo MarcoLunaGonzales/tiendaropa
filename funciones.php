@@ -18,7 +18,10 @@ function numeroCorrelativoCUFD($enlaceCon,$tipoDoc){
 	$globalAlmacen=$_COOKIE['global_almacen'];	 
 	//echo "GlobalAlmacen".$globalAlmacen;
   $fechaActual=date("Y-m-d");
-  $sqlCufd="select cufd FROM siat_cufd where cod_ciudad='$globalCiudad' and estado=1 and fecha='$fechaActual'";
+  $anioActual=date("Y");
+  //$sqlCufd="select cufd FROM siat_cufd where cod_ciudad='$globalCiudad' and estado=1 and fecha='$fechaActual'";
+
+   $sqlCufd="select cufd from siat_cufd where cod_ciudad=$globalCiudad and fecha = '$fechaActual' and estado=1 AND (cufd <> '' or cufd <> null) and cuis in (select cuis from siat_cuis where cod_ciudad='$globalCiudad' and estado=1 and cod_gestion='$anioActual')";
 	 
   $respCufd=mysqli_query($enlaceCon,$sqlCufd);
   $datCufd=mysqli_fetch_array($respCufd);
@@ -26,7 +29,7 @@ function numeroCorrelativoCUFD($enlaceCon,$tipoDoc){
   $nro_correlativo="CUFD INCORRECTO / VENCIDO";
   $bandera=1;
 
-  $anioActual=date("Y");
+  
   $sqlCuis="select cuis FROM siat_cuis where cod_ciudad='$globalCiudad' and estado=1 and cod_gestion='$anioActual'";  
   $respCuis=mysqli_query($enlaceCon,$sqlCuis);
   $datCuis=mysqli_fetch_array($respCuis);
