@@ -457,7 +457,7 @@ echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 echo "<h1>Listado de Ventas &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='navegadorVentas2.php'><img src='imagenes/go2.png' width='15'></a></h1>";
 echo "<table class='texto' cellspacing='0' width='90%'>
 <tr><th>Leyenda:</th>
-<th>Ventas On-line</th><td  bgcolor='#99E80A' width='5%'></td>
+<th>Ventas On-line</th><td  bgcolor='#f9e79f' width='5%'></td>
 <th>Ventas Anuladas</th><td bgcolor='#e74c3c' width='5%'></td>
 <th>Ventas Off-line</th><td bgcolor='#12A4DF' width='5%'></td>
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table>";

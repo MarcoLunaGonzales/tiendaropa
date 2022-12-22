@@ -31,13 +31,19 @@ if(empty($proveedor)){
 $createdBy=$_COOKIE['global_usuario'];
 $createdDate=date("Y-m-d H:i:s");
 
-$fecha=date("Y-m-d");
+$fecha=$_POST['fecha'];
+$vector_fecha_recibo=explode("/",$fecha);
+$fecha_recibo=$vector_fecha_recibo[2]."-".$vector_fecha_recibo[1]."-".$vector_fecha_recibo[0];
+/*echo $fecha."<br>";
+echo $fecha_recibo;*/
+//$fecha=date("Y-m-d");
+
 
 
 
 $consulta="insert into recibos (id_recibo,fecha_recibo,cod_ciudad,nombre_recibo,desc_recibo,
 monto_recibo,created_by,created_date,cel_recibo,recibo_anulado,cod_tipopago, cod_tiporecibo, cod_proveedor,cod_estadorecibo,resta_ventas_proveedor,cod_gruporecibo) 
-values(".$id_recibo.",'".$fecha."',".$global_agencia.",'".$nombre."','".$desc_recibo."',".$monto.",".$createdBy.",
+values(".$id_recibo.",'".$fecha_recibo."',".$global_agencia.",'".$nombre."','".$desc_recibo."',".$monto.",".$createdBy.",
 '".$createdDate."','".$nro_contacto."',0,".$tipoPago.",'".$tipoRecibo."','".$proveedor."',1 ,".$restarVentaProv.",'".$grupoRecibo."')";
 
 mysqli_query($enlaceCon,$consulta);

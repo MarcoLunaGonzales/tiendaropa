@@ -1,4 +1,6 @@
 <?php
+
+require("estilos_almacenes.inc");
 require("conexionmysqli.inc");
 require("estilos.inc");
 require("funciones.php");
@@ -18,6 +20,7 @@ require('funcion_nombres.php');*/
         <script type="text/javascript" src="dlcalendar.js"></script>
         <script type="text/javascript" src="functionsGeneral.js"></script>
         <script src="lib/sweetalert2/sweetalert2.all.js"></script>
+		
 <script>
 
 function validar(f)
@@ -27,6 +30,7 @@ function cancelar(f)
 {  location.href="listaRecibos.php";
 }
 	</script>
+	</head>
 <?php
 
 
@@ -37,7 +41,8 @@ if($fecha=="")
 $global_agencia=$_COOKIE['global_agencia'];
 ?>
 <form id='guarda_recibo' action='guarda_recibo.php' method='post' name='form1' >
-<table border='0' class='textotit' align='center'><tr><th>Registro de Recibo</th></tr></table><br>
+<table border='0' class='textotit' align='center'><tr><th>Registro de Recibo</th></tr></table>
+<br>
 <table border="0" class="texto" cellspacing="0" align="center" width="80%" style="border:#ccc 1px solid;">
 <tr><th>Tipo Recibo</th><th>Grupo Recibo</th><th>Nro de Recibo</th><th>Fecha de Recibo</th><th>Forma Pago</th><th>Monto Recibido</th></tr>
 <tr>
@@ -88,7 +93,7 @@ else
 ?>
 <td align="center"><?=$nro_correlativo;?></td>
 <td align="center">
-<input type="text" align="left" disabled="true" class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
+<input type="text" align="left"  class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
 <img id="imagenFecha" src="imagenes/fecha.bmp">
 </td>
 <td>
@@ -149,9 +154,11 @@ else
 <input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);"></center>
 <input type="button" class="boton2" value="Cancelar" onClick="cancelar(this.form);"></center>
 </div>
-</div>
+
 
 
 
 </form>
+
 </body>
+</html>

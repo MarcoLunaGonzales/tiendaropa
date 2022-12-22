@@ -315,7 +315,7 @@ $resp = mysqli_query($enlaceCon,$consulta);
 <div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
 <input type='button' value='Editar' class='boton' onclick='editar_recibo(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_recibo(this.form)'>
-<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
+<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>
 
 <br><div id='divCuerpo'>
 <br><center><table class='texto'>
