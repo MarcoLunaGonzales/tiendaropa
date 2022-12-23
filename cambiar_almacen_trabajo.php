@@ -16,7 +16,7 @@ echo "<center><table class='texto'>";
 echo "<tr><th align='left'>Almacen</th>";
 echo "<td align='center'>";
 
-$sql1="select cod_almacen, nombre_almacen from almacenes order by nombre_almacen";
+$sql1="select cod_almacen, nombre_almacen from almacenes where cod_estado=1 order by nombre_almacen";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td align='center'><select name='almacen' id='almacen' class='texto'>";
 while($dat1=mysqli_fetch_array($resp1))

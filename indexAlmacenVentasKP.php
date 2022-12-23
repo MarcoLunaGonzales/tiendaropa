@@ -106,12 +106,12 @@ include("datosUsuario.php");
 					<li><span>Productos</span>
 						<ul>
 							<li><a href="rptOpProductos.php" target="contenedorPrincipal">Productos</a></li>
-							<li><a href="rptOpPrecios.php" target="contenedorPrincipal">Precios</a></li>
 						</ul>
 					</li>	
 					<li><span>Movimiento de Almacen</span>
 						<ul>
 							<li><a href="rpt_op_inv_kardex.php" target="contenedorPrincipal">Kardex de Movimiento</a></li>
+							<!--li><a href="rptOpMovimientoProductos.php" target="contenedorPrincipal">Movimiento de Productos</a></li-->							
 							<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
 							<li><a href="rpt_op_inv_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>
 							<li><a href="rpt_op_inv_salidas.php" target="contenedorPrincipal">Salidas</a></li>
@@ -121,22 +121,9 @@ include("datosUsuario.php");
 					<li><span>Ventas</span>
 						<ul>
 							<li><a href="rptOpVentasDocumento.php" target="contenedorPrincipal">Ventas x Documento</a></li>
-							<li><a href="rptOpVentasxItem.php" target="contenedorPrincipal">Ranking de Ventas x Item</a></li>
 							<li><a href="rptOpVentasGeneral.php" target="contenedorPrincipal">Ventas x Documento e Item</a></li>
 							<li><a href="rptOpVentasxPersona.php" target="contenedorPrincipal">Ventas x Vendedor Resumido</a></li>
 							<li><a href="rptOpVentasxPersonaDetalle.php" target="contenedorPrincipal">Ventas x Vendedor Detallado</a></li>
-						</ul>	
-					</li>
-					<li><span>Reportes Contables</span>
-						<ul>
-							<li><a href="rptOpLibroVentas.php" target="contenedorPrincipal">Libro de Ventas</a></li>
-						</ul>	
-					</li>
-					<li><span>Utilidades</span>
-						<ul>
-							<li><a href="rptOpUtilidadesDocumento.php" target="contenedorPrincipal">Utilidades x Documento</a></li>
-							<li><a href="rptOpUtilidadesxItem.php" target="contenedorPrincipal">Ranking de Utilidades x Item</a></li>
-							<li><a href="rptOpUtilidadesDocItem.php" target="contenedorPrincipal">Utilidades x Documento e Item</a></li>
 						</ul>	
 					</li>
 				</ul>
@@ -144,7 +131,7 @@ include("datosUsuario.php");
 			<li><a href="rptOpArqueoDiario.php?variableAdmin=1" target="contenedorPrincipal" >Arqueo de Caja</a></li>
 			<li><a href="registrar_cotizacion_dolar.php" target="contenedorPrincipal"><span>Cotización Dolar</span></a>	
 			</li>
-			<li><a href="cambiar_almacen_trabajo.php" target="contenedorPrincipal"><span>Cambiar Almacen Trabajo</span></a>	
+			<!--li><a href="cambiar_almacen_trabajo.php" target="contenedorPrincipal"><span>Cambiar Almacen Trabajo</span></a-->	
 			</li>	
 </div>			
 	</nav>

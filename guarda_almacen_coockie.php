@@ -1,7 +1,7 @@
 <?php
 $variable=$_POST['almacen'];
 
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 $sql = "select cod_ciudad from almacenes where cod_almacen=$variable";
 $resp = mysqli_query($enlaceCon,$sql );
 $dat = mysqli_fetch_array( $resp );
