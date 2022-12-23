@@ -20,6 +20,7 @@ function cancelar(f)
 {  location.href="listaRecibos.php";
 }
 	</script>
+	</head>
 <?php
 
 
@@ -125,7 +126,7 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <td align="left" ><input type="text" class="texto" name="nombre" size="35"  id="nombre" value="<?=$nombre_recibo;?>" required></td>
 <td align="left" ><input type="text" class="texto" name="nro_contacto"  size="15" id="nro_contacto" value="<?=$cel_recibo;?>" required></td>
 <td colspan="2" ><input type='text' class='texto' name='desc_recibo' value="<?=$desc_recibo;?>" size='60'></td>
-<td>
+<td colspan="2">
 	<select name="proveedor" id="proveedor" class="texto"  >
 	<option value="" >NINGUNO</option>
 <?php	
@@ -158,9 +159,10 @@ from recibos  where id_recibo='".$idReciboEditar."' and cod_ciudad='".$global_ag
 <input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);"></center>
 <input type="button" class="boton2" value="Cancelar" onClick="cancelar(this.form);"></center>
 </div>
-</div>
+
 
 
 
 </form>
 </body>
+</html>

@@ -305,7 +305,7 @@ left  join proveedores p on (r.cod_proveedor=p.cod_proveedor)
 left  join estados_recibo er on (r.cod_estadorecibo=er.cod_estado)
 left join grupos_recibo gr on (r.cod_gruporecibo=gr.cod_gruporecibo) 
 where r.cod_ciudad=".$global_agencia." order by r.id_recibo DESC,r.cod_ciudad desc";
-echo "consulta=".$consulta;
+//echo "consulta=".$consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 ?>
 
@@ -315,7 +315,7 @@ $resp = mysqli_query($enlaceCon,$consulta);
 <div class='divBotones'><input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_recibo()'>
 <input type='button' value='Editar' class='boton' onclick='editar_recibo(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_recibo(this.form)'>
-<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
+<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>
 
 <br><div id='divCuerpo'>
 <br><center><table class='texto'>

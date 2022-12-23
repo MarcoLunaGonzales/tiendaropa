@@ -18,6 +18,9 @@ $desc_recibo=$_POST['desc_recibo'];
 $proveedor=$_POST['proveedor'];
 $restarVentaProv=$_POST['restarVentaProv'];
 $grupoRecibo=$_POST['grupoRecibo'];
+$fecha=$_POST['fecha'];
+$vector_fecha_recibo=explode("/",$fecha);
+$fecha_recibo=$vector_fecha_recibo[2]."-".$vector_fecha_recibo[1]."-".$vector_fecha_recibo[0];
 //echo "proveedor=".$proveedor;
 if(empty($proveedor)){
 	$proveedor=NULL;
@@ -35,6 +38,7 @@ $consulta="update recibos  set ";
 $consulta.=" nombre_recibo='".$nombre."',";
 $consulta.=" desc_recibo='".$desc_recibo."',";
 $consulta.=" monto_recibo='".$monto."',";
+$consulta.=" fecha_recibo='".$fecha_recibo."',";
 $consulta.=" cel_recibo='".$nro_contacto."',";
 $consulta.=" cod_tipopago='".$tipoPago."',";
 $consulta.=" cod_tiporecibo='".$tipoRecibo."',";
