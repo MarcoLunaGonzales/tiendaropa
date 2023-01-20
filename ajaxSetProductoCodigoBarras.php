@@ -27,16 +27,14 @@ $codigoItem=trim($codigoItem);
 			//SACAMOS EL PRECIO
 			$precioItem=0;
 			$costoItem=0;
-			$sqlPrecio="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' 
-			and cod_ciudad='$globalAgencia'";
+			$sqlPrecio="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1'";
 			$respPrecio=mysqli_query($enlaceCon, $sqlPrecio);
 			$numFilas2=mysqli_num_rows($respPrecio);
 			if($numFilas2>0){
 				$precioItem=mysqli_result($respPrecio,0,0);
 			}
 			//SACAMOS EL COSTO REGISTRADO EN LA TABLA DE PRECIOS
-			$sqlCosto="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='0' 
-			and cod_ciudad='$globalAgencia'";
+			$sqlCosto="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='0'";
 			$respCosto=mysqli_query($enlaceCon, $sqlCosto);
 			$numFilas2=mysqli_num_rows($respCosto);
 			if($numFilas2>0){

@@ -232,6 +232,50 @@ function stockProducto($enlaceCon,$almacen, $item){
 	return($stock2);
 }
 
+function stockProductoAFecha($enlaceCon, $almacen, $item, $fechaInventario){
+	$fechaActual=$fechaInventario;
+	$fechaInicioSistema=obtenerValorConfiguracion($enlaceCon,6);
+   $sql_ingresos="select IFNULL(sum(id.cantidad_unitaria),0) from ingreso_almacenes i, ingreso_detalle_almacenes id
+	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$fechaInicioSistema' and '$fechaActual' and i.cod_almacen='$almacen'
+	and id.cod_material='$item' and i.ingreso_anulado=0";
+	$cant_ingresos=0;
+	$cant_salidas=0;
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	if($dat_ingresos=mysqli_fetch_array($resp_ingresos)){
+		$cant_ingresos=$dat_ingresos[0];	
+	}
+	$sql_salidas="select IFNULL(sum(sd.cantidad_unitaria),0) from salida_almacenes s, salida_detalle_almacenes sd
+	where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$fechaInicioSistema' and '$fechaActual' and s.cod_almacen='$almacen'
+	and sd.cod_material='$item' and s.salida_anulada=0";
+	$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+	if($dat_salidas=mysqli_fetch_array($resp_salidas)){
+		$cant_salidas=$dat_salidas[0];
+	}
+	$stock2=$cant_ingresos-$cant_salidas;
+	return($stock2);
+}
+function ingresosItemPeriodo($enlaceCon, $almacen, $item, $fechaInicio, $fechaFinal){
+	$sql_ingresos="select IFNULL(sum(id.cantidad_unitaria),0) from ingreso_almacenes i, ingreso_detalle_almacenes id
+	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$fechaInicio' and '$fechaFinal' and i.cod_almacen='$almacen'
+	and id.cod_material='$item' and i.ingreso_anulado=0";
+	$cant_ingresos=0;
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	if($dat_ingresos=mysqli_fetch_array($resp_ingresos)){
+		$cant_ingresos=$dat_ingresos[0];	
+	}
+	return($cant_ingresos);
+}
+function salidasItemPeriodo($enlaceCon, $almacen, $item, $fechaInicio, $fechaFinal){
+	$cant_salidas=0;
+	$sql_salidas="select IFNULL(sum(sd.cantidad_unitaria),0) from salida_almacenes s, salida_detalle_almacenes sd
+	where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$fechaInicio' and '$fechaFinal' and s.cod_almacen='$almacen'
+	and sd.cod_material='$item' and s.salida_anulada=0";
+	$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+	if($dat_salidas=mysqli_fetch_array($resp_salidas)){
+		$cant_salidas=$dat_salidas[0];
+	}
+	return($cant_salidas);
+}
 function stockMaterialesEdit($enlaceCon,$almacen, $item, $cantidad){
 	//
 	//require("conexion.inc");

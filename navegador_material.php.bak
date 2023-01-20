@@ -370,21 +370,24 @@ function Hidden(){
 			</select>
 			</td>
 			</tr>
-			<tr><th>Talla</th><th>Color</th></tr>
-			<tr>
+			<tr><th>Talla</th>
 			<td>
 				<input type='text' name='itemTallaBusqueda' id="itemTallaBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$ta?>">
 			</td>
+			</tr>
+			<tr><th>Color</th>
 			<td>
 				<input type='text' name='itemColorBusqueda' id="itemColorBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$cl?>">
 			</td>
 			</tr>
+			
 			<tr><th colspan="2">Nombre Producto</th></tr>
 			<tr>
 			<td colspan="2">
 				<input type='text' style="width:100%" name='itemNombreBusqueda' id="itemNombreBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$nm?>">
 			</td>
 			</tr>
+			
 			<tr><th colspan="2">Codigo de Barras</th></tr>
 			<tr>
 			<td colspan="2" style="text-align:center;">
@@ -395,7 +398,7 @@ function Hidden(){
 			</tr>
 		</table>
 		<div class="div-center">
-             <input type='button' class='boton-verde' value='Buscar Producto' id="btnBusqueda" onClick="cambiar_vista(this.form)">
+             <input type='button' class='boton-verde' value='Buscar Producto' id="btnBusqueda" onClick="javascript:cambiar_vista(this.form);">
 		</div>
 	
 	</div>

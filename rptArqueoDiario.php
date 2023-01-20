@@ -120,15 +120,21 @@ if($variableAdmin==1){
 $sql2.=" group by s.cod_tipopago order by s.cod_tipopago asc";
 
 $resp2 = mysqli_query($enlaceCon,$sql2);
+
+$totalMontoxTipoPagoEfectivo=0;
 while ($dat2 = mysqli_fetch_array($resp2)) {
 	$tipopago= $dat2[0];
 	$totMontoTipopago= $dat2[1];
 	$sql3=" select nombre_tipopago from tipos_pago where cod_tipopago=".$tipopago;
-	
 	$resp3 = mysqli_query($enlaceCon,$sql3);	
 	while ($dat3 = mysqli_fetch_array($resp3)) {
 		$descTipopago=$dat3[0];
 	}
+
+	if($tipopago==1){
+		$totalMontoxTipoPagoEfectivo=$totMontoTipopago;
+	}
+
 	$totMontoTipopagoF=number_format($totMontoTipopago,2,".",",");
 ?>
 <tr>
@@ -523,9 +529,20 @@ $totGTO=0;
 </table>
 </center>
 <?php
+$saldoCajaChica=$montoCajaChica+$totalVenta+$totalRecibo-$totalGastos;
+$saldoCajaChicaF=number_format($saldoCajaChica,2,".",",");
 
+$saldoCajaChica2=$montoCajaChica+$totalMontoxTipoPagoEfectivo-$totalGastos;
+$saldoCajaChica2F=number_format($saldoCajaChica2,2,".",",");
 
-
+echo "<br><center><table class='textomediano'>";
+echo "<tr><td>Saldo Inicial Caja Chica + Ingresos - Gastos   ---->  </td>
+<td align='right'>$saldoCajaChicaF</td>
+</tr>";
+echo "<tr><th>Saldo Inicial Caja Chica + Ingresos Efectivo - Gastos   ---->  </td>
+<td align='right'>$saldoCajaChica2F</td>
+</td>";
+echo "</table></center><br>";
 
 
 include("imprimirInc.php");

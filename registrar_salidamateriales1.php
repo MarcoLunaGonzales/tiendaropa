@@ -155,6 +155,9 @@ function setMateriales(f, cod, nombreMat){
 
 	actStock(numRegistro);
 }
+function calculaMontoMaterial(){
+	console.log('enter calcula monto');
+}
 
 num=0;
 cantidad_items=0;
@@ -461,6 +464,10 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 	
 	</div>
 </div>
+
+<input type='hidden' id='totalmat' value='<?=$cantidad_material;?>'>
+<input type='hidden' id='codalmacen' value='<?=$global_almacen;?>'>
+<input type='hidden' id='global_almacen' value='<?=$global_almacen;?>'>
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">

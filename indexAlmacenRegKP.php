@@ -124,6 +124,7 @@ include("datosUsuario.php");
 					<li><span>Movimiento de Almacen</span>
 						<ul>
 							<li><a href="rpt_op_inv_kardex.php" target="contenedorPrincipal">Kardex de Movimiento</a></li>
+							<li><a href="rptOpMovimientoProductos.php" target="contenedorPrincipal">Movimiento de Productos</a></li>
 							<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
 							<li><a href="rpt_op_inv_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>
 							<li><a href="rpt_op_inv_salidas.php" target="contenedorPrincipal">Salidas</a></li>

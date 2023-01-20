@@ -34,7 +34,7 @@ $consulta = "
     AND i.cod_almacen='$global_almacen'";
 
 if($notaIngreso!="")
-   {$consulta = $consulta." AND i.nota_entrega='$notaIngreso' ";
+   {$consulta = $consulta." AND i.nro_correlativo='$notaIngreso' ";
    }
 if(!empty($fechaIniBusqueda) && !empty($fechaFinBusqueda) ){
 	$consulta = $consulta." AND '$fechaIniBusqueda'<=i.fecha AND i.fecha<='$fechaFinBusqueda' ";

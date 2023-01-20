@@ -134,7 +134,7 @@ echo "<script language='Javascript'>
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2
+		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2, m.fecha_creacion
 		from material_apoyo m
 		where m.estado='1' and m.cod_tipomaterial in (1,2)";
 	if($vista==1)
@@ -142,7 +142,7 @@ echo "<script language='Javascript'>
 		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
 		(select t.nombre from marcas t where t.codigo=m.cod_marca),
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen, m.color, m.talla, m.codigo_barras
+		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2, m.fecha_creacion
 		from material_apoyo m
 		where m.estado='0' and m.cod_tipomaterial in (1,2)";
 	}
@@ -243,7 +243,7 @@ echo "<script language='Javascript'>
 	echo "<center><table class='texto'>";
 	echo "<tr><th>Nro</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th><th>Codigo<br>Externo</th>
 		<th>Marca</th><th>Grupo/SubGrupo</th><th>Color</th><th>Talla</th>
-		<th>Precio de Venta [Bs]</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+		<th>Precio de Venta [Bs]</th><th>Fecha Creacion</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
 	
 	$indice_tabla=1;
 	while($dat=mysqli_fetch_array($resp))
@@ -260,6 +260,7 @@ echo "<script language='Javascript'>
 		$talla=$dat[9];
 		$codigoBarras=$dat[10];
 		$codigo2=$dat[11];
+		$fechaCreacion=$dat[12];
 		
 		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
@@ -282,6 +283,7 @@ echo "<script language='Javascript'>
 		<td>$color</td>
 		<td>$talla</td>
 		<td align='center'>$precioVenta</td>
+		<td align='center'>$fechaCreacion</td>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'></td>
 		<td><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='40' title='Reemplazar Imagen'></a></td>
 		</tr>";
