@@ -20,10 +20,10 @@ $tipoPago=$_POST['tipoPago'];
 $tipoGasto=$_POST['tipoGasto'];
 $grupoGasto=$_POST['grupoGasto'];
 $proveedor=$_POST['proveedor'];
-echo "proveedor=".$proveedor;
+//echo "proveedor=".$proveedor;
 if(empty($proveedor)){
 	$proveedor=NULL;
-	echo "entro if proveedor=".$proveedor;
+	//echo "entro if proveedor=".$proveedor;
 }
 
 $descripcion_gasto=$_POST['descripcion_gasto'];

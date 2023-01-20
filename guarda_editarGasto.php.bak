@@ -21,6 +21,9 @@ if(empty($proveedor)){
 }
 $descripcion_gasto=$_POST['descripcion_gasto'];
 
+$fecha=$_POST['fecha'];
+$vector_fecha_gasto=explode("/",$fecha);
+$fecha_gasto=$vector_fecha_gasto[2]."-".$vector_fecha_gasto[1]."-".$vector_fecha_gasto[0];
 
 $modifiedBy=$_COOKIE['global_usuario'];
 $modifiedDate=date("Y-m-d H:i:s");
@@ -36,7 +39,7 @@ $consulta.=" cod_proveedor='".$proveedor."',";
 $consulta.=" modified_by='".$modifiedBy."',";
 $consulta.=" modified_date='".$modifiedDate."' ";
 $consulta.=" where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agencia."'";
-echo $consulta;
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
 ?>

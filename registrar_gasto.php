@@ -66,7 +66,8 @@ else
 ?>
 <td align="center"><?=$nro_correlativo;?></td>
 <td align="center">
-<input type="text" align="left" disabled="true" class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
+<input type="text" align="left"  class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
+
 <img id="imagenFecha" src="imagenes/fecha.bmp">
 </td>
 <td>

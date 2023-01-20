@@ -21,6 +21,9 @@ if(empty($proveedor)){
 }
 $descripcion_gasto=$_POST['descripcion_gasto'];
 
+$fecha=$_POST['fecha'];
+$vector_fecha_gasto=explode("/",$fecha);
+$fecha_gasto=$vector_fecha_gasto[2]."-".$vector_fecha_gasto[1]."-".$vector_fecha_gasto[0];
 
 $modifiedBy=$_COOKIE['global_usuario'];
 $modifiedDate=date("Y-m-d H:i:s");
@@ -29,6 +32,7 @@ $modifiedDate=date("Y-m-d H:i:s");
 $consulta="update gastos  set ";
 $consulta.=" descripcion_gasto='".$descripcion_gasto."',";
 $consulta.=" monto='".$monto."',";
+$consulta.=" fecha_gasto='".$fecha_gasto."',";
 $consulta.=" cod_tipopago='".$tipoPago."',";
 $consulta.=" cod_tipogasto='".$tipoGasto."',";
 $consulta.=" cod_grupogasto='".$grupoGasto."',";
