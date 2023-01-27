@@ -31,14 +31,16 @@ $descripcion_gasto=$_POST['descripcion_gasto'];
 $createdBy=$_COOKIE['global_usuario'];
 $createdDate=date("Y-m-d H:i:s");
 
-$fecha=date("Y-m-d");
+$fecha=$_POST['fecha'];
+$vector_fecha_gasto=explode("/",$fecha);
+$fecha_gasto=$vector_fecha_gasto[2]."-".$vector_fecha_gasto[1]."-".$vector_fecha_gasto[0];
 
 
 
 $consulta="insert into gastos (cod_gasto,descripcion_gasto,cod_tipogasto,fecha_gasto,monto,cod_ciudad,
 created_by,created_date,
 gasto_anulado,cod_proveedor,cod_grupogasto,cod_tipopago) 
-values(".$cod_gasto.",'".$descripcion_gasto."',".$tipoGasto.",'".$fecha."',".$monto.",'".$global_agencia."',".$createdBy.",'".$createdDate."',0,'".$proveedor."','".$grupoGasto."','".$tipoPago."')";
+values(".$cod_gasto.",'".$descripcion_gasto."',".$tipoGasto.",'".$fecha_gasto."',".$monto.",'".$global_agencia."',".$createdBy.",'".$createdDate."',0,'".$proveedor."','".$grupoGasto."','".$tipoPago."')";
 
 mysqli_query($enlaceCon,$consulta);
 

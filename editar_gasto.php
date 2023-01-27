@@ -83,7 +83,8 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 	</td>
 
 <td align="center"><?=$idGastoEditar;?></td>
-<td align="center"><?=$fecha_gasto_mostrar;?></td>
+<td align="center">
+<input type="text" align="left"  class="texto" value="<?=$fecha_gasto_mostrar;?>" id="fecha" size="10" name="fecha"></td>
 <td>
 	<select name="tipoPago" id="tipoPago" class="texto"  >
 <?php	
