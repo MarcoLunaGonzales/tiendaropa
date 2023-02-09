@@ -17,17 +17,6 @@ require("estilos_almacenes.inc");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="lib/externos/jquery/jquery-ui/completo/jquery-ui-1.8.9.custom.css" rel="stylesheet" type="text/css"/>
         <link href="lib/css/paneles.css" rel="stylesheet" type="text/css"/>
-        <!-- <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.core.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.widget.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.button.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.mouse.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.draggable.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.position.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.resizable.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.dialog.min.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.datepicker.min.js"></script>
-        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script> -->
         <script type='text/javascript' language='javascript'>
 
 function nuevoAjax()
@@ -472,7 +461,7 @@ echo "<div class='divBotones'>
 echo "<br><br>";
 
 echo "<div id='divCuerpo'><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th><th>TipoPago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>-</th>";
+echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Venta</th><th>Vendedor</th><th>Tipo Pago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>-</th>";
 if($global_admin_cargo==1){
     echo "<th>-</th><th>-</th>";
 }
@@ -485,7 +474,8 @@ $consulta = "
     (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
     s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
     (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, razon_social, nit,
-    (select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago,siat_estado_facturacion
+    (select t.nombre_tipopago from tipos_pago t where t.cod_tipopago=s.cod_tipopago)as tipopago,siat_estado_facturacion,
+	(select concat(f.paterno, ' ', f.nombres) from funcionarios f where f.codigo_funcionario=s.cod_chofer)as vendedor
     FROM salida_almacenes s, tipos_salida ts 
     WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 
     and s.cod_tipo_doc in (1,4)";
@@ -522,6 +512,8 @@ while ($dat = mysqli_fetch_array($resp)) {
     $razonSocial=strtoupper($razonSocial);
     $nitCli=$dat[13];
     $tipoPago=$dat[14];
+	$nombreVendedor=$dat[16];
+
     
     echo "<input type='hidden' name='fecha_salida$nro_correlativo' value='$fecha_salida_mostrar'>";
     
@@ -566,7 +558,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     echo "<td align='center'>&nbsp;$chk</td>";
     echo "<td align='center'>$stikea$nombreTipoDoc-$nro_correlativo $stikec</td>";
     echo "<td align='center'>$stikea$fecha_salida_mostrar $hora_salida$stikec</td>";
-    echo "<td>$stikea $nombre_tiposalida $stikec</td>";
+    echo "<td>$stikea $nombreVendedor	$stikec</td>";
     echo "<td>$stikea $tipoPago $stikec</td><td>$stikea &nbsp;$razonSocial $stikec</td><td>$stikea&nbsp;$nitCli $stikec</td><td>$stikea &nbsp;$obs_salida $stikec</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     
@@ -669,7 +661,6 @@ echo "</form>";
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 450px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>
-
 <div id="divProfileData" style="background-color:#FFF; width:750px; height:400px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px;     -moz-border-radius: 20px; visibility: hidden; z-index:2;">
     <div id="divProfileDetail" style="visibility:hidden; text-align:center">
         <h2 align='center' class='texto'>Buscar Ventas</h2>

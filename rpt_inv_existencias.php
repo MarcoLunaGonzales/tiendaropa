@@ -181,14 +181,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$stock2=$cant_ingresos-$cant_salidas;
 			//echo $stock2;
 			
-			$sql_stock="select SUM(id.cantidad_restante) from ingreso_detalle_almacenes id, ingreso_almacenes i
-			where id.cod_material='$codigo_item' and i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.ingreso_anulado=0 and i.cod_almacen='$rpt_almacen'";
-			$resp_stock=mysqli_query($enlaceCon,$sql_stock);
-			$dat_stock=mysqli_fetch_array($resp_stock);
-			$stock_real=$dat_stock[0];
-			if($stock_real=="")
-			{	$stock_real=0;
-			}
+			$stock_real=$stock2;
 			
 			if($stock2<0)
 			{	$cadena_mostrar.="<td align='center'>0</td>";
