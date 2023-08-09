@@ -22,7 +22,7 @@
 	date_default_timezone_set('America/La_Paz');
 	$fechaSistemaSesion = date( "d-m-Y" );
 	$horaSistemaSesion = date( "H:i" );*/
-		$global_usuario=$_COOKIE['global_usuario'];
+	$global_usuario=$_COOKIE['global_usuario'];
 	$global_agencia=$_COOKIE['global_agencia'];
 	$global_almacen=$_COOKIE['global_almacen'];
 	$sql = "select paterno, materno, nombres, cod_ciudad from funcionarios where codigo_funcionario=$global_usuario";
