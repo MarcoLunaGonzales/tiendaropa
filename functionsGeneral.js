@@ -43,11 +43,14 @@ function cambiarDatosProductosTable(valor){
 	            if(existeCodigo==0){
 	              if($("#ventas_codigo").length>0){
                     soloMasVentas(resp);	//para Ventas
+                    console.log("soloMasVentas");
 	              }else{
 	              	if($("#tipoSalida").length>0){ //para salida
                       soloMasSalida(resp);	//para Ingresos
+                      console.log("soloMasSalida");
 	              	}else{
 	              	  soloMas(resp);	//para Ingresos
+                    console.log("soloMas");
 	              	}
 	                
 	              }	

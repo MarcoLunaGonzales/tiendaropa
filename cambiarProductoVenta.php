@@ -709,6 +709,8 @@ $codigoVenta=$_GET['codVenta'];
 <tr>
 <input type="hidden" name="tipoSalida" id="tipoSalida" value="1002">
 
+<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
+
 <td align='left'>
 	<input type="hidden" value="<?=$tipoDocDefault;?>" id="tipoDoc" name="tipoDoc" onChange='ajaxNroDoc(form1)'>
 	<input type="text" style="background:#BFBFBD;"  value="<?=$nombreCliente;?>" id="nombreCliente" name="nombreCliente" size='40' readonly>
