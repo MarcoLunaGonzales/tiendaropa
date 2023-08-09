@@ -1414,14 +1414,17 @@ if($tipoDocDefault==2){
 	<div id='divNroDoc'>
 		<?php
 
-		$vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDocDefault);
+		if($tipoDocDefault==1){
+			$vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDocDefault);
+		}else{
+			$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDocDefault);
+		}
 		$nroCorrelativo=$vectorNroCorrelativo[0];
 		$banderaErrorFacturacion=$vectorNroCorrelativo[1];
 
 		echo "<span class='textogranderojo'>$nroCorrelativo</span>";
-	  if($nroCorrelativo=="CUFD INCORRECTO / VENCIDO"){
+	  if($nroCorrelativo=="CUFD INCORRECTO / VENCIDO" && $tipoDocDefault==1){
 			?><script>$(document).ready(function (){
-			
 				$("#dosificar_factura_sucursal").removeClass("d-none");
 			})</script><?php
 	  }
