@@ -1,35 +1,21 @@
 <?php
-require('fpdf.php');
-//require('conexionmysqlipdf.inc');
-require('conexionmysqli.php');
+
+require('fpdf186/fpdf.php');
+require('conexionmysqli2.inc');
 require('funciones.php');
 require('NumeroALetras.php');
 
-class PDF extends FPDF
-{ 
+mysqli_query($enlaceCon,"SET NAMES utf8");
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+class PDF extends FPDF{ 
+	public $titulo = 'Otro Titulo';
 	function Header()
 	{
-		//require_once 'conexionmysqli2.inc';
- 		
-		$codigoVenta=$_GET["codVenta"];
-
-		//consulta cuantos items tiene el detalle
-		/*$sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
-		$respNro=mysqli_query($enlaceCon,$sqlNro);
-
-		$nroItems=mysqli_result($respNro,0,0);*/
-
-		$incremento=3;
-
-		//desde aca
-		$sqlConf="select id, valor from configuracion_facturas where id=1";
-		$respConf=mysqli_query($enlaceCon,$sqlConf);
-		while ($datConf=mysqli_fetch_array($respConf)){
-			$nombreEmpresa=$datConf[1];
-			
-		}
-		//$nombreEmpresa=mysqli_result($respConf,0,1);
+		//$incremento=3;
+		global $nombreEmpresa;
 
 		/*$sqlConf="select id, valor from configuracion_facturas where id=2";
 		$respConf=mysqli_query($enlaceCon,$sqlConf);
@@ -83,13 +69,15 @@ class PDF extends FPDF
 			$tipoPago=$datDatosVenta[7];
 		}*/
 		
-		$this->Image('imagenes/altarNegro.png',10,5,-1000);	
+		//$this->Image('imagenes/altarNegro.png',10,5,-1000);	
 		$y=30;
 		$this->SetY($y);
 		$this->SetXY(10,$y+3);		
 		$this->SetFont('Arial','',10);
 		//$this->SetTextColor(0,0,0);	
-		$this->Cell(0,0,"vacio".$nombreEmpresa,0,0,"L");
+		$this->Cell(100,20,$nombreEmpresa,1,0,"L");
+
+		/*
 		$this->SetXY(10,$y+8);		
 		$this->Cell(0,0,"NIF:".$nitEmpresa,0,0,"L");
 		$this->SetXY(10,$y+13);		
@@ -113,14 +101,18 @@ class PDF extends FPDF
 		$this->SetXY(35,$y+48);		$this->Cell(0,0,"Cant.");
 		$this->SetXY(50,$y+48);		$this->Cell(0,0,"Importe");
 		$this->SetXY(0,$y+52);		$this->Cell(0,0,"=============================================================================",0,0,"C");
+		*/
 
 	}	
 
 	function Footer()
 	{
 	}	
-	
-}		
+
+	function cambiaTitulo(){
+		$titulo="que mierda es esto";
+	}
+}
 
 
 ////////////////////////////
@@ -128,32 +120,35 @@ class PDF extends FPDF
 $codigoVenta=$_GET["codVenta"];
 
 //consulta cuantos items tiene el detalle
-/*$sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
+$sqlNro="select count(*) from `salida_detalle_almacenes` s where s.`cod_salida_almacen`=$codigoVenta";
 $respNro=mysqli_query($enlaceCon,$sqlNro);
-$nroItems=mysqli_result($respNro,0,0);*/
+$nroItems=0;
+if($datNro=mysqli_fetch_array($respNro)){
+	$nroItems=$datNro[0];
+}
 
 $tamanoLargo=180+($nroItems*3)-3;
 
-//$pdf = FPDF(orientation="P", unit="mm", format="A4")
 
-/*$pdf=new FPDF('P','mm',array(214,279));
+$y=10;
+$incremento=3;
 
-$pdf->SetMargins(0,0,0);
-$pdf->AddPage(); 
-$pdf->SetFont('Arial','',10);*/
+//desde aca
+$nombreEmpresa="";
+$sqlConf="select id, valor from configuracion_facturas where id=1";
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+if($datConf=mysqli_fetch_array($respConf)){
+	$nombreEmpresa=$datConf[1];
+}
 
+
+/******** Iniciando FPDF ******/
 	$pdf=new PDF('P','mm',array(214,279));
 	$pdf->SetAutoPageBreak(true,65);
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 
-/*$y=10;
-$incremento=3;
 
-//desde aca
-$sqlConf="select id, valor from configuracion_facturas where id=1";
-$respConf=mysqli_query($enlaceCon,$sqlConf);
-$nombreEmpresa=mysqli_result($respConf,0,1);
 
 $sqlConf="select id, valor from configuracion_facturas where id=2";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
@@ -244,7 +239,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 		
 	$yyy=$yyy+8;
 }
-$pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");		
+$pdf->SetXY(0,$y+$yyy+2);		$pdf->Cell(0,0,"=================================================================================".$nombreEmpresa,0,0,"C");		
 $yyy=$yyy+5;
 
 
@@ -259,7 +254,8 @@ $pdf->SetXY(45,$y+$yyy+4);		$pdf->Cell(20,5,$descuentoVenta,0,0,"R");
 $pdf->SetXY(25,$y+$yyy+8);		$pdf->Cell(25,5,"Total Final:",0,0,"R");
 $pdf->SetXY(45,$y+$yyy+8);		$pdf->Cell(20,5,$montoFinal,0,0,"R");
 
-list($montoEntero, $montoDecimal) = explode('.', $montoFinal);
+$montoFinalX=formatonumeroDec($montoFinal);
+list($montoEntero, $montoDecimal) = explode('.', $montoFinalX);
 if($montoDecimal==""){
 	$montoDecimal="00";
 }
@@ -269,7 +265,7 @@ $pdf->SetFont('Arial','',7);
 $txtMonto=NumeroALetras::convertir($montoEntero);
 $pdf->SetXY(5,$y+$yyy+15);		$pdf->MultiCell(0,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
 $pdf->SetXY(0,$y+$yyy+21);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
-*/
+
 $pdf->Output();
 
 
