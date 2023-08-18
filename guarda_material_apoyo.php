@@ -17,7 +17,11 @@ $precioProducto=$_POST['precio_producto'];
 $costoProducto=$_POST['costo_producto'];
 
 $codigoBarras=$_POST['codigo_barras'];
-$color=$_POST['color'];
+$codColor=$_POST['cod_color'];
+$codTalla=$_POST['cod_talla'];
+$codModelo=$_POST['cod_modelo'];
+$codMaterial=$_POST['cod_material'];
+$codGenero=$_POST['cod_genero'];
 $codMarca=$_POST['cod_marca'];
 $codSubGrupo=$_POST['cod_subgrupo'];
 
@@ -40,8 +44,9 @@ $codigo=$dat[0];
 //$codigo=mysql_result($resp,0,0);
 
 $sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial,
-cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2, fecha_creacion) values ($codigo,'$nombreProducto','1','$codLinea','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
-'$codSubGrupo','$codMarca','$color','$talla','$codigo2','$fechaCreacion')";
+cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2, fecha_creacion,cod_modelo,cod_material,cod_genero) values ($codigo,'$nombreProducto','1','$codLinea','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
+'$codSubGrupo','$codMarca','$codColor','$codTalla','$codigo2','$fechaCreacion','$codModelo','$codMaterial',
+'$codGenero')";
 //echo $sql_inserta;
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 

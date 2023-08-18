@@ -17,15 +17,22 @@ $precioProducto=$_POST['precio_producto'];
 $costoProducto=$_POST['costo_producto'];
 
 $codigoBarras=$_POST['codigo_barras'];
-$color=$_POST['color'];
+$color=$_POST['cod_color'];
+$talla=$_POST['cod_talla'];
 $codMarca=$_POST['cod_marca'];
 $codSubGrupo=$_POST['cod_subgrupo'];
 $codigo2=$_POST['codigo2'];
+$codModelo=$_POST['cod_modelo'];
+$codGenero=$_POST['cod_genero'];
+$codMaterial=$_POST['cod_material'];
 
 $sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', 
 
 cod_grupo='$codGrupo', observaciones='$observaciones', cod_unidad='$codUnidad', codigo_barras='$codigoBarras', color='$color',
-talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo',codigo2='$codigo2' where codigo_material='$codProducto'";
+talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo',codigo2='$codigo2',
+cod_modelo='$codModelo',cod_genero='$codGenero',cod_material='$codMaterial'
+
+where codigo_material='$codProducto'";
 //echo $sql_inserta;
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 

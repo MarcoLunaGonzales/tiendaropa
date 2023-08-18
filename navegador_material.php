@@ -131,19 +131,48 @@ echo "<script language='Javascript'>
 	echo "<form method='post' action=''>";
 	
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
-		(select t.nombre from marcas t where t.codigo=m.cod_marca), 
+		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
+		m.cod_marca, mar.nombre as nombreMarca,
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2, m.fecha_creacion
+		m.observaciones, imagen,
+		 m.color, col.nombre as nombreColor,
+		 m.talla, tal.nombre as nombreTalla,
+		 m.codigo_barras, m.codigo2, m.fecha_creacion,
+		m.cod_modelo,mo.nombre as nombreModelo, 
+		m.cod_material, mat.nombre as nombreMaterial, 
+		m.cod_genero, gen.nombre as nombreGenero
 		from material_apoyo m
+		left join grupos gru on ( gru.codigo=m.cod_grupo)
+		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
+		left join marcas mar on ( mar.codigo=m.cod_marca)
+		left join modelos mo on ( mo.codigo=m.cod_modelo)
+		left join materiales mat on ( mat.codigo=m.cod_material)
+		left join generos gen on ( gen.codigo=m.cod_genero)
+		left join colores col on ( col.codigo=m.color)
+		left join tallas tal on ( tal.codigo=m.talla)
 		where m.estado='1' and m.cod_tipomaterial in (1,2)";
-	if($vista==1)
-	{	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		(select e.nombre from grupos e where e.codigo=m.cod_grupo), 
-		(select t.nombre from marcas t where t.codigo=m.cod_marca),
+	if($vista==1){	
+
+		$sql="select m.codigo_material, m.descripcion_material, m.estado, 
+		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
+		m.cod_marca, mar.nombre as nombreMarca,
 		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen, m.color, m.talla, m.codigo_barras, m.codigo2, m.fecha_creacion
+		m.observaciones, imagen,
+		 m.color, col.nombre as nombreColor,
+		 m.talla, tal.nombre as nombreTalla,
+		 m.codigo_barras, m.codigo2, m.fecha_creacion,
+		m.cod_modelo,mo.nombre as nombreModelo, 
+		m.cod_material, mat.nombre as nombreMaterial, 
+		m.cod_genero, gen.nombre as nombreGenero
 		from material_apoyo m
+		left join grupos gru on ( gru.codigo=m.cod_grupo)
+		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
+		left join marcas mar on ( mar.codigo=m.cod_marca)
+		left join modelos mo on ( mo.codigo=m.cod_modelo)
+		left join materiales mat on ( mat.codigo=m.cod_material)
+		left join generos gen on ( gen.codigo=m.cod_genero)
+		left join colores col on ( col.codigo=m.color)
+		left join tallas tal on ( tal.codigo=m.talla)
 		where m.estado='0' and m.cod_tipomaterial in (1,2)";
 	}
 	if($grupo!=0){
@@ -241,26 +270,37 @@ echo "<script language='Javascript'>
 		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>Nro</th><th>&nbsp;</th><th>Nombre</th><th>Descripcion</th><th>Codigo<br>Externo</th>
-		<th>Marca</th><th>Grupo/SubGrupo</th><th>Color</th><th>Talla</th>
-		<th>Precio de Venta [Bs]</th><th>Fecha Creacion</th><th>&nbsp;</th><th>&nbsp;</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Nombre</th>
+		<th>Grupo/SubGrupo</th><th>Marca</th><th>Modelo</th><th>Genero</th><th>Material</th>
+		<th>Color</th><th>Talla</th>
+		<th>Precio de Venta [Bs]</th><th>Fecha Creacion</th><th>Imagen</th><th>&nbsp;</th>
+		</tr>";
 	
 	$indice_tabla=1;
 	while($dat=mysqli_fetch_array($resp))
 	{
-		$codigo=$dat[0];
-		$nombreProd=$dat[1];
-		$estado=$dat[2];
-		$grupo=$dat[3];
-		$tipoMaterial=$dat[4];
-		$nombreLinea=$dat[5];
-		$observaciones=$dat[6];
-		$imagen=$dat[7];
-		$color=$dat[8];
-		$talla=$dat[9];
-		$codigoBarras=$dat[10];
-		$codigo2=$dat[11];
-		$fechaCreacion=$dat[12];
+
+
+		$codigo=$dat['codigo_material'];
+		$nombreProd=$dat['descripcion_material'];
+		$estado=$dat['estado'];
+		$grupo=$dat['nombreGrupo'];
+		$subgrupo=$dat['nombreSubgrupo'];
+		$marca=$dat['nombreMarca'];
+		//$tipoMaterial=$dat[4];
+		$nombreLinea=$dat['nombre_linea_proveedor'];
+		$observaciones=$dat['observaciones'];
+		$imagen=$dat['imagen'];
+		$color=$dat['color'];
+		$nombreColor=$dat['nombreColor'];
+		$talla=$dat['talla'];
+		$nombreTalla=$dat['nombreTalla'];
+		$codigoBarras=$dat['codigo_barras'];
+		$codigo2=$dat['codigo2'];
+		$fechaCreacion=$dat['fecha_creacion'];
+		$nombreModelo=$dat['nombreModelo'];
+		$nombreMaterial=$dat['nombreMaterial'];
+		$nombreGenero=$dat['nombreGenero'];
 		
 		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
@@ -270,22 +310,26 @@ echo "<script language='Javascript'>
 		}
 		
 		if($imagen=='default.png'){
-			$tamanioImagen=80;
+			$tamanioImagen=50;
 		}else{
-			$tamanioImagen=80;
+			$tamanioImagen=50;
 		}
-		echo "<tr><td align='center'>$indice_tabla</td><td align='center'>
-		<input type='checkbox' name='codigo' value='$codigo'></td>
-		<td>$nombreProd</td><td>($codigoBarras) $observaciones</td>
-		<td>$codigo2</td>
-		<td>$tipoMaterial</td>
-		<td>$grupo</td>
-		<td>$color</td>
-		<td>$talla</td>
+		echo "<tr>
+		<td align='center'><input type='checkbox' name='codigo' value='$codigo'></td>
+		<td align='center'>$indice_tabla</td>
+		<td>$codigoBarras -$codigo2</td>
+		<td>$nombreProd</td>
+		<td>$grupo <br/> $subgrupo</td>
+		<td>$marca</td>
+		<td>$nombreModelo</td>
+		<td>$nombreGenero</td>
+		<td>$nombreMaterial</td>
+		<td>$nombreColor</td>
+		<td>$nombreTalla</td>
 		<td align='center'>$precioVenta</td>
 		<td align='center'>$fechaCreacion</td>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'></td>
-		<td><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='40' title='Reemplazar Imagen'></a></td>
+		<td><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
 		</tr>";
 		$indice_tabla++;
 	}

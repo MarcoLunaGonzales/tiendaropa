@@ -63,6 +63,11 @@ include("datosUsuario.php");
 							<!--li><a href="navegador_tiposmaterial.php" target="contenedorPrincipal">Tipos de Producto</a></li-->
 							<li><a href="grupos/list.php" target="contenedorPrincipal">Grupos</a></li>
 							<li><a href="marcas/list.php" target="contenedorPrincipal">Marcas</a></li>
+							<li><a href="modelos/list.php" target="contenedorPrincipal">Modelos</a></li>
+							<li><a href="materiales/list.php" target="contenedorPrincipal">Materiales</a></li>
+							<li><a href="tallas/list.php" target="contenedorPrincipal">Tallas</a></li>
+							<li><a href="colores/list.php" target="contenedorPrincipal">Colores</a></li>
+							<li><a href="generos/list.php" target="contenedorPrincipal">Generos</a></li>
 							<li><a href="navegador_material.php?vista=0&vista_ordenar=0&grupo=0" target="contenedorPrincipal">Productos</a></li>
 							<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
 							<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>

@@ -58,7 +58,7 @@ $globalAgencia=$_COOKIE['global_agencia'];
 
 $sqlEdit="select m.codigo_material, m.descripcion_material, m.estado, m.cod_linea_proveedor, m.cod_grupo, m.cod_tipomaterial, 
 	m.observaciones, m.cod_unidad, m.codigo_barras, m.color, m.talla, m.cod_marca, m.cod_subgrupo,
-	m.codigo2
+	m.codigo2, m.cod_material,m.cod_modelo,  m.cod_genero
 	from material_apoyo m where m.codigo_material='$codProducto'";
 $respEdit=mysqli_query($enlaceCon,$sqlEdit);
 while($datEdit=mysqli_fetch_array($respEdit)){
@@ -81,7 +81,10 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 	$tallaX=$datEdit[10];
 	$codMarcaX=$datEdit[11];
 	$codSubGrupoX=$datEdit[12];
-	$codigo2X=$datEdit[13];
+	$codigo2X=$datEdit[13];	
+	$codMaterialX=$datEdit[14];
+	$codModeloX=$datEdit[15];
+	$codGeneroX=$datEdit[16];
 }
 
 $sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`='$codProducto'";
@@ -212,19 +215,111 @@ while($dat=mysqli_fetch_array($resp)){
 echo "</select>";
 
 echo "</div>";
-
 echo "</td>";
 echo "</tr>";
 
+echo "<tr><th>Modelo</th>";
+$sqlMod="select codigo, nombre, abreviatura from modelos  where estado=1 order by 2;";
+$respMod=mysqli_query($enlaceCon,$sqlMod);
+echo "<td>
+			<select name='cod_modelo' id='cod_modelo' required >
+			<option value=''></option>";
+			while($datMod=mysqli_fetch_array($respMod))
+			{	$codModelo=$datMod[0];
+				$nombreModelo=$datMod[1];
+				$abreviaturaModelo=$datMod[2];
+				if($codModeloX==$codModelo){
+					echo "<option value='$codModelo' selected>$nombreModelo - $abreviaturaModelo</option>";					
+				}else{
+					echo "<option value='$codModelo'>$nombreModelo - $abreviaturaModelo</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+
+echo "<th>Genero</th>";
+
+$sqlGen="select codigo, nombre, abreviatura from generos  where estado=1 order by 2;";
+$respGen=mysqli_query($enlaceCon,$sqlGen);
+echo "<td>
+			<select name='cod_genero' id='cod_genero' required >
+			<option value=''></option>";
+			while($datGen=mysqli_fetch_array($respGen))
+			{	$codGenero=$datGen[0];
+				$nombreGenero=$datGen[1];
+				$abreviaturaGenero=$datGen[2];
+				if($codGeneroX==$codGenero){
+					echo "<option value='$codGenero' selected>$nombreGenero - $abreviaturaGenero</option>";					
+				}else{
+					echo "<option value='$codGenero'>$nombreGenero-$abreviaturaGenero</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+
+echo "</tr>";
+echo "<tr>";
+echo "<th>Material</th>";
+
+$sqlMat="select codigo, nombre, abreviatura from materiales  where estado=1 order by 2;";
+$respMat=mysqli_query($enlaceCon,$sqlMat);
+echo "<td>
+			<select name='cod_material' id='cod_material' required >
+			<option value=''></option>";
+			while($datMat=mysqli_fetch_array($respMat))
+			{	$codMaterial=$datMat[0];
+				$nombreMaterial=$datMat[1];
+				$abreviaturaMaterial=$datMat[2];
+				if($codMaterialX==$codMaterial){
+					echo "<option value='$codMaterial' selected>$nombreMaterial - $abreviaturaMaterial</option>";					
+				}else{
+					echo "<option value='$codMaterial'>$nombreMaterial - $abreviaturaMaterial</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+
+echo "<td></td><td></td></tr>";
+
 echo "<tr><th align='left'>Talla</th>";
-echo "<td align='left'>
-	<input type='text' class='texto' name='talla' value='$tallaX' size='30'>
-	</td>";
+$sqlTalla="select codigo, nombre, abreviatura from tallas  where estado=1 order by 2;";
+$respTalla=mysqli_query($enlaceCon,$sqlTalla);
+echo "<td>
+			<select name='cod_talla' id='cod_talla' required >
+			<option value=''></option>";
+			while($datTalla=mysqli_fetch_array($respTalla))
+			{	$codTalla=$datTalla[0];
+				$nombreTalla=$datTalla[1];
+				$abreviaturaTalla=$datTalla[2];
+				if($tallaX==$codTalla){
+					echo "<option value='$codTalla' selected>$nombreTalla - $abreviaturaTalla</option>";					
+				}else{
+					echo "<option value='$codTalla'>$nombreTalla - $abreviaturaTalla</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+
 
 echo "<th align='left'>Color</th>";
-echo "<td align='left'>
-	<input type='text' class='texto' name='color' value='$colorX' size='30'>
-	</td></tr>";
+$sqlColor="select codigo, nombre, abreviatura from colores  where estado=1 order by 2;";
+$respColor=mysqli_query($enlaceCon,$sqlColor);
+echo "<td>
+			<select name='cod_color' id='cod_color' required >
+			<option value=''></option>";
+			while($datColor=mysqli_fetch_array($respColor))
+			{	$codColor=$datColor[0];
+				$nombreColor=$datColor[1];
+				$abreviaturaColor=$datColor[2];
+				if($colorX==$codColor){
+					echo "<option value='$codColor' selected>$nombreColor - $abreviaturaColor</option>";					
+				}else{
+					echo "<option value='$codColor'>$nombreColor - $abreviaturaColor</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+echo "</tr>";
 
 
 echo "<tr><th align='left'>Descripcion</th>";
