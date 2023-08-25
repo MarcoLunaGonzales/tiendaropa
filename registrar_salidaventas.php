@@ -336,6 +336,7 @@ function ajaxPrecioItem(indice){
 	ajax.send(null);
 }*/
 function ajaxRazonSocial(f){
+
 	var contenedor;
 	contenedor=document.getElementById("divRazonSocial");
 	var nitCliente=document.getElementById("nitCliente").value;
@@ -345,13 +346,36 @@ function ajaxRazonSocial(f){
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
 			document.getElementById('razonSocial').focus();
+			
 			ajaxClienteBuscar();
 			ajaxVerificarNitCliente();			
+				
 		}
 	}
 	ajax.send(null);
+
 }
+/*
+function ajaxRazonSocialDireccion(f){
+	alert("holaa");
+	var contenedor;
+	contenedor=document.getElementById("divRazonSocialDireccion");
+	var nitCliente=document.getElementById("nitCliente").value;
+	ajax=nuevoAjax();
+	ajax.open("GET", "ajaxRazonSocialDireccion.php?nitCliente="+nitCliente,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText;
+			document.getElementById('razonSocialDireccion').focus();
+			alert("holaa2");
+					
+		}
+	}
+	ajax.send(null);
+	
+}*/
 function ajaxRazonSocialCliente(f){
+	
 	var contenedor;
 	contenedor=document.getElementById("divRazonSocial");
 	var cliente=document.getElementById("cliente").value;
@@ -505,6 +529,7 @@ function calculaMontoMaterial(indice){
 
 function totales(){
 	var subtotal=0;
+	var impuesto=0;
     for(var ii=1;ii<=num;ii++){
 	 	if(document.getElementById('materiales'+ii)!=null){
 			var monto=document.getElementById("montoMaterial"+ii).value;
@@ -524,18 +549,30 @@ function totales(){
     subtotalPrecio=Math.round(subtotalPrecio*100)/100;
 
 	subtotal=Math.round(subtotal*100)/100;
-	
+	impuesto=(subtotal*document.getElementById("porcentajeImpuesto").value)/100
+	impuesto=Math.round(impuesto*100)/100;
+
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 
-    document.getElementById("totalVenta").value=subtotal;
-	document.getElementById("totalFinal").value=subtotal;
+  document.getElementById("totalVenta").value=subtotal;
+
+   document.getElementById("impuesto").value=impuesto;
+
+document.getElementById("totalVentaDesc").value=subtotal;
+
+
+	document.getElementById("totalFinal").value=subtotal+impuesto;
 
 	document.getElementById("totalVentaUSD").value=Math.round((subtotal/tipo_cambio)*100)/100;
-	document.getElementById("totalFinalUSD").value=Math.round((subtotal/tipo_cambio)*100)/100;
+	document.getElementById("totalVentaDescUSD").value=Math.round((subtotal/tipo_cambio)*100)/100;
+	document.getElementById("impuestoUSD").value=Math.round((impuesto/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round(((subtotal+impuesto)/tipo_cambio)*100)/100;
 
     //setear descuento o aplicar la suma total final con el descuento
 	document.getElementById("descuentoVenta").value=0;
 	document.getElementById("descuentoVentaUSD").value=0;
+	document.getElementById("descuentoVentaPorcentaje").value=0;
+	document.getElementById("descuentoVentaUSDPorcentaje").value=0;
 	aplicarCambioEfectivo();
 	minimoEfectivo();
 }
@@ -544,16 +581,30 @@ function aplicarDescuento(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
 	var descuento=document.getElementById("descuentoVenta").value;
+	var porcentajeImpuesto=document.getElementById("porcentajeImpuesto").value;
+
 	
 	descuento=Math.round(descuento*100)/100;
+	 var totalVentaDesc=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
+	  var impuesto= (totalVentaDesc*porcentajeImpuesto)/100;
+
+	document.getElementById("totalVentaDesc").value=totalVentaDesc;
+	document.getElementById("impuesto").value=impuesto;	
+	document.getElementById("totalFinal").value=Math.round((parseFloat(totalVentaDesc)+parseFloat(impuesto))*100)/100;
+
+
+	var descuentoUSD=(parseFloat(descuento))/tipo_cambio;
+	document.getElementById("descuentoVentaUSD").value=Math.round((descuentoUSD)*100)/100;
+	var totalVentaDescUSD=totalVentaDesc/tipo_cambio;
+	var impuestoUSD=impuesto/tipo_cambio;
+
+		document.getElementById("totalVentaDescUSD").value=Math.round((totalVentaDescUSD)*100)/100;
+	document.getElementById("impuestoUSD").value=Math.round((impuestoUSD)*100)/100;
 	
-	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
-	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
-	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
-	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((totalVentaDescUSD+impuestoUSD)*100)/100;
 
 	document.getElementById("descuentoVentaPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
-	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
+	document.getElementById("descuentoVentaUSDPorcentaje").value=document.getElementById("descuentoVentaPorcentaje").value;
 	aplicarCambioEfectivo();
 	minimoEfectivo();
 	//totales();
@@ -561,17 +612,45 @@ function aplicarDescuento(f){
 }
 function aplicarDescuentoUSD(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
-	var total=document.getElementById("totalVentaUSD").value;
-	var descuento=document.getElementById("descuentoVentaUSD").value;
+	var total=document.getElementById("totalVenta").value;
+	var descuentoUSD=document.getElementById("descuentoVentaUSD").value;
+	var porcentajeImpuesto=document.getElementById("porcentajeImpuesto").value;
 	
-	descuento=Math.round(descuento*100)/100;
+	descuentoUSD=Math.round(descuentoUSD*100)/100;
+	document.getElementById("descuentoVentaUSD").value=descuentoUSD;
+
+	var descuento=descuentoUSD*tipo_cambio;
+	document.getElementById("descuentoVenta").value=descuento;
+
+	var descuentoPorcentaje=Math.round(((descuento*100)/total)*100)/100;
+
+	document.getElementById("descuentoVentaUSDPorcentaje").value=descuentoPorcentaje;
+	document.getElementById("descuentoVentaPorcentaje").value=descuentoPorcentaje;
+
+
+	var totalVentaDesc=parseFloat(total)-parseFloat(descuento);
+
+
+	document.getElementById("totalVentaDesc").value=Math.round((totalVentaDesc)*100)/100;
+	var impuesto=(totalVentaDesc*porcentajeImpuesto)/100
+
+	document.getElementById("impuesto").value=Math.round(impuesto*100)/100;
+
+	document.getElementById("totalFinal").value=Math.round(((totalVentaDesc+impuesto))*100)/100;
+
+ var totalUSD=Math.round((total/tipo_cambio)*100)/100;
+
+	var totalVentaDescUSD=parseFloat(totalUSD)-parseFloat(descuentoUSD);
+
+	var impuestoUSD=Math.round((impuesto/tipo_cambio)*100)/100;
+
 	
-	document.getElementById("totalFinalUSD").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
-	var descuentoBOB=(parseFloat(total)-parseFloat(descuento))*tipo_cambio;
-	document.getElementById("descuentoVenta").value=Math.round((descuento*tipo_cambio)*100)/100;
-	document.getElementById("totalFinal").value=Math.round((descuentoBOB)*100)/100;
-	document.getElementById("descuentoVentaPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
-	document.getElementById("descuentoVentaUSDPorcentaje").value=Math.round((parseFloat(descuento)*100)/(parseFloat(total)));
+	document.getElementById("totalVentaDescUSD").value=Math.round(totalVentaDescUSD*100)/100;
+	document.getElementById("impuestoUSD").value=Math.round(impuestoUSD*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((totalVentaDescUSD+impuestoUSD)*100)/100;
+	
+
+	
 	aplicarCambioEfectivoUSD();
 	minimoEfectivo();
 	//totales();
@@ -580,45 +659,72 @@ function aplicarDescuentoUSD(f){
 function aplicarDescuentoPorcentaje(f){
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
+	var porcentajeImpuesto=document.getElementById("porcentajeImpuesto").value;
     
-    var descuentoPorcentaje=document.getElementById("descuentoVentaPorcentaje").value;
-    document.getElementById("descuentoVentaUSDPorcentaje").value=descuentoPorcentaje;
+  var descuentoPorcentaje=document.getElementById("descuentoVentaPorcentaje").value;
+  document.getElementById("descuentoVentaUSDPorcentaje").value=descuentoPorcentaje;
 
 	var descuento=document.getElementById("descuentoVenta").value;
 	
 	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total)/100);
+
+  document.getElementById("descuentoVenta").value=descuento;
+	var totalVentaDesc=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
+	document.getElementById("totalVentaDesc").value=totalVentaDesc;
+
+	var impuesto=(totalVentaDesc*porcentajeImpuesto)/100;
+
+	document.getElementById("impuesto").value=Math.round(impuesto*100)/100;
 	
-	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
-	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
-	document.getElementById("descuentoVenta").value=Math.round((descuento)*100)/100;
+	document.getElementById("totalFinal").value=Math.round((parseFloat(totalVentaDesc)+parseFloat(impuesto))*100)/100;
+
+	var totalVentaDescUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
+	var impuestoUSD=Math.round((impuesto/tipo_cambio)*100)/100;
+	
 	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
-	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+
+	document.getElementById("totalVentaDescUSD").value=Math.round((totalVentaDescUSD)*100)/100;
+	document.getElementById("impuestoUSD").value=Math.round((impuestoUSD)*100)/100;
+
+	document.getElementById("totalFinalUSD").value=Math.round((totalVentaDescUSD+impuestoUSD)*100)/100;
 	
 	aplicarCambioEfectivo();
 	minimoEfectivo();
 	//totales();
 }
 function aplicarDescuentoUSDPorcentaje(f){
+
 	var tipo_cambio=$("#tipo_cambio_dolar").val();
 	var total=document.getElementById("totalVenta").value;
+	var porcentajeImpuesto=document.getElementById("porcentajeImpuesto").value;
     
-    var descuentoPorcentaje=document.getElementById("descuentoVentaUSDPorcentaje").value;
-    document.getElementById("descuentoVentaPorcentaje").value=descuentoPorcentaje;
+  var descuentoVentaUSDPorcentaje=document.getElementById("descuentoVentaUSDPorcentaje").value;
+  document.getElementById("descuentoVentaPorcentaje").value=descuentoVentaUSDPorcentaje;
 
-	var descuento=document.getElementById("descuentoVenta").value;
-	
-	descuento=Math.round(parseFloat(descuentoPorcentaje)*parseFloat(total))/100;
-	
-	document.getElementById("totalFinal").value=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
-	var descuentoUSD=(parseFloat(total)-parseFloat(descuento))/tipo_cambio;
+	var descuento=Math.round(parseFloat(descuentoVentaUSDPorcentaje)*parseFloat(total))/100;
 	document.getElementById("descuentoVenta").value=Math.round((descuento)*100)/100;
+	
+	var totalVentaDesc=Math.round((parseFloat(total)-parseFloat(descuento))*100)/100;
+	document.getElementById("totalVentaDesc").value=totalVentaDesc;
+
+	var impuesto=(totalVentaDesc*porcentajeImpuesto)/100;
+	//alert (incremento);
+	document.getElementById("impuesto").value=Math.round(impuesto*100)/100;
+	
+	var totalFinal=(parseFloat(totalVentaDesc)+parseFloat(impuesto));
+	document.getElementById("totalFinal").value=totalFinal;
+
 	document.getElementById("descuentoVentaUSD").value=Math.round((descuento/tipo_cambio)*100)/100;
-	document.getElementById("totalFinalUSD").value=Math.round((descuentoUSD)*100)/100;
+
+	document.getElementById("totalVentaDescUSD").value=Math.round((totalVentaDesc/tipo_cambio)*100)/100;
+	document.getElementById("impuestoUSD").value=Math.round((impuesto/tipo_cambio)*100)/100;
+	document.getElementById("totalFinalUSD").value=Math.round((totalFinal/tipo_cambio)*100)/100;
 	
 	aplicarCambioEfectivo();
 	minimoEfectivo();
 	//totales();
 }
+
 function minimoEfectivo(){
   //obtener el minimo a pagar
 	var minimoEfectivo=$("#totalFinal").val();
@@ -1325,6 +1431,13 @@ $sqlConf="select valor_configuracion from configuraciones where id_configuracion
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $datConf=mysqli_fetch_array($respConf);
 $ventaDebajoCosto=$datConf[0];
+
+//SACAMOS LA CONFIGURACION PARA CONOCER el PORCENTAJE DE IMPUESTOS
+$sqlConf="select valor_configuracion from configuraciones where id_configuracion=51";
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$porcentajeImpuesto=$datConf[0];
+
 //$ventaDebajoCosto=mysql_result($respConf,0,0);
 include("datosUsuario.php");
 
@@ -1360,16 +1473,19 @@ if(isset($_GET['file'])){
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
-
+	<input type="hidden" id="porcentajeImpuesto" name="porcentajeImpuesto"value="<?=$porcentajeImpuesto?>">
+	
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
 <tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 <?php
 
 if($tipoDocDefault==2){
 	$razonSocialDefault="-";
+	$razonSocialDireccionDefault="-";
 	$nitDefault="0";
 }else{
 	$razonSocialDefault="";
+	$razonSocialDireccionDefault="";
 	$nitDefault="";
 }
 
@@ -1473,16 +1589,20 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</select>
 	</div>
 		<div id='divNIT' class="col-sm-9" style="padding: 0;">
-			<input type='text' value='<?php echo $nitDefault; ?>' name='nitCliente' id='nitCliente'  onChange='ajaxRazonSocial(this.form);' onkeypress="return check(event)" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" required placeholder="INGRESE EL NIT" autocomplete="off">
+			<input type='text' value='<?php echo $nitDefault; ?>' name='nitCliente' id='nitCliente'  
+			onChange='ajaxRazonSocial(this.form);' onkeypress="return check(event)" onkeyup="javascript:this.value=this.value.toUpperCase();" class="form-control" required placeholder="INGRESE EL NIT" autocomplete="off">
 		</div>
 		<!-- style="font-size: 20px;color:#9D09BB"-->		
 	</div>
 	<input type='hidden' name='complemento' id='complemento' value='' class="form-control" placeholder="COMPLEMENTO" style="text-transform:uppercase;position:absolute;width:160px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();">
 	</td>	
-	<td colspan="2">
+	<td  colspan='2'>
 		<div id='divRazonSocial'>
           <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razon social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);' pattern='[A-Za-z0-9Ññ.& ]+'>          
-        </div>
+        <br/>
+       <input type='text' name='razonSocialDireccion' id='razonSocialDireccion' value='<?php echo $razonSocialDireccionDefault; ?>' class="form-control" required placeholder="Ingrese la direccion" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  
+       >
+           </div>
         <span class="input-group-btn" style="position:absolute;width:10px !important;">
             <a href="#" onclick="ajaxVerificarNitCliente(); return false;" class="btn btn-info btn-sm" style="position:absolute;right: 100%;"><i class="material-icons">refresh</i> Verificar Nit</a>
             <a href="#" class="btn btn-primary btn-sm" onclick="mostrarListadoNits();return false;"><span class="material-icons">person_search</span> Encontrar NIT
@@ -1493,6 +1613,7 @@ while($dat2=mysqli_fetch_array($resp2)){
           </span>
 		  
 	</td>
+
 	<td align='center' id='divCliente' width="20%">			
 	<select name='cliente' class='selectpicker form-control' data-live-search="true" id='cliente' onChange='ajaxRazonSocialCliente(this.form);' required data-style="btn btn-rose">
 		
@@ -1676,8 +1797,19 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='center' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#0691CD;">Cambio</b></td>
 		</tr>
 		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Venta - Descuento</td><td><input type='number' name='totalVentaDesc' id='totalVentaDesc' readonly style="background:#B0B4B3;width:120px;"></td>
+
+		</tr>
+		<tr>
+
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Impuesto <?=$porcentajeImpuesto;?> %</td><td><input type='number' name='impuesto' id='impuesto' readonly style="background:#B0B4B3;width:120px;"></td>
+
+			
+			
+		</tr>
+		<tr>
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:20px;font-size:19px;width:120px;;color:#fff;"></td>
-			<td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:20px;font-size:18px;width:120px;"></td>
+			<td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:20px;font-size:20px;width:120px;"></td>
 		</tr>
 	</table>
       
@@ -1703,6 +1835,18 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#189B22;">Cambio</b></td>
 		</tr>
 		<tr>
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Venta - Descuento</td><td><input type='number' name='totalVentaDescUSD' id='totalVentaDescUSD' readonly style="background:#B0B4B3;width:120px;"></td>
+
+		</tr>
+
+		<tr>
+
+			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Impuesto <?=$porcentajeImpuesto;?> %</td><td><input type='number' name='impuestoUSD' id='impuestoUSD' readonly style="background:#B0B4B3;width:120px;"></td>
+
+			
+			
+		</tr>
+		<tr>
 			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Monto Final</td>
 			<td><input type='number' name='totalFinalUSD' id='totalFinalUSD' readonly style="background:#189B22;height:20px;font-size:19px;width:120px;color:#fff;"> </td>
 			<td><input type='number' name='cambioEfectivoUSD' id='cambioEfectivoUSD' readonly style="background:#4EC156;height:20px;font-size:19px;width:120px;"></td>
@@ -1726,8 +1870,8 @@ if($banderaErrorFacturacion==0){
             
             <table style='width:330px;padding:0 !important;margin:0 !important;bottom:25px;position:fixed;left:100px;'>
             <tr>
-               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>EFECTIVO Bs.</td>
-               <td style='font-size:12px;color:#189B22; font-weight:bold;'>EFECTIVO $ USD</td>
+               <td style='font-size:12px;color:#0691CD; font-weight:bold;'>MONTO PAGO Bs.</td>
+               <td style='font-size:12px;color:#189B22; font-weight:bold;'>MONTO PAGO $ USD</td>
              </tr>
              <tr>
                <td><input type='number' name='efectivoRecibidoUnido' onChange='aplicarMontoCombinadoEfectivo(form1);' onkeyup='aplicarMontoCombinadoEfectivo(form1);' onkeydown='aplicarMontoCombinadoEfectivo(form1);' id='efectivoRecibidoUnido' style='height:25px;font-size:18px;width:100%;' step='any'></td>

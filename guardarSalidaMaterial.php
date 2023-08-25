@@ -58,6 +58,9 @@ if(isset($_POST['tipo_cambio_dolar'])){
 if(isset($_POST['cliente'])){	$codCliente=$_POST['cliente']; }else{ $codCliente=0;	}
 if(isset($_POST['tipoPrecio'])){	$tipoPrecio=$_POST['tipoPrecio']; }else{ $tipoPrecio=0;	}
 if(isset($_POST['razonSocial'])){	$razonSocial=$_POST['razonSocial']; }else{ $razonSocial="";	}
+if(isset($_POST['razonSocialDireccion'])){$razonSocialDireccion=$_POST['razonSocialDireccion']; }else{ $razonSocialDireccion="";	}
+echo "direccion".$_POST['razonSocialDireccion'];
+
 if($razonSocial==""){
 	$razonSocial="SN";
 }
@@ -94,7 +97,7 @@ if(isset($_POST['totalEfectivo'])){	$totalEfectivo=$_POST['totalEfectivo']; }els
 if(isset($_POST['totalCambio'])){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
 if(isset($_POST['complemento'])){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
 
-$totalFinalRedondeado=round($totalFinal);
+
 
 //VALIDAMOS QUE NO SEA CERO EL VALOR DEL REDONDEADO PARA EL CODIGO DE ControlCode
 if($totalFinalRedondeado==0){
@@ -141,6 +144,18 @@ $datConf=mysqli_fetch_array($respConf);
 $banderaValidacionStock=$datConf[0];
 //$banderaValidacionStock=mysql_result($respConf,0,0);
 
+
+///IMPUESTO ESPANIA
+$sqlConf="select valor_configuracion from configuraciones where id_configuracion=51";
+$respConf=mysqli_query($enlaceCon,$sqlConf);
+$datConf=mysqli_fetch_array($respConf);
+$porcentajeImpuesto=$datConf[0];
+$totalVentaDesc=$totalVenta-$descuentoVenta;
+
+echo "totalVentaDesc=".$totalVentaDesc;
+$impuestoEspania=($totalVentaDesc*$porcentajeImpuesto)/100;
+echo "totalFinal".$totalFinal."<br/>";
+	echo "impuestoEspania".$impuestoEspania;
 //variables para envio de correo
 $siat_estado_facturacion="";
 
@@ -229,31 +244,42 @@ do {
 		if($_POST['tipo_documento']==5){
 			$complemento="";
 		}
-		$sql_insert="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
-			`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
-			`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
-			`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo,
+
+echo "totalFinal factura".$totalFinal."<br/>";	
+echo "razonSocialDireccion factura".$razonSocialDireccion."<br/>";	
+		$sql_insert="INSERT INTO salida_almacenes(cod_salida_almacenes, cod_almacen,cod_tiposalida, 
+			cod_tipo_doc, fecha, hora_salida, territorio_destino, 
+			almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
+			cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo,
 			monto_cambio,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2,monto_cancelado_bs,monto_cancelado_usd,tipo_cambio,cod_delivery,
-			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda)
+			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda,direccion_cliente,porcentaje_impuesto,incremento_impuesto)
 			values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 			'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-			'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio','$cod_tipodelivery','$cuis','$cuf','$siat_codigotipodocumentoidentidad','$complemento','$codigoPuntoVenta',$excepcion,'$codigoCufd','$cod_leyenda')";
+			'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio','$cod_tipodelivery','$cuis','$cuf','$siat_codigotipodocumentoidentidad','$complemento','$codigoPuntoVenta',$excepcion,'$codigoCufd','$cod_leyenda','$razonSocialDireccion','$porcentajeImpuesto','$impuestoEspania')";
+			echo "<br>".$sql_insert;
 		$sql_inserta=mysqli_query($enlaceCon,$sql_insert);
+		echo "valor de sql_inserta=".$sql_inserta;
 	}else{   //CUANDO ES NR O TRASPASOS U OTROS TIPOS DE DOCS
 		$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
 		$nro_correlativo=$vectorNroCorrelativo[0];
 		$cod_dosificacion=0;
-
+echo "totalFinal factura".$totalFinal."<br/>";	
+echo "razonSocialDireccion factura".$razonSocialDireccion."<br/>";	
 		$sql_inserta="INSERT INTO salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
  		cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
- 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
+ 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago,direccion_cliente,porcentaje_impuesto,incremento_impuesto)
  		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
- 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta')";
+ 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta',
+ 	'$razonSocialDireccion','$porcentajeImpuesto','$impuestoEspania')";
+ 			echo "<br>".$sql_insert;
  		$sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 	}
 	$contador++;
+
 } while ($sql_inserta<>1 && $contador <= 100);
 
+
+ echo "contador=".$contador;
 
 if($sql_inserta==1){
 	$code="";
@@ -269,8 +295,8 @@ if($sql_inserta==1){
 	if($facturacionActivada==1 && $tipoDoc==1){
 		//insertamos la factura
 		$sqlInsertFactura="insert into facturas_venta (cod_dosificacion, cod_sucursal, nro_factura, cod_estado, razon_social, nit, fecha, importe, 
-		codigo_control, cod_venta) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
-		'$code','$codigo')";
+		codigo_control, cod_venta,direccion) values ('$cod_dosificacion','$globalSucursal','$nro_correlativo','1','$razonSocial','$nitCliente','$fecha','$totalFinal',
+		'$code','$codigo','$razonSocialDireccion')";
 		// echo $sqlInsertFactura;
 		$respInsertFactura=mysqli_query($enlaceCon,$sqlInsertFactura);	
 	}
@@ -307,7 +333,7 @@ if($sql_inserta==1){
 	
 	$montoTotalConDescuento=$montoTotalVentaDetalle-$descuentoVenta;
 	//ACTUALIZAMOS EL PRECIO CON EL DETALLE
-	$sqlUpdMonto="update salida_almacenes set monto_total=$montoTotalVentaDetalle, monto_final=$montoTotalConDescuento 
+	/*$sqlUpdMonto="update salida_almacenes set monto_total=$montoTotalVentaDetalle, monto_final=$montoTotalConDescuento 
 				where cod_salida_almacenes=$codigo";
 				// echo $sqlUpdMonto;
 	$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
@@ -316,7 +342,8 @@ if($sql_inserta==1){
 					where cod_venta=$codigo";
 					// echo $sqlUpdMonto;
 		$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-	}
+	}*/
+
 	//echo "tipoSalida=".$tipoSalida;
 	//echo "tipoDoc=".$tipoDoc;
 	if($tipoSalida==1001){
