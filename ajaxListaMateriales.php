@@ -4,7 +4,7 @@
 <tr>
 <th>Cod</th><th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Stock</th><th>Precio</th></tr>
 <?php
-require("conexionmysqli.php");
+require("conexionmysqli2.inc");
 require("funciones.php");
 
 $codTipo=$_GET['codTipo'];
@@ -20,9 +20,11 @@ if(isset($_GET['codBarraCod2'])){
 $globalAlmacen=$_COOKIE['global_almacen'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $globalAgencia=$_COOKIE["global_agencia"];
- echo "globalAgencia".$globalAgencia;
+ 	//echo "globalAgencia".$globalAgencia;
 
-
+	if($itemsNoUtilizar==""){
+		$itemsNoUtilizar=0;
+	}
 
 	$sql="select m.codigo_material, m.descripcion_material,
 	(select concat(p.nombre_proveedor,' ',pl.abreviatura_linea_proveedor)from proveedores p, proveedores_lineas pl 
@@ -42,7 +44,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 		$sql=$sql. " and m.cod_grupo='$codTipo' ";
 	}
 	$sql=$sql." order by 2";
-	
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);
@@ -59,22 +61,41 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			$colorProducto=$dat[5];
 			$codigoBarras=$dat[6];
 			$codigo2=$dat[7];
+
 			$precioProducto=0;
+			$precioProductoMayor=0;
+
+			/************  sacamos el precio por mayor   **************/
 			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$globalAgencia'";
-			
 			$rs=mysqli_query($enlaceCon,$consulta);
 			$registro=mysqli_fetch_array($rs);
 			if(mysqli_num_rows($rs)>0){
 				$precioProducto=$registro[0];
 			}
-			
-			if($precioProducto=="")
-			{   $precioProducto=0;
+			/************  sacamos el precio por mayor   **************/
+			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='2' and cod_ciudad='$globalAgencia'";
+			$rs=mysqli_query($enlaceCon,$consulta);
+			$registro=mysqli_fetch_array($rs);
+			if(mysqli_num_rows($rs)>0){
+				$precioProductoMayor=$registro[0];
+			}
+			/************  fin sacar precios   **************/
+
+			if($precioProducto==""){   
+				$precioProducto=0;
+			}
+			if($precioProductoMayor==""){
+				$precioProductoMayor=0;
 			}
 			$precioProducto=redondear2($precioProducto);
+			$precioProductoMayor=redondear2($precioProductoMayor);
+
 			$nombreEnvio=$codigo2.$codigoBarras." ".$nombre." (<small>".$marcaProducto." ".$colorProducto." ".$tallaProducto."</small>)";
+
+			$nombreEnvio=addslashes($nombreEnvio);
+			
 			echo "<tr><td>$codigo2 $codigoBarras </td>
-			<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\")'>$nombre</a></div></td>			
+			<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\", $stockProducto, $precioProducto, $precioProductoMayor)'>$nombre</a></div></td>			
 			<td>$marcaProducto</td>
 			<td>$colorProducto</td>
 			<td>$tallaProducto</td>

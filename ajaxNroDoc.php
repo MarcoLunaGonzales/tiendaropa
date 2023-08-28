@@ -1,5 +1,5 @@
 <?php
-require("conexionmysqli.php");
+require_once 'conexionmysqli2.inc';
 require("funciones.php");
 
 $codTipoDoc=$_GET['codTipoDoc'];

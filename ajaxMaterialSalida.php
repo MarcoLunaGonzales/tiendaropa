@@ -5,8 +5,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <?php 
 
-require("conexionmysqli.php");
+require_once 'conexionmysqli2.inc';
+require_once 'funciones.php';
+
 	$num=$_GET['codigo'];
+
+	$banderaEditPrecios=0;
+	$banderaEditPrecios=obtenerValorConfiguracion($enlaceCon, 20);
 ?>
 
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
@@ -21,14 +26,22 @@ require("conexionmysqli.php");
 	<div id="cod_material<?php echo $num;?>" class='textomedianonegro'>-</div>
 </td>
 
-<td width="20%" align="center">
+<td width="10%" align="center">
 	<div id='idstock<?php echo $num;?>'>
 		<input type='hidden' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value=''>
 	</div>
 </td>
 
-<td align="center" width="20%">
+<td align="center" width="10%">
 	<input class="inputnumber" type="number" value="" min="0.01" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required> 
+</td>
+
+<td align="center" width="10%">
+	<input class="inputnumber" type="number" value="" min="0.01" id="precio_traspaso<?php echo $num;?>" name="precio_traspaso<?php echo $num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
+</td>
+
+<td align="center" width="10%">
+	<input class="inputnumber" type="number" value="" min="0.01" id="precio_traspaso2<?php echo $num;?>" name="precio_traspaso2<?php echo $num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
 </td>
 
 

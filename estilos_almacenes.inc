@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/La_Paz');
 echo"<link href='stilos.css' rel='stylesheet' type='text/css'>";  
-require("conexionmysqli.php");
+require_once 'conexionmysqli.php';
 
 /*
 $sql="select paterno, materno, nombres from funcionarios where codigo_funcionario=$global_usuario";
