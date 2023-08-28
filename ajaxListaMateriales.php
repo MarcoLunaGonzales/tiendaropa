@@ -20,6 +20,7 @@ if(isset($_GET['codBarraCod2'])){
 $globalAlmacen=$_COOKIE['global_almacen'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
 $globalAgencia=$_COOKIE["global_agencia"];
+ echo "globalAgencia".$globalAgencia;
 
 
 
@@ -58,10 +59,15 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			$colorProducto=$dat[5];
 			$codigoBarras=$dat[6];
 			$codigo2=$dat[7];
+			$precioProducto=0;
 			$consulta="select p.`precio` from precios p where p.`codigo_material`='$codigo' and p.`cod_precio`='1' and cod_ciudad='$globalAgencia'";
+			
 			$rs=mysqli_query($enlaceCon,$consulta);
 			$registro=mysqli_fetch_array($rs);
-			$precioProducto=$registro[0];
+			if(mysqli_num_rows($rs)>0){
+				$precioProducto=$registro[0];
+			}
+			
 			if($precioProducto=="")
 			{   $precioProducto=0;
 			}

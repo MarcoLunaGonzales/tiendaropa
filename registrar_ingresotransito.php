@@ -4,7 +4,7 @@ require("estilos.inc");
 
 $fecha=date("Y-m-d");
 $hora=date("H:i");
-
+$observaciones="";
 $sql_datos_salidaorigen="select s.nro_correlativo, s.cod_tiposalida, a.nombre_almacen from salida_almacenes s, almacenes a
 where a.cod_almacen=s.cod_almacen and s.cod_salida_almacenes='$codigo_registro'";
 $resp_datos_salidaorigen=mysqli_query($enlaceCon,$sql_datos_salidaorigen);

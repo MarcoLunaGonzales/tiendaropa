@@ -7,11 +7,13 @@ $indice = $_GET["indice"];
 $codTipoPrecio=$_GET["tipoPrecio"];
 $globalAgencia=$_COOKIE["global_agencia"];
 
+//echo $globalAgencia;
+
 //
 require("conexionmysqli.php");
 $cadRespuesta="";
 $consulta="
-    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1";
+    select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.cod_precio=1 and cod_ciudad='".$globalAgencia."'";
 $rs=mysqli_query($enlaceCon,$consulta);
 $registro=mysqli_fetch_array($rs);
 $cadRespuesta=$registro[0];

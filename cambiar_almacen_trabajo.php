@@ -1,6 +1,9 @@
 <?php
 require("conexionmysqli.php");
+
 require("estilos.inc");
+error_reporting(E_ALL);
+ ini_set('display_errors', '1');
     $sqlCambioUsd="select valor from cotizaciondolar order by 1 desc limit 1";
 	$respUsd=mysqli_query($enlaceCon,$sqlCambioUsd);
 	$tipoCambio=1;

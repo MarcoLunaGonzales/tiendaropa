@@ -270,10 +270,11 @@ echo "<script language='Javascript'>
 		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Nombre</th>
-		<th>Grupo/SubGrupo</th><th>Marca</th><th>Modelo</th><th>Genero</th><th>Material</th>
-		<th>Color</th><th>Talla</th>
-		<th>Precio de Venta [Bs]</th><th>Fecha Creacion</th><th>Imagen</th><th>&nbsp;</th>
+	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
+		<th>Grupo/SubGrupo</th><th>Modelo</th><th>Genero</th><th>Material</th>
+		<th>Color/Talla</th>
+		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
+		<th>Fijar Precios</th>
 		</tr>";
 	
 	$indice_tabla=1;
@@ -305,6 +306,7 @@ echo "<script language='Javascript'>
 		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
 		$precioVenta=$precioVenta;
 		
+
 		if($imagen==""){
 			$imagen="default.png";
 		}
@@ -318,18 +320,48 @@ echo "<script language='Javascript'>
 		<td align='center'><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td align='center'>$indice_tabla</td>
 		<td>$codigoBarras -$codigo2</td>
+		<td>$marca</td>
 		<td>$nombreProd</td>
 		<td>$grupo <br/> $subgrupo</td>
-		<td>$marca</td>
+		
 		<td>$nombreModelo</td>
 		<td>$nombreGenero</td>
 		<td>$nombreMaterial</td>
-		<td>$nombreColor</td>
-		<td>$nombreTalla</td>
-		<td align='center'>$precioVenta</td>
-		<td align='center'>$fechaCreacion</td>
-		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'></td>
-		<td><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
+		<td>$nombreColor<br/><center>T:$nombreTalla</center></td>
+		<td align='center'>";
+		$sqlListPrecios="select p.codigo_material,p.cod_precio,gp.nombre ,gp.abreviatura ,p.precio,p.cod_ciudad,c.nombre_ciudad,
+		p.cant_inicio,p.cant_final, p.created_by, 
+		concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date,
+		p.modified_by, 
+		concat(f1.nombres,' ',f1.paterno,' ',f1.materno) as modificado_por,
+		p.modified_date
+		from precios p
+		left join grupos_precio gp on (p.cod_precio=gp.codigo)
+		left join ciudades c on (p.cod_ciudad=c.cod_ciudad)
+		left join funcionarios f on (p.created_by=f.codigo_funcionario)
+		left join funcionarios f1 on (p.modified_by=f1.codigo_funcionario)
+		where p.codigo_material='".$codigo."'and p.cod_ciudad='".$globalAgencia."' order by p.cod_precio asc";
+
+
+		$respListPrecios=mysqli_query($enlaceCon,$sqlListPrecios);
+		echo" <table border='0'>";
+		while($datListPrecios=mysqli_fetch_array($respListPrecios)){
+			$nombreGrupoPrecio=$datListPrecios['nombre'];
+			$abrevGrupoPrecio=$datListPrecios['abreviatura'];
+			$precio=$datListPrecios['precio'];
+
+			echo "<tr><td>".redondear2($precio)."</td><td>".$abrevGrupoPrecio."</td></tr>";
+
+		}
+		echo" </table>";
+
+
+
+		echo" </td>";
+		echo "<td align='center'>$fechaCreacion</td>
+		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'><br><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
+		<td><a href='listaPrecios.php?codigo=$codigo&nombre=$nombreProd'>
+		<img src='imagenes/fijarPrecio.jpg' width='30' title='Fijar Precio'></a></td>
 		</tr>";
 		$indice_tabla++;
 	}
