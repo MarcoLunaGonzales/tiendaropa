@@ -8,6 +8,9 @@ require("funciones.php");
 require("funciones_inventarios.php");
 require("enviar_correo/php/send-email_anulacion.php");
 
+$banderaEditPreciosTraspaso=0;
+$banderaEditPreciosTraspaso=obtenerValorConfiguracion($enlaceCon, 20);
+
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
@@ -285,16 +288,40 @@ if($sql_inserta==1){
 			$precioUnitario=$_POST["precio_unitario$i"];
 			$descuentoProducto=$_POST["descuentoProducto$i"];
 
+			/****************** Gestionamos los precios desde los traspasos  **************/
+			$precioTraspaso=0;
+			$precioTraspaso2=0;
+			if(isset($_POST["precio_traspaso$i"])){
+				$precioTraspaso=$_POST["precio_traspaso$i"];
+				$precioTraspaso2=$_POST["precio_traspaso2$i"];
+			}
+			/******* Cuando es Traspaso y los precios no son Editables ******/
+			if($tipoSalida==1000 && $banderaEditPreciosTraspaso==0){
+				$consulta="select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.`cod_precio`='1' and cod_ciudad='$globalSucursal'";
+				$rs=mysqli_query($enlaceCon,$consulta);
+				$registro=mysqli_fetch_array($rs);
+				if(mysqli_num_rows($rs)>0){
+					$precioTraspaso=$registro[0];
+				}
+				$consulta="select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.`cod_precio`='2' and cod_ciudad='$globalSucursal'";
+				$rs=mysqli_query($enlaceCon,$consulta);
+				$registro=mysqli_fetch_array($rs);
+				if(mysqli_num_rows($rs)>0){
+					$precioTraspaso2=$registro[0];
+				}
+			}
+
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
 			$montoMaterialConDescuento=($precioUnitario*$cantidadUnitaria)-$descuentoProducto;
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
+			
 			if($banderaValidacionStock==1){
 				//echo "descontando aca";
-				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i);
+				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precioTraspaso,$precioTraspaso2);
 			}else{
-				$respuesta=insertar_detalleSalidaVenta($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock, $i);
+				$respuesta=insertar_detalleSalidaVenta($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock,$i,$precioTraspaso,$precioTraspaso2);
 			}
 	
 			if($respuesta!=1){

@@ -1,6 +1,9 @@
 <?php
-require("conexionmysqli.php");
-require("estilos_almacenes.inc");
+$indexGerencia=1;
+require_once 'conexionmysqli.inc';
+require_once 'estilos_almacenes.inc';
+
+
 $global_almacen=$_COOKIE['global_almacen'];
 
 ?>
@@ -8,8 +11,9 @@ $global_almacen=$_COOKIE['global_almacen'];
     <head>
         <title>Busqueda</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
-        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        
+        <!--script type="text/javascript" src="lib/js/xlibPrototipoSimple-v0.1.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script-->
         <script type="text/javascript" src="functionsGeneral.js"></script>
 		
 		
@@ -117,9 +121,8 @@ function actStock(indice){
 		}
 	}
 	ajax.send(null);
-	
-	
 }
+
 
 function buscarMaterial(f, numMaterial){
 	f.materialActivo.value=numMaterial;
@@ -140,19 +143,26 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
-function setMateriales(f, cod, nombreMat){
+function setMateriales(f, cod, nombreMat, stock_producto, precio_producto, precio_productomayor){
 	var numRegistro=f.materialActivo.value;
 	
+	console.log("numRegistro: "+numRegistro);
+	console.log("codigoproducto: "+cod);
+
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	
+	document.getElementById('precio_traspaso'+numRegistro).value=precio_producto;
+	document.getElementById('precio_traspaso2'+numRegistro).value=precio_productomayor;
+	
+
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
 	document.getElementById('divProfileDetail').style.visibility='hidden';
 	document.getElementById('divboton').style.visibility='hidden';
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
-
+	
 	actStock(numRegistro);
 }
 function calculaMontoMaterial(){
@@ -313,7 +323,7 @@ else
 <tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Almacen Destino</th></tr>
 <tr>
 <td align='center'>
-	<select name='tipoSalida' id='tipoSalida' onChange='ajaxTipoDoc(form1)' required>
+	<select name='tipoSalida' id='tipoSalida' onChange='ajaxTipoDoc(form1)' class="texto" required>
 		<option value="">--------</option>
 <?php
 	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
@@ -381,9 +391,11 @@ else
 	</tr>
 	<tr align="center">
 		<th width="10%">-</th>
-		<th width="40%">Material</th>
-		<th width="20%">Stock</th>
-		<th width="20%">Cantidad</th>
+		<th width="40%">Producto</th>
+		<th width="10%">Stock</th>
+		<th width="10%">Cantidad</th>
+		<th width="10%">Precio</th>
+		<th width="10%">Precio por Mayor</th>
 		<th width="10%">&nbsp;</th>
 	</tr>
 	</table>
@@ -403,14 +415,14 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1100px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
-<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
+<div id="divboton" style="position: absolute; top:20px; left:1220px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1050px; height:450px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>

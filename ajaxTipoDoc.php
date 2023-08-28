@@ -1,5 +1,7 @@
 <?php
-require("conexionmysqli.php");
+
+require_once 'conexionmysqli2.inc';
+
 $codTipoSalida=$_GET['codTipoSalida'];
 
 if($codTipoSalida==1001){
