@@ -331,15 +331,13 @@ echo "<script language='Javascript'>
 		<td align='center'>";
 		$sqlListPrecios="select p.codigo_material,p.cod_precio,gp.nombre ,gp.abreviatura ,p.precio,p.cod_ciudad,c.nombre_ciudad,
 		p.cant_inicio,p.cant_final, p.created_by, 
-		concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date,
-		p.modified_by, 
-		concat(f1.nombres,' ',f1.paterno,' ',f1.materno) as modificado_por,
-		p.modified_date
+		concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date
+		
 		from precios p
 		left join grupos_precio gp on (p.cod_precio=gp.codigo)
 		left join ciudades c on (p.cod_ciudad=c.cod_ciudad)
 		left join funcionarios f on (p.created_by=f.codigo_funcionario)
-		left join funcionarios f1 on (p.modified_by=f1.codigo_funcionario)
+	
 		where p.codigo_material='".$codigo."'and p.cod_ciudad='".$globalAgencia."' order by p.cod_precio asc";
 
 

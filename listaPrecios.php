@@ -6,12 +6,14 @@ require('funciones.php');
 $codProducto=$_GET['codigo'];
 $nombreProducto=$_GET['nombre'];
 
-echo "<form enctype='multipart/form-data' action='guarda_reemplazar_imagen.php' method='post' name='form1'>";
+echo "<form  action='actualizaPreciosMaterial.php' method='post' name='form1'>";
 
 echo "<h1>Lista de Precios</h1><h2>$nombreProducto</h2>";
 
 
 echo "<input type='hidden' name='codProducto' id='codProducto' value='$codProducto'>";
+echo "<input type='hidden' name='nombreProducto' id='nombreProducto' value='$nombreProducto'>";
+
 
 echo "<center><table class='texto'>";
 	echo "<tr>
@@ -39,11 +41,10 @@ echo "<center><table class='texto'>";
 				$nomGrupoPrecio=$datGrupoPrecio['nombre'];			
 
 			$sqlPrecio="select p.codigo_material,p.precio, p.cant_inicio,p.cant_final, 
-			p.created_by, concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date,
-			p.modified_by, concat(f1.nombres,' ',f1.paterno,' ',f1.materno) as modificado_por,
-			p.modified_date from precios p		
+			p.created_by, concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date
+			from precios p		
 			left join funcionarios f on (p.created_by=f.codigo_funcionario)
-			left join funcionarios f1 on (p.modified_by=f1.codigo_funcionario)
+			
 			where p.codigo_material='".$codigo."' and p.cod_ciudad='".$cod_ciudad."' and p.cod_precio='".$codGrupoPrecio."'";
 
 			$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
@@ -58,9 +59,9 @@ echo "<center><table class='texto'>";
 					echo "<td>&nbsp;</td>";
 					echo "<td>".$desc_ciudad."</td>";
 					echo "<td>".$nomGrupoPrecio."</td>";
-					echo "<td><input type='number' class='inputnumber'  id='precio' name='precio' size='6' min='0.1' step='0.01'  value='".redondear2($precio)."'></td>";
-					echo "<td><input class='inputnumber' type='number' min='1' id='cant_ini'  name='cant_ini' step='1' value='".$cant_inicio."' required></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin'  name='cant_fin' step='1' value='".$cant_final."' required></td>";
+					echo "<td><input type='number' class='inputnumber'  id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6' min='0.1' step='0.01'  value='".redondear2($precio)."'></td>";
+					echo "<td><input class='inputnumber' type='number' min='1' id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' step='1' value='".$cant_inicio."' required></td>";
+					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."' step='1' value='".$cant_final."' required></td>";
 					echo "</tr>";
 				}
 			}else{
@@ -68,9 +69,9 @@ echo "<center><table class='texto'>";
 					echo "<td>&nbsp;</td>";
 					echo "<td>".$desc_ciudad."</td>";
 					echo "<td>".$nomGrupoPrecio."</td>";
-					echo "<td><input type='number' class='inputnumber'  id='precio' name='precio' size='6' min='0.1' step='0.01'  value='0'></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_ini'  name='cant_ini' step='1' value='0' required></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin'  name='cant_fin' step='1' value='0' required></td>";
+					echo "<td><input type='number' class='inputnumber'  id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6' min='0.1' step='0.01'  value='0'></td>";
+					echo " <td><input class='inputnumber' type='number' min='1' id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' step='1' value='0' required></td>";
+					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."' step='1' value='0' required></td>";
 					echo "</tr>";
 
 			}	
