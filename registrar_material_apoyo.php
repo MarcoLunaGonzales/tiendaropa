@@ -16,6 +16,7 @@ function nuevoAjax()
 	return xmlhttp;
 }
 
+
 function ajaxSubGrupo(combo){
 	var cod_grupo=combo.value;
 	
@@ -53,14 +54,19 @@ require('estilos.inc');
 
 echo "<form enctype='multipart/form-data' action='guarda_material_apoyo.php' method='post' name='form1'>";
 
-echo "<h1>Adicionar Producto</h1>";
+echo "<h2>Adicionar Producto</h2>";
 
 
 echo "<center><table class='texto'>";
+echo "<tr><th align='left'>Genera Nombre Automatico</th>
+<td align='left'><input type='checkbox' name='nombreGenerado' id='nombreGenerado' 
+
+checked='true'></td>";
+echo "</tr>";
 
 echo "<tr><th align='left'>Nombre Producto</th>";
 echo "<td align='left'>
-	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' required>
+	<input type='text' class='texto' name='material' id='material' size='40' style='text-transform:uppercase;' >
 	</td> <th align='left'>Codigo Proveedor</th>
 	<td align='left'><input type='text' class='texto' name='codigo2' id='codigo2' size='20' style='text-transform:uppercase;'> </td>
 	</tr>";
@@ -265,15 +271,7 @@ echo "<th>Imagen</th>";
 echo "<td> <input name='archivo' id='archivo' type='file' class='boton2'/> </td>";
 echo "</tr>";
 
-echo "<tr><th align='left'>Costo</th>";
-echo "<td align='left'>
-	<input type='number' class='texto' name='costo_producto' id='costo_producto' step='0.1'>
-	</td>";
 
-echo "<th align='left'>Precio de Venta</th>";
-echo "<td align='left'>
-	<input type='number' class='texto' name='precio_producto' id='precio_producto' step='0.1'>
-	</td></tr>";
 
 ?>	
 

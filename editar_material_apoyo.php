@@ -87,30 +87,6 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 	$codGeneroX=$datEdit[16];
 }
 
-$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=0 and p.`codigo_material`='$codProducto'";
-$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
-$numFilas=mysqli_num_rows($respPrecio);
-if($numFilas>=1){
-	$datPrecio=mysqli_fetch_array($respPrecio);
-	$costo=$datPrecio[0];
-	//$costo=mysql_result($respPrecio,0,0);
-	$costo=redondear2($costo);
-}else{
-	$costo=0;
-	$costo=redondear2($costo);
-}
-$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`='$codProducto'";
-$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
-$numFilas=mysqli_num_rows($respPrecio);
-if($numFilas>=1){
-	$datPrecio=mysqli_fetch_array($respPrecio);
-	$precio1=$datPrecio[0];
-	//$precio1=mysql_result($respPrecio,0,0);
-	$precio1=redondear2($precio1);
-}else{
-	$precio1=0;
-	$precio1=redondear2($precio1);
-}
 
 echo "<form action='guarda_editarproducto.php' method='post' name='form1'>";
 
@@ -123,7 +99,7 @@ echo "<center><table class='texto'>";
 
 echo "<tr><th align='left'>Nombre de Producto</th>";
 echo "<td align='left'>
-	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' value='$nombreProductoX' required>
+	<input type='text' class='texto' name='material' size='40' style='text-transform:uppercase;' value='$nombreProductoX' >
 	</td>
 	<th align='left'>Codigo Externo</th>
 	<td align='left'>
@@ -352,15 +328,7 @@ echo "<th>Imagen</th>";
 echo "<td> <input name='archivo' id='archivo' type='file' class='boton2' disabled/> </td>";
 echo "</tr>";
 
-echo "<tr><th align='left'>Costo</th>";
-echo "<td align='left'>
-	<input type='number' class='texto' name='costo_producto' id='costo_producto' value='$costo' step='0.1'>
-	</td>";
 
-echo "<th align='left'>Precio de Venta</th>";
-echo "<td align='left'>
-	<input type='number' class='texto' name='precio_producto' id='precio_producto' value='$precio1' step='0.1'>
-	</td></tr>";
 
 
 echo "</table></center>";

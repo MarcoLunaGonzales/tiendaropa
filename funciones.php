@@ -96,7 +96,56 @@ function obtenerCorreosListaCliente($id_proveedor){
   	return $correosProveedor;
 }
 
+function actualizaNombreProducto($enlaceCon,$codProducto){
+	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
+		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
+		m.cod_marca, mar.nombre as nombreMarca,
+		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
+		m.observaciones, imagen,
+		 m.color, col.nombre as nombreColor,
+		 m.talla, tal.nombre as nombreTalla,
+		 m.codigo_barras, m.codigo2, m.fecha_creacion,
+		m.cod_modelo,mo.nombre as nombreModelo, 
+		m.cod_material, mat.nombre as nombreMaterial, 
+		m.cod_genero, gen.nombre as nombreGenero
+		from material_apoyo m
+		left join grupos gru on ( gru.codigo=m.cod_grupo)
+		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
+		left join marcas mar on ( mar.codigo=m.cod_marca)
+		left join modelos mo on ( mo.codigo=m.cod_modelo)
+		left join materiales mat on ( mat.codigo=m.cod_material)
+		left join generos gen on ( gen.codigo=m.cod_genero)
+		left join colores col on ( col.codigo=m.color)
+		left join tallas tal on ( tal.codigo=m.talla)
+		where m.codigo_material=".$codProducto;
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp))
+	{
 
+		
+		$nombreProd=$dat['descripcion_material'];
+		$estado=$dat['estado'];
+		$grupo=$dat['nombreGrupo'];
+		$subgrupo=$dat['nombreSubgrupo'];
+		$marca=$dat['nombreMarca'];		
+		$nombreLinea=$dat['nombre_linea_proveedor'];
+		$observaciones=$dat['observaciones'];
+		$imagen=$dat['imagen'];
+		$color=$dat['color'];
+		$nombreColor=$dat['nombreColor'];
+		$talla=$dat['talla'];
+		$nombreTalla=$dat['nombreTalla'];
+		$codigoBarras=$dat['codigo_barras'];
+		$codigo2=$dat['codigo2'];
+		$fechaCreacion=$dat['fecha_creacion'];
+		$nombreModelo=$dat['nombreModelo'];
+		$nombreMaterial=$dat['nombreMaterial'];
+		$nombreGenero=$dat['nombreGenero'];
+		$sqlActualizanombre="update material_apoyo set descripcion_material='".$grupo." ".$nombreModelo." ".$nombreGenero." ".$nombreMaterial." ".$nombreColor." T:".$nombreTalla."' where codigo_material=".$codProducto;
+		$resp=mysqli_query($enlaceCon,$sqlActualizanombre);
+	}
+	return($resp);
+}
 
 
 
