@@ -114,12 +114,10 @@ class PDF extends FPDF{
 			$this->SetFont('Times','B',10);
 
 	
-		 $this->SetXY(10,65);		$this->Cell(80,8,"Concepto",'C', True);
-		$this->SetXY(93,65);		$this->Cell(10,8,"Cant.",'C', True);
-		$this->SetXY(106,65);		$this->Cell(20,8,"Precio",'C', True);
-		$this->SetXY(129,65);		$this->Cell(20,8,"SubTotal",'C', True);
-		$this->SetXY(152,65);		$this->Cell(20,8,"Impuesto",'C', True);
-		$this->SetXY(175,65);		$this->Cell(20,8,"Total",'C', True);
+		$this->SetXY(10,65);		$this->Cell(80,8,"CONCEPTO",'C', True);
+		$this->SetXY(125,65);		$this->Cell(20,8,"CANT.",'C', True);
+		$this->SetXY(152,65);		$this->Cell(20,8,"PRECIO",'C', True);
+		$this->SetXY(179,65);		$this->Cell(20,8,"IMPORTE",'C', True);
 	
 
 	}	
@@ -127,25 +125,44 @@ class PDF extends FPDF{
 	function Footer()
 	{
 			global $montoTotal;
+			global $descuentoVenta;
+			global $montoTotal2;
+			global $montoFinal2;
+			global $porcentajeImpuesto;
+			global $incrementoImpuesto;
+
 			$euro=" €";
 			//$this->Line(10,210,200,210);
-			$this->SetXY(175,210);	
+			$this->SetXY(172,210);	
 			$this->SetFont('Times','B',9);
 			$this->Cell(10,6,"SUBTOTAL:",0,0,'R',false);
 			$this->SetXY(187,210);	
-			$this->Cell(10,6,$montoTotal.iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
+			$this->Cell(13,6,(number_format($montoTotal2,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
 
-			$this->SetXY(175,216);	
+			$this->SetXY(172,215);	
 			$this->SetFont('Times','B',9);
-			$this->Cell(10,6,"IVA(21%):",0,0,'R',false);
-			$this->SetXY(187,216);	
-			$this->Cell(10,6,(($montoTotal*21)/100).iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
+			$this->Cell(10,6,"DESCUENTO:",0,0,'R',false);
+			$this->SetXY(187,215);	
+			$this->Cell(13,6,(number_format($descuentoVenta,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
+
+			$this->SetXY(172,220);	
+			$this->SetFont('Times','B',10);
+			$this->Cell(10,6,"TOTAL:",0,0,'R',false);
+			$this->SetXY(187,220);	
+			$this->Cell(13,6,(number_format(($montoTotal2-$descuentoVenta),2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
+
+
+			$this->SetXY(172,225);	
+			$this->SetFont('Times','B',9);
+			$this->Cell(10,6,"IVA(".$porcentajeImpuesto."%):",0,0,'R',false);
+			$this->SetXY(187,225);	
+			$this->Cell(13,6,(number_format($incrementoImpuesto,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,'R',false);
 		
-			$this->Line(10,226,200,226);
-			$this->SetXY(10,228);
-			$this->SetFont('Times','B',12);
-			$this->Cell(194,6,"TOTAL A PAGAR: ".((($montoTotal*21)/100)+$montoTotal).iconv('UTF-8', 'windows-1252', $euro),0,0,'C',false);
 			$this->Line(10,236,200,236);
+			$this->SetXY(10,238);
+			$this->SetFont('Times','B',12);
+			$this->Cell(194,6,"MONTO A PAGAR: ".(number_format($montoFinal2,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,'C',false);
+			$this->Line(10,246,200,246);
 	}	
 }
 
@@ -221,7 +238,7 @@ $sqlDatosVenta="select DATE_FORMAT(s.fecha, '%d/%m/%Y'), t.`nombre` as nombreTip
  c.`nombre_cliente`, s.`nro_correlativo`, 
 s.descuento, s.hora_salida,s.monto_total,s.monto_final,s.monto_efectivo,s.monto_cambio,s.cod_chofer,
 s.cod_tipopago,tp.nombre_tipopago,s.cod_tipo_doc,s.fecha,
-al.cod_ciudad,s.cod_cliente
+al.cod_ciudad,s.cod_cliente,s.porcentaje_impuesto,s.incremento_impuesto
 from `salida_almacenes` s
 left join almacenes al on (s.cod_almacen=al.cod_almacen)
 left join`tipos_docs` t on (s.`cod_tipo_doc`=t.`codigo`)
@@ -242,6 +259,7 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$montoFinal2=$datDatosVenta['monto_final'];
 	$montoEfectivo2=$datDatosVenta['monto_efectivo'];
 	$montoCambio2=$datDatosVenta['monto_cambio'];
+
 	$montoTotal2=redondear2($montoTotal2);
 	$montoFinal2=redondear2($montoFinal2);
 
@@ -259,6 +277,11 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$hora_salida=$datDatosVenta['hora_salida'];
 	$cod_ciudad_salida=$datDatosVenta['cod_ciudad'];
 	$cod_cliente=$datDatosVenta['cod_cliente'];
+	$porcentajeImpuesto=$datDatosVenta['porcentaje_impuesto'];
+	$incrementoImpuesto=$datDatosVenta['incremento_impuesto'];
+
+		$porcentajeImpuesto=redondear2($porcentajeImpuesto);
+	$incrementoImpuesto=redondear2($incrementoImpuesto);
 	
 
 }
@@ -327,11 +350,14 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	$euro=" €";
 	
 	$pdf->SetXY(10,$yyy);		$pdf->Cell(80,8,$nombreMat,0,0,"L");
-	$pdf->SetXY(93,$yyy);		$pdf->Cell(10,8,$cantUnit,0,0,"R");
-	$pdf->SetXY(106,$yyy);		$pdf->Cell(20,8,$montoUnit.iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
-	$pdf->SetXY(129,$yyy);		$pdf->Cell(20,8,($cantUnit*$montoUnit).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
-	$pdf->SetXY(152,$yyy);		$pdf->Cell(20,8,((($cantUnit*$montoUnit)*21)/100).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
-	$pdf->SetXY(175,$yyy);		$pdf->Cell(20,8,$montoUnit+((($cantUnit*$montoUnit)*21)/100).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
+	$pdf->SetXY(125,$yyy);		$pdf->Cell(15,8,$cantUnit,0,0,"R");
+	$pdf->SetXY(152,$yyy);		$pdf->Cell(15,8,(number_format($montoUnit,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
+	//$pdf->SetXY(129,$yyy);		$pdf->Cell(20,8,($cantUnit*$montoUnit).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
+	//$pdf->SetXY(152,$yyy);		$pdf->Cell(20,8,((($cantUnit*$montoUnit)*21)/100).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
+	
+	//$pdf->SetXY(175,$yyy);		$pdf->Cell(20,8,$montoUnit+((($cantUnit*$montoUnit)*21)/100).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
+
+	$pdf->SetXY(179,$yyy);		$pdf->Cell(20,8,(number_format($cantUnit*$montoUnit,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
 
 	$montoTotal=$montoTotal+$montoUnit;
 		

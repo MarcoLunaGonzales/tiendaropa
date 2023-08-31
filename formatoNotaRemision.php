@@ -63,7 +63,7 @@ $nitEmpresa=mysqli_result($respConf,0,1);
 		
 $sqlDatosVenta="select concat(s.fecha,' ',s.hora_salida) as fecha, t.`nombre`, 
 (select c.nombre_cliente from clientes c where c.cod_cliente=s.cod_cliente) as nombreCliente, 
-s.`nro_correlativo`, s.razon_social, s.observaciones, s.descuento, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago) 
+s.`nro_correlativo`, s.razon_social, s.observaciones, s.descuento, (select tp.nombre_tipopago from tipos_pago tp where tp.cod_tipopago=s.cod_tipopago) ,s.porcentaje_impuesto,s.incremento_impuesto,s.monto_total,s.monto_final
 		from `salida_almacenes` s, `tipos_docs` t
 		where s.`cod_salida_almacenes`='$codigoVenta'  and
 		s.`cod_tipo_doc`=t.`codigo`";
@@ -78,6 +78,10 @@ while($datDatosVenta=mysqli_fetch_array($respDatosVenta)){
 	$descuentoVenta=$datDatosVenta[6];
 	$descuentoVenta=redondear2($descuentoVenta);
 	$tipoPago=$datDatosVenta[7];
+	$porcentajeImpuesto=$datDatosVenta['porcentaje_impuesto'];
+	$incrementoImpuesto=$datDatosVenta['incremento_impuesto'];
+	$montoTotalCabecera=$datDatosVenta['monto_total'];
+	$montoFinalCabecera=$datDatosVenta['monto_final'];
 }
 
 $y=-3;
@@ -142,16 +146,22 @@ $yyy=$yyy+5;
 
 $montoFinal=$montoTotal-$descuentoVenta;
 
-$pdf->SetXY(25,$y+$yyy);		$pdf->Cell(25,5,"Total Venta:",0,0,"R");
-$pdf->SetXY(45,$y+$yyy);		$pdf->Cell(20,5,$montoTotal,0,0,"R");
+$pdf->SetXY(25,$y+$yyy);		$pdf->Cell(25,5,"SUBTOTAL:",0,0,"R");
+$pdf->SetXY(45,$y+$yyy);		$pdf->Cell(20,5,($montoTotalCabecera*1),0,0,"R");
 
-$pdf->SetXY(25,$y+$yyy+4);		$pdf->Cell(25,5,"Descuento:",0,0,"R");
+$pdf->SetXY(25,$y+$yyy+4);		$pdf->Cell(25,5,"DESCUENTO:",0,0,"R");
 $pdf->SetXY(45,$y+$yyy+4);		$pdf->Cell(20,5,$descuentoVenta,0,0,"R");
 
-$pdf->SetXY(25,$y+$yyy+8);		$pdf->Cell(25,5,"Total Final:",0,0,"R");
-$pdf->SetXY(45,$y+$yyy+8);		$pdf->Cell(20,5,$montoFinal,0,0,"R");
+$pdf->SetXY(25,$y+$yyy+8);		$pdf->Cell(25,5,"TOTAL:",0,0,"R");
+$pdf->SetXY(45,$y+$yyy+8);		$pdf->Cell(20,5,($montoTotalCabecera-$descuentoVenta),0,0,"R");
 
-list($montoEntero, $montoDecimal) = explode('.', $montoFinal);
+$pdf->SetXY(25,$y+$yyy+12);		$pdf->Cell(25,5,"IVA( ".($porcentajeImpuesto*1)."% ):",0,0,"R");
+$pdf->SetXY(45,$y+$yyy+12);		$pdf->Cell(20,5,($incrementoImpuesto*1),0,0,"R");
+
+$pdf->SetXY(25,$y+$yyy+16);		$pdf->Cell(25,5,"MONTO A PAGAR:",0,0,"R");
+$pdf->SetXY(45,$y+$yyy+16);		$pdf->Cell(20,5,($montoFinalCabecera*1),0,0,"R");
+
+list($montoEntero, $montoDecimal) = explode('.', $montoFinalCabecera);
 if($montoDecimal==""){
 	$montoDecimal="00";
 }
@@ -159,8 +169,8 @@ if($montoDecimal==""){
 $pdf->SetFont('Arial','',7);
 
 $txtMonto=NumeroALetras::convertir($montoEntero);
-$pdf->SetXY(5,$y+$yyy+15);		$pdf->MultiCell(0,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
-$pdf->SetXY(0,$y+$yyy+21);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
+//$pdf->SetXY(5,$y+$yyy+24);		$pdf->MultiCell(0,3,"Son:  $txtMonto"." ".$montoDecimal."/100 Bolivianos",0,"L");
+$pdf->SetXY(0,$y+$yyy+25);		$pdf->Cell(0,0,"=================================================================================",0,0,"C");
 
 $pdf->Output();
 ?>
