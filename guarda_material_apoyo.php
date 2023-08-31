@@ -3,6 +3,10 @@ require("conexionmysqli2.inc");
 require("estilos.inc");
 require("funciones.inc");
 
+error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 //recogemos variables
 $globalAgencia=$_COOKIE['global_agencia'];
 
