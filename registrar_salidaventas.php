@@ -247,7 +247,7 @@ function listaMateriales(f){
 	
 	ajax=nuevoAjax();
 	//ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
+	ajax.open("GET", "ajaxListaMaterialesVenta.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -286,7 +286,7 @@ function ajaxNroDoc(f){
 }
 
 function actStock(indice){
-	var contenedor;
+	/*var contenedor;
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
@@ -297,13 +297,13 @@ function actStock(indice){
 			contenedor.innerHTML = ajax.responseText;
 			ajaxPrecioItem(indice);
 		}
-	}
+	}*/
 	totales();
-	ajax.send(null);
+	//ajax.send(null);
 }
 
 function ajaxPrecioItem(indice){
-	var contenedor;
+	/*var contenedor;
 	contenedor=document.getElementById("idprecio"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
 	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
@@ -318,7 +318,8 @@ function ajaxPrecioItem(indice){
 			calculaMontoMaterial(indice);
 		}
 	}
-	ajax.send(null);
+	ajax.send(null);*/
+	calculaMontoMaterial(indice);
 }
 
 /*function ajaxRazonSocial(f){
@@ -380,7 +381,7 @@ function ajaxNitCliente(f){
 	
 }
 function ajaxVerificarNitCliente(){
-	$("#siat_error").attr("style","");
+	/*$("#siat_error").attr("style","");
 	$("#siat_error_valor").val(0);
 	$("#siat_error").html("Verificando existencia del NIT...");
 	var parametros={"nit":$("#nitCliente").val()};
@@ -409,6 +410,7 @@ function ajaxVerificarNitCliente(){
            $("#tipo_documento").selectpicker("refresh");                        	   
         }
     });	
+    */
 }
 function ajaxClienteBuscar(f){
 	var contenedor;
@@ -492,12 +494,20 @@ function verificarPagoTargeta(){
 function calculaMontoMaterial(indice){
 
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
-	var precioUnitario=document.getElementById("precio_unitario"+indice).value;
+	var array_precio=document.getElementById("precio_normal"+indice).value;
+	var array_preciomayor=document.getElementById("precio_mayor"+indice).value;
+	console.log("array precionormal: "+array_precio);
+	console.log("array preciomayor: "+array_preciomayor);
+
+	var precioUnitario=setPrecioVenta(cantidadUnitaria, array_precio, array_preciomayor);
+	console.log("precio recuperado: "+precioUnitario);
+	
 	var descuentoUnitario=document.getElementById("descuentoProducto"+indice).value;
 	
 	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) - (parseFloat(descuentoUnitario));
 	montoUnitario=Math.round(montoUnitario*100)/100
-		
+
+	document.getElementById("precio_unitario"+indice).value=precioUnitario;		
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
 	
 	totales();
@@ -774,9 +784,46 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
-function setMateriales(f, cod, nombreMat){
-	var numRegistro=f.materialActivo.value;
+
+function setPrecioVenta(cantidad_venta, array_precio, array_preciomayor){
+	var cant_ini_normal, cant_ini_mayor, cant_fin_normal, cant_fin_mayor, precio_normal, precio_mayor;
+	var precio_ventajs=0;
 	
+	const array_preciojs = array_precio.split(",");
+	const array_preciomayorjs = array_preciomayor.split(",");
+
+	console.log("arrays funcion setPrecioVenta: "+array_preciojs+" "+array_preciomayorjs);
+	console.log("cantidad venta funcion: "+cantidad_venta);
+
+	cant_ini_normal=parseInt(array_preciojs[0]);
+	cant_fin_normal=parseInt(array_preciojs[1]);
+	precio_normal=parseFloat(array_preciojs[2]);
+
+	cant_ini_mayor=parseInt(array_preciomayorjs[0]);
+	cant_fin_mayor=parseInt(array_preciomayorjs[1]);
+	precio_mayor=parseFloat(array_preciomayorjs[2]);
+
+	console.log("0: "+array_preciojs[0]+" 1: "+array_preciojs[1]+" 2: "+array_preciojs[2]);
+	console.log("funcion set precio -> precio normal y mayor: "+precio_normal+" "+precio_mayor);
+
+	if(cantidad_venta>=cant_ini_normal && cantidad_venta<cant_fin_normal){
+			precio_ventajs=precio_normal;
+	}
+	if(cantidad_venta>=cant_ini_mayor && cantidad_venta<cant_fin_mayor){
+			precio_ventajs=precio_mayor;
+	}
+	/*validamos el precio*/
+	if(precio_ventajs==0){
+			precio_ventajs=precio_normal;
+	}
+	return precio_ventajs;
+}
+
+function setMateriales(f, cod, nombreMat, stock_producto, array_precio, array_preciomayor){
+	var numRegistro=f.materialActivo.value;
+
+	//var precioVentaJS=setPrecioVenta(1, array_precio, array_preciomayor);
+		
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	
@@ -784,10 +831,18 @@ function setMateriales(f, cod, nombreMat){
 	document.getElementById('divProfileData').style.visibility='hidden';
 	document.getElementById('divProfileDetail').style.visibility='hidden';
 	document.getElementById('divboton').style.visibility='hidden';
-	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
 
-	actStock(numRegistro);
+	document.getElementById('stock'+numRegistro).value=parseInt(stock_producto);
+
+	//document.getElementById('precio_unitario'+numRegistro).value=precioVentaJS;
+
+	document.getElementById('precio_normal'+numRegistro).value=array_precio;
+	document.getElementById('precio_mayor'+numRegistro).value=array_preciomayor;
+	//actStock(numRegistro);
+
+	calculaMontoMaterial(numRegistro);
+	totales();
 }
 		
 function precioNeto(fila){
@@ -1366,8 +1421,8 @@ if(isset($_GET['file'])){
 <?php
 
 if($tipoDocDefault==2){
-	$razonSocialDefault="-";
-	$nitDefault="0";
+	$razonSocialDefault="SN";
+	$nitDefault="123";
 }else{
 	$razonSocialDefault="";
 	$nitDefault="";
@@ -1591,14 +1646,14 @@ while($dat2=mysqli_fetch_array($resp2)){
 </fieldset>
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1000px; height: 600px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
-<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
+<div id="divboton" style="position: absolute; top:20px; left:1120px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:950px; height:550px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>

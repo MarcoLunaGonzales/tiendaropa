@@ -126,7 +126,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	
 	$pdf->SetFont('Arial','',7);
 	//$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(60,3,"$nombreMat",1,"C");
-	$pdf->SetXY(2,$y+$yyy);		$pdf->Cell(80,3,"$nombreMat",0,0,"L");
+	$pdf->SetXY(2,$y+$yyy);		$pdf->Cell(80,3,utf8_decode($nombreMat),0,0,"L");
 	
 	$pdf->SetFont('Arial','',9);
 	
