@@ -303,8 +303,7 @@ echo "<script language='Javascript'>
 		$nombreMaterial=$dat['nombreMaterial'];
 		$nombreGenero=$dat['nombreGenero'];
 		
-		$precioVenta=precioVenta($enlaceCon,$codigo,$globalAgencia);
-		$precioVenta=$precioVenta;
+
 		
 
 		if($imagen==""){

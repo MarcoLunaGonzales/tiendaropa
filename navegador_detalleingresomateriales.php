@@ -25,12 +25,13 @@
 	echo "<tr><td align='center'>$nro_correlativo</td><td align='center'>$fecha_ingreso_mostrar</td>
 	<td>$nombre_proveedor</td><td>$nombre_tipoingreso</td><td>&nbsp;$obs_ingreso</td></tr>";
 	echo "</table>";
-	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras from ingreso_detalle_almacenes i, material_apoyo m
+	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras,i.precio_venta,i.precio_venta2 
+	from ingreso_detalle_almacenes i, material_apoyo m
 	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by m.descripcion_material";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 
 	echo "<br><table border=0 class='textoform' align='center'>";
-	echo "<tr><th>Nro</th><th>&nbsp;</th><th>&nbsp;</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>Precio Venta(Bs.)</th><th>TotalCosto(Bs.)</th></tr>";
+	echo "<tr><th>Nro</th><th>&nbsp;</th><th>&nbsp;</th><th>Grupo/Subgrupo</th><th>Marca</th><th>Material</th><th>Cantidad</th><th>Lote</th><th>Costo(Bs.)</th><th>Precio Normal (Bs.)</th><th>Precio x Mayor (Bs.)</th></tr>";
 	$indice=1;
 	$totalCantProd=0;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
@@ -42,6 +43,8 @@
 		$color=$dat_detalle[6];
 		$talla=$dat_detalle[7];
 		$barCode=$dat_detalle[8];
+		$precioVenta=$dat_detalle['precio_venta'];
+		$precioVenta2=$dat_detalle['precio_venta2'];
 		
 		
 		$totalValorItem=$cantidad_unitaria*$precioNeto;
@@ -62,21 +65,7 @@
 		$nombre_grupo=$dat_nombre_material[2];
 		$nombre_marca=$dat_nombre_material[3];
 		$codigo2=$dat_nombre_material[4];
-								/// SACAMOS PRECIO DE VENTA
-			///////////////
-					$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$cod_material and p.cod_ciudad='".$_COOKIE['global_agencia']."'";
-					$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
-					$numFilas=mysqli_num_rows($respPrecio);
-					if($numFilas==1){
-						$datPrecio=mysqli_fetch_array($respPrecio);
-						$precio0=$datPrecio[0];
-						
-						$precio0=redondear2($precio0);
-					}else{
-						$precio0=0;
-						$precio0=redondear2($precio0);
-					}
-			///////////////
+								
 			
 		
 		if($cantidad_unitaria>1){
@@ -89,7 +78,7 @@
 		<td>$codigo2</td>
 		<td>$nombre_grupo - $nombre_subgrupo</td>
 		<td>$nombre_marca</td>
-		<td>$nombre_material - $color $talla</td>";
+		<td>$nombre_material</td>";
 		if($cantidad_unitaria >1){
 			echo "<td align='center' bgcolor='#d3ffce' > <strong><font size='2' color ='#ff0076'>$cantidad_unitaria</font></strong></td>";
 		}else{
@@ -97,8 +86,10 @@
 		}
 		echo "<td align='center'>$loteProducto</td>
 		<td align='center'>$precioNeto</td>
-		<td align='center'>$precio0</td>
-		<td align='center'>$totalValorItem</td></tr>";
+		<td align='center'>$precioVenta</td>
+		<td align='center'>$precioVenta2</td>
+	
+		</tr>";
 		$indice++;
 	}
 		echo "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align='right'><strong>Total Productos</strong></td>

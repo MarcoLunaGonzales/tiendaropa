@@ -86,7 +86,7 @@ function Hidden(){
 }
 
 
-function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioVenta){
+function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioVenta,precioVentaMayor){
 	var numRegistro=f.materialActivo.value;
 	
 	document.getElementById('material'+numRegistro).value=cod;
@@ -94,8 +94,10 @@ function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioV
 	document.getElementById('ultimoCosto'+numRegistro).value=costoItem;
 	document.getElementById('precio'+numRegistro).value=costoItem;
 	document.getElementById('precioVenta'+numRegistro).value=precioVenta;
+	document.getElementById('precioVentaMayor'+numRegistro).value=precioVentaMayor;
 	document.getElementById('divUltimoCosto'+numRegistro).innerHTML="["+costoItem+"]";
 	document.getElementById('divPVenta'+numRegistro).innerHTML="["+precioVenta+"]";
+	document.getElementById('divPVentaMayor'+numRegistro).innerHTML="["+precioVentaMayor+"]";
 	
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
 	document.getElementById('divProfileData').style.visibility='hidden';
@@ -121,11 +123,10 @@ function cambiaCosto(f, fila){
 		calculoCosto.value=0;
 	}
 	
-	if(document.getElementById('swCambiarPrecioVenta').value==1){
-	  	document.getElementById('precioVenta'+fila).value=precioFila; 
-	}	
+
 	document.getElementById('divUltimoCosto'+fila).innerHTML="["+ultimoCosto+"]";
 	document.getElementById('divPrecioTotal'+fila).innerHTML=calculoPrecioTotal;
+	
 	
 }
 function enviar_form(f)
@@ -303,8 +304,9 @@ echo "</table><br>";
 					<td width="35%" align="center">Producto</td>
 					<td width="10%" align="center">Cantidad</td>
 					<td width="10%" align="center">Lote</td>
-					<td width="10%" align="center">P. Compra[u]</td>
-					<td width="10%" align="center">P. Venta[u]</td>
+					<td width="10%" align="center">Costo [u]</td>
+					<td width="10%" align="center">P. Normal[u]</td>
+					<td width="10%" align="center">P. x Mayor[u]</td>
 					<td width="10%" align="center">Precio Total</td>
 					<td width="10%" align="center">&nbsp;</td>
 				</tr>
@@ -341,8 +343,8 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 			<tr>
 			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="texto" style="width:120px">
 			<?php
-			$sqlTipo="select g.cod_grupo, g.nombre_grupo from grupos g
-			where g.estado=1 order by 2;";
+			$sqlTipo="select g.codigo, g.nombre from grupos g
+			where g.estado=1 order by 2";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){

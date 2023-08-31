@@ -1,6 +1,7 @@
 <?php
 require("conexionmysqli.php");
 require("estilos.inc");
+require("funciones.php");
 
 //recogemos variables
 $globalAgencia=$_COOKIE['global_agencia'];
@@ -35,16 +36,8 @@ cod_modelo='$codModelo',cod_genero='$codGenero',cod_material='$codMaterial'
 where codigo_material='$codProducto'";
 //echo $sql_inserta;
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
+actualizaNombreProducto($enlaceCon,$codProducto);
 
-//insertamos los precios
-$sqlDel="delete from precios where codigo_material=$codProducto";
-$respDel=mysqli_query($enlaceCon,$sqlDel);
-
-$sqlInsertPrecio="insert into precios values($codProducto, 0,$costoProducto,'$globalAgencia')";
-$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
-
-$sqlInsertPrecio="insert into precios values($codProducto, 1,$precioProducto,'$globalAgencia')";
-$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
 
 if($resp_inserta){
 		echo "<script language='Javascript'>

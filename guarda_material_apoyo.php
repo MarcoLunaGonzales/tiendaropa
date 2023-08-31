@@ -1,6 +1,7 @@
 <?php
 require("conexionmysqli2.inc");
 require("estilos.inc");
+require("funciones.inc");
 
 //recogemos variables
 $globalAgencia=$_COOKIE['global_agencia'];
@@ -47,18 +48,11 @@ $sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, 
 cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2, fecha_creacion,cod_modelo,cod_material,cod_genero) values ($codigo,'$nombreProducto','1','$codLinea','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
 '$codSubGrupo','$codMarca','$codColor','$codTalla','$codigo2','$fechaCreacion','$codModelo','$codMaterial',
 '$codGenero')";
-//echo $sql_inserta;
+
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
-//insertamos los precios
-$sqlDel="delete from precios where codigo_material=$codigo";
-$respDel=mysqli_query($enlaceCon,$sqlDel);
-$sqlInsertPrecio="insert into precios values($codigo, 0,$costoProducto,'$globalAgencia')";
-//echo $sqlInsertPrecio;
-$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
-$sqlInsertPrecio="insert into precios values($codigo, 1,$precioProducto,'$globalAgencia')";
-//echo $sqlInsertPrecio;
-$respInsertPrecio=mysqli_query($enlaceCon,$sqlInsertPrecio);
+actualizaNombreProducto($enlaceCon,$codigo);
+	
 
 if($resp_inserta){
 		echo "<script language='Javascript'>

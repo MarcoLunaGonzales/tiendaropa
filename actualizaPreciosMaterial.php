@@ -19,7 +19,7 @@ $sqlCiu="select cod_ciudad,descripcion as desc_ciudad,nombre_ciudad
 			$desc_ciudad=$datCiu['desc_ciudad'];
 			$nombre_ciudad=$datCiu['nombre_ciudad'];		
 
-		$sqlGrupoPrecio="select codigo,nombre from grupos_precio where codigo<>0  and estado=1 order by codigo asc";
+		$sqlGrupoPrecio="select codigo,nombre from grupos_precio where estado=1 order by codigo asc";
 
 		$respGrupoPrecio=mysqli_query($enlaceCon,$sqlGrupoPrecio);
 		

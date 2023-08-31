@@ -15,7 +15,7 @@ $codSalida=$_POST['codSalida'];
 $fecha_real=date("Y-m-d");
 
 $global_agencia=$_COOKIE['global_agencia'];
-//$consulta="insert into ingreso_almacenes values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones',0,'$nota_entrega','$nro_correlativo',0,0,0,$nro_factura)";
+
 $consulta="update ingreso_almacenes set cod_tipoingreso='$tipo_ingreso', nro_factura_proveedor='$nro_factura', 
 		observaciones='$observaciones' where cod_ingreso_almacen='$codIngreso'";
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
@@ -34,44 +34,78 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 		$precioBruto=$_POST["precio$i"];
 		
 		$precioVenta=$_POST["precioVenta$i"];
+		$precioVentaMayor=$_POST["precioVentaMayor$i"];
 		
 		$fechaVenc=UltimoDiaMes($fechaVenc);
 		
-		$consulta="insert into ingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto) 
-		values($codIngreso,'$cod_material',$cantidad,$cantidad,'$lote','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto')";
+		$consulta="insert into ingreso_detalle_almacenes (cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta,precio_venta2) 
+		values($codIngreso,'$cod_material',$cantidad,$cantidad,'$lote','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioBruto','$precioVenta','$precioVentaMayor')";
 		
 		//echo "bbb:$consulta";
 		$sql_inserta2 = mysqli_query($enlaceCon,$consulta);
 		//echo "valor de configuracion=".obtenerValorConfiguracion($enlaceCon,7);
 			 if(obtenerValorConfiguracion($enlaceCon,7)==1){
 				 				 
-				//SACAMOS EL ULTIMO PRECIO REGISTRADO
-				$sqlPrecioActual="select precio from precios where codigo_material='$cod_material' and cod_precio=1 and cod_ciudad='".$global_agencia."'";
-						
-				//echo $sqlPrecioActual;
-				$respPrecioActual=mysqli_query($enlaceCon,$sqlPrecioActual);
-				$numFilasPrecios=mysqli_num_rows($respPrecioActual);
-				$precioActual=0;
-				//echo "numFilasPrecios=".$numFilasPrecios."<br>";
-				if($numFilasPrecios>0){
-					$datPrecioActual=mysqli_fetch_array($respPrecioActual);
-					$precioActual=$datPrecioActual[0];
-					//$precioActual=mysql_result($enlaceCon,$respPrecioActual,0,0);
-				}
-			
-					//echo "precio +margen: ".$precioItem." precio actual: ".$precioActual;
-					//SI NO EXISTE EL PRECIO LO INSERTA CASO CONTRARIO VERIFICA QUE EL PRECIO DEL INGRESO SEA MAYOR AL ACTUAL PARA HACER EL UPDATE
-				if($numFilasPrecios==0){
-					$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad) values('$cod_material','1','$precioVenta','".$global_agencia."')";
-					//echo $sqlPrecios;
-					$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
-				}else{
-					//if($precioItem>$precioActual){
-						$sqlPrecios="update precios set precio='$precioVenta' where codigo_material='$cod_material' and cod_precio=1 and cod_ciudad='".$global_agencia."'";
-					//	echo $sqlPrecios;
-						$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
-					//}
-				}			
+				//SACAMOS EL ULTIMO COSTO
+							$sqlPrecioActual="select precio from precios where codigo_material='".$cod_material."' and cod_precio=0 
+							and cod_ciudad='".$global_agencia."'";
+							$respPrecioActual=mysqli_query($enlaceCon,$sqlPrecioActual);
+							$numFilasPrecios=mysqli_num_rows($respPrecioActual);
+							$precioActual=0;				
+							if($numFilasPrecios>0){
+								$datPrecioActual=mysqli_fetch_array($respPrecioActual);
+								$precioActual=$datPrecioActual[0];
+							}
+							if($numFilasPrecios==0){
+									$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,created_by,created_date) values('".$cod_material."','0','".$precioBruto."','".$global_agencia."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";					
+								$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
+							}else{
+									$sqlPrecios="update precios set precio='".$precioBruto."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."'
+									 where codigo_material='".$cod_material."' and cod_precio=0 and cod_ciudad='".$global_agencia."'";		
+									 $respPrecios=mysqli_query($enlaceCon,$sqlPrecios);					
+							}			
+							// FIN COSTO
+							$cantIniPN=1;$cantFinPN=5;		 
+							//SACAMOS EL ULTIMO PRECIO REGISTRADO PRECIO NORMAL
+							$sqlPrecioActual="select precio from precios where codigo_material='$cod_material' and cod_precio=1 
+							and cod_ciudad='".$global_agencia."'";
+							$respPrecioActual=mysqli_query($enlaceCon,$sqlPrecioActual);
+							$numFilasPrecios=mysqli_num_rows($respPrecioActual);
+							$precioActual=0;				
+							if($numFilasPrecios>0){
+									$datPrecioActual=mysqli_fetch_array($respPrecioActual);
+									$precioActual=$datPrecioActual[0];
+							}
+							if($numFilasPrecios==0){
+								$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,cant_inicio,cant_final,created_by,created_date) values('".$cod_material."','1','".$precioVenta."','".$global_agencia."','".$cantIniPN."','".$cantFinPN."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";
+					  		$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
+							}else{					
+									$sqlPrecios="update precios set precio='$precioVenta',
+									cant_inicio='".$cantIniPN."', cant_final='".$cantFinPN."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."'
+						 			where codigo_material='".$cod_material."' and cod_precio=1 and cod_ciudad='".$global_agencia."'";			
+						 			$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);					
+							}			
+							// FIN PRECIO NORMAL
+							//SACAMOS EL ULTIMO PRECIO REGISTRADO PRECIO X MAYOR
+							$cantIniPM=6;
+			 				$cantFinPM=1000;
+							$sqlPrecioActual="select precio from precios where codigo_material='$cod_material' and cod_precio=2 and cod_ciudad='".$global_agencia."'";
+							$respPrecioActual=mysqli_query($enlaceCon,$sqlPrecioActual);
+							$numFilasPrecios=mysqli_num_rows($respPrecioActual);
+							$precioActual=0;
+							if($numFilasPrecios>0){
+								$datPrecioActual=mysqli_fetch_array($respPrecioActual);
+								$precioActual=$datPrecioActual[0];
+							}
+							if($numFilasPrecios==0){
+								$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,cant_inicio,cant_final,created_by,created_date) values('".$cod_material."','2','".$precioVentaMayor."','".$global_agencia."','".$cantIniPM."','".$cantFinPM."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";
+									$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
+							}else{				
+									$sqlPrecios="update precios set precio='".$precioVentaMayor."',
+									cant_inicio='".$cantIniPM."', cant_final='".$cantFinPM."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."' where codigo_material='".$cod_material."' and cod_precio=2 and cod_ciudad='".$global_agencia."'";
+									$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);					
+							}
+							// FIN PRECIO x MAYOR
 				 
 			} 
 	}

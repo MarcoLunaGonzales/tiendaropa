@@ -1,6 +1,7 @@
 <?php
 require("conexionmysqli.php");
 require("estilos.inc");
+require("funciones.php");
 
 $fecha=date("Y-m-d");
 $hora=date("H:i");
@@ -33,7 +34,7 @@ echo "</table><br>";
 
 echo "<table class='texto'>";
 
-$sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen
+$sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,precio_traspaso,precio_traspaso2
 from salida_detalle_almacenes where cod_salida_almacen='$codigo_registro' and cantidad_unitaria>0 
 group by cod_salida_almacen, cod_material";
 $resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
@@ -41,7 +42,8 @@ $cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
 
 echo "<input type='hidden' name='codigo_salida' value='$codigo_registro'>";
 echo "<input type='hidden' name='cantidad_material' value='$cantidad_materiales'>";
-echo "<tr><th width='5%'>&nbsp;</th><th width='45%'>Material</th><th width='25%'>Cantidad de Origen</th><th>Cantidad Recibida</th></tr>";
+echo "<tr><th width='5%'>&nbsp;</th><th width='45%'>Material</th><th width='25%'>Cantidad de Origen</th><th>Cantidad Recibida</th>
+<th>Precio Normal</th><th>Precio x Mayor</th></tr>";
 
 $indice_detalle=1;
 
@@ -49,6 +51,8 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 {	$cod_material=$dat_detalle_salida[1];
 	$cantidad_unitaria=$dat_detalle_salida[2];
 	$costo_almacen=$dat_detalle_salida[3];
+	$precio_traspaso=$dat_detalle_salida['precio_traspaso'];
+	$precio_traspaso2=$dat_detalle_salida['precio_traspaso2'];
 	
 	echo "<tr><td align='center'>$indice_detalle</td>";
 	$sql_materiales="select codigo_material, descripcion_material from material_apoyo where 
@@ -63,8 +67,13 @@ while($dat_detalle_salida=mysqli_fetch_array($resp_detalle_salida))
 	echo "<input type='hidden' value='$costo_almacen' name='precio$indice_detalle'>";
 	
 	echo "<td align='center'>$cantidad_unitaria</td>";
-	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria' class='texto' required></td>
-	</tr>";
+	echo "<td><input type='number' name='cantidad_unitaria$indice_detalle' step='0.1' value='$cantidad_unitaria' class='texto' required></td>";
+	echo "<td><input type='number' name='precioVenta".$indice_detalle."' step='0.1' value='".$precio_traspaso."' class='texto'";
+	 if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";} echo" required></td>";
+
+	echo "<td><input type='number' name='precioVentaMayor".$indice_detalle."' step='0.1' value='".$precio_traspaso2."' class='texto' ";if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";} echo" required></td>";
+
+	echo" </tr>";
 	$indice_detalle++;
 }
 echo "</table></center>";

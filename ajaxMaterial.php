@@ -41,7 +41,7 @@ $fechaActual=date("Y-m-d");
 
 <td align="center" width="10%">
 <input type="number" class="inputnumber" value="0" id="precio<?php echo $num;?>" name="precio<?php echo $num;?>" size="5" min="0.1" step="0.01"  
-onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required><br>
+onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)'  <?php if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";}?> required><br>
 <input type="hidden" id='ultimoCosto<?php echo $num;?>' name='ultimoCosto<?php echo $num;?>' value=''>
 <div id='divUltimoCosto<?php echo $num;?>'></div>
 </td>
@@ -49,8 +49,17 @@ onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.f
 <input type="number" class="inputnumber" value="0" id="precioVenta<?php echo $num;?>" name="precioVenta<?php echo $num;?>" size="5" min="0.1" step="0.01" 
  <?php if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";}?>  required>
 <br>
+
 <div id='divPVenta<?php echo $num;?>'></div>
+
+
+<td align="center" width="10%">
+	<input type="number" class="inputnumber" value="0" id="precioVentaMayor<?php echo $num;?>" name="precioVentaMayor<?php echo $num;?>" size="5" min="0.1" step="0.01" 
+ <?php if (obtenerValorConfiguracion($enlaceCon,7)==0){  echo "readonly";}?>  required>
+<br>
+<div id='divPVentaMayor<?php echo $num;?>'></div>
 </td>
+
 
 <td align="center" width="10%">
 <div id='divPrecioTotal<?php echo $num;?>'></div>
