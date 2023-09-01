@@ -38,9 +38,15 @@ function numeroCorrelativoCUFD($enlaceCon,$tipoDoc){
   		$nro_correlativo="CUIS INCORRECTO / VENCIDO";$bandera=1;	
   } 
   //$nro_correlativo.=" CUIS".$cufd; 
+  $cuis="cuis_europa";
+  $cufd="cufd_europa";
   if($cufd!=""&&$cuis!=""){
-    $sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
-				and siat_cuis='$cuis' and cod_almacen='$globalAlmacen' ";		
+    /*$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
+				and siat_cuis='$cuis' and cod_almacen='$globalAlmacen' ";*/		
+
+	$sql="select IFNULL(max(nro_correlativo)+1,1) from salida_almacenes where cod_tipo_doc='$tipoDoc' 
+				 and cod_almacen='$globalAlmacen' ";		
+
 	$resp=mysqli_query($enlaceCon,$sql);
     while($row=mysqli_fetch_array($resp)){  
        $nro_correlativo=$row[0];   

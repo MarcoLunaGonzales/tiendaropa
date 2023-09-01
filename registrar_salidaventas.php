@@ -404,7 +404,7 @@ function ajaxNitCliente(f){
 	
 }
 function ajaxVerificarNitCliente(){
-	$("#siat_error").attr("style","");
+	/*$("#siat_error").attr("style","");
 	$("#siat_error_valor").val(0);
 	$("#siat_error").html("Verificando existencia del NIT...");
 	var parametros={"nit":$("#nitCliente").val()};
@@ -433,6 +433,7 @@ function ajaxVerificarNitCliente(){
            $("#tipo_documento").selectpicker("refresh");                        	   
         }
     });	
+    */
 }
 function ajaxClienteBuscar(f){
 	var contenedor;
@@ -1529,7 +1530,7 @@ if($tipoDocDefault==2){
 <td align='center'>
 	<div id='divNroDoc'>
 		<?php
-
+//echo "tipoDocDefault".$tipoDocDefault."<br/>";
 		if($tipoDocDefault==1){
 			$vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDocDefault);
 		}else{
@@ -2105,6 +2106,7 @@ if($banderaErrorFacturacion==0){
   $respCuis=mysqli_query($enlaceCon,$sqlCuis);
   $datCuis=mysqli_fetch_array($respCuis);
   $cuis=$datCuis[0];//  $cuis=mysqli_result($respCuis,0,0);
+  $cuis="CUIS_EUROPA";
   if($cuis!=""){
 
   }else{
