@@ -58,11 +58,13 @@ class PDF extends FPDF{
 		global $tipoDoc;
 		global $codTipoDoc;
 		global $direccionCliente;
+
+		global $logoFactura;
 		//
 		
 
 		
-		$this->Image('imagenes/altarValencia.jpeg',10,10,-700);	
+		$this->Image("imagenes/".$logoFactura,10,10,-700);	
 		$y=30;
 		$this->SetY($y);
 		$this->SetXY(10,$y+3);		
@@ -222,6 +224,11 @@ $txt3=mysqli_result($respConf,0,1);
 $sqlConf="select id, valor from configuracion_facturas where id=9";
 $respConf=mysqli_query($enlaceCon,$sqlConf);
 $nitEmpresa=mysqli_result($respConf,0,1);
+
+$sqlLogoFactura="select valor_configuracion from configuraciones where id_configuracion=15";	
+	$respLogoFactura=mysqli_query($enlaceCon,$sqlLogoFactura);
+	$datLogoFactura=mysqli_fetch_array($respLogoFactura);
+	$logoFactura=$datLogoFactura[0];
 
 $sqlDatosFactura="select  f.nit, f.razon_social, DATE_FORMAT(f.siat_fechaemision, '%d/%m/%Y'),f.direccion_cliente
 from salida_almacenes f where f.cod_salida_almacenes=$codigoVenta";	
