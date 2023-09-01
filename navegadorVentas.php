@@ -17,6 +17,17 @@ require("estilos_almacenes.inc");
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link href="lib/externos/jquery/jquery-ui/completo/jquery-ui-1.8.9.custom.css" rel="stylesheet" type="text/css"/>
         <link href="lib/css/paneles.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.core.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.widget.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.button.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.mouse.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.draggable.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.position.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.resizable.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.dialog.min.js"></script>
+        <script type="text/javascript" src="lib/externos/jquery/jquery-ui/minimo/jquery.ui.datepicker.min.js"></script>
+        <script type="text/javascript" src="lib/js/xlibPrototipo-v0.1.js"></script>
         <script type='text/javascript' language='javascript'>
 
 function nuevoAjax()
@@ -80,7 +91,7 @@ function funOk(codReg,funOkConfirm)
                     }
                 });
             } else {
-                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introduzca el codigo de confirmacion.</div>",function(){},function(){});
+                dlgA("#pnldlgA3","Informe","<div class='pnlalertar'>Introdusca el codigo de confirmacion.</div>",function(){},function(){});
             }
         },function(){});
     });
@@ -454,8 +465,8 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 echo "<div class='divBotones'>
         <input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
         <input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>      
-        <!--input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'-->
-        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
+        <input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+        <!--input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'-->
     </div>";
 
 echo "<br><br>";
@@ -627,8 +638,8 @@ echo "</div>";
 echo "<div class='divBotones'>
         <input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
         <input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>      
-        <!--input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'-->
-        <input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'>
+        <input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
+        <!--input type='button' value='Anular Con SIAT' class='boton2' onclick='anular_salida_siat(this.form)'-->
     </div>";
     
 echo "</form>";
@@ -797,11 +808,6 @@ echo "</form>";
         </form>
     </div>
 </div>
-
-
-
-
-
         <script type='text/javascript' language='javascript'>
         </script>
         <div id="pnldlgfrm"></div>
