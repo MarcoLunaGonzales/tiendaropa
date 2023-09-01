@@ -69,7 +69,7 @@ if($banderaCorreo==1){
 	?>
 	<script language='Javascript'>
 		alert('El registro fue anulado.');
-		location.href='navegadorVentas2.php';
+		location.href='navegadorVentas.php';
 	</script>
 	
 <?php		

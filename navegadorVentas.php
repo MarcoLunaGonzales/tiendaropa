@@ -474,7 +474,7 @@ echo "<br><br>";
 echo "<div id='divCuerpo'><center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Nro. Doc</th><th>Fecha/hora<br>Venta</th><th>Vendedor</th><th>Tipo Pago</th><th>Razon Social</th><th>NIT</th><th>Observaciones</th><th>Factura</th><th>-</th>";
 if($global_admin_cargo==1){
-    echo "<th>-</th><th>-</th>";
+    echo "<th>-</th>";
 }
     echo "</tr>";
     
@@ -489,7 +489,7 @@ $consulta = "
 	(select concat(f.paterno, ' ', f.nombres) from funcionarios f where f.codigo_funcionario=s.cod_chofer)as vendedor
     FROM salida_almacenes s, tipos_salida ts 
     WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 
-    and s.cod_tipo_doc in (1,4)";
+    and s.cod_tipo_doc in (1,2,4)";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
@@ -626,8 +626,6 @@ while ($dat = mysqli_fetch_array($resp)) {
      //    echo "<td  bgcolor='$color_fondo'> ";
      //    echo "</td>";   
      // }
-     echo "<td  bgcolor='$color_fondo'> <a href='$urlDetalle?codigo_salida=$codigo' target='_BLANK' title='DOCUMENTO FACTURA'  class='text-dark'><i class='material-icons'>description</i></a>";
-        echo "</td>";
     }
 
     echo "</tr>";
