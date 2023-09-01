@@ -578,7 +578,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     }
     if($codTipoDoc==1){
         echo "<td  bgcolor='$color_fondo'>
-		<a href='formatoFacturaEspaniaFinal.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>
+		<a href='formatoFacturaEspaniaFinal2.php?codVenta=$codigo' target='_BLANK'><img src='imagenes/factura1.jpg' width='30' border='0' title='Factura Formato Pequeño'></a>
         
 		
 		</td>";
