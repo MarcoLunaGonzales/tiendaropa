@@ -1599,7 +1599,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 	</td>	
 	<td  colspan='2'>
 		<div id='divRazonSocial'>
-          <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razon social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);' pattern='[A-Za-z0-9Ññ.& ]+'>          
+          <input type='text' name='razonSocial' id='razonSocial' value='<?php echo $razonSocialDefault; ?>' class="form-control" required placeholder="Ingrese la razon social" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  onchange='ajaxNitCliente(this.form);' >          
         <br/>
        <input type='text' name='razonSocialDireccion' id='razonSocialDireccion' value='<?php echo $razonSocialDireccionDefault; ?>' class="form-control" required placeholder="Ingrese la direccion" style="text-transform:uppercase;" onkeyup="javascript:this.value=this.value.toUpperCase();"  
        >

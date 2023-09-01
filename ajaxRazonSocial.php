@@ -52,7 +52,7 @@ if($nitCliente=="99003"){
 	$nombre="VENTAS MENORES DEL DIA";
 	$direccion="";
 }
-echo "<input type='text' value='$nombre' class='form-control' name='razonSocial' id='razonSocial' required style='text-transform:uppercase;'  onchange='ajaxNitCliente(this.form);' onkeyup='javascript:this.value=this.value.toUpperCase();' placeholder='Ingrese la razon social' pattern='[A-Za-z0-9Ññ.&]+'>
+echo "<input type='text' value='$nombre' class='form-control' name='razonSocial' id='razonSocial' required style='text-transform:uppercase;'  onchange='ajaxNitCliente(this.form);' onkeyup='javascript:this.value=this.value.toUpperCase();' placeholder='Ingrese la razon social' >
 <br/>
 <input type='text' value='$direccion' class='form-control' name='razonSocialDireccion' id='razonSocialDireccion' required style='text-transform:uppercase;'   onkeyup='javascript:this.value=this.value.toUpperCase();' placeholder='Ingrese la direccion' >";
 
