@@ -534,9 +534,14 @@ function obtieneIdProducto($enlaceCon,$idProducto){
 
 function obtieneMarcaProducto($enlaceCon,$idMarca){
 	$sql="select m.nombre from marcas m where m.codigo='$idMarca'";
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
+	$numFilas=mysqli_num_rows($resp);
+	$nombreMarca="";
+	if($numFilas>0){
 	$dat=mysqli_fetch_array($resp);
 	$nombreMarca=$dat[0];
+}
 	return($nombreMarca);	
 }
 function fechaInicioSistema($enlaceCon){
