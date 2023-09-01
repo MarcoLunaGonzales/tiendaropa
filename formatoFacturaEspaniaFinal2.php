@@ -92,9 +92,10 @@ class PDF extends FPDF{
 		$this->SetXY(0,$y+20);	
 		$this->Cell(200,0,$direccionCliente,0,0,"R");	
 		$this->SetXY(10,51);
-		$this->SetFont('Times','B',9);
+		$this->SetFont('Times','B',10);
 		$this->Cell(200,0,"DATOS CLIENTE",0,0,"L");	
 		$this->SetXY(10,55);
+	$this->SetFont('Times','B',9);
 		$this->Cell(20,0,"ID Fiscal: ",0,0,"L");	
 		
 		$this->SetFont('Times','',10);
