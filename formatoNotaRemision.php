@@ -130,7 +130,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 	
 	$pdf->SetFont('Arial','',7);
 	//$pdf->SetXY(5,$y+$yyy);		$pdf->MultiCell(60,3,"$nombreMat",1,"C");
-	$pdf->SetXY(2,$y+$yyy);		$pdf->Cell(80,3,"$nombreMat",0,0,"L");
+	$pdf->SetXY(2,$y+$yyy);		$pdf->Cell(80,3,utf8_decode($nombreMat),0,0,"L");
 	
 	$pdf->SetFont('Arial','',9);
 	
@@ -155,8 +155,8 @@ $pdf->SetXY(45,$y+$yyy+4);		$pdf->Cell(20,5,$descuentoVenta,0,0,"R");
 $pdf->SetXY(25,$y+$yyy+8);		$pdf->Cell(25,5,"TOTAL:",0,0,"R");
 $pdf->SetXY(45,$y+$yyy+8);		$pdf->Cell(20,5,($montoTotalCabecera-$descuentoVenta),0,0,"R");
 
-$pdf->SetXY(25,$y+$yyy+12);		$pdf->Cell(25,5,"IVA( ".($porcentajeImpuesto*1)."% ):",0,0,"R");
-$pdf->SetXY(45,$y+$yyy+12);		$pdf->Cell(20,5,($incrementoImpuesto*1),0,0,"R");
+//$pdf->SetXY(25,$y+$yyy+12);		$pdf->Cell(25,5,"IVA( ".($porcentajeImpuesto*1)."% ):",0,0,"R");
+//$pdf->SetXY(45,$y+$yyy+12);		$pdf->Cell(20,5,($incrementoImpuesto*1),0,0,"R");
 
 $pdf->SetXY(25,$y+$yyy+16);		$pdf->Cell(25,5,"MONTO A PAGAR:",0,0,"R");
 $pdf->SetXY(45,$y+$yyy+16);		$pdf->Cell(20,5,($montoFinalCabecera*1),0,0,"R");

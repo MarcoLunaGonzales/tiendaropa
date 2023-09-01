@@ -67,16 +67,17 @@ class PDF extends FPDF{
 		$this->Image("imagenes/".$logoFactura,10,10,-700);	
 		$y=30;
 		$this->SetY($y);
-		$this->SetXY(10,$y+2);		
-		$this->SetFont('Times','',10);
-		//$this->SetTextColor(0,0,0);	
+		$this->SetXY(10,$y);		
+		$this->SetFont('Times','',10);	
 		$this->Cell(0,0,$nombreEmpresa,0,0,"L");		
-		$this->SetXY(10,$y+7);		
+		$this->SetXY(10,$y+4);		
 		$this->Cell(0,0,"NIF: ".$nitEmpresa,0,0,"L");
-		$this->SetXY(10,$y+11);		
+		$this->SetXY(10,$y+8);		
 		$this->Cell(0,0,$direccionEmpresa,0,0,"L");
-		$this->SetXY(10,$y+15);		
-		$this->Cell(0,0,"CP.46003 VALENCIA-ESPAÑA",0,0,"L");
+		$this->SetXY(10,$y+12);		
+		$this->Cell(0,0,utf8_decode("CP.46003"),0,0,"L");
+		$this->SetXY(10,$y+16);		
+		$this->Cell(0,0,utf8_decode("VALENCIA-ESPAÑA"),0,0,"L");
 		$this->SetFont('Times','B',25);
 		$this->SetXY(0,$y);		
 		$this->Cell(200,0,strtoupper($nombreTipoDoc),0,0,"R");		
@@ -90,25 +91,25 @@ class PDF extends FPDF{
 		$this->Cell(200,0,$razonSocialCliente,0,0,"R");
 		$this->SetXY(0,$y+20);	
 		$this->Cell(200,0,$direccionCliente,0,0,"R");	
-		$this->SetXY(10,50);
+		$this->SetXY(10,51);
 		$this->SetFont('Times','B',9);
 		$this->Cell(200,0,"DATOS CLIENTE",0,0,"L");	
-		$this->SetXY(10,54);
+		$this->SetXY(10,55);
 		$this->Cell(20,0,"ID Fiscal: ",0,0,"L");	
 		
 		$this->SetFont('Times','',10);
-		$this->SetXY(25,54);
+		$this->SetXY(25,55);
 		$this->Cell(0,0,$nitCliente,0,0,"L");	
 		$this->SetFont('Times','B',9);
-		$this->SetXY(10,58);
+		$this->SetXY(10,59);
 		$this->Cell(95,0,"FECHA:",0,0,"L");	
 		$this->SetFont('Times','',10);
-		$this->SetXY(25,58);
+		$this->SetXY(25,59);
 		$this->Cell(0,0,$fechaVenta,0,0,"L");
 		$this->SetFont('Times','B',9);
-		$this->SetXY(100,58);
+		$this->SetXY(100,59);
 		$this->Cell(30,0,"FORMA DE PAGO:",0,0,"L");	
-		$this->SetXY(130,58);
+		$this->SetXY(130,59);
 		$this->SetFont('Times','',9);
 		$this->Cell(0,0,$nombretipoPago,0,0,"L");	
 		$this->SetXY(10,63);
@@ -358,7 +359,7 @@ while($datDetalle=mysqli_fetch_array($respDetalle)){
 
 	$euro=" €";
 	
-	$pdf->SetXY(10,$yyy);		$pdf->Cell(80,8,$nombreMat,0,0,"L");
+	$pdf->SetXY(10,$yyy);		$pdf->Cell(80,8,utf8_decode($nombreMat),0,0,"L");
 	$pdf->SetXY(125,$yyy);		$pdf->Cell(15,8,$cantUnit,0,0,"R");
 	$pdf->SetXY(152,$yyy);		$pdf->Cell(15,8,(number_format($montoUnit,2,'.','')).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
 	//$pdf->SetXY(129,$yyy);		$pdf->Cell(20,8,($cantUnit*$montoUnit).iconv('UTF-8', 'windows-1252', $euro),0,0,"R");
