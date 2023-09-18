@@ -115,20 +115,13 @@ include("datosUsuario.php");
 				</ul>	
 			</li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
-			<!--li><span>Otros Ingresos </span>
-				<ul>
-				<li>
+			
 					<li><a href="listaRecibos.php" target="contenedorPrincipal">Recibos</a></li>
-					<li><a href="filtroGeneraRecibosAutomaticos.php" target="contenedorPrincipal">Generar Recibos Automaticos</a></li>
-					
-				</ul>	
-			</li-->
-						<!--li><span>Egresos </span>
-				<ul>
+		
+			
 					<li><a href="listaGastos.php" target="contenedorPrincipal">Gastos</a></li>
 					
-				</ul>	
-			</li-->
+		
 						
 						
 						
