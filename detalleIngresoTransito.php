@@ -51,9 +51,10 @@
 
 		$nombre_material=$dat_nombre_material[0];
 		$barCode=$dat_nombre_material[1];
-		$indice_detalle++;
+		
 		
 		echo "<tr><td>$indice_detalle</td><td>$barCode</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td></tr>";
+		$indice_detalle++;
 	}
 	echo "</table></center>";
 
