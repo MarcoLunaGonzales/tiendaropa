@@ -36,7 +36,7 @@ echo "<table class='texto'>";
 
 $sql_detalle_salida="select cod_salida_almacen, cod_material, sum(cantidad_unitaria), costo_almacen,precio_traspaso,precio_traspaso2
 from salida_detalle_almacenes where cod_salida_almacen='$codigo_registro' and cantidad_unitaria>0 
-group by cod_salida_almacen, cod_material";
+group by cod_salida_almacen, cod_material ORDER BY orden_detalle ASC";
 $resp_detalle_salida=mysqli_query($enlaceCon,$sql_detalle_salida);
 $cantidad_materiales=mysqli_num_rows($resp_detalle_salida);
 

@@ -37,7 +37,7 @@
 	echo "<tr><th>Codigo Barras</th><th>Material</th><th>Cantidad</th></tr>";
 	echo "<form method='post' action=''>";
 	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria) from salida_detalle_almacenes s 
-	where s.cod_salida_almacen='$codigo_salida' group by s.cod_material";
+	where s.cod_salida_almacen='$codigo_salida' group by s.cod_material ORDER BY orden_detalle ASC";
 	$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
