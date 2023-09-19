@@ -34,8 +34,9 @@
 	echo "</table><br>";
 	
 	echo "<table class='texto'>";
-	echo "<tr><th>Codigo Barras</th><th>Material</th><th>Cantidad</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo Barras</th><th>Codigo Barras</th><th>Material</th><th>Cantidad</th></tr>";
 	echo "<form method='post' action=''>";
+	$indice_detalle=1;
 	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria) from salida_detalle_almacenes s 
 	where s.cod_salida_almacen='$codigo_salida' group by s.cod_material ORDER BY orden_detalle ASC";
 	$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
@@ -50,8 +51,9 @@
 
 		$nombre_material=$dat_nombre_material[0];
 		$barCode=$dat_nombre_material[1];
+		$indice_detalle++;
 		
-		echo "<tr><td>$barCode</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td></tr>";
+		echo "<tr><td>$indice_detalle</td><td>$barCode</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td></tr>";
 	}
 	echo "</table></center>";
 
