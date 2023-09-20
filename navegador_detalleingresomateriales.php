@@ -2,6 +2,8 @@
 	require("conexionmysqli.php");
 	require('estilos_almacenes_central_sincab.php');
 	require("funciones.php");
+	error_reporting(E_ALL);
+ ini_set('display_errors', '1');
 	echo "<form method='post' action=''>";
 	
 	$sql="select i.cod_ingreso_almacen, i.fecha, ti.nombre_tipoingreso, i.observaciones, i.nro_correlativo, 
