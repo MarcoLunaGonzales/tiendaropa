@@ -5,6 +5,7 @@
 	error_reporting(E_ALL);
  ini_set('display_errors', '1');
 	echo "<form method='post' action=''>";
+	$codCargo=$_COOKIE['global_cargo'];
 	
 	$sql="select i.cod_ingreso_almacen, i.fecha, ti.nombre_tipoingreso, i.observaciones, i.nro_correlativo, 
 (select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as nombre_proveedor FROM ingreso_almacenes i, tipos_ingreso ti where i.cod_tipoingreso=ti.cod_tipoingreso and i.cod_almacen='$global_almacen' and i.cod_ingreso_almacen='$codigo_ingreso'";
@@ -87,7 +88,8 @@
 			echo "<td align='center' >$cantidad_unitaria</td>";
 		}
 		echo "<td align='center'>$loteProducto</td>";
-		if($_COOKIE['global_cargo']==1000 ||  $_COOKIE['global_cargo']==1002){
+
+		if($codCargo==1000 ||  $codCargo==1002){
 		echo"<td align='center'>$precioNeto</td>";
 	}else{
 		echo"<td align='center'></td>";
