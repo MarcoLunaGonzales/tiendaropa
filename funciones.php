@@ -141,7 +141,7 @@ function actualizaNombreProducto($enlaceCon,$codProducto){
 		$nombreModelo=$dat['nombreModelo'];
 		$nombreMaterial=$dat['nombreMaterial'];
 		$nombreGenero=$dat['nombreGenero'];
-		$sqlActualizanombre="update material_apoyo set descripcion_material='".$grupo." ".$nombreModelo." ".$nombreGenero." ".$nombreMaterial." ".$nombreColor." T:".$nombreTalla."' where codigo_material=".$codProducto;
+		$sqlActualizanombre="update material_apoyo set descripcion_material='".$codProducto." ".$grupo." ".$subgrupo." ".$nombreModelo." ".$nombreGenero." ".$nombreMaterial." ".$nombreColor." ".$nombreTalla."' where codigo_material=".$codProducto;
 		$resp=mysqli_query($enlaceCon,$sqlActualizanombre);
 	}
 	return($resp);
