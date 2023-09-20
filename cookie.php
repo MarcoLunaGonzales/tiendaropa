@@ -4,6 +4,9 @@ $estilosVenta=0; //para no ejecutar las librerias js css
 require("conexionmysqli.php");
 require("funciones.php");
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
 $usuario = $_POST["usuario"];
 $contrasena = $_POST["contrasena"];
 $contrasena = str_replace("'", "''", $contrasena);
