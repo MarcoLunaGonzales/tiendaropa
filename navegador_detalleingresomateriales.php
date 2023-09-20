@@ -86,9 +86,14 @@
 		}else{
 			echo "<td align='center' >$cantidad_unitaria</td>";
 		}
-		echo "<td align='center'>$loteProducto</td>
-		<td align='center'>$precioNeto</td>
-		<td align='center'>$precioVenta</td>
+		echo "<td align='center'>$loteProducto</td>";
+		if($_COOKIE['global_cargo']==1000 ||  $_COOKIE['global_cargo']==1002){
+		echo"<td align='center'>$precioNeto</td>";
+	}else{
+		echo"<td align='center'></td>";
+
+	}
+		echo" <td align='center'>$precioVenta</td>
 		<td align='center'>$precioVenta2</td>
 	
 		</tr>";
