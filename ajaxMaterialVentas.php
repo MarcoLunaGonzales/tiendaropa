@@ -6,13 +6,21 @@
 <?php 
 
 require("conexionmysqli2.inc");
-	$num=$_GET['codigo'];
-	$cod_precio=0;
-	if(isset($_GET["cod_precio"])){
-		$cod_precio=$_GET["cod_precio"];
-	}
+require_once 'funciones.php';
 
+
+$num=$_GET['codigo'];
+$globalAdmin=$_COOKIE["global_admin_cargo"];
+
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
+/*Bandera de descuento abierto en Venta*/
+$banderaDescuentoAbierto=obtenerValorConfiguracion($enlaceCon,15);
 ?>
+
 
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
 <tr bgcolor="#FFFFFF">
@@ -44,8 +52,10 @@ require("conexionmysqli2.inc");
 </td>
 
 <td align="center" width="15%">
-	<input class="inputnumber" type="number" value="0" id="tipoPrecio<?php echo $num;?>" name="tipoPrecio<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' value="0" step="0.01" style="background:#ADF8FA;" readonly>%
-	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" style="background:#ADF8FA;" readonly>
+	<input class="inputnumber" type="number" max="90" step="0.01" value="0" id="tipoPrecio<?php echo $num;?>" name="tipoPrecio<?php echo $num;?>" style="background:#ADF8FA;" onkeyup='calculaMontoMaterial(<?php echo $num;?>);' onchange='calculaMontoMaterial(<?php echo $num;?>);' <?=($banderaDescuentoAbierto==0)?'readonly':'';?> >%
+
+	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" step="0.01" style='background:#ADF8FA;' onkeyup='calculaMontoMaterial_bs(<?php echo $num;?>);' onchange='calculaMontoMaterial_bs(<?php echo $num;?>);' <?=($banderaDescuentoAbierto==0)?'readonly':'';?>>
+	<div id="divMensajeOferta<?=$num;?>" class="textomedianosangre"></div>
 </td>
 
 <td align="center" width="10%">
