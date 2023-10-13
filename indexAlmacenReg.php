@@ -114,6 +114,7 @@ include("datosUsuario.php");
 					<li><a href="registrar_salidaventas_manuales.php" target="_blank">Factura Manual de Contigencia</a></li>
 				</ul>	
 			</li>
+			<li><a href="filtroDefinicionPrecios.php" target="contenedorPrincipal" >Definicion de Precios</a></li>
 			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
 			<li><span>Otros Ingresos </span>
 				<ul>
