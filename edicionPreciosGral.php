@@ -2,6 +2,22 @@
 require("conexionmysqli.php");
 require('estilos.inc');
 require('funciones.php');
+?>
+<script language='JavaScript'>
+
+	
+
+function repetirValor(f,grupoPrecio)
+{	
+ 
+ 	alert('holaa='+grupoPrecio);
+
+
+
+}
+</script>
+<?php
+
 
 $rpt_territorio=$_GET['rpt_territorio'];
 $rpt_marca=$_GET['rpt_marca'];
@@ -24,6 +40,16 @@ echo "rpt_talla=".$rpt_talla."<br/>";
 echo "rpt_material=".$rpt_material."<br/>";
 echo "rpt_color=".$rpt_color."<br/>";
 
+echo "<input type='hidden' name='rpt_territorio' id='rpt_territorio' value='$rpt_territorio'>";
+echo "<input type='hidden' name='rpt_marca' id='rpt_marca' value='$rpt_marca'>";
+echo "<input type='hidden' name='rpt_modelo' id='rpt_modelo' value='$rpt_modelo'>";
+echo "<input type='hidden' name='rpt_grupo' id='rpt_grupo' value='$rpt_grupo'>";
+echo "<input type='hidden' name='rpt_subgrupo' id='rpt_subgrupo' value='$rpt_subgrupo'>";
+echo "<input type='hidden' name='rpt_genero' id='rpt_genero' value='$rpt_genero'>";
+echo "<input type='hidden' name='rpt_talla' id='rpt_talla' value='$rpt_talla'>";
+echo "<input type='hidden' name='rpt_material' id='rpt_material' value='$rpt_material'>";
+echo "<input type='hidden' name='rpt_color' id='rpt_color' value='$rpt_color'>";
+
 $sqlSucursal="select descripcion from ciudades where cod_ciudad=".$rpt_territorio;
 $respSucursal=mysqli_query($enlaceCon,$sqlSucursal);		
 while($datSucursal=mysqli_fetch_array($respSucursal)){
@@ -36,7 +62,7 @@ while($datMarca=mysqli_fetch_array($respMarca)){
 	$marca=$datMarca['nombre'];
 }
 
-echo "<form  action='actualizaPreciosMaterial.php' method='post' name='form1'>";
+echo "<form  action='guardarEdicionPreciosGral.php' method='post' name='form1'>";
 
 echo "<h1>Actualizacion de Precios Sucursal $sucursal <br/> $marca</h1>";
 
@@ -46,8 +72,23 @@ echo "<h1>Actualizacion de Precios Sucursal $sucursal <br/> $marca</h1>";
 echo "<center><table class='texto'>";
 	echo "<tr>
 	<th>Nro</th><th>Codigo</th><th>Modelo</th><th>Grupo</th><th>SubGrupo</th>		
-	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Material</th></tr>";
+	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Material</th>";
+ 
+	$sqlGrupoPrecio="select codigo,nombre from grupos_precio where  estado=1 order by codigo asc";
 
+	$respGrupoPrecio=mysqli_query($enlaceCon,$sqlGrupoPrecio);
+		
+	while($datGrupoPrecio=mysqli_fetch_array($respGrupoPrecio)){
+
+			$codGrupoPrecio=$datGrupoPrecio['codigo'];
+			$nomGrupoPrecio=$datGrupoPrecio['nombre'];
+	echo" <th>".$nomGrupoPrecio."<br/>
+	<table><tr><td><input type='button' value='R' onClick='repetirValor(this.form,".$codGrupoPrecio.")' ></td><td>
+<input type='number' class='inputnumber'  id='precioGral".$codGrupoPrecio."' name='precioGral".$codGrupoPrecio."' 
+ size='3' min='0' step='0.01'  value='0'></td></tr></table>
+	</th>";
+}
+echo "</tr>";
 
 $sql="select mp.codigo_material,mp.descripcion_material,mp.estado,mp.cod_grupo, g.nombre as nombreGrupo,
 mp.cod_tipomaterial,mp.cantidad_presentacion,mp.observaciones,mp.imagen,
@@ -76,9 +117,39 @@ if($rpt_grupo!="-1"){
 // Fin Filtro Grupo
 // Filtro SubGrupo
 if($rpt_subgrupo!="-1"){
-	$sql.=" and sg.codigo in(".$rpt_subgrupo.")";
+	$sql.=" and mp.cod_subgrupo in(".$rpt_subgrupo.")";
 }
 // Fin Filtro SubGrupo
+// Filtro Modelo
+if($rpt_modelo!="-1"){
+	$sql.=" and mp.cod_modelo in(".$rpt_modelo.")";
+}
+// Fin Filtro Modelo
+// Filtro Modelo
+if($rpt_modelo!="-1"){
+	$sql.=" and mp.cod_modelo in(".$rpt_modelo.")";
+}
+// Fin Filtro Modelo
+// Filtro Genero
+if($rpt_genero!="-1"){
+	$sql.=" and mp.cod_genero in(".$rpt_genero.")";
+}
+// Fin Filtro Genero
+// Filtro Talla
+if($rpt_talla!="-1"){
+	$sql.=" and mp.talla in(".$rpt_talla.")";
+}
+// Fin Filtro Talla
+// Filtro Color
+if($rpt_color!="-1"){
+	$sql.=" and mp.color in(".$rpt_color.")";
+}
+// Fin Filtro Color
+// Filtro Material
+if($rpt_material!="-1"){
+	$sql.=" and mp.cod_material in(".$rpt_material.")";
+}
+// Fin Filtro Material
 
 
 $sql.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre asc,mp.codigo_material asc";
@@ -120,8 +191,7 @@ while($dat=mysqli_fetch_array($resp)){
 
  	echo "<tr>";
 					echo "<td>&nbsp;</td>";
-					echo "<td>".$codigo_material."</td>";
-					
+					echo "<td>".$codigo_material."</td>";					
 					echo "<td>".$nombreModelo."</td>";
 					echo "<td>".$nombreGrupo."</td>";
 					echo "<td>".$nombreSubgrupo."</td>";
@@ -130,6 +200,37 @@ while($dat=mysqli_fetch_array($resp)){
 					echo "<td>".$nombreColor."</td>";		
 					echo "<td>".$nombreTalla."</td>";
 					echo "<td>".$descripcion_material."</td>";
+
+					$sqlGrupoPrecio="select codigo,nombre from grupos_precio where  estado=1 order by codigo asc";
+
+					$respGrupoPrecio=mysqli_query($enlaceCon,$sqlGrupoPrecio);
+		
+					while($datGrupoPrecio=mysqli_fetch_array($respGrupoPrecio)){
+
+						$codGrupoPrecio=$datGrupoPrecio['codigo'];
+						$nomGrupoPrecio=$datGrupoPrecio['nombre'];	
+
+						$sqlPrecio="select p.precio, p.cant_inicio,p.cant_final from precios p		
+						where p.codigo_material='".$codigo_material."' 
+						and p.cod_ciudad='".$rpt_territorio."' and p.cod_precio='".$codGrupoPrecio."'";
+
+						$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
+						$cantSqlPrecio=mysqli_num_rows($respPrecio);
+
+						if($cantSqlPrecio>0){
+
+							while($datPrecio=mysqli_fetch_array($respPrecio)){
+								$precio=$datPrecio['precio'];
+								$cant_inicio=$datPrecio['cant_inicio'];
+								$cant_final=$datPrecio['cant_final'];
+
+						echo "<td><center><input type='number' class='inputnumber'  id='precio".$codGrupoPrecio.$codigo_material."' name='precio".$codGrupoPrecio.$codigo_material."' size='6' min='0' step='0.01'  value='".$precio."' required></center></td>";
+							}
+						}else{
+							echo "<td><center><input type='number' class='inputnumber'  id='precio".$codGrupoPrecio.$codigo_material."' name='precio".$codGrupoPrecio.$codigo_material."' size='6' min='0' step='0.01'  value='0' required></center></td>";
+
+						}
+					}
 					
 					echo "</tr>";
 
