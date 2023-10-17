@@ -489,7 +489,7 @@ $consulta = "
 	(select concat(f.paterno, ' ', f.nombres) from funcionarios f where f.codigo_funcionario=s.cod_chofer)as vendedor
     FROM salida_almacenes s, tipos_salida ts 
     WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida=1001 
-    and s.cod_tipo_doc in (1,2,4)";
+    and s.cod_tipo_doc in (1)";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
