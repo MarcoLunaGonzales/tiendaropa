@@ -33,8 +33,6 @@ if ($num_filas != 0) {
 	$datGestion = mysqli_fetch_array($respGestion);
 	$globalGestion=$datGestion[0];
 	$nombreG=$datGestion[1];
-
-
 	
 	//almacen
 	$sql_almacen="select cod_almacen, nombre_almacen from almacenes where cod_ciudad='$cod_ciudad'";	
@@ -48,8 +46,7 @@ if ($num_filas != 0) {
 
 	//VARIABLE PARA EL CLIENTE KIDSPLACE, ALTAR, ETC. -> 1 kidsplace 2 altar
 	$idClienteConfiguracion=obtenerValorConfiguracion($enlaceCon,0);
-
-
+	
 	if($idClienteConfiguracion==1){
 		if($cod_cargo==1000 || $cod_cargo==1001 || $cod_cargo==1002){
 			header("location:indexAlmacenRegKP.php");
