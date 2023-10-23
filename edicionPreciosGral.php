@@ -15,15 +15,11 @@ function repetirValor(f,grupoPrecio)
  	var inputs = $('form input[name^="precio'+grupoPrecio+'"]');
 		inputs.each(function() {
   		var value = $(this).val();
-  		//alert('aqui1');
-  		if(value<=0 || value==""){
-  			//banderaValidacionDetalle=1;
-			//alert('valor verdad='+value);
-  		}else{
-  			//$(this).val()=nuevoPrecio;
+  		
+  		
   			document.getElementById($(this).attr('id')).value=nuevoPrecio;
-  			//alert('valr falso='+$(this).attr('id'));
-  		}
+  			
+  		
 
     	});
 
@@ -325,6 +321,7 @@ while($dat=mysqli_fetch_array($resp)){
 
 						$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
 						$cantSqlPrecio=mysqli_num_rows($respPrecio);
+						$precio=0;
 
 						if($cantSqlPrecio>0){
 
@@ -333,12 +330,11 @@ while($dat=mysqli_fetch_array($resp)){
 								$cant_inicio=$datPrecio['cant_inicio'];
 								$cant_final=$datPrecio['cant_final'];
 
-						echo "<td><center><input type='number' class='inputnumber'  id='precio".$codGrupoPrecio.$codigo_material."' name='precio".$codGrupoPrecio.$codigo_material."' size='6' min='0' step='0.01'  value='".$precio."' required></center></td>";
 							}
-						}else{
-							echo "<td><center><input type='number' class='inputnumber'  id='precio".$codGrupoPrecio.$codigo_material."' name='precio".$codGrupoPrecio.$codigo_material."' size='6' min='0' step='0.01'  value='0' required></center></td>";
-
 						}
+
+							echo "<td><center><input type='number' class='inputnumber'  id='precio".$codGrupoPrecio.$codigo_material."' name='precio".$codGrupoPrecio.$codigo_material."' size='6' min='0' step='0.01'  value='".($precio)."' ></center></td>";
+							
 					}
 					
 					echo "</tr>";
