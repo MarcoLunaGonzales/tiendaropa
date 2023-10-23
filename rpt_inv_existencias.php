@@ -48,6 +48,8 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			from material_apoyo ma
 			where ma.codigo_material<>0 and ma.estado='1' 
 			and ma.cod_grupo in ($rptGrupo) ";
+
+
 			if($globalTipoFuncionario==2){
 				if($cantFuncProv>0){
 					$sql_item= $sql_item." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor in
@@ -56,6 +58,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			}else{
 				$sql_item= $sql_item." and ma.cod_marca in ($rptMarca) ";
 			}	
+			
 			if($rptBarCode!=""){
 				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
 			}
@@ -144,18 +147,18 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			if($rptOrdenar==1){
 				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombre_item</td><td>$pesoItem</td>";
 				if($rptFormato==1){
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item - $colorItem $tallaItem</td><td>$precio0</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item</td><td>$precio0</td>";
 				}else{//para inventario
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item - $colorItem $tallaItem</td><td>$precio0</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item</td><td>$precio0</td>";
 				}
 			}else{
 				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombreLinea</td><td>$nombre_item</td><td>$pesoItem</td>";				
 				if($rptFormato==1){
 					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td>
-					<td>$nombre_item - $colorItem $tallaItem</td><td>$precio0</td>";			
+					<td>$nombre_item</td><td>$precio0</td>";			
 				}else{
 					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td>
-					<td>$nombre_item - $colorItem $tallaItem</td><td>$precio0</td>";				
+					<td>$nombre_item</td><td>$precio0</td>";				
 				}
 			}
 			
