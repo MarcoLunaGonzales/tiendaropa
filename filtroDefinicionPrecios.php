@@ -61,7 +61,7 @@ function envia_formulario(f)
 					a++;
 				}
 			}
-	alert("modelo="+rpt_modelo);
+	//alert("modelo="+rpt_modelo);
 
 	var e=0;
 			for(g=0;g<=f.rpt_grupo.options.length-1;g++)
@@ -70,7 +70,7 @@ function envia_formulario(f)
 					e++;
 				}
 			}
-	alert("rpt_grupo="+rpt_grupo);
+	//alert("rpt_grupo="+rpt_grupo);
 
 	var i=0;
 			for(j=0;j<=f.rpt_subgrupo.options.length-1;j++)
@@ -79,7 +79,7 @@ function envia_formulario(f)
 					i++;
 				}
 			}
-	alert("rpt_subgrupo="+rpt_subgrupo);
+	//alert("rpt_subgrupo="+rpt_subgrupo);
 
 	var c=0;
 			for(d=0;d<=f.rpt_genero.options.length-1;d++)
@@ -88,7 +88,7 @@ function envia_formulario(f)
 					c++;
 				}
 			}
-	alert("rpt_genero="+rpt_genero);
+	//alert("rpt_genero="+rpt_genero);
 
 	var n=0;
 			for(m=0;m<=f.rpt_talla.options.length-1;m++)
@@ -97,7 +97,7 @@ function envia_formulario(f)
 					n++;
 				}
 			}
-	alert("rpt_talla="+rpt_talla);
+	//alert("rpt_talla="+rpt_talla);
 
 	var p=0;
 			for(q=0;q<=f.rpt_material.options.length-1;q++)
@@ -106,7 +106,7 @@ function envia_formulario(f)
 					p++;
 				}
 			}			
-	alert("rpt_material="+rpt_material);
+	//alert("rpt_material="+rpt_material);
 
 	var y=0;
 			for(z=0;z<=f.rpt_color.options.length-1;z++)
@@ -115,18 +115,13 @@ function envia_formulario(f)
 					y++;
 				}
 			}			
-	alert("rpt_color="+rpt_color);
+	//alert("rpt_color="+rpt_color);
 
-
+ var mensaje='';
 	var forms = f;
-	window.open('edicionPreciosGral.php?rpt_territorio='+rpt_territorio+'&rpt_marca='+rpt_marca+'&rpt_modelo='+rpt_modelo+'&rpt_grupo='+rpt_grupo+'&rpt_subgrupo='+rpt_subgrupo+'&rpt_genero='+rpt_genero+'&rpt_talla='+rpt_talla+'&rpt_material='+rpt_material+'&rpt_color='+rpt_color+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');	
+	location.href='edicionPreciosGral.php?rpt_territorio='+rpt_territorio+'&rpt_marca='+rpt_marca+'&rpt_modelo='+rpt_modelo+'&rpt_grupo='+rpt_grupo+'&rpt_subgrupo='+rpt_subgrupo+'&rpt_genero='+rpt_genero+'&rpt_talla='+rpt_talla+'&rpt_material='+rpt_material+'&rpt_color='+rpt_color+'&mensaje='+mensaje;
+	/*window.open('edicionPreciosGral.php?rpt_territorio='+rpt_territorio+'&rpt_marca='+rpt_marca+'&rpt_modelo='+rpt_modelo+'&rpt_grupo='+rpt_grupo+'&rpt_subgrupo='+rpt_subgrupo+'&rpt_genero='+rpt_genero+'&rpt_talla='+rpt_talla+'&rpt_material='+rpt_material+'&rpt_color='+rpt_color+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');	*/
 
-    if(forms.checkValidity()){
-		window.open('rptVentasGeneral.php?rpt_territorio='+rpt_territorio+'&rpt_tipoPago='+rpt_tipoPago+'&fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin+'','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');			
-		   return(true);    
-	} else{
-        alert("Debe seleccionar todos los campos del reporte.");
-    }
 
 }
 </script>
