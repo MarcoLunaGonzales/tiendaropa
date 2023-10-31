@@ -41,28 +41,41 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 	
 		//desde esta parte viene el reporte en si
 		
-		
-			$sql_item="select ma.codigo_material, ma.descripcion_material, ma.cantidad_presentacion,
-			(select g.nombre from grupos g where g.codigo=ma.cod_grupo)as nombregrupo, ma.peso, ma.color, ma.talla, ma.codigo_barras,
-			(select mar.nombre from marcas mar where mar.codigo=ma.cod_marca)as marca,ma.codigo2
-			from material_apoyo ma
-			where ma.codigo_material<>0 and ma.estado='1' 
-			and ma.cod_grupo in ($rptGrupo) ";
+$sql_item="select mp.codigo_material,mp.descripcion_material,mp.estado,mp.cod_grupo, g.nombre as nombreGrupo,
+mp.cod_tipomaterial,mp.cantidad_presentacion,mp.observaciones,mp.imagen,
+mp.cod_unidad, um.nombre as nombreUnidad,mp.peso, mp.cod_subgrupo,
+sg.nombre as nombreSubgrupo, 
+mp.cod_marca, mar.nombre as nombreMarca, mp.talla,tal.nombre as nombreTalla, mp.color, col.nombre as nombreColor,
+mp.codigo_anterior,
+mp.codigo2,mp.fecha_creacion,mp.cod_modelo, mo.nombre as nombreModelo,
+mp.cod_material, ma.nombre as nombreMaterial,
+mp.cod_genero, ge.nombre as nombreGenero
+from material_apoyo mp
+left join subgrupos sg on (mp.cod_subgrupo=sg.codigo)
+left join grupos g on (sg.cod_grupo=g.codigo)
+left join unidades_medida um on (mp.cod_unidad=um.codigo)
+left join marcas mar on (mp.cod_marca=mar.codigo)
+left join tallas tal on (mp.talla=tal.codigo)
+left join colores col on (mp.color=col.codigo)
+left join modelos mo on (mp.cod_modelo=mo.codigo)
+left join materiales ma on (mp.cod_material=ma.codigo)
+left join generos ge on (mp.cod_genero=ge.codigo)
+where mp.estado=1";
+if($rpt_marca!="-1"){
+	$sql_item.=" and mp.cod_marca in(".$rpt_marca.")";
+}
+// Filtro Grupo
+if($rpt_grupo!="-1"){
+	$sql_item.=" and sg.cod_grupo in(".$rpt_grupo.")";
+}
 
+if($rptBarCode!=""){
+	$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
+}
 
-			if($globalTipoFuncionario==2){
-				if($cantFuncProv>0){
-					$sql_item= $sql_item." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor in
-					( select cod_proveedor from funcionarios_proveedores where codigo_funcionario=$global_usuario))";						
-				}
-			}else{
-				$sql_item= $sql_item." and ma.cod_marca in ($rptMarca) ";
-			}	
-			
-			if($rptBarCode!=""){
-				$sql_item.=" and ma.codigo_barras like '$rptBarCode%' ";
-			}
-			if($rptOrdenar==1){
+$sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre asc,mp.codigo_material asc";
+
+			/*if($rptOrdenar==1){
 				$sql_item.=" order by ma.descripcion_material";
 			}
 			if($rptOrdenar==2){
@@ -70,7 +83,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			}
 			if($rptOrdenar==3){
 				$sql_item.=" order by 9,4,2";
-			}
+			}*/
 			
 		
 		
@@ -81,12 +94,21 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			if($rptFormato==1){
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>COD INT</th><th>COD BARRA /COD PROV</th><th>Marca</th>><th>Grupo</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th></tr>
+					<tr>
+					<th>Nro</th><th>Modelo</th><th>Grupo</th><th>SubGrupo</th>		
+	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+
+				
+					</tr>
 				</thead>";				
 			}else{//PARA INVENTARIO
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>COD INT</th><th>COD BARRA / COD PROV</th><th>Marca</th><th>Grupo</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+					<tr>
+										<th>Nro</th><th>Modelo</th><th>Grupo</th><th>SubGrupo</th>		
+	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+
+				
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -99,12 +121,19 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			if($rptFormato==1){
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>COD INT</th><th>COD BARRA / COD PROV</th><th>Marca</th><th>Grupo</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th></tr>
+					<tr>
+					<th>Nro</th><th>Modelo</th><th>Grupo</th><th>SubGrupo</th>		
+	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+
+				
+					</tr>
 				</thead>";				
 			}else{//PARA INVENTARIO
 				echo "<br><table border=0 align='center' class='textomediano' width='70%'>
 				<thead>
-					<tr><th>&nbsp;</th><th>COD INT</th><th>COD BARRA / COD PROV</th><th>Marca</th><th>Grupo</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+					<th>Nro</th><th>Modelo</th><th>Grupo</th><th>SubGrupo</th>		
+	<th>Material</th><th>Genero</th><th>Color</th><th>Talla</th><th>Producto</th><th>Precio Actual</th><th>Cantidad</th>
+
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th></tr>
@@ -116,7 +145,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 		while($datos_item=mysqli_fetch_array($resp_item))
 		{	
 	
-			$codigo_item=$datos_item[0];
+			$codigo_item=$datos_item['codigo_material'];
 			
 			///////////////
 					$sqlPrecio="select p.`precio` from `precios` p where p.`cod_precio`=1 and p.`codigo_material`=$codigo_item and p.cod_ciudad='".$_COOKIE['global_agencia']."'";
@@ -132,7 +161,36 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 						$precio0=redondear2($precio0);
 					}
 			///////////////
-			$nombre_item=$datos_item[1];
+			$descripcion_material=$datos_item['descripcion_material'];
+			$estado=$datos_item['estado'];
+			$cod_grupo=$datos_item['cod_grupo'];
+			$nombreGrupo=$datos_item['nombreGrupo'];
+			$cod_tipomaterial=$datos_item['cod_tipomaterial'];
+			$cantidad_presentacion=$datos_item['cantidad_presentacion'];
+			$observaciones=$datos_item['observaciones'];
+			$imagen=$datos_item['imagen'];
+			$cod_unidad=$datos_item['cod_unidad'];
+			$nombreUnidad=$datos_item['nombreUnidad'];
+			$peso=$datos_item['peso'];
+			$cod_subgrupo=$datos_item['cod_subgrupo'];
+			$nombreSubgrupo=$datos_item['nombreSubgrupo'];
+			$cod_marca=$datos_item['cod_marca'];
+			$nombreMarca=$datos_item['nombreMarca'];
+			$talla=$datos_item['talla'];
+			$nombreTalla=$datos_item['nombreTalla'];
+			$color=$datos_item['color'];
+			$nombreColor=$datos_item['nombreColor'];
+			$codigo_anterior=$datos_item['codigo_anterior'];
+			$codigo2=$datos_item['codigo2'];
+			$fecha_creacion=$datos_item['fecha_creacion'];
+			$cod_modelo=$datos_item['cod_modelo'];
+			$nombreModelo=$datos_item['nombreModelo'];
+			$cod_material=$datos_item['cod_material'];
+			$nombreMaterial=$datos_item['nombreMaterial'];
+			$cod_genero=$datos_item['cod_genero'];
+ 			$nombreGenero=$datos_item['nombreGenero'];
+
+			/*$nombre_item=$datos_item[1];
 			$cantidadPresentacion=$datos_item[2];
 			$nombreGrupo=$datos_item[3];
 			$pesoItem=$datos_item[4];
@@ -140,25 +198,29 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			$tallaItem=$datos_item[6];
 			$barCode=$datos_item[7];
 			$nombreMarca=$datos_item[8];
-			$codigo2=$datos_item[9];
-			
-			
+			$codigo2=$datos_item[9];*/
+						
 			$cadena_mostrar="";
-			if($rptOrdenar==1){
-				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombre_item</td><td>$pesoItem</td>";
+			if($rptOrdenar==1){			
 				if($rptFormato==1){
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item</td><td>$precio0</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreModelo</td><td>$nombreGrupo</td><td>$nombreSubgrupo</td>
+					<td>$nombreMaterial</td><td>$nombreGenero</td><td>$nombreColor</td><td>$nombreTalla</td>
+					<td>$codigo_item - $descripcion_material</td><td>$precio0</td>";
 				}else{//para inventario
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td><td>$nombre_item</td><td>$precio0</td>";
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreModelo</td><td>$nombreGrupo</td><td>$nombreSubgrupo</td>
+					<td>$nombreMaterial</td><td>$nombreGenero</td><td>$nombreColor</td><td>$nombreTalla</td>
+					<td>$codigo_item - $descripcion_material</td><td>$precio0</td>";
 				}
 			}else{
-				//$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$nombreLinea</td><td>$nombre_item</td><td>$pesoItem</td>";				
+			
 				if($rptFormato==1){
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td>
-					<td>$nombre_item</td><td>$precio0</td>";			
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreModelo</td><td>$nombreGrupo</td><td>$nombreSubgrupo</td>
+					<td>$nombreMaterial</td><td>$nombreGenero</td><td>$nombreColor</td><td>$nombreTalla</td>
+					<td>$codigo_item - $descripcion_material</td><td>$precio0</td>";			
 				}else{
-					$cadena_mostrar.="<tr><td>$indice</td><td>$codigo_item</td><td>$barCode $codigo2</td><td>$nombreMarca</td><td>$nombreGrupo</td>
-					<td>$nombre_item</td><td>$precio0</td>";				
+					$cadena_mostrar.="<tr><td>$indice</td><td>$nombreModelo</td><td>$nombreGrupo</td><td>$nombreSubgrupo</td>
+					<td>$nombreMaterial</td><td>$nombreGenero</td><td>$nombreColor</td><td>$nombreTalla</td>
+					<td>$codigo_item - $descripcion_material</td><td>$precio0</td>";				
 				}
 			}
 			
@@ -228,7 +290,7 @@ $txt_reporte="Fecha de Reporte <strong>$fecha_reporte</strong>";
 			}
 			
 		}
-		echo "<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td align='right'><strong>Total Productos</strong></td><td align='center'>$totalStock</td><td>&nbsp;</td></tr>";
+		echo "<tr><td colspan='9'>&nbsp;</td><td align='right'><strong>Total Productos</strong></td><td align='center'>$totalStock</td></tr>";
 		//$cadena_mostrar.="</tbody>";
 		echo "</table>";
 		
