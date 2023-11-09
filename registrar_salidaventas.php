@@ -276,10 +276,16 @@ function ajaxNroDoc(f){
 	contenedor=document.getElementById("divNroDoc");
 	ajax=nuevoAjax();
 	var codTipoDoc=(f.tipoDoc.value);
+	console.log("codTipoDoc: "+codTipoDoc);
 	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
+			if(codTipoDoc==2){
+				document.getElementById("nitCliente").value="0"; 	
+				document.getElementById("razonSocial").value="-"; 	
+				document.getElementById("razonSocialDireccion").value="-"; 	
+			}
 		}
 	}
 	ajax.send(null);
@@ -1024,7 +1030,7 @@ require("funciones.php");
 
 function validar(f, ventaDebajoCosto){
 	
-	if($("#nitCliente").val()=="0"){
+	if($("#nitCliente").val()==""){
 		// errores++;
 		Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
 		// $("#pedido_realizado").val(0);		
