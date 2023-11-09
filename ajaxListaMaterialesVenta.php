@@ -10,12 +10,20 @@ require("funciones.php");
 $codTipo=$_GET['codTipo'];
 $nombreItem=$_GET['nombreItem'];
 $codMarca="";
+$codModelo="";
+$verSoloConStock="";
 $codBarraCod2="";
 if(isset($_GET['codMarca'])){
 	$codMarca=$_GET['codMarca'];	
 }
+if(isset($_GET['codModelo'])){
+	$codModelo=$_GET['codModelo'];	
+}
 if(isset($_GET['codBarraCod2'])){
 	$codBarraCod2=$_GET['codBarraCod2'];
+}
+if(isset($_GET['stock'])){
+	$verSoloConStock=$_GET['stock'];
 }
 $globalAlmacen=$_COOKIE['global_almacen'];
 $itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
@@ -42,6 +50,9 @@ $globalAgencia=$_COOKIE["global_agencia"];
 	}
 	if($codTipo!=0){
 		$sql=$sql. " and m.cod_grupo='$codTipo' ";
+	}
+	if($codModelo!=0){
+		$sql=$sql. " and m.cod_modelo='$codModelo' ";
 	}
 	$sql=$sql." order by 2";
 	//echo $sql;
@@ -100,15 +111,17 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			$arrayPrecioNormalEncode=json_encode($arrayPrecioNormal);
 			$arrayPrecioMayorEncode=json_encode($arrayPrecioMayor);
 
-			echo "<tr><td> $codigo2 $codigoBarras </td>
-			<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\", $stockProducto, $arrayPrecioNormalEncode, $arrayPrecioMayorEncode)'>$nombre</a></div></td>			
-			<td>$marcaProducto</td>
-			<td>$colorProducto</td>
-			<td>$tallaProducto</td>
-			<td align='center'><span class='textomedianorojo'>$stockProducto</span></td>
-			<td align='right'><span class='textomedianoazul'>$precioProductoNormalF</span></td>
-			<td align='right'><span class='textomedianoazul'>$precioProductoMayorF</span></td>
-			</tr>";
+			if( ($verSoloConStock==1 && $stockProducto>0) || $verSoloConStock==0 ){
+				echo "<tr><td> $codigo2 $codigoBarras </td>
+				<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\", $stockProducto, $arrayPrecioNormalEncode, $arrayPrecioMayorEncode)'>$nombre</a></div></td>			
+				<td>$marcaProducto</td>
+				<td>$colorProducto</td>
+				<td>$tallaProducto</td>
+				<td align='center'><span class='textomedianorojo'>$stockProducto</span></td>
+				<td align='right'><span class='textomedianoazul'>$precioProductoNormalF</span></td>
+				<td align='right'><span class='textomedianoazul'>$precioProductoMayorF</span></td>
+				</tr>";
+			}
 		}
 	}else{
 		echo "<tr><td colspan='6'>Sin Resultados en la busqueda.</td></tr>";

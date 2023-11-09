@@ -38,15 +38,24 @@ include("datosUsuario.php");
 
 	<div class="header">
 		<a href="#menu"><span></span></a>
-		<?php echo $nombreTiendaRopa;?>
-		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
-			[<?php echo $fechaSistemaSesion?>][<?php echo $horaSistemaSesion;?>]			
-            <button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-azul">Salir</button>
+		TuAdmin - <?=$nombreEmpresa;?>
+		<div style="position:absolute; width:95%; height:50px; text-align:right; top:0px; font-size: 15px; font-weight: bold; color: #ffff00;">
+			[<?=$fechaSistemaSesion;?> <?=$horaSistemaSesion;?>]
+			<button onclick="location.href='salir.php'" style="position:relative;z-index:99999;right:0px;" class="boton-rojo" title="Salir">
+				<i class="material-icons" style="font-size: 16px">logout</i>
+			</button>			
 		</div>
-		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 11px; font-weight: bold; color: #fff;">
-			[<?php echo $nombreUsuarioSesion?>][<?php echo $nombreAlmacenSesion;?>]
+		<div style="position:absolute; width:95%; height:50px; text-align:left; top:0px; font-size: 15px; font-weight: bold; color: #ffff00;">
+			[<?=$nombreUsuarioSesion;?>]    [<?=$nombreAlmacenSesion;?>]
+			<button onclick="window.contenedorPrincipal.location.href='cambiar_almacen_trabajo.php'" style="position:relative;z-index:99999;right:0px;" class="boton-rojo" title="Cambiar Sucursal" formtarget="contenedorPrincipal">
+				<i class="material-icons" style="font-size: 16px">swap_horiz</i>
+			</button>
+			<button onclick="window.contenedorPrincipal.location.href='editPerfil.php'" style="position:relative;z-index:99999;right:0px;" class="boton-rojo" title="Cambiar Clave de Acceso" formtarget="contenedorPrincipal">
+				<i class="material-icons" style="font-size: 16px">person</i>
+			</button>	
 		</div>
-	</div>	
+	</div>
+
 	<div class="content">
 		<iframe src="inicio_almacenes.php" name="contenedorPrincipal" id="mainFrame"  style="top:50px;" border="1"></iframe>	
 	</div>

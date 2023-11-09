@@ -226,9 +226,14 @@ function nuevoAjax()
 }
 
 function listaMateriales(f){
+	var stock=0;
+	if($("#solo_stock").is(":checked")){
+		stock=1;
+	}
 	var contenedor;
 	var codTipo=f.itemTipoMaterial.value;
 	var nombreItem=f.itemNombreMaterial.value;
+	var codModelo=f.itemModelo.value;
 	
 	var codMarca=f.itemMarca.value;
 	var codBarraCod2=f.itemCodBarraCod2.value;
@@ -247,7 +252,7 @@ function listaMateriales(f){
 	
 	ajax=nuevoAjax();
 	//ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
-	ajax.open("GET", "ajaxListaMaterialesVenta.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
+	ajax.open("GET", "ajaxListaMaterialesVenta.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados+"&codModelo="+codModelo+"&stock="+stock,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -1005,84 +1010,182 @@ require("funciones.php");
 <script>
 
 
-function validar(f, ventaDebajoCosto){
-	
-	if($("#nitCliente").val()=="0"){
-		// errores++;
-		Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
-		// $("#pedido_realizado").val(0);		
-		return(false);
-	}
-
-	if($("#nro_tarjeta").val().length!=16&&$("#nro_tarjeta").val()!=""){
-		// errores++;
-		Swal.fire("Tarjeta!", "El número de Tarjeta debe tener 16 digitos<br><br><b>Ej: 1234********1234</b>", "info");
-		// $("#pedido_realizado").val(0);
-		return(false);
-	}
-	//alert(ventaDebajoCosto);
+function validar(f){	
+	var mensajeGuardar="";
 	f.cantidad_material.value=num;
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
-	if(cantidadItems>0){
-		var item="";
-		var cantidad="";
-		var stock="";
-		var descuento="";
-		for(var i=1; i<=cantidadItems; i++){
-			console.log("valor i: "+i);
-			console.log("objeto materiales: "+document.getElementById("materiales"+i));
-			if(document.getElementById("materiales"+i)!=null){
-				console.log("entro a materiales");
-				item=parseFloat(document.getElementById("materiales"+i).value);
-				cantidad=parseFloat(document.getElementById("cantidad_unitaria"+i).value);
-				
-				//VALIDACION DE VARIABLE DE STOCK QUE NO SE VALIDA
-				stock=document.getElementById("stock"+i).value;
-				if(stock=="-"){
-					stock=10000;
-				}else{
-					stock=parseFloat(document.getElementById("stock"+i).value);
-				}
-				descuento=parseFloat(document.getElementById("descuentoProducto"+i).value);
-				precioUnit=parseFloat(document.getElementById("precio_unitario"+i).value);				
-				//var costoUnit=parseFloat(document.getElementById("costoUnit"+i).value);
-		
-				console.log("materiales"+i+" valor: "+item);
-				console.log("stock: "+stock+" cantidad: "+cantidad+ "precio: "+precioUnit);
+	console.log("MontoFinal: "+totalFinal);
 
-				if(item==0){
-					alert("Debe escoger un item en la fila "+i);
-					return(false);
-				}
-				//alert(costoUnit+" "+precioUnit);
-				/*if(costoUnit>precioUnit && ventaDebajoCosto==0){
-					alert('No puede registrar una venta a perdida!!!!');
-					return(false);
-				}*/
-				if(stock<cantidad){
-					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
-					return(false);
-				}		
-				if((cantidad<=0 || precioUnit<=0) || (Number.isNaN(cantidad)) || Number.isNaN(precioUnit)){
-					alert("La cantidad y/o Precio no pueden estar vacios o ser <= 0.");
-					return(false);
-				}
-			}
-		}
-	}else{
-		alert("El ingreso debe tener al menos 1 item.");
+	
+	if($("#nitCliente").val()=="0"){
+		Swal.fire("Nit!", "Se requiere un número de NIT / CI / CEX válido", "warning");
 		return(false);
 	}
+	if($("#nro_tarjeta").val().length!=16&&$("#nro_tarjeta").val()!=""){
+		Swal.fire("Tarjeta!", "El número de Tarjeta debe tener 16 digitos<br><br><b>Ej: 1234********1234</b>", "info");
+		return(false);
+	}
+
+	/******** Validacion productos vacios ********/
+	var banderaValidacionDetalle=0;
+	var inputs = $('form input[name^="materiales"]');
+	inputs.each(function() {
+  	var value = $(this).val();
+  	if(value==0 || value==""){
+			banderaValidacionDetalle=1;
+  	}else{
+  	}
+	});
+	if(banderaValidacionDetalle==1){
+		Swal.fire("Productos!", "Debe seleccionar un producto para cada fila.", "info");
+		return(false);
+	}
+	/******** Fin validacion productos vacios ********/
+	
+	/******** Validacion Cantidades ********/
+	var banderaValidacionDetalle=0;
+	var inputs = $('form input[name^="cantidad_unitaria"]');
+	inputs.each(function() {
+  	var value = $(this).val();
+  	if(value<=0 || value==""){
+			banderaValidacionDetalle=1;
+  	}else{
+  	}
+	});
+	if(banderaValidacionDetalle==1){
+		Swal.fire("Cantidades!", "Hay algún campo con la cantidad vacia o en cero.", "info");
+		return(false);
+	}
+	/******** Fin validacion Cantidades ********/
+
+	/******** Validacion Precios ********/
+	var banderaValidacionDetalle=0;
+	var inputs = $('form input[name^="precio_unitario"]');
+	inputs.each(function() {
+  	var value = $(this).val();
+  	if(value<=0 || value==""){
+			banderaValidacionDetalle=1;
+  	}else{
+  	}
+	});
+	if(banderaValidacionDetalle==1){
+		Swal.fire("Precios!", "No pueden existir precios menores o iguales a 0.", "info");
+		return(false);
+	}
+	/******** Fin Precios ********/
+
+	/******** Validacion Montos Productos ********/
+	var banderaValidacionDetalle=0;
+	var inputs = $('form input[name^="montoMaterial"]');
+	inputs.each(function() {
+  	var value = $(this).val();
+  	if(value==0 || value==""){
+			banderaValidacionDetalle=1;
+  	}else{
+  	}
+	});
+	if(banderaValidacionDetalle==1){
+		Swal.fire("Montos por Producto!", "No puede existir la venta de un producto en 0.", "info");
+		return(false);
+	}
+	/******** Fin Montos Productos ********/
+
+	/**************************************************/
+	/************ Validacion de Stocks ****************/
+	/**************************************************/
+	var banderaValidacionStock=document.getElementById("bandera_validacion_stock").value;
+	console.log("bandera stocks valid: "+banderaValidacionStock);
+	banderaValidacionDetalle=0;
+	var inputs_stocks = $('form input[name^="stock"]');
+	var inputs_cantidades = $('form input[name^="cantidad_unitaria"]');
+	for (var i = 0; i < inputs_stocks.length; i++) {
+  	var cantidadFila = parseFloat(inputs_cantidades[i].value);
+  	var stockFila = parseFloat(inputs_stocks[i].value);
+  	if(banderaValidacionStock==1){
+  		if(cantidadFila>stockFila){
+  			banderaValidacionDetalle=1;
+  		}
+  	}else{ 				//para todos los otros casos de stocks
+  		if(cantidadFila>stockFila){
+  			banderaValidacionDetalle=2;
+  		}
+  	}
+  	console.log("cantidadStock: "+stockFila);
+  	console.log( "cantidadFila: "+cantidadFila);
+	}
+	console.log("validacionDetalleStocks:"+banderaValidacionDetalle);
+	if(banderaValidacionDetalle==1){
+		Swal.fire("Stocks!", "NO puede sacar cantidades mayores al stock.", "error");
+		return(false);
+	}
+	if(banderaValidacionDetalle==2){
+		mensajeGuardar="La venta provocara NEGATIVO en el STOCK!";				
+	}
+	/**************************************************/
+	/************ Fin Validacion de Stocks ************/
+	/**************************************************/
+
+  /**************** Validar Efectivo y Total Final ****************/
+  var banderaValidacionEfectivoRecibido=document.getElementById("bandera_efectivo_recibido").value;
+  var efectivoRecibido = parseFloat($("#efectivoRecibido").val());
+  var totalFinalVenta = parseFloat($("#totalFinal").val());
+  if (isNaN(efectivoRecibido)) { efectivoRecibido = 0; }
+  if (isNaN(totalFinalVenta)) { totalFinalVenta = 0; }
+  console.log("efectivo: "+efectivoRecibido);
+  if(banderaValidacionEfectivoRecibido==1){
+	  if(efectivoRecibido < totalFinalVenta){
+	    Swal.fire("Error en Monto Recibido en Efectivo!", "<b>El monto en efectivo NO puede ser menor al monto total.</b>", "error");
+			return (false);
+	  }  	
+  }
+
+	if(totalFinalVenta<=0){
+		Swal.fire("Monto Final!", "El Monto Final del documento no puede ser 0", "info");
+		return(false);
+	}
+  /**************** Fin Validar Efectivo y Total Final ****************/
+
+	var banderaMsgGuardar=document.getElementById("bandera_msg_guardar").value;
+	if(banderaMsgGuardar==1){
+			Swal.fire({
+				title: '¿Esta seguro de Realizar la Venta?',
+				text: mensajeGuardar,
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Si, Vender/Facturar!'
+				}).then((result) => {
+						console.log(result);
+						console.log("resultado: "+result.value);
+				    if (result.value) {
+				      console.log("Enviando");
+				      document.getElementById("btsubmit").value = "Enviando...";
+							document.getElementById("btsubmit").disabled = true;   
+							document.forms[0].submit();
+				    }if(result.dismiss){
+								console.log("Cancelando....");
+								return false;
+				    }
+			});		
+	}else{
+			document.getElementById("btsubmit").value = "Enviando...";
+			document.getElementById("btsubmit").disabled = true;   
+			document.forms[0].submit();				
+	}
+
+
+  return false;
+
 }
 
-function checkSubmit() {
+/*function checkSubmit() {
     document.getElementById("btsubmit").value = "Enviando...";
     document.getElementById("btsubmit").disabled = true;
     return true;
-}	
+}	*/
 
-$(document).ready(function() {
+/*$(document).ready(function() {
   $("#guardarSalidaVenta").submit(function(e) {
       var mensaje="";
       if(parseFloat($("#efectivoRecibido").val())<parseFloat($("#totalFinal").val())){
@@ -1094,7 +1197,7 @@ $(document).ready(function() {
         document.getElementById("btsubmit").disabled = true;
       }     
     });
-});
+});*/
 
 function mostrarComplemento(){
 	var tipo=$("#tipo_documento").val();
@@ -1443,21 +1546,28 @@ if(isset($_GET['file'])){
                 </div>
             </nav>
 
-<form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" ><!--onsubmit='return checkSubmit();'-->
+<form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" onsubmit="return validar(this)">
 
 	<input type="hidden" id="siat_error_valor" name="siat_error_valor">
 	<input type="hidden" id="confirmacion_guardado" value="0">
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
+	<input type="hidden" id="bandera_validacion_stock" name="bandera_validacion_stock" value="<?=obtenerValorConfiguracion($enlaceCon,4)?>">
+	<input type="hidden" id="bandera_efectivo_recibido" name="bandera_efectivo_recibido" value="<?=obtenerValorConfiguracion($enlaceCon,21)?>">
+	<input type="hidden" id="bandera_msg_guardar" name="bandera_msg_guardar" value="<?=obtenerValorConfiguracion($enlaceCon,23)?>">
+	
 
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
 <tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
 <?php
 
 if($tipoDocDefault==2){
-	$razonSocialDefault="SN";
-	$nitDefault="123";
+	// $razonSocialDefault="SN";
+	// $nitDefault="123";
+	$razonSocialDefault="";
+	$nitDefault="";
+
 }else{
 	$razonSocialDefault="";
 	$nitDefault="";
@@ -1681,19 +1791,20 @@ while($dat2=mysqli_fetch_array($resp2)){
 </fieldset>
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1000px; height: 600px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1200px; height: 600px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
-<div id="divboton" style="position: absolute; top:20px; left:1120px;visibility:hidden; text-align:center; z-index:3">
+<div id="divboton" style="position: absolute; top:20px; left:1320px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:950px; height:550px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:1150px; height:550px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
-			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
+			<tr><td align="center">Grupo</td><td align="center">Marca</td><td align="center">Modelo</td><td align="center">&nbsp;</td></tr>
 			<tr>
-			<td><select class="texto" name='itemTipoMaterial' style="width:120px">
+			<td align="center">
+				<select class="selectpicker" data-style="btn btn-success" data-live-search="true" name='itemTipoMaterial' id='itemTipoMaterial' style="width:120px">
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";
@@ -1705,14 +1816,13 @@ while($dat2=mysqli_fetch_array($resp2)){
 				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
 			}
 			?>
-
 			</select>
 			</td>
-			<td><select class="texto" name='itemMarca' style="width:120px">
+			<td align="center"><select class="selectpicker" data-style="btn btn-primary" data-live-search="true" name='itemMarca' id='itemMarca' style="width:120px">
 			<?php
 			$sqlMarca="select m.codigo, m.nombre from marcas m
 			where m.estado=1 order by 2;";
-			echo $sqlMarca;
+			//echo $sqlMarca;
 			$respMarca=mysqli_query($enlaceCon,$sqlMarca);
 			echo "<option value='0'>--</option>";
 			while($datMarca=mysqli_fetch_array($respMarca)){
@@ -1721,18 +1831,41 @@ while($dat2=mysqli_fetch_array($resp2)){
 				echo "<option value=$codMarca> $codMarca - $nombreMarca</option>";
 			}
 			?>
-
 			</select>
 			</td>
-			<td>
-				<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' style="width:120px" class="texto" onkeypress="return pressEnter(event, this.form);">
-			</td>	
-			<td>
-				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="texto" onkeypress="return pressEnter(event, this.form);">
+			<td align="center">
+				<select class="selectpicker" data-style="btn btn-success" data-live-search="true" name='itemModelo' id='itemModelo' style="width:120px">
+				<?php
+				$sqlModelo="select codigo, nombre from modelos where estado=1 order by 2;";
+				$respModelo=mysqli_query($enlaceCon,$sqlModelo);
+				echo "<option value='0'>--</option>";
+				while($datModelo=mysqli_fetch_array($respModelo)){
+					$codModelo=$datModelo[0];
+					$nombreModelo=$datModelo[1];
+					echo "<option value=$codModelo>$nombreModelo</option>";
+				}
+				?>
+				</select>
 			</td>
-			<td>
-				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">
+			<td>				
 			</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="custom-control custom-checkbox small float-left">
+            	<input type="checkbox" class="" id="solo_stock" checked="">
+            	<label class="text-dark font-weight-bold" for="solo_stock">&nbsp;&nbsp;&nbsp;Solo Productos con Stock</label>
+					</div>
+				</td>
+				<td>
+					<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' placeholder='Cod. Barras' class="textogranderojo" onkeypress="return pressEnter(event, this.form);">
+				</td>	
+				<td>
+					<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' class="textogranderojo" onkeypress="return pressEnter(event, this.form);" placeholder="Nombre Producto">
+				</td>
+				<td>
+					<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">	
+				</td>
 			</tr>
 			
 		</table>
@@ -1807,7 +1940,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 
 if($banderaErrorFacturacion==0){
 	echo "<div class='divBotones'>
-	        <input type='submit' class='boton' value='Guardar Venta' id='btsubmit' name='btsubmit' onClick='return validar(this.form, $ventaDebajoCosto)'>
+	        <input type='submit' class='boton2' value='Guardar Venta' id='btsubmit' name='btsubmit'>
 					<!--input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"';-->
 					
 					<a href='#' class='btn btn-default btn-sm btn-fab' style='background:#96079D' onclick='mostrarRegistroConTarjeta(); return false;' id='boton_tarjeta' title='AGREGAR TARJETA DE CREDITO' data-toggle='tooltip'><i class='material-icons'>credit_card</i></a>

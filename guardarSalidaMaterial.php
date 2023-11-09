@@ -1,12 +1,15 @@
 <?php
- error_reporting(E_ALL);
- ini_set('display_errors', '1');
 $start_time = microtime(true);
 require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
 require("enviar_correo/php/send-email_anulacion.php");
+
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
 
 $banderaEditPreciosTraspaso=0;
 $banderaEditPreciosTraspaso=obtenerValorConfiguracion($enlaceCon, 20);
@@ -93,23 +96,24 @@ $cuf="";
 if(isset($_POST['totalVenta'])){	$totalVenta=$_POST['totalVenta']; }else{ $totalVenta=0;	}
 if(isset($_POST['descuentoVenta'])){	$descuentoVenta=$_POST['descuentoVenta']; }else{ $descuentoVenta=0;	}
 if(isset($_POST['totalFinal'])){	$totalFinal=$_POST['totalFinal']; }else{ $totalFinal=0;	}
-if(isset($_POST['totalEfectivo'])){	$totalEfectivo=$_POST['totalEfectivo']; }else{ $totalEfectivo=0;	}
-if(isset($_POST['totalCambio'])){	$totalCambio=$_POST['totalCambio']; }else{ $totalCambio=0;	}
 if(isset($_POST['complemento'])){	$complemento=$_POST['complemento']; }else{ $complemento=0;	}
 
 $totalFinalRedondeado=round($totalFinal);
-
 //VALIDAMOS QUE NO SEA CERO EL VALOR DEL REDONDEADO PARA EL CODIGO DE ControlCode
 if($totalFinalRedondeado==0){
 	$totalFinalRedondeado=1;
 }
-
 $fecha=$_POST["fecha"];
 $cantidad_material=$_POST["cantidad_material"];
-
 if($descuentoVenta=="" || $descuentoVenta==0){
 	$descuentoVenta=0;
 }
+
+$totalEfectivo=0;
+$totalCambio=0;
+if(isset($_POST['efectivoRecibido'])){	$totalEfectivo=$_POST['efectivoRecibido']; }else{ $totalEfectivo=0;	}
+if(isset($_POST['cambioEfectivo'])){	$totalCambio=$_POST['cambioEfectivo']; }else{ $totalCambio=0;	}
+
 
 $vehiculo=0;
 
@@ -149,17 +153,12 @@ $siat_estado_facturacion="";
 
 //SI TIPO DE DOCUMENTO ES 1 == FACTURA INGRESAMOS A LOS PROCESOS SIAT y 4 facturas de contigencia
 if($tipoDoc==1 || $tipoDoc==4){
-	//ALEATORIAMENTE SON DOS PORQUE AL PRIMER RAND SIEMPRE RETORNA EL MISMO
-	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
 	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
-	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
-	// $sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad=$codigoActividadSIAT and estado=1 ORDER BY rand() LIMIT 1;";
 	$sqlConf="SELECT codigo FROM siat_sincronizarlistaleyendasfactura where codigoActividad in (SELECT siat_codigoActividad from ciudades where cod_ciudad='$globalSucursal') and estado=1 ORDER BY rand() LIMIT 1;";
 	$respConf=mysqli_query($enlaceCon,$sqlConf);
-	// $cod_leyenda=mysqli_result($respConf,0,0);
 	$datConf=mysqli_fetch_array($respConf);
 	$cod_leyenda=$datConf[0];
 	$siat_codigotipodocumentoidentidad=$_POST["tipo_documento"];	
@@ -241,6 +240,7 @@ do {
 			values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 			'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
 			'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio','$cod_tipodelivery','$cuis','$cuf','$siat_codigotipodocumentoidentidad','$complemento','$codigoPuntoVenta',$excepcion,'$codigoCufd','$cod_leyenda')";
+		//echo $sql_insert;
 		$sql_inserta=mysqli_query($enlaceCon,$sql_insert);
 	}else{   //CUANDO ES NR O TRASPASOS U OTROS TIPOS DE DOCS
 		$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
@@ -249,9 +249,9 @@ do {
 
 		$sql_inserta="INSERT INTO salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
  		cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
- 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago)
+ 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago, monto_efectivo, monto_cambio)
  		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
- 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta')";
+ 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta','$totalEfectivo','$totalCambio')";
  		$sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 	}
 	$contador++;
@@ -393,13 +393,10 @@ if($sql_inserta==1){
 							location.href='errorDiferenciaFactura.php?codVenta=$codigo';
 						</script>";	
 				}else{
-					$mensaje="transacción Existosa :)";	
-					$url="location.href='formatoFactura.php?codVenta=$codigo';";				
-					
+					$mensaje="transacción Exitosa :)";						
 				}
 			}else{ //ESTO ES CUANDO HAY ERROR FACTURA
 				$mensaje="Factura emitida fuera de línea :(";				
-				$url="location.href='dFacturaElectronica.php?codigo_salida=$codigo';";
 			}
 
 			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
@@ -440,8 +437,6 @@ if($sql_inserta==1){
 					   location.href='formatoFactura.php?codVenta=$codigo'; 
 					});
 					</script>";
-				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
-				// echo "<script language='Javascript'>
 			}else{
 				echo "<script language='Javascript'>
 					Swal.fire({
@@ -452,97 +447,18 @@ if($sql_inserta==1){
 					    location.href='formatoFactura.php?codVenta=$codigo';
 					});
 					</script>";
-				// echo "<script type='text/javascript' language='javascript'>
-				// location.href='navegadorVentas.php?codVenta=$codigo';
-				// </script>";
 			}
-
 		}else if($tipoDoc==2){
 			/*PARA EL CASO DE NR NO ENVIAR CORREO EN NINGUN CASO*/
 			$banderaCorreo=0;
 			if($banderaCorreo==1 || $banderaCorreo==2){
 				header("location:sendEmailVenta.php?codigo=$codigo&evento=1&tipodoc=$tipoDoc");
 			    $respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-		    }else{
+		   }else{
 				echo "<script type='text/javascript' language='javascript'>
-				location.href='formatoNotaRemision.php?codVenta=$codigo';
+				location.href='formatoNotaRemisionOnLine.php?codVenta=$codigo';
 				</script>";		
 			}
-		}else if($tipoDoc==4){
-			$sqlUpdMonto="update salida_almacenes set siat_codigotipoemision=2,siat_fechaemision='$fecha_emision_manual',siat_codigocufd='$codigoCufd'
-						where cod_salida_almacenes='$codigo' ";
-			mysqli_query($enlaceCon,$sqlUpdMonto);
-			require_once "siat_folder/funciones_siat.php";
-			$errorConexion=2; //OFFLINE
-			$facturaImpuestos=generarFacturaVentaImpuestos($codigo,true,$errorConexion);							
-			$cuf=$facturaImpuestos[2];
-			$sqlUpdMonto="update salida_almacenes set siat_cuf='$cuf' where cod_salida_almacenes='$codigo' ";
-			$respUpdMonto=mysqli_query($enlaceCon,$sqlUpdMonto);
-			$errorFacturaXml=1;
-			// echo "<script type='text/javascript' language='javascript'>
-			// location.href='navegadorVentas.php';
-			// </script>";
-
-			//SACAMOS LA VARIABLE PARA ENVIAR EL CORREO O NO SI ES 1 ENVIAMOS CORREO DESPUES DE LA TRANSACCION
-			$banderaCorreo=obtenerValorConfiguracion($enlaceCon,10);
-			if($banderaCorreo==1){
-				//para correo solo en caso de offline y online
-				$enviar_correo=true;
-				$correo_destino=obtenerCorreosListaCliente($codCliente);
-				if($correo_destino==null || $correo_destino=="" || $correo_destino==" "){
-					$enviar_correo=false;
-					$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
-				}
-			}else{
-				$enviar_correo=false;
-				$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>CORREO NO ENVIADO</b></span>";
-			}
-			if($enviar_correo){
-				$sw_correo=true;
-				$codigoVenta=$codigo;
-				require_once "descargarFacturaXml.php";
-				$codigoVenta=$codigo;
-				require_once "descargarFacturaPDF.php";
-
-				$estado_envio=envio_factura($codigoVenta,$correo_destino,$enlaceCon);
-				if($estado_envio==1){
-					$texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>SE ENVIÓ EL CORREO CON EXITO.</b></span>";
-				}elseif($estado_envio==0){
-					$texto_correo="<span style=\"border:1px;font-size:18px;color:orange;\"><b>EL CLIENTE NO TIENE UN CORREO REGISTRADO</b></span>";
-				}else{
-					$texto_correo="<span style=\"border:1px;font-size:18px;color:red;\"><b>Ocurrio un error al enviar el correo, vuelva a intentarlo.</b></span>";
-				}
-				echo "<script language='Javascript'>
-					Swal.fire({
-				    title: 'FACTURA CON CAFC REGISTRADO CORRECTAMENTE',
-				    html: '".$texto_correo."',
-				    type: 'success'
-					}).then(function() {
-					   location.href='navegadorVentas.php'; 
-					});
-					</script>";
-				// $texto_correo="<span style=\"border:1px;font-size:18px;color:#91d167;\"><b>¿DESEAS ENVIAR CORREO?</b></span>";
-				// echo "<script language='Javascript'>
-			}else{
-				echo "<script language='Javascript'>
-					Swal.fire({
-				    title: 'FACTURA CON CAFC REGISTRADO CORRECTAMENTE',
-				    html: '".$texto_correo."',
-				    type: 'success'
-					}).then(function() {
-					    location.href='navegadorVentas.php';
-					});
-					</script>";
-				// echo "<script type='text/javascript' language='javascript'>
-				// location.href='navegadorVentas.php?codVenta=$codigo';
-				// </script>";
-			}
-
-
-		}else{
-			echo "<script type='text/javascript' language='javascript'>
-			location.href='navegador_salidamateriales.php';
-			</script>";
 		}
 	}else{	
 		echo "<script type='text/javascript' language='javascript'>
