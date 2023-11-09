@@ -306,7 +306,7 @@ else
     $codigo++;
 }
 ?>
-<form action='guardarSalidaMaterial.php' method='POST' name='form1'>
+<form action='guardarSalidaMaterialProveedor.php' method='POST' name='form1'>
 <h1>Registrar Salida de Almacen</h1>
 
 <table class='texto' align='center' width='90%'>
@@ -369,20 +369,29 @@ else
 </table>
 
 <br>
-<div class="codigo-barras div-center">
-               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
-         </div>
-<fieldset id="fiel" style="width:100%;border:0;">
+
 	<table align="center" class="texto" width="80%" border="0" id="data0" style="border:#ccc 1px solid;">
 	<tr>
 		<td align="center" colspan="9">
-			<b>Detalle de la Transaccion   </b><input class="boton" type="button" value="Agregar (+)" onclick="mas(this)" />
+			<b>DETALLE</b>
 		</td>
 	</tr>
+		<tr align="center">
+		<th width="10%">-</th>
+		<th width="10%">Marca</th>
+		<th width="10%">Subgrupo</th>
+		<th width="20%">Material</th>
+		<th width="10%">Talla</th>
+		<th width="10%">Color</th>
+		<th width="10%">Stock</th>
+		<th width="10%">Cantidad</th>
+		<th width="10%">&nbsp;</th>
+	</tr>
 	<?php
-  $sql="select mp.codigo_material, mp.descripcion_material,mp.estado,mp.cod_grupo, g.nombre, mp.cod_tipomaterial,
- mp.cantidad_presentacion, mp.observaciones, mp.imagen, mp.cod_unidad, um.nombre, mp.peso, mp.cod_subgrupo, sg.nombre,
- mp.cod_marca,ma.nombre,mp.codigo_barras,mp.talla,mp.color,mp.codigo_anterior,mp.codigo2, mp.fecha_creacion
+
+  $sql="select mp.codigo_material, mp.descripcion_material,mp.estado,mp.cod_grupo, g.nombre as grupo , mp.cod_tipomaterial,
+ mp.cantidad_presentacion, mp.observaciones, mp.imagen, mp.cod_unidad, um.nombre as unidadmedida, mp.peso, mp.cod_subgrupo, sg.nombre as subgrupo,
+ mp.cod_marca,ma.nombre as marca ,mp.codigo_barras,mp.talla,mp.color,mp.codigo_anterior,mp.codigo2, mp.fecha_creacion
 from material_apoyo mp
 left join unidades_medida um on( mp.cod_unidad=um.codigo)
 left join subgrupos sg on( mp.cod_subgrupo=sg.codigo)
@@ -391,14 +400,96 @@ left join marcas ma on( mp.cod_marca=ma.codigo)
 where mp.cod_marca in (select codigo from proveedores_marcas where cod_proveedor=1)
 and mp.estado=1
 order by mp.codigo_material asc";
+$rptFechaInicio="2020-11-20";
+$rpt_fecha=date("Y-m-d");
+$resp = mysqli_query($enlaceCon,$sql);
+$nro=0;
+$cantProductosGral=0;
+while ($dat = mysqli_fetch_array($resp)) {
+
+	$codigo_material=$dat['codigo_material'];
+	$descripcion_material=$dat['descripcion_material'];
+	$estado=$dat['estado'];
+	$cod_grupo=$dat['cod_grupo'];
+	$grupo=$dat['grupo'];
+	$cod_tipomaterial=$dat['cod_tipomaterial'];
+ 	$cantidad_presentacion=$dat['cantidad_presentacion'];
+ 	$observaciones=$dat['observaciones'];
+ 	$imagen=$dat['imagen'];
+ 	$cod_unidad=$dat['cod_unidad'];
+ 	$unidadmedida=$dat['unidadmedida'];
+ 	$peso=$dat['peso'];
+ 	$cod_subgrupo=$dat['cod_subgrupo'];
+ 	$subgrupo=$dat['subgrupo'];
+ 	$cod_marca=$dat['cod_marca'];
+ 	$marca=$dat['marca'];
+ 	$codigo_barras=$dat['codigo_barras'];
+ 	$talla=$dat['talla'];
+ 	$color=$dat['color'];
+ 	$codigo_anterior=$dat['codigo_anterior'];
+ 	$codigo2=$dat['codigo2'];
+ 	$fecha_creacion=$dat['fecha_creacion'];
+
+ 	$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
+	where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$rptFechaInicio 00:00:00' 
+	and '$rpt_fecha 23:59:59' and i.cod_almacen='$global_almacen' and id.cod_material='$codigo_material' 
+	and i.ingreso_anulado=0";
+	$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+	$dat_ingresos=mysqli_fetch_array($resp_ingresos);
+	$cant_ingresos=$dat_ingresos[0];
+			
+	$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
+	where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and s.cod_almacen='$global_almacen'
+	and sd.cod_material='$codigo_material' and s.salida_anulada=0";
+	//echo $sql_salidas;
+	$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+	$dat_salidas=mysqli_fetch_array($resp_salidas);
+	$cant_salidas=$dat_salidas[0];
+	$stock2=$cant_ingresos-$cant_salidas;
+	$stock_real=$stock2;
+
+	if($stock2>0){
+		$cantProductosGral=$cantProductosGral+$stock2;
+		$nro++;
+ ?>
+
+ <tr bgcolor="#FFFFFF">
+<td width="10%" align="center"><?php echo $nro;?></td>
+
+<td width="10%" ><?php echo $marca;?></td>
+<td width="10%" ><?php echo $subgrupo;?></td>
+<td width="20%" >
+	<input type="hidden" name="cod_material<?php echo $codigo_material;?>" id="cod_material<?php echo $codigo_material;?>" 
+	value="<?php echo $codigo_material;?>">
+<?php echo $codigo_material." - ".$descripcion_material;?>
+</td>
+<td width="10%" ><?php echo $talla;?></td>
+<td width="10%" ><?php echo $color;?></td>
+<td width="10%" align="center">
+	<input type='hidden' id='stock<?php echo $codigo_material;?>' name='stock<?php echo $codigo_material;?>' value='<?php echo $stock2;?>'>	
+	<?php echo $stock2;?>
+</td>
+
+<td align="center" width="10%">
+	<input class="inputnumber" type="number" value="<?php echo $stock2;?>" min="0.01" 
+	id="cantidad_unitaria<?php echo $codigo_material;?>" onKeyUp='calculaMontoMaterial(<?php echo $codigo_material;?>);' name="cantidad_unitaria<?php echo $codigo_material;?>" onChange='calculaMontoMaterial(<?php echo $codigo_material;?>);' step="0.01" required> 
+</td>
+
+
+<td align="center"  width="10%" ></td>
+
+</tr>
+<?php 
+	}
+?>
+<?php
+
+ }
+
+
 	?>
-	<tr align="center">
-		<th width="10%">-</th>
-		<th width="40%">Material</th>
-		<th width="20%">Stock</th>
-		<th width="20%">Cantidad</th>
-		<th width="10%">&nbsp;</th>
-	</tr>
+	<tr><td colspan="6"></td><td align="center"><?php echo $cantProductosGral;?></td><td></td></tr>
+
 	</table>
 </fieldset>
 
@@ -416,67 +507,7 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
-</div>
 
-<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
-	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
-</div>
-
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
-  	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
-		<table align='center'>
-			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
-			<tr>
-			<td><select class="texto" name='itemTipoMaterial' style="width:120px">
-			<?php
-			$sqlTipo="select g.codigo, g.nombre from grupos g
-			where g.estado=1 order by 2;";
-			echo $sqlTipo;
-			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-			echo "<option value='0'>--</option>";
-			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
-			}
-			?>
-
-			</select>
-			</td>
-			<td><select class="texto" name='itemMarca' style="width:120px">
-			<?php
-			$sqlMarca="select m.codigo, m.nombre from marcas m
-			where m.estado=1 order by 2;";
-			echo $sqlMarca;
-			$respMarca=mysqli_query($enlaceCon,$sqlMarca);
-			echo "<option value='0'>--</option>";
-			while($datMarca=mysqli_fetch_array($respMarca)){
-				$codMarca=$datMarca[0];
-				$nombreMarca=$datMarca[1];
-				echo "<option value=$codMarca> $codMarca - $nombreMarca</option>";
-			}
-			?>
-
-			</select>
-			</td>
-			<td>
-				<input type='text' name='itemCodBarraCod2' id='itemCodBarraCod2' style="width:120px" class="texto" onkeypress="return pressEnter(event, this.form);">
-			</td>			
-			<td>
-				<input type='text' name='itemNombreMaterial' id='itemNombreMaterial' style="width:180px" class="texto" onkeypress="return pressEnter(event, this.form);">
-			</td>
-			<td>
-				<input type='button' class='boton' value='Buscar' onClick="listaMateriales(this.form)">
-			</td>
-			</tr>
-			
-		</table>
-		<div id="divListaMateriales">
-		</div>
-	
-	</div>
-</div>
 
 <input type='hidden' id='totalmat' value='<?=$cantidad_material;?>'>
 <input type='hidden' id='codalmacen' value='<?=$global_almacen;?>'>
