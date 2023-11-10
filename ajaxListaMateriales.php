@@ -42,6 +42,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 	}
 	$sql=$sql." order by 2";
 	
+	echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);
@@ -68,7 +69,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 			$precioProducto=redondear2($precioProducto);
 			$nombreEnvio=$codigo2.$codigoBarras." ".$nombre." (<small>".$marcaProducto." ".$colorProducto." ".$tallaProducto."</small>)";
 			echo "<tr><td>$codigo2 $codigoBarras </td>
-			<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\")'>$nombre</a></div></td>			
+			<td><div class='textograndenegro'><a href='javascript:setMateriales(form1, $codigo, \"$nombreEnvio\", $stockProducto, $precioProducto)'>$nombre</a></div></td>			
 			<td>$marcaProducto</td>
 			<td>$colorProducto</td>
 			<td>$tallaProducto</td>

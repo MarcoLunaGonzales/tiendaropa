@@ -6,13 +6,21 @@
 <?php 
 
 require("conexionmysqli2.inc");
-	$num=$_GET['codigo'];
-	$cod_precio=0;
-	if(isset($_GET["cod_precio"])){
-		$cod_precio=$_GET["cod_precio"];
-	}
+require_once 'funciones.php';
 
+
+$num=$_GET['codigo'];
+$globalAdmin=$_COOKIE["global_admin_cargo"];
+
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
+/*Bandera de descuento abierto en Venta*/
+$banderaDescuentoAbierto=obtenerValorConfiguracion($enlaceCon,20);
 ?>
+
 
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
 <tr bgcolor="#FFFFFF">
@@ -28,7 +36,7 @@ require("conexionmysqli2.inc");
 
 <td width="10%" align="center">
 	<div id='idstock<?php echo $num;?>'>
-		<input type='hidden' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value=''>
+		<input type='number' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value='' style="height:20px;font-size:19px;width:60px;color:blue;" readonly>
 	</div>
 </td>
 
@@ -39,33 +47,23 @@ require("conexionmysqli2.inc");
 
 <td align="center" width="10%">
 	<div id='idprecio<?php echo $num;?>'>
-		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
+		<input class="inputnumber" type="number" min="1" value="0" id="precio_unitario<?php echo $num;?>" name="precio_unitario<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' readonly onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required>
 	</div>
 </td>
 
 <td align="center" width="15%">
-	<?php
-			$sql1="select codigo, nombre, abreviatura from tipos_precio where estado=1 order by 3";
-			$resp1=mysqli_query($enlaceCon,$sql1);
-			echo "<select name='tipoPrecio' class='texto".$num."' id='tipoPrecio".$num."' style='width:55px !important;float:left;' onchange='ajaxPrecioItem(".$num.")'>";
-			while($dat=mysqli_fetch_array($resp1)){
-				$codigo=$dat[0];
-				$nombre=$dat[1];
-				$abreviatura=$dat[2];
-				if($codigo==$cod_precio){
-                 echo "<option value='$codigo' selected>$abreviatura %</option>";					 
-				}else{
-				echo "<option value='$codigo'>$abreviatura %</option>";					
-				}
-			}
-			echo "</select>";
-			?>
-	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' onChange='calculaMontoMaterial(<?php echo $num;?>);'  value="0" step="0.01" readonly>
+	<input class="inputnumber" type="number" max="90" step="0.01" value="0" id="tipoPrecio<?php echo $num;?>" name="tipoPrecio<?php echo $num;?>" style="background:#ADF8FA;" onkeyup='calculaMontoMaterial(<?php echo $num;?>);' onchange='calculaMontoMaterial(<?php echo $num;?>);' <?=($banderaDescuentoAbierto==0)?'readonly':'';?> >%
+
+	<input class="inputnumber" type="number" value="0" id="descuentoProducto<?php echo $num;?>" name="descuentoProducto<?php echo $num;?>" step="0.01" style='background:#ADF8FA;' onkeyup='calculaMontoMaterial_bs(<?php echo $num;?>);' onchange='calculaMontoMaterial_bs(<?php echo $num;?>);' <?=($banderaDescuentoAbierto==0)?'readonly':'';?>>
+	<div id="divMensajeOferta<?=$num;?>" class="textomedianosangre"></div>
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="0" id="montoMaterial<?php echo $num;?>" name="montoMaterial<?php echo $num;?>" value="0"  step="0.01"  required readonly> 
+	<input class="inputnumber" type="number" value="0" id="montoMaterial<?php echo $num;?>" name="montoMaterial<?php echo $num;?>" value="0"  step="0.01" style="height:20px;font-size:19px;width:120px;color:red;" required readonly> 
 </td>
+
+<input type="hidden" name="precio_normal<?php echo $num;?>" id="precio_normal<?php echo $num;?>" value="">
+<input type="hidden" name="precio_mayor<?php echo $num;?>" id="precio_mayor<?php echo $num;?>" value="">
 
 <td align="center"  width="10%" ><input class="boton2peque" type="button" value="-" onclick="menos(<?php echo $num;?>)" /></td>
 

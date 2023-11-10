@@ -235,15 +235,15 @@ function listaMateriales(f){
 	
 	contenedor = document.getElementById('divListaMateriales');
 
-	var arrayItemsUtilizados=new Array();	
+	//var arrayItemsUtilizados=new Array();	
 	var i=0;
-	for(var j=1; j<=num; j++){
-		if(document.getElementById('materiales'+j)!=null){
-			console.log("codmaterial: "+document.getElementById('materiales'+j).value);
-			arrayItemsUtilizados[i]=document.getElementById('materiales'+j).value;
-			i++;
-		}
-	}
+	var arrayItemsUtilizados="0";
+	var  inputs = $('form input[name^="materiales"]');
+	inputs .each(function() {
+  	var value = $(this).val();
+  	arrayItemsUtilizados=arrayItemsUtilizados+","+value;
+	});
+	console.log("itemsNoUtilizados: "+arrayItemsUtilizados);
 	
 	ajax=nuevoAjax();
 	//ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
@@ -292,7 +292,7 @@ function ajaxNroDoc(f){
 }
 
 function actStock(indice){
-	var contenedor;
+	/*var contenedor;
 	contenedor=document.getElementById("idstock"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
     var codalm=document.getElementById("global_almacen").value;
@@ -305,11 +305,11 @@ function actStock(indice){
 		}
 	}
 	totales();
-	ajax.send(null);
+	ajax.send(null);*/
 }
 
 function ajaxPrecioItem(indice){
-	var contenedor;
+	/*var contenedor;
 	contenedor=document.getElementById("idprecio"+indice);
 	var codmat=document.getElementById("materiales"+indice).value;
 	var tipoPrecio=document.getElementById("tipoPrecio"+indice).value;
@@ -324,7 +324,7 @@ function ajaxPrecioItem(indice){
 			calculaMontoMaterial(indice);
 		}
 	}
-	ajax.send(null);
+	ajax.send(null);*/
 }
 
 /*function ajaxRazonSocial(f){
@@ -519,16 +519,46 @@ function verificarPagoTargeta(){
   }
 }
 
-
 function calculaMontoMaterial(indice){
-
+	console.log("function calculaMontoMaterial");
 	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
+	if(cantidadUnitaria==""){
+		cantidadUnitaria=0;
+	}
 	var precioUnitario=document.getElementById("precio_unitario"+indice).value;
-	var descuentoUnitario=document.getElementById("descuentoProducto"+indice).value;
+	var porcentajeDescuentoUnitario=document.getElementById("tipoPrecio"+indice).value;
 	
+	console.log("Variables entrada porcentaje: "+porcentajeDescuentoUnitario);
+
+	descuentoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) * (parseFloat(porcentajeDescuentoUnitario)/100);
+	descuentoUnitario=Math.round(descuentoUnitario*100)/100;
+	console.log("calculo: CU: "+cantidadUnitaria+" PU: "+precioUnitario+" DUPorc: "+porcentajeDescuentoUnitario+" DU:"+descuentoUnitario);
 	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) - (parseFloat(descuentoUnitario));
-	montoUnitario=Math.round(montoUnitario*100)/100
-		
+	montoUnitario=Math.round(montoUnitario*100)/100;
+	document.getElementById("descuentoProducto"+indice).value=descuentoUnitario;
+	document.getElementById("montoMaterial"+indice).value=montoUnitario;
+	
+	totales();
+}
+
+function calculaMontoMaterial_bs(indice){
+	console.log("function calculaMontoMaterialBolivianos");
+	var cantidadUnitaria=document.getElementById("cantidad_unitaria"+indice).value;
+	if(cantidadUnitaria==""){
+		cantidadUnitaria=0;
+	}
+	var precioUnitario=document.getElementById("precio_unitario"+indice).value;
+	
+	var descuentoUnitarioBS=document.getElementById("descuentoProducto"+indice).value;
+	
+	console.log("Variables entrada porcentajeDescuentoUnitarioBS: "+descuentoUnitarioBS);
+
+	porcentajeDescuentoUnitario = ((parseFloat(descuentoUnitarioBS)) / (parseFloat(cantidadUnitaria)*parseFloat(precioUnitario))*100);
+	porcentajeDescuentoUnitario=Math.round(porcentajeDescuentoUnitario*100)/100;
+	console.log("calculo: CU: "+cantidadUnitaria+" PU: "+precioUnitario+" DUPorc: "+porcentajeDescuentoUnitario+" DU:"+descuentoUnitario);
+	var montoUnitario=(parseFloat(cantidadUnitaria)*parseFloat(precioUnitario)) - (parseFloat(descuentoUnitarioBS));
+	montoUnitario=Math.round(montoUnitario*100)/100;
+	document.getElementById("tipoPrecio"+indice).value=porcentajeDescuentoUnitario;
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
 	
 	totales();
@@ -887,7 +917,7 @@ function Hidden(){
 	document.getElementById('divboton').style.visibility='hidden';
 
 }
-function setMateriales(f, cod, nombreMat){
+function setMateriales(f, cod, nombreMat, stock, precio){
 	var numRegistro=f.materialActivo.value;
 	
 	document.getElementById('materiales'+numRegistro).value=cod;
@@ -899,8 +929,11 @@ function setMateriales(f, cod, nombreMat){
 	document.getElementById('divboton').style.visibility='hidden';
 	
 	document.getElementById("cantidad_unitaria"+numRegistro).focus();
+	
+	document.getElementById("stock"+numRegistro).value=stock;
+	document.getElementById("precio_unitario"+numRegistro).value=precio;
 
-	actStock(numRegistro);
+	//actStock(numRegistro);
 }
 		
 function precioNeto(fila){
@@ -1481,6 +1514,8 @@ if(isset($_GET['file'])){
 	<input type="hidden" id="global_almacen" value="<?=$globalAlmacen?>">
 	<input type="hidden" id="validacion_clientes" name="validacion_clientes" value="<?=obtenerValorConfiguracion($enlaceCon,11)?>">
 	<input type="hidden" id="porcentajeImpuesto" name="porcentajeImpuesto"value="<?=$porcentajeImpuesto?>">
+
+
 	
 <table class='' width='100%' style='width:100%;margin-top:-24px !important;'>
 <tr class="bg-info text-white" align='center' id='venta_detalle' style="color:#fff;background:#aa00ff !important; font-size: 16px;">
