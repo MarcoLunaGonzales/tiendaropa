@@ -8,7 +8,7 @@ require("funciones.php");
  ini_set('display_errors', '1');
 */
 
-date_default_timezone_set('America/La_Paz');
+date_default_timezone_set('Europe/Madrid');
 
 class PDF extends FPDF
 { 	

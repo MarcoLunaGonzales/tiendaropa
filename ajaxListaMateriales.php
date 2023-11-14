@@ -42,7 +42,7 @@ $globalAgencia=$_COOKIE["global_agencia"];
 	}
 	$sql=$sql." order by 2";
 	
-	echo $sql;
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);

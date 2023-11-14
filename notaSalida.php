@@ -3,7 +3,7 @@ require("fpdf.php");
 require("conexionmysqli.php");
 require("funciones.php");
 
-date_default_timezone_set('America/La_Paz');
+date_default_timezone_set('Europe/Madrid');
 
 
 class PDF extends FPDF

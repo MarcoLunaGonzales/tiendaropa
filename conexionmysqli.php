@@ -2,7 +2,7 @@
 require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8'); 
-date_default_timezone_set('America/La_Paz');
+date_default_timezone_set('Europe/Madrid');
 
 if(!function_exists('register_globals')){
 	require_once('register_globals.php');

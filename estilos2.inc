@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('America/La_Paz');
+date_default_timezone_set('Europe/Madrid');
 echo"<link href='../stilos.css' rel='stylesheet' type='text/css'>";  
 require("conexionmysqli.php");
 
