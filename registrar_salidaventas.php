@@ -316,6 +316,8 @@ function ajaxPrecioItem(indice){
 			contenedor.innerHTML = respuesta[0];
             document.getElementById("descuentoProducto"+indice).value=(respuesta[1]*parseFloat(cantidadUnitaria)); 
 			calculaMontoMaterial(indice);
+			// Suma total de descuento
+			sumaTotalDescuentoProducto();
 		}
 	}
 	ajax.send(null);
@@ -501,6 +503,9 @@ function calculaMontoMaterial(indice){
 	document.getElementById("montoMaterial"+indice).value=montoUnitario;
 	
 	totales();
+	
+	// Suma total de descuento
+	sumaTotalDescuentoProducto();
 }
 
 function totales(){
@@ -864,6 +869,8 @@ function menos(numero) {
 	fi = document.getElementById('fiel');
 	fi.removeChild(document.getElementById('div'+numero));
 	totales();
+	
+	sumaTotalDescuentoProducto();
 }
 
 /*function pressEnter(e, f){
@@ -1256,6 +1263,17 @@ function editarDatosCliente() {
 		    });	
   	}
   }
+}
+/**
+ * Suma total de descuento final por producto
+ */
+function sumaTotalDescuentoProducto(){
+	var sumaTotal = 0;
+	$('[id^=descuentoProducto]').each(function() {
+		console.log("+++++++++++ ")
+		sumaTotal += parseFloat($(this).val()) || 0;
+	});
+	$('#descuentoProdTotal').val(sumaTotal);
 }
 </script>
 
@@ -1659,7 +1677,15 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center' colspan="2"><b style="font-size:20px;color:#0691CD;">Bs.</b></td>
 		</tr>
-
+		<tr>
+			
+			<!-- Descuento por producto -->
+			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento Total Prod.</td>
+			<td>
+				<input type='number' name='descuentoProdTotal' id='descuentoProdTotal' style="height:20px;font-size:19px;width:120px;color:red;" value="0" step='0.01' required>
+			</td>
+			<!-- Fin Descuento por producto -->
+		</tr>
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3;width:120px;"></td>
 			<td align='center' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#0691CD;">Efectivo Recibido</b></td>
