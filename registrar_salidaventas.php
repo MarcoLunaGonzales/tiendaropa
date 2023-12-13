@@ -1609,14 +1609,14 @@ while($dat2=mysqli_fetch_array($resp2)){
 </fieldset>
 
 
-<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
+<div id="divRecuadroExt" style="background-color:#666; position:absolute; width:900px; height: 400px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
 </div>
 
-<div id="divboton" style="position: absolute; top:20px; left:920px;visibility:hidden; text-align:center; z-index:3">
+<div id="divboton" style="position: absolute; top:20px; left:1020px;visibility:hidden; text-align:center; z-index:3">
 	<a href="javascript:Hidden();"><img src="imagenes/cerrar4.png" height="45px" width="45px"></a>
 </div>
 
-<div id="divProfileData" style="background-color:#FFF; width:750px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
+<div id="divProfileData" style="background-color:#FFF; width:850px; height:350px; position:absolute; top:50px; left:170px; -webkit-border-radius: 20px; 	-moz-border-radius: 20px; visibility: hidden; z-index:2; overflow: auto;">
   	<div id="divProfileDetail" style="visibility:hidden; text-align:center">
 		<table align='center'>
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
@@ -1680,15 +1680,7 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;"></td><td align='center' colspan="2"><b style="font-size:20px;color:#0691CD;">Bs.</b></td>
 		</tr>
-		<tr>
-			
-			<!-- Descuento por producto -->
-			<td align='right' width='90%' style="font-weight:bold;color:red;font-size:12px;">Descuento Total Prod.</td>
-			<td>
-				<input type='number' name='descuentoProdTotal' id='descuentoProdTotal' style="height:20px;font-size:19px;width:120px;color:red;" value="0" step='0.01' required>
-			</td>
-			<!-- Fin Descuento por producto -->
-		</tr>
+
 		<tr>
 			<td align='right' width='90%' style="color:#777B77;font-size:12px;">Monto Nota</td><td><input type='number' name='totalVenta' id='totalVenta' readonly style="background:#B0B4B3;width:120px;"></td>
 			<td align='center' width='90%' style="color:#777B77;font-size:12px;"><b style="font-size:12px;color:#0691CD;">Efectivo Recibido</b></td>
@@ -1704,6 +1696,14 @@ while($dat2=mysqli_fetch_array($resp2)){
 		<tr>
 			<td align='right' width='90%' style="font-weight:bold;font-size:12px;color:red;">Monto Final</td><td><input type='number' name='totalFinal' id='totalFinal' readonly style="background:#0691CD;height:20px;font-size:19px;width:120px;;color:#fff;"></td>
 			<td><input type='number' name='cambioEfectivo' id='cambioEfectivo' readonly style="background:#7BCDF0;height:20px;font-size:18px;width:120px;"></td>
+		</tr>
+		<tr>
+			<!-- Descuento por producto -->
+			<td align='right' width='90%' style="font-weight:bold;color:blue;font-size:12px;background-color: yellow;" colspan="2">Descuento Por Producto</td>
+			<td>
+				<input type='number' name='descuentoProdTotal' id='descuentoProdTotal' style="height:20px;font-size:19px;width:120px;color:blue;background-color: yellow;" value="0" step='0.01' required>
+			</td>
+			<!-- Fin Descuento por producto -->
 		</tr>
 	</table>
       
