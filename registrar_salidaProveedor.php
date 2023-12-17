@@ -13,7 +13,7 @@ $global_almacen=$_COOKIE['global_almacen'];
         <script type="text/javascript" src="functionsGeneral.js"></script>
 		
 		
-		        <script type='text/javascript' language='javascript'>
+<script type='text/javascript' language='javascript'>
 function nuevoAjax()
 {	var xmlhttp=false;
 	try {
@@ -239,37 +239,37 @@ function validar(f){
 		}
 	}
 
-	if(cantidadItems>0){	
-		var item="";
-		var cantidad="";
-		var stock="";
-		var descuento="";
-						
-		for(var i=1; i<=cantidadItems; i++){
-			console.log("valor i: "+i);
-			console.log("objeto materiales: "+document.getElementById("materiales"+i));
-			if(document.getElementById("materiales"+i)!=null){
-				item=parseFloat(document.getElementById("materiales"+i).value);
-				cantidad=parseFloat(document.getElementById("cantidad_unitaria"+i).value);
-				stock=parseFloat(document.getElementById("stock"+i).value);
-		
-				console.log("materiales"+i+" valor: "+item);
-				console.log("stock: "+stock+" cantidad: "+cantidad);
 
-				if(item==0){
-					alert("Debe escoger un item en la fila "+i);
-					return(false);
-				}		
-				if(stock<cantidad){
-					alert("No puede sacar cantidades mayores a las existencias. Fila "+i);
-					return(false);
-				}						
-			}
+	var sw=0;
+ 
+	var valor=0;
+	var stock=0;
+	var cantSal=0;
+ 	var inputs = $('form input[name^="cod_material"]');
+		inputs.each(function() {
+
+  			valor = $(this).val();
+  			stock=document.getElementById("stock"+valor).value;
+  			cantSal=document.getElementById("cantidad_unitaria"+valor).value;
+  			//alert("hola3 stock"+valor+"="+stock+"cantsal="+cantSal);
+  		  	
+  		  if( cantSal>stock || cantSal<0){
+
+
+  		  	sw=1;
+  		  	document.getElementById("cantidad_unitaria"+valor).focus();	
+
+  		  }  	
+  		
+    	});
+
+		if(sw==1){
+    	 	alert(" Existen cantidades de Salida que son mayores a las de su stock o Cantidades de Salida menores a 0.");
+
+    	 	return (false);
 		}
-	}else{
-		alert("El ingreso debe tener al menos 1 item.");
-		return(false);
-	}
+
+
 }
 	
 	
@@ -306,7 +306,7 @@ else
     $codigo++;
 }
 ?>
-<form action='guardarSalidaMaterialProveedor.php' method='POST' name='form1'>
+<form action='' method='POST' name='form1'>
 <h1>Registrar Salida de Almacen</h1>
 
 <table class='texto' align='center' width='90%'>
@@ -461,6 +461,8 @@ while ($dat = mysqli_fetch_array($resp)) {
 <td width="20%" >
 	<input type="hidden" name="cod_material<?php echo $codigo_material;?>" id="cod_material<?php echo $codigo_material;?>" 
 	value="<?php echo $codigo_material;?>">
+	<input type="hidden" name="desc_producto<?php echo $codigo_material;?>" id="desc_producto<?php echo $codigo_material;?>" 
+	value="<?php echo $descripcion_material;?>">
 <?php echo $codigo_material." - ".$descripcion_material;?>
 </td>
 <td width="10%" ><?php echo $talla;?></td>
