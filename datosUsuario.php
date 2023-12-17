@@ -67,7 +67,7 @@
 	$nombreTipoAlmacen=$dat_tipo_almacen[1];
 	*/
 
-	date_default_timezone_set('America/La_Paz');
+	date_default_timezone_set('Europe/Madrid');
 	$fechaSistemaSesion = date( "d-m-Y" );
 	$horaSistemaSesion = date( "H:i" );
 

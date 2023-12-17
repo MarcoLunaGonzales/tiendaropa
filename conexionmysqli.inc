@@ -7,7 +7,7 @@ if(!isset($_COOKIE["global_usuario"])){
 }
 set_time_limit(0);
 error_reporting(0);
-date_default_timezone_set('America/La_Paz');
+date_default_timezone_set('Europe/Madrid');
 if(!function_exists('log_querys')){
   require_once('register_logs.php');  
 }
