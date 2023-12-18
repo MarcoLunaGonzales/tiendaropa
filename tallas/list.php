@@ -93,7 +93,7 @@ echo "<script language='Javascript'>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$codigo</td>
 		<td>$nombre</td>
-		<td>$abreviatura</td
+		<td>$abreviatura</td>
 		</tr>";
 	}
 	echo "</table></center><br>";

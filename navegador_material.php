@@ -7,6 +7,10 @@ echo "<script language='Javascript'>
 		function enviar_nav()
 		{	location.href='registrar_material_apoyo.php';
 		}
+
+		function adicionargrupo()
+		{	location.href='registrar_material_apoyo_masivo.php';
+		}
 		function eliminar_nav(f)
 		{
 			var i;
@@ -263,6 +267,7 @@ echo "<script language='Javascript'>
 	
 	echo "<div class='divBotones'>
 		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
+				<input type='button' value='Adicionar en Grupo' name='adicionar' class='boton' onclick='adicionargrupo()'>
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 		<input type='button' value='Duplicar' name='Duplicar' class='boton' onclick='duplicar(this.form)'>
@@ -272,9 +277,10 @@ echo "<script language='Javascript'>
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
 		<th>Grupo/SubGrupo</th><th>Modelo</th><th>Genero</th><th>Material</th>
-		<th>Color/Talla</th>
+		<th>Color/<br/>Talla</th>
 		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
 		<th>Fijar Precios</th>
+	
 		</tr>";
 	
 	$indice_tabla=1;
@@ -359,6 +365,7 @@ echo "<script language='Javascript'>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'><br><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
 		<td><a href='listaPrecios.php?codigo=$codigo&nombre=$nombreProd'>
 		<img src='imagenes/fijarPrecio.jpg' width='30' title='Fijar Precio'></a></td>
+	
 		</tr>";
 		$indice_tabla++;
 	}
