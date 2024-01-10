@@ -228,7 +228,7 @@ echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th>
 <th>Observaciones</th>
 <th>Registro</th>
 <th>Ult. Edicion</th>
-<th>&nbsp;</th><th>&nbsp;</th><th>Nro PreIngreso</th></tr>";
+<th>Detalle</th><th>Imprimir</th></tr>";
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_ingreso = $dat[1];
@@ -297,8 +297,8 @@ while ($dat = mysqli_fetch_array($resp)) {
 		<a target='_BLANK' href='navegador_detalleingresomateriales.php?codigo_ingreso=$codigo'><img src='imagenes/detalles.png' border='0' width='30' heigth='30' title='Ver Detalles del Ingreso'></a>
 	</td>
 	<td align='center'>
-		<a href='#' onclick='javascript:editarIngresoTipoProv($codigo)' > 
-			<img src='imagenes/edit.png' border='0' width='30' heigth='30' title='Editar Tipo & Proveedor'>
+		<a href='formatoNotaIngreso.php?codigo_ingreso=$codigo' target='_blank'> 
+			<img src='imagenes/print.jpg' border='0' width='30' heigth='30' title='Imprimir Ingreso'>
 		</a>
 	</td>";
 	if($datAux[0]>0){
