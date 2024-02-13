@@ -3,6 +3,8 @@
 	require("../estilos2.inc");
 	require("configModule.php");
 
+	$tipo=$_GET['tipo'];
+	$datos=$_GET['datos'];
 	$vector=explode(",",$datos);
 	$n=sizeof($vector);
 	for($i=0;$i<$n;$i++)
@@ -12,7 +14,7 @@
 	}
 	echo "<script language='Javascript'>
 			alert('Los datos fueron eliminados.');
-			location.href='$urlList2';
+			location.href='$urlList2?tipo=".$tipo."';
 			</script>";
 
 ?>

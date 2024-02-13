@@ -6,6 +6,8 @@ require('funciones.php');
 //recogemos variables
 
 $codProducto=$_GET['cod_material'];
+$tipo=$_GET['tipo'];
+$estado=$_GET['estado'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
 $sqlEdit="select codigo_material,descripcion_material,estado,cod_linea_proveedor,
@@ -46,9 +48,9 @@ $codigo=$dat[0];
 $txtCopia="COPIA ";
 
 $sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial,
-cantidad_presentacion, observaciones, cod_unidad, cod_subgrupo, cod_marca, color, talla,fecha_creacion,cod_modelo,cod_material,cod_genero) values ($codigo,'$txtCopia.$codigo.$descripcion_material','1','1','$cod_grupo','$cod_tipomaterial','1','$observaciones','$cod_unidad',
+cantidad_presentacion, observaciones, cod_unidad, cod_subgrupo, cod_marca, color, talla,fecha_creacion,cod_modelo,cod_material,cod_genero,cod_tipo) values ($codigo,'$txtCopia.$codigo.$descripcion_material','1','1','$cod_grupo','$cod_tipomaterial','1','$observaciones','$cod_unidad',
 '$cod_subgrupo','$cod_marca','$color','$talla','$fechaCreacion','$cod_modelo','$cod_material',
-'$cod_genero')";
+'$cod_genero','$tipo')";
 
 
 
@@ -82,7 +84,7 @@ cant_final,created_by,created_date from precios  where codigo_material='".$codPr
 if($resp_inserta){
 		echo "<script language='Javascript'>
 			alert('Los datos fueron insertados correctamente.');
-			location.href='navegador_material.php';
+			location.href='navegador_material.php?tipo=".$tipo."&estado=".$estado."'
 			</script>";
 }else{
 	echo "<script language='Javascript'>

@@ -10,6 +10,7 @@ $tel2 = $_GET["tel2"];
 $contacto = $_GET["contacto"];
 $email = $_GET["email"];
 $cod_ciu = $_GET["cod_ciu"];
+$cod_tipo = $_GET["cod_tipo"];
 
 $nomPro = str_replace("'", "''", $nomPro);
 $dir = str_replace("'", "''", $dir);
@@ -25,7 +26,8 @@ $consulta="
     telefono2 = '$tel2',
     contacto = '$contacto',
 	 correo = '$email',
-	  cod_ciu = '$cod_ciu'
+	  cod_ciu = '$cod_ciu',
+      cod_tipo = '$cod_tipo'
     WHERE cod_proveedor = $codPro
 ";
 $resp=mysqli_query($enlaceCon,$consulta);

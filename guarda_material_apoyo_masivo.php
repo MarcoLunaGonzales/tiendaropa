@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 //recogemos variables
 $globalAgencia=$_COOKIE['global_agencia'];
 
+$tipo=$_POST['tipo'];
 $codTipo=$_POST['cod_tipo'];
 $codGrupo=$_POST['cod_grupo'];
 
@@ -58,9 +59,9 @@ $sql="select codigo, nombre, abreviatura, estado from tallas where estado=1 orde
 			
 
 			$sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial,
-cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2, fecha_creacion,cod_modelo,cod_material,cod_genero) values ($codigo,'$nombreProducto','1','1','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
+cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_subgrupo, cod_marca, color, talla,codigo2, fecha_creacion,cod_modelo,cod_material,cod_genero,cod_tipo) values ($codigo,'$nombreProducto','1','1','$codGrupo','$codTipo','1','$observaciones','$archivoName','$codUnidad','$codigoBarras',
 '$codSubGrupo','$codMarca','$codColor','$codTalla','','$fechaCreacion','$codModelo','$codMaterial',
-'$codGenero')";
+'$codGenero','$tipo')";
 
 
 			$resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
@@ -120,7 +121,6 @@ cantidad_presentacion, observaciones, imagen, cod_unidad, codigo_barras, cod_sub
 			}
 		}			
 	
-echo"</table></center>";
 			////////////////////
 
 
@@ -132,7 +132,7 @@ echo"</table></center>";
 	if($resp_inserta){
 		echo "<script language='Javascript'>
 			alert('Los datos fueron insertados correctamente.');
-			location.href='navegador_material.php';
+			location.href='navegador_material.php?estado=-1&tipo=".$tipo."';
 			</script>";
 }else{
 	echo "<script language='Javascript'>

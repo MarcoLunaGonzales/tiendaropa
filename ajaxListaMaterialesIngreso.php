@@ -2,12 +2,15 @@
 <body>
 <table align='center' class="texto">
 <tr>
-<th>Cod</th><th>Producto</th><th>Marca</th><th>C</th><th>T</th><th>Costo</th><th>Precio Normal</th>
+<th>Cod</th><th>Producto</th><th>Marca</th><th>Costo</th><th>Precio Normal</th>
 <th>Precio x Mayor</th></tr>
 <?php
 require("conexionmysqli.inc");
 require("funciones.php");
-$codTipo=$_GET['codTipo'];
+$tipo=$_GET['tipo'];
+echo $tipo;
+$codGrupo=$_GET['codGrupo'];
+
 $nombreItem=$_GET['nombreItem'];
 $codMarca=$_GET['codMarca'];
 $codBarraCod2=$_GET['codBarraCod2'];
@@ -19,7 +22,7 @@ $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 
 
 $codProveedor=$_GET['codProveedor'];
-//$itemsNoUtilizar=$_GET['arrayItemsUtilizados'];
+
 $itemsNoUtilizar="0";
 $cantAux1=0;
 if($globalTipoFuncionario==2){
@@ -36,12 +39,12 @@ $cantAux1=mysqli_num_rows($respAux1);
 		left join subgrupos s on (ma.cod_subgrupo=s.codigo)
 		left join grupos g on (s.cod_grupo=g.codigo)
 		left join marcas m on (ma.cod_marca=m.codigo)
-		where ma.estado=1 
+		where ma.estado=1  and ma.cod_tipo=".$tipo."
 		";
 	if($globalTipoFuncionario==2 && $cantAux1>0){
 		$sql=$sql." and ma.cod_marca in ( select codigo from proveedores_marcas where cod_proveedor=$codProveedor )";
 	}
-	$sql=$sql." and ma.cod_marca not in ($itemsNoUtilizar)";
+
 	
 	if($codBarraCod2!=""){
 		$sql=$sql. " and (ma.codigo_barras like '%$codBarraCod2%' or  ma.codigo2 like '%$codBarraCod2%')";
@@ -52,18 +55,13 @@ $cantAux1=mysqli_num_rows($respAux1);
 	if($nombreItem!=""){
 		$sql=$sql. " and ma.descripcion_material like '%$nombreItem%'";
 	}
-	if($codTipo!=0){
-		$sql=$sql. " and ma.cod_grupo = '$codTipo' ";
-	}
-	
-	if($nombreItem!=""){
-		$sql=$sql. " and ma.descripcion_material like '%$nombreItem%'";
-	}
-	if($codTipo!=0){
-		$sql=$sql. " and ma.cod_grupo = '$codTipo' ";
+
+	if($codGrupo!=0){
+		$sql=$sql. " and s.cod_grupo = '$codGrupo' ";
 	}
 	$sql=$sql." order by 2";
-	
+
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 
 	$numFilas=mysqli_num_rows($resp);
@@ -132,10 +130,8 @@ $cantAux1=mysqli_num_rows($respAux1);
 			echo "<tr>
 			<td>$codigo2 $codigoBarras</td>
 			<td align='left'>
-			<div class='texto'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2 $codigoBarras</strong>$nombre ($nombre_marca)\", $cantidadPresentacion, $costoItem, $precio0,$precio2)'>$nombre </a></div></td>
+			<div class='texto'><a href='javascript:setMateriales(form1, $codigo, \"<strong>$codigo2 $codigoBarras</strong>$nombre ($nombre_marca)\",$costoItem, $precio0,$precio2)'>$nombre</a></div></td>
 			<td>$nombre_marca</td>
-			<td>$talla</td>
-			<td>$color</td>
 		
 			<td>$costoItem</td>
 			<td>$precio0</td>

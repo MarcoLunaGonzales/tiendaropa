@@ -5,10 +5,13 @@ require("../estilos2.inc");
 require("configModule.php");
 require_once("../funcion_nombres.php");
 
-	$codMaestro=$_GET['cod_maestro'];
+	$codMaestro=$_GET['codMaestro'];
+	$tipo=$_GET['tipo'];
 	$nameMaestro=obtenerNombreMaestro($enlaceCon,$table,$codMaestro);
 	
 echo "<form action='$urlSaveDet' method='post'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='".$tipo."'>";
+echo "<input type='hidden' name='codMaestro' id='codMaestro' value='".$codMaestro."'>";
 
 echo "<h1>Registrar $moduleDetNameSingular</h1>";
 echo "<h1>$moduleNameSingular $nameMaestro</h1>";
@@ -27,12 +30,12 @@ echo "<td align='left'>
 echo "</tr>";
 echo "</table></center>";
 
-echo "<input type='hidden' name='cod_maestro' value='$codMaestro'>";
+
 
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"$urlList2\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"listDetalle.php?codMaestro=".$codMaestro."&tipo=".$tipo."\"'>
 ";
 
 echo "</form>";

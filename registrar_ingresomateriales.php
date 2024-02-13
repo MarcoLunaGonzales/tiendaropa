@@ -47,7 +47,8 @@ function ajaxNroSalida(){
 }
 function listaMateriales(f){
 	var contenedor;
-	var codTipo=f.itemTipoMaterial.value;
+	var codGrupo=f.codGrupo.value;
+	var tipo=f.tipo.value;
 	var nombreItem=f.itemNombreMaterial.value;
 		var codMarca=f.itemMarca.value;
 	var codBarraCod2=f.itemCodBarraCod2.value;
@@ -55,7 +56,7 @@ function listaMateriales(f){
 	contenedor = document.getElementById('divListaMateriales');
 	ajax=nuevoAjax();
 	//ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem,true);
-	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
+	ajax.open("GET", "ajaxListaMaterialesIngreso.php?tipo="+tipo+"&codGrupo="+codGrupo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -220,11 +221,16 @@ if($fecha=="")
 }
 
 echo "<form id='guarda_ingresomateriales' action='guarda_ingresomateriales.php' method='post' name='form1' enctype='multipart/form-data'>";
+$tipo=$_GET['tipo'];
+$estado=$_GET['estado'];
+
+//echo "tipo=".$tipo."<br/> estado=".$estado;
+echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";
 echo "<table border='0' class='textotit' align='center'><tr><th>Registrar Ingreso de Materiales</th></tr></table><br>";
 echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%' style='border:#ccc 1px solid;'>";
 echo "<tr><th>Numero de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th><th>Factura o Nota de Ingreso</th></tr>";
 echo "<tr>";
-$sql="select nro_correlativo from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
+$sql="select nro_correlativo from ingreso_almacenes where cod_almacen='$global_almacen' and cod_tipo=".$tipo." order by cod_ingreso_almacen desc";
 $resp=mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $num_filas=mysqli_num_rows($resp);
@@ -255,7 +261,7 @@ echo "<td align='center'><input type='number' class='texto' name='nro_factura' v
 
 echo "<tr><th>Proveedor</th>";
 echo "<th colspan='3'>Observaciones</th></tr>";
-$sql1="select cod_proveedor, nombre_proveedor from proveedores order by 2";
+$sql1="select cod_proveedor, nombre_proveedor from proveedores where  cod_tipo=".$tipo." order by 2";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<tr><td align='center'><select name='proveedor' id='proveedor' class='texto'>";
 while($dat1=mysqli_fetch_array($resp1))
@@ -319,7 +325,7 @@ echo "</table><br>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'></center>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"'></center>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php?tipo=$tipo&estado=$estado\"'></center>
 </div>";
 
 echo "</div>";
@@ -341,16 +347,16 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 		<table align='center' class="texto">
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="texto" style="width:120px">
+			<td><select name='codGrupo' id="codGrupo" class="texto" style="width:120px">
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
-			where g.estado=1 order by 2";
+			where g.estado=1 and  g.cod_tipo=".$tipo." order by 2";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+				$codigoGrupo=$datTipo[0];
+				$nombreGrupo=$datTipo[1];
+				echo "<option value=$codigoGrupo>$nombreGrupo</option>";
 			}
 			?>
 			</select>

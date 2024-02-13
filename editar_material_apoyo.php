@@ -54,6 +54,8 @@ require('estilos.inc');
 require('funciones.php');
 
 $codProducto=$_GET['cod_material'];
+$tipo=$_GET['tipo'];
+$estado=$_GET['estado'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
 $sqlEdit="select m.codigo_material, m.descripcion_material, m.estado, m.cod_linea_proveedor, m.cod_grupo, m.cod_tipomaterial, 
@@ -153,7 +155,7 @@ echo "<td><div id='divMarca'>
 echo "</tr>";
 
 echo "<tr><th>Grupo</th>";
-$sql1="select f.codigo, f.nombre from grupos f where f.estado=1 order by 2;";
+$sql1="select f.codigo, f.nombre from grupos f where f.estado=1 and cod_tipo='".$tipo."' order by 2;";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_grupo' id='cod_grupo' required onChange='ajaxSubGrupo(this);'>
@@ -334,7 +336,7 @@ echo "</tr>";
 echo "</table></center>";
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_material.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_material.php?estado=".$estado."&tipo=".$tipo."\"'>
 </div>";
 echo "</form>";
 ?>

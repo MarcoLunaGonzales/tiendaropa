@@ -7,6 +7,8 @@ require("funciones.php");
 
 
 $codIngreso=$_POST["codIngreso"];
+$tipo=$_POST["tipo"];
+$estado=$_POST["estado"];
 $tipo_ingreso=$_POST['tipo_ingreso'];
 $nota_entrega=$_POST['nota_entrega'];
 $nro_factura=$_POST['nro_factura'];
@@ -115,7 +117,7 @@ for ($i = 1; $i <= $cantidad_material; $i++) {
 	echo "<script language='Javascript'>
 			Swal.fire('Los datos fueron modificados correctamente.')
 		    .then(() => {
-				location.href='navegador_ingresomateriales.php';
+				location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=".$estado."';
 		    });
 		</script>";
 			

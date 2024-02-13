@@ -70,14 +70,14 @@ include("datosUsuario.php");
 					<li><span>Gestion de Productos</span>
 						<ul>
 							<!--li><a href="navegador_tiposmaterial.php" target="contenedorPrincipal">Tipos de Producto</a></li-->
-							<li><a href="grupos/list.php" target="contenedorPrincipal">Grupos</a></li>
+							<li><a href="grupos/list.php?tipo=1" target="contenedorPrincipal">Grupos</a></li>
 							<li><a href="marcas/list.php" target="contenedorPrincipal">Marcas</a></li>
 							<li><a href="modelos/list.php" target="contenedorPrincipal">Modelos</a></li>
 							<li><a href="materiales/list.php" target="contenedorPrincipal">Materiales</a></li>
 							<li><a href="tallas/list.php" target="contenedorPrincipal">Tallas</a></li>
 							<li><a href="colores/list.php" target="contenedorPrincipal">Colores</a></li>
 							<li><a href="generos/list.php" target="contenedorPrincipal">Generos</a></li>
-							<li><a href="navegador_material.php?vista=0&vista_ordenar=0&grupo=0" target="contenedorPrincipal">Productos</a></li>
+							<li><a href="navegador_material.php?estado=-1&tipo=1" target="contenedorPrincipal">Productos</a></li>
 							<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
 							<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>
 							<li><a href="navegador_precios.php?orden=2" target="contenedorPrincipal">Precios (Por Linea Proveedor)</a></li>			
@@ -108,14 +108,27 @@ include("datosUsuario.php");
 					</li>							
 				</ul>	
 			</li>
+					<li><span>Produccion</span>
+				<ul>
+					<li><a href="grupos/list.php?tipo=2" target="contenedorPrincipal">Grupos</a></li>					
+					<li><a href="navegador_insumos.php" target="contenedorPrincipal">Insumos</a></li>
+					<li><a href="navegador_procesosConstruccion.php?estado=-1" target="contenedorPrincipal">Procesos</a></li>
+					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Proveedores</a></li>
+					<li><a href="navegador_ingresoinsumos.php?estado=-1&tipo=2" target="contenedorPrincipal">Ingresos de Insumos</a></li>
+					<li><a href="navegador_lotes.php" target="contenedorPrincipal">Lotes de Produccion</a></li>
+					
+					
+				</ul>	
+			</li>
 			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>
 			<li><span>Ingresos de Productos</span>
 				<ul>
-					<li><a href="navegador_ingresomateriales.php" target="contenedorPrincipal">Ingreso de Productos</a></li>
+					<li><a href="navegador_ingresomateriales.php?estado=-1&tipo=1" target="contenedorPrincipal">Ingreso de Productos</a></li>
 					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>
+	
 			<li><span>Salidas de Productos</span>
 				<ul>
 					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>

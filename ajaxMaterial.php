@@ -35,9 +35,6 @@ $fechaActual=date("Y-m-d");
 <input type="text" class="textoform" id="lote<?php echo $num;?>" name="lote<?php echo $num;?>" size="10" value="0" required>
 </td>
 
-<!--td align="center" width="10%">
-<input type="date" class="textoform" min="<?php echo $fechaActual; ?>" id="fechaVenc<?php echo $num;?>" name="fechaVenc<?php echo $num;?>" size="5" required>
-</td-->
 
 <td align="center" width="10%">
 <input type="number" class="inputnumber" value="0" id="precio<?php echo $num;?>" name="precio<?php echo $num;?>" size="5" min="0.1" step="0.01"  
