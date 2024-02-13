@@ -38,8 +38,11 @@ function ajaxSubGrupo(combo){
 require("conexionmysqli2.inc");
 require('estilos.inc');
 
-echo "<form enctype='multipart/form-data' action='guarda_material_apoyo_masivo.php' method='post' name='form1'>";
+$tipo=$_GET['tipo'];
+$estado=$_GET['estado'];
 
+echo "<form enctype='multipart/form-data' action='guarda_material_apoyo_masivo.php' method='post' name='form1'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
 
 echo "<center><table class='texto'>";
 echo "<tr><th colspan='4'><center>AÑADIR PRODUCTOS EN DIFERENTES TALLAS</center></th></tr>";
@@ -85,7 +88,7 @@ echo "</tr>";
 
 echo "<tr><th>Grupo</th>";
 $sql1="select f.codigo, f.nombre from grupos f 
-where f.estado=1 order by 2;";
+where f.estado=1 and f.cod_tipo=".$tipo." order by 2;";
 $resp1=mysqli_query($enlaceCon,$sql1);
 echo "<td>
 			<select name='cod_grupo' id='cod_grupo' required onChange='ajaxSubGrupo(this);'>
@@ -272,7 +275,7 @@ echo"</table></center>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_material.php\"'>
+<input type='button' class='boton2' value='Cancelar'  onClick='location.href=\"navegador_material.php?estado=".$estado."&tipo=".$tipo."\"'>
 </div>";
 echo "</form>";
 ?>

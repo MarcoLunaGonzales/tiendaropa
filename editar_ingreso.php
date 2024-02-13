@@ -11,6 +11,9 @@ if($fecha=="")
 }
 	require("conexionmysqli.php");	
 	$codIngresoEditar=$_GET["codIngreso"];
+	$tipo=$_GET["tipo"];
+	$estado=$_GET["estado"];
+
 	$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$codIngresoEditar;	
 	$num_materiales=0;
 	$resp= mysqli_query($enlaceCon,$sql);				
@@ -62,14 +65,15 @@ function ajaxNroSalida(){
 
 function listaMateriales(f){
 	var contenedor;
-	var codTipo=f.itemTipoMaterial.value;
+	var codGrupo=f.codGrupo.value;
+	var tipo=f.tipo.value;
 	var nombreItem=f.itemNombreMaterial.value;
 			var codMarca=f.itemMarca.value;
 	var codBarraCod2=f.itemCodBarraCod2.value;
 	contenedor = document.getElementById('divListaMateriales');
 	ajax=nuevoAjax();
-	//ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&nombreItem="+nombreItem,true);
-	ajax.open("GET", "ajaxListaMaterialesIngreso.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
+	
+	ajax.open("GET", "ajaxListaMaterialesIngreso.php?tipo="+tipo+"&codGrupo="+codGrupo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -210,7 +214,10 @@ function validar(f){
 	</script>
 
 <form action='guarda_editaringresomateriales.php' method='post' name='form1'>
+
 <input type="hidden" name="codIngreso" value="<?php echo $codIngresoEditar;?>" id="codIngreso">
+<input type="hidden" name="tipo" value="<?php echo $tipo;?>" id="tipo">
+<input type="hidden" name="estado" value="<?php echo $estado;?>" id="estado">
 <table border='0' class='textotit' align='center'><tr><th>Editar Ingreso de Materiales</th></tr></table><br>
 
 <?php
@@ -425,7 +432,7 @@ onchange='cambiaCosto(this.form,<?=$num;?>)' onkeyup='cambiaCosto(this.form,<?=$
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'></center>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php\"'></center>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php?tipo=".$tipo."&estado=".$estado."\"'></center>
 </div>";
 ?>
 
@@ -443,16 +450,16 @@ echo "<div class='divBotones'>
 		<table align='center' class="texto">
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select name='itemTipoMaterial' id="itemTipoMaterial" class="texto" style="width:120px">
+			<td><select name='codGrupo' id="codGrupo" class="texto" style="width:120px">
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
-			where g.estado=1 order by 2;";
+			where g.estado=1 and cod_tipo=".$tipo." order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+				$codGrupo=$datTipo[0];
+				$nombreGrupo=$datTipo[1];
+				echo "<option value=$codGrupo>$nombreGrupo</option>";
 			}
 			?>
 			</select>

@@ -15,8 +15,19 @@ $(document).ready(function() {
 });
 /*proceso inicial*/
 function listadoProveedores() {
-    cargarPnl("#pnl00","prgListaProveedores.php","");
+	var tipo=-1;
+    cargarPnl("#pnl00","prgListaProveedores.php?tipo="+tipo,"");
 }
+
+    function cambiar_vista()
+		{
+			var tipo;
+
+			tipo=$("#tipo").val();
+
+			cargarPnl("#pnl00","prgListaProveedores.php?tipo="+tipo+"","");
+		
+		}
 //procesos
 function frmAdicionar() {
 	
@@ -79,7 +90,8 @@ function adicionarProveedor() {
 			var contacto = $("#contacto").val();
 			var email = $("#email").val();
 			var cod_ciu = $("#cod_ciu").val();
-			var parms="nompro="+nompro+"&dir="+dir+"&tel1="+tel1+"&tel2="+tel2+"&contacto="+contacto+"&email="+email+"&cod_ciu="+cod_ciu+"";
+			var cod_tipo = $("#cod_tipo").val();
+			var parms="nompro="+nompro+"&dir="+dir+"&tel1="+tel1+"&tel2="+tel2+"&contacto="+contacto+"&email="+email+"&cod_ciu="+cod_ciu+"&cod_tipo="+cod_tipo;
 			cargarPnl("#pnl00","prgProveedorAdicionar.php",parms);
 		}else{
 		  alert("El Campo Telefono 1 debe ser Llenado.");
@@ -100,7 +112,8 @@ function modificarProveedor() {
 		var contacto = $("#contacto").val();
 		var email = $("#email").val();
 			var cod_ciu = $("#cod_ciu").val();
-		var parms="codpro="+codpro+"&nompro="+nompro+"&dir="+dir+"&tel1="+tel1+"&tel2="+tel2+"&contacto="+contacto+"&email="+email+"&cod_ciu="+cod_ciu+"";
+			var cod_tipo = $("#cod_tipo").val();
+		var parms="codpro="+codpro+"&nompro="+nompro+"&dir="+dir+"&tel1="+tel1+"&tel2="+tel2+"&contacto="+contacto+"&email="+email+"&cod_ciu="+cod_ciu+"&cod_tipo="+cod_tipo;
 		cargarPnl("#pnl00","prgProveedorModificar.php",parms);
 	}else{
 		  alert("El Campo Nombre debe ser Llenado.");

@@ -6,11 +6,12 @@ require("configModule.php");
 $codigo=$_POST['codigo'];
 $nombre=$_POST['nombre'];
 $abreviatura=$_POST['abreviatura'];
+$tipo=$_POST['tipo'];
 
 $sql_upd=mysqli_query($enlaceCon,"update $table set nombre='$nombre', abreviatura='$abreviatura' where codigo='$codigo'");
 
 echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');
-			location.href='$urlList2';
+			location.href='$urlList2?tipo=".$tipo."';
 			</script>";
 ?>

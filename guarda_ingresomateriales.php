@@ -15,14 +15,14 @@ $dat=mysqli_fetch_array($resp);
 $codigo=$dat[0];
 
 
-$sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' order by cod_ingreso_almacen desc";
+$sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' and cod_tipo=".$tipo."  order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $nro_correlativo=$dat[0];
 
 
 $hora_sistema = date("H:i:s");
-
+$tipo=$_POST['tipo'];
 $tipo_ingreso=$_POST['tipo_ingreso'];
 $nota_entrega=0;
 $nro_factura=$_POST['nro_factura'];
@@ -44,8 +44,8 @@ if($tipo_ingreso==1002){
 //echo "paso 0 query cabecera";
 $consulta="insert into ingreso_almacenes (cod_ingreso_almacen,cod_almacen,cod_tipoingreso,fecha,hora_ingreso,observaciones,
 nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nro_factura_proveedor,factura_proveedor,estado_liquidacion,
-cod_proveedor,created_by,modified_by,created_date,modified_date) 
-values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$nota_entrega','$nro_correlativo',0,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','')";
+cod_proveedor,created_by,modified_by,created_date,modified_date,cod_tipo) 
+values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$nota_entrega','$nro_correlativo',1,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','','$tipo')";
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
 //echo "paso 1 sql_inserta".$sql_inserta;
 if($sql_inserta==1){
@@ -154,10 +154,11 @@ if($sql_inserta==1){
 	  	//echo "inserto todos los materiales";
 		}
 
+
 	echo "Los datos fueron insertados correctamente";
 echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
-		location.href='navegador_ingresomateriales.php';
+		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
 		</script>";	
 }else{
 
@@ -166,7 +167,7 @@ echo "<script language='Javascript'>
 
 	echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
-		location.href='navegador_ingresomateriales.php';
+		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
 		</script>";
 }
 

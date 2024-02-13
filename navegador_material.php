@@ -4,15 +4,25 @@
 	require("funciones.php");
 
 echo "<script language='Javascript'>
-		function enviar_nav()
-		{	location.href='registrar_material_apoyo.php';
+		function enviar_nav(f){
+
+			var tipo=f.tipo.value
+			var estado=f.estado.value
+			location.href='registrar_material_apoyo.php?tipo='+tipo+'&estado='+estado;
 		}
 
-		function adicionargrupo()
-		{	location.href='registrar_material_apoyo_masivo.php';
+		function adicionargrupo(f){
+
+			var tipo=f.tipo.value
+			var estado=f.estado.value
+			location.href='registrar_material_apoyo_masivo.php?tipo='+tipo+'&estado='+estado;
 		}
 		function eliminar_nav(f)
 		{
+
+			var tipo=f.tipo.value
+			var estado=f.estado.value
+			
 			var i;
 			var j=0;
 			datos=new Array();
@@ -32,7 +42,8 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					location.href='eliminar_material_apoyo.php?datos='+datos+'';
+					
+					location.href='eliminar_material_apoyo.php?datos='+datos+'&tipo='+tipo+'&estado='+estado;
 				}
 				else
 				{
@@ -42,6 +53,11 @@ echo "<script language='Javascript'>
 		}
 		function editar_nav(f)
 		{
+
+				var tipo=f.tipo.value
+			var estado=f.estado.value
+			
+
 			var i;
 			var j=0;
 			var j_ciclo;
@@ -65,29 +81,31 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					location.href='editar_material_apoyo.php?cod_material='+j_ciclo+'';
+					location.href='editar_material_apoyo.php?cod_material='+j_ciclo+'&tipo='+tipo+'&estado='+estado;
 				}
 			}
 		}
     function cambiar_vista(f)
 		{
-			var modo_vista;
-			var modo_orden;
-			var grupo;
-			modo_vista=f.vista.value;
-			modo_orden=f.vista_ordenar.value;
-			grupo=f.grupo.value;			
-
-			var grupo2=$('#itemGrupoBusqueda').val();
-			var marca=$('#itemMarcaBusqueda').val();
-			var talla=$('#itemTallaBusqueda').val();
-			var color=$('#itemColorBusqueda').val();
-			var nombre=$('#itemNombreBusqueda').val();
-			var cod_barras=$('#input_codigo_barras').val();
-			location.href='navegador_material.php?vista='+modo_vista+'&vista_ordenar='+modo_orden+'&grupo='+grupo+'&gr='+grupo2+'&ma='+marca+'&ta='+talla+'&cl='+color+'&nm='+nombre+'&cb='+cod_barras;
+			var tipo;
+			var estado;
+		
+			tipo=f.tipo.value;
+			estado=f.estado.value;			
+			var grupo=$('#grupo').val();
+			var marca=$('#marca').val();
+		
+			var material=$('#material').val();
+			var barra=$('#barra').val();
+			location.href='navegador_material.php?tipo='+tipo+'&estado='+estado+'&grupo='+grupo+'&marca='+marca+'&material='+material+'&barra='+barra;
 		}
 		function duplicar(f)
 		{
+				var tipo;
+			var estado;
+		
+			tipo=f.tipo.value;
+			estado=f.estado.value;
 			var i;
 			var j=0;
 			var j_ciclo;
@@ -111,7 +129,7 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					location.href='duplicarProducto.php?cod_material='+j_ciclo+'&tipo=1';
+					location.href='duplicarProducto.php?cod_material='+j_ciclo+'&tipo='+tipo+'&estado='+estado;
 				}
 			}
 		}
@@ -124,51 +142,34 @@ echo "<script language='Javascript'>
 
 
 </script><?php
-	$vista_ordenar=$_GET['vista_ordenar'];
-	$vista=$_GET['vista'];
-	$globalAgencia=$_COOKIE['global_agencia'];
+	$estado=$_GET['estado'];
+	$tipo=$_GET['tipo'];
+	$marca=$_GET['marca'];
 	$grupo=$_GET['grupo'];
+	
+	$material=$_GET['material'];
+	$barra=$_GET['barra'];
+	$globalAgencia=$_COOKIE['global_agencia'];
     
 
 	echo "<h3 align='center'>Registro de Productos</h3>";
 
 	echo "<form method='post' action=''>";
+	echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
 	
-	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
-		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
-		m.cod_marca, mar.nombre as nombreMarca,
-		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
-		m.observaciones, imagen,
-		 m.color, col.nombre as nombreColor,
-		 m.talla, tal.nombre as nombreTalla,
-		 m.codigo_barras, m.codigo2, m.fecha_creacion,
-		m.cod_modelo,mo.nombre as nombreModelo, 
-		m.cod_material, mat.nombre as nombreMaterial, 
-		m.cod_genero, gen.nombre as nombreGenero
-		from material_apoyo m
-		left join grupos gru on ( gru.codigo=m.cod_grupo)
-		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
-		left join marcas mar on ( mar.codigo=m.cod_marca)
-		left join modelos mo on ( mo.codigo=m.cod_modelo)
-		left join materiales mat on ( mat.codigo=m.cod_material)
-		left join generos gen on ( gen.codigo=m.cod_genero)
-		left join colores col on ( col.codigo=m.color)
-		left join tallas tal on ( tal.codigo=m.talla)
-		where m.estado='1' and m.cod_tipomaterial in (1,2)";
-	if($vista==1){	
 
 		$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
 		m.cod_marca, mar.nombre as nombreMarca,
-		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen,
 		 m.color, col.nombre as nombreColor,
 		 m.talla, tal.nombre as nombreTalla,
 		 m.codigo_barras, m.codigo2, m.fecha_creacion,
 		m.cod_modelo,mo.nombre as nombreModelo, 
 		m.cod_material, mat.nombre as nombreMaterial, 
-		m.cod_genero, gen.nombre as nombreGenero
+		m.cod_genero, gen.nombre as nombreGenero, es.nombre_estado
 		from material_apoyo m
+		left join estados es on (m.estado=es.cod_estado)
 		left join grupos gru on ( gru.codigo=m.cod_grupo)
 		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
 		left join marcas mar on ( mar.codigo=m.cod_marca)
@@ -177,97 +178,59 @@ echo "<script language='Javascript'>
 		left join generos gen on ( gen.codigo=m.cod_genero)
 		left join colores col on ( col.codigo=m.color)
 		left join tallas tal on ( tal.codigo=m.talla)
-		where m.estado='0' and m.cod_tipomaterial in (1,2)";
-	}
-	if($grupo!=0){
-		$sql.=" and m.cod_grupo in ($grupo) ";
-	}
-
-	//nuevos filtros
-  $gr=0;$ma=0;$ta="";$cl="";$nm="";$cb="";
-  if(isset($_GET['gr'])&&$_GET['gr']!=0){
-      $sql.=" and m.cod_grupo in (".$_GET["gr"].")";
-      $gr=$_GET['gr'];
-  }
-  if(isset($_GET['ma'])&&$_GET['ma']!=0){
-      $sql.=" and m.cod_marca in (".$_GET["ma"].")";
-      $ma=$_GET['ma'];
-  }
-  if(isset($_GET['ta'])&&$_GET['ta']!=""){
-      $sql.=" and m.talla='".$_GET["ta"]."'";
-      $ta=$_GET['ta'];
-  }
-  if(isset($_GET['cl'])&&$_GET['cl']!=""){
-      $sql.=" and m.color like '%".$_GET["cl"]."%'";
-      $cl=$_GET['cl'];
-  }
-  if(isset($_GET['nm'])&&$_GET['nm']!=""){
-      $sql.=" and m.descripcion_material like '%".$_GET["nm"]."%'";
-      $nm=$_GET['nm'];
-  }
-  if(isset($_GET['cb'])&&$_GET['cb']!=""){
-      $sql.=" and m.codigo_barras='".$_GET["cb"]."'";
-      $cb=$_GET['cb'];
-  }
-
-   if($vista_ordenar==0){
-		$sql=$sql." order by 4,2";
-	}
-	if($vista_ordenar==1){
-		$sql=$sql." order by 2";	
-	}
-	if($vista_ordenar==2){
-		$sql=$sql." order by 6,2";	
-	}
-    if($gr==0&&$ma==0&&$ta==""&&$cl==""&&$nm==""&&$cb==""){
-      $sql=$sql." limit 50";
-    }
+		where m.cod_tipo=$tipo ";
 	
+	if($estado<>-1){
+		$sql.=" and m.estado in ($estado) ";
+	}
 
-	
-	//echo $sql;
+	if($marca<>0){
+		$sql.=" and m.cod_marca in ($marca) ";
+	}
+
+	if($grupo<>0){
+		$sql.=" and sgru.cod_grupo in ($grupo) ";
+	}
+
+  if($material!=""){
+      $sql.=" and m.descripcion_material like '%".$_GET["material"]."%'";
+      
+  }
+ if($barra!=""){
+      $sql.=" and m.codigo_barras='".$_GET["barra"]."'";
+   
+  }
+	$sql=$sql." order by m.descripcion_material asc";		
+//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Productos:
-	<select name='vista' class='texto' onChange='cambiar_vista(this.form)'>";
-	if($vista==0)	echo "<option value='0' selected>Activos</option><option value='1'>Retirados</option><option value='2'>Todo</option>";
-	if($vista==1)	echo "<option value='0'>Activos</option><option value='1' selected>Retirados</option><option value='2'>Todo</option>";
-	echo "</select>
+<select name='estado' id='estado'class='texto' onChange='cambiar_vista(this.form)'>";
+			
+			$sql2="select es.cod_estado, es.nombre_estado from estados es order by es.cod_estado asc";
+			$resp2=mysqli_query($enlaceCon,$sql2);
+		echo"	<option value='-1' selected>TODOS</option>";
+			while($dat2=mysqli_fetch_array($resp2)){
+				$codEstado=$dat2[0];
+				$nombreEstado=$dat2[1];
+				if($codEstado==$estado){
+				  echo "<option value=$codEstado selected>$nombreEstado</option>";	
+				}else{
+					echo "<option value=$codEstado>$nombreEstado</option>";
+				}
+			}
+			echo " </select>
 	</th>
 	
-	<th>Filtrar Grupo:
-	<select name='grupo' class='texto' onChange='cambiar_vista(this.form)'>";
-	echo "<option value='0'>-</option>";
-	$sqlGrupo="select codigo, nombre from grupos where estado=1 order by 2";
-	$respGrupo=mysqli_query($enlaceCon,$sqlGrupo);
-	while($datGrupo=mysqli_fetch_array($respGrupo)){
-		$codGrupoX=$datGrupo[0];
-		$nombreGrupoX=$datGrupo[1];
-		if($codGrupoX==$grupo){
-			echo "<option value='$codGrupoX' selected>$nombreGrupoX</option>";
-		}else{
-			echo "<option value='$codGrupoX'>$nombreGrupoX</option>";
-		}
-	}
-	echo "</select>
-	</th>
-	
-	<th>
-	Ordenar por:
-	<select name='vista_ordenar' class='texto' onChange='cambiar_vista(this.form)'>";
-	if($vista_ordenar==0)	echo "<option value='0' selected>Por Grupo y Producto</option><option value='1'>Por Producto</option><option value='2'>Por Linea y Producto</option>";
-	if($vista_ordenar==1)	echo "<option value='0'>Por Grupo y Producto</option><option value='1' selected>Por Producto</option><option value='2'>Por Linea y Producto</option>";
-	if($vista_ordenar==2)	echo "<option value='0'>Por Grupo y Producto</option><option value='1'>Por Producto</option><option value='2' selected>Por Linea y Producto</option>";
-	echo "</select>
-	</th>
+
 	</tr></table><br>";
 	
 	echo "<center><table border='0' class='textomini'><tr><th>Leyenda:</th><th>Productos Retirados</th><td bgcolor='#ff6666' width='30%'></td></tr></table></center><br>";
 	
 	
 	echo "<div class='divBotones'>
-		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
-				<input type='button' value='Adicionar en Grupo' name='adicionar' class='boton' onclick='adicionargrupo()'>
+		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
+				<input type='button' value='Adicionar en Grupo' name='adicionar' class='boton' onclick='adicionargrupo(this.form)'>
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 		<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 		<input type='button' value='Duplicar' name='Duplicar' class='boton' onclick='duplicar(this.form)'>
@@ -279,7 +242,7 @@ echo "<script language='Javascript'>
 		<th>Grupo/SubGrupo</th><th>Modelo</th><th>Genero</th><th>Material</th>
 		<th>Color/<br/>Talla</th>
 		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
-		<th>Fijar Precios</th>
+		<th>Fijar Precios</th><th>Estado</th>
 	
 		</tr>";
 	
@@ -295,7 +258,7 @@ echo "<script language='Javascript'>
 		$subgrupo=$dat['nombreSubgrupo'];
 		$marca=$dat['nombreMarca'];
 		//$tipoMaterial=$dat[4];
-		$nombreLinea=$dat['nombre_linea_proveedor'];
+
 		$observaciones=$dat['observaciones'];
 		$imagen=$dat['imagen'];
 		$color=$dat['color'];
@@ -308,9 +271,8 @@ echo "<script language='Javascript'>
 		$nombreModelo=$dat['nombreModelo'];
 		$nombreMaterial=$dat['nombreMaterial'];
 		$nombreGenero=$dat['nombreGenero'];
-		
-
-		
+		$nombre_estado=$dat['nombre_estado'];
+				
 
 		if($imagen==""){
 			$imagen="default.png";
@@ -365,6 +327,7 @@ echo "<script language='Javascript'>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'><br><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
 		<td><a href='listaPrecios.php?codigo=$codigo&nombre=$nombreProd'>
 		<img src='imagenes/fijarPrecio.jpg' width='30' title='Fijar Precio'></a></td>
+		<td>$nombre_estado</td>
 	
 		</tr>";
 		$indice_tabla++;
@@ -413,65 +376,56 @@ function Hidden(){
 		<table align='center' class="texto">
 			<tr><th>Grupo</th><th>Marca</th></tr>
 			<tr>
-			<td><select name='itemGrupoBusqueda' id="itemGrupoBusqueda" class="textomedianorojo" style="width:300px">
+			<td><select name='grupo' id="grupo" class="textomedianorojo" style="width:300px">
 			<?php
-			$sqlTipo="select g.codigo, g.nombre from grupos g
-			where g.estado=1 order by 2;";
-			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-			echo "<option value='0'>--</option>";
-			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				if($codTipoMat==$gr){
-				  echo "<option value=$codTipoMat selected>$nombreTipoMat</option>";	
+			$sqlGrupo="select g.codigo, g.nombre from grupos g
+			where estado=1 and cod_tipo=".$tipo." order by 2;";
+			$respGrupo=mysqli_query($enlaceCon,$sqlGrupo);
+			echo "<option value='0'>TODOS</option>";
+			while($datGrupo=mysqli_fetch_array($respGrupo)){
+				$codGrupoB=$datGrupo[0];
+				$nombreGrupoB=$datGrupo[1];
+				if($codGrupoB==$grupo){
+				  echo "<option value=$codGrupoB selected>$nombreGrupoB</option>";	
 				}else{
-					echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+					echo "<option value=$codGrupoB>$nombreGrupoB</option>";
 				}
 			}
 			?>
 			</select>
 			</td>
 			<td>
-				<select name='itemMarcaBusqueda' id="itemMarcaBusqueda" class="textomedianorojo" style="width:300px">
+				<select name='marca' id="marca" class="textomedianorojo" style="width:300px">
 			<?php
-			$sqlTipo="select g.codigo, g.nombre from marcas g
-			where g.estado=1 order by 2;";
-			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-			echo "<option value='0'>--</option>";
-			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				if($codTipoMat==$ma){
-				  echo "<option value=$codTipoMat selected>$nombreTipoMat</option>";	
+			$sqlMarcas="select g.codigo, g.nombre from marcas g
+			where g.estado=1 order by g.nombre;";
+			$respMarcas=mysqli_query($enlaceCon,$sqlMarcas);
+			echo "<option value='0'>TODOS</option>";
+			while($datMarca=mysqli_fetch_array($respMarcas)){
+				$codMarcaB=$datMarca[0];
+				$nombreMarcaB=$datMarca[1];
+				if($codMarcaB==$marca){
+				  echo "<option value=$codMarcaB selected>$nombreMarcaB</option>";	
 				}else{
-					echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+					echo "<option value=$codMarcaB>$nombreMarcaB</option>";
 				}
 				
 			}
 			?>
 			</select>
 			</td>
-			</tr>
-			<tr><th>Talla</th><th>Color</th></tr>
-			<tr>
-			<td>
-				<input type='text' name='itemTallaBusqueda' id="itemTallaBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$ta?>">
-			</td>
-			<td>
-				<input type='text' name='itemColorBusqueda' id="itemColorBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$cl?>">
-			</td>
-			</tr>
+			</tr>			
 			<tr><th colspan="2">Nombre Producto</th></tr>
 			<tr>
 			<td colspan="2">
-				<input type='text' style="width:100%" name='itemNombreBusqueda' id="itemNombreBusqueda" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$nm?>">
+				<input type='text' style="width:100%" name='material' id="material" class="textomedianorojo"  onkeypress="return pressEnter(event, this.form);" value="<?=$material?>">
 			</td>
 			</tr>
 			<tr><th colspan="2">Codigo de Barras</th></tr>
 			<tr>
 			<td colspan="2" style="text-align:center;">
 				<div class="codigo-barras div-center">
-               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el codigo de barras." autofocus autocomplete="off">
+               <input type="text" class="form-codigo-barras" name="barra"id="barra" placeholder="Ingrese el codigo de barras." autofocus autocomplete="off">
          </div>
 			</td>
 			</tr>

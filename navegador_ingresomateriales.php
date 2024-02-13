@@ -105,12 +105,16 @@ function ajaxBuscarIngresos(f){
 	global_almacen=document.getElementById("global_almacen").value;
 	
 	provBusqueda=document.getElementById("provBusqueda").value;
+	tipo=document.getElementById("tipo").value;
+	estado=document.getElementById("estado").value;
 	
 	var contenedor;
 	contenedor = document.getElementById('divCuerpo');
 	ajax=nuevoAjax();
 
-	ajax.open("GET", "ajaxNavIngresos.php?fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&notaIngreso="+notaIngreso+"&global_almacen="+global_almacen+"&provBusqueda="+provBusqueda,true);
+	
+
+	ajax.open("GET", "ajaxNavIngresos.php?tipo="+tipo+"&estado="+estado+"&fechaIniBusqueda="+fechaIniBusqueda+"&fechaFinBusqueda="+fechaFinBusqueda+"&notaIngreso="+notaIngreso+"&global_almacen="+global_almacen+"&provBusqueda="+provBusqueda,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -122,8 +126,12 @@ function ajaxBuscarIngresos(f){
 
 
 
-function enviar_nav()
-{   location.href='registrar_ingresomateriales.php';
+function enviar_nav(f)
+{   
+			var estado,tipo;
+			estado=f.estado.value;
+			tipo=f.tipo.value;
+			location.href='registrar_ingresomateriales.php?tipo='+tipo+'&estado='+estado;
 }
 
 function editarIngresoTipoProv(codigoIngreso)
@@ -134,7 +142,14 @@ function editarIngresoTipoProv(codigoIngreso)
 }
 
 function editar_ingreso(f)
-{   var i;
+{   
+
+	var estado,tipo;
+			estado=f.estado.value;
+			tipo=f.tipo.value;
+			
+
+	var i;
     var j=0;
     var j_cod_registro;
     var fecha_registro;
@@ -157,13 +172,19 @@ function editar_ingreso(f)
         else
         {      //location.href='editar_ingresomateriales.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=1&valor_inicial=1';
                 funOk(j_cod_registro,function(){
-                    location.href='editar_ingreso.php?codIngreso='+j_cod_registro+'';
+                	//location.href='registrar_ingresomateriales.php?tipo='+tipo+'&estado='+estado;
+                    location.href='editar_ingreso.php?codIngreso='+j_cod_registro+'&tipo='+tipo+'&estado='+estado;
                 });
         }
     }
 }
 function anular_ingreso(f)
-{   var i;
+{   
+
+var estado,tipo;
+			estado=f.estado.value;
+			tipo=f.tipo.value;
+	var i;
     var j=0;
     var j_cod_registro;
     var fecha_registro;
@@ -186,11 +207,24 @@ function anular_ingreso(f)
         else
         {   //window.open('anular_ingreso.php?codigo_registro='+j_cod_registro+'&grupo_ingreso=2','','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=280,height=150');
                 funOk(j_cod_registro,function(){
-                    location.href='anular_ingreso.php?codigo_registro='+j_cod_registro+'';
+
+                    location.href='anular_ingreso.php?codigo_registro='+j_cod_registro+'&tipo='+tipo+'&estado='+estado;
                 });
         }
     }
 }
+
+function cambiar_vista(f)
+		{
+			var estado,tipo;
+
+			estado=f.estado.value;
+			tipo=f.tipo.value;
+
+			
+		
+			location.href='navegador_ingresomateriales.php?estado='+estado+'&tipo='+tipo;
+		}
         </script>
     </head>
     <body>
@@ -198,25 +232,43 @@ function anular_ingreso(f)
 <?php
   $global_usuario=$_COOKIE['global_usuario'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
+$estado=$_GET['estado'];
+$tipo=$_GET['tipo'];
+//echo "tipo=".$tipo."<br/> estado=".$estado;
+
 echo "<form method='post' action='navegador_ingresomateriales.php'>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 echo "<input type='hidden' name='global_almacen' id='global_almacen' value='$global_almacen'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
 
-$consulta = "
-    SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso, i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,
-	(select p.nombre_proveedor from proveedores p where p.cod_proveedor=i.cod_proveedor) as proveedor, i.nro_factura_proveedor,
-	i.created_by,i.created_date, i.modified_by, i.modified_date
-    FROM ingreso_almacenes i, tipos_ingreso ti
-    WHERE i.cod_tipoingreso=ti.cod_tipoingreso
-    AND i.cod_almacen='$global_almacen'";
-   $consulta = $consulta."ORDER BY i.nro_correlativo DESC limit 0, 50 ";
-//echo "MAT:$sql";
-$resp = mysqli_query($enlaceCon,$consulta);
+
+
 echo "<h1>Ingreso de Productos</h1>";
 
-echo "<table border='1' cellspacing='0' class='textomini'><tr><th>LEYENDA:</th><th>INGRESOS ANULADOS</th><td bgcolor='#ff8080' width='10%'></td><th>INGRESOS CON MOVIMIENTO</th><td bgcolor='#ffff99' width='10%'></td><th>INGRESOS SIN MOVIMIENTO</th><td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
+echo "<table align='center' class='texto'><tr><th>Ver Ingresos:
+	<select name='estado' id='estado'class='texto' onChange='cambiar_vista(this.form)'>";
+			
+			$sql2="select es.cod_estado, es.nombre_estado from estados es order by es.cod_estado asc";
+			$resp2=mysqli_query($enlaceCon,$sql2);
+		echo"	<option value='-1' selected>TODOS</option>";
+			while($dat2=mysqli_fetch_array($resp2)){
+				$codEstado=$dat2[0];
+				$nombreEstado=$dat2[1];
+				if($codEstado==$estado){
+				  echo "<option value=$codEstado selected>$nombreEstado</option>";	
+				}else{
+					echo "<option value=$codEstado>$nombreEstado</option>";
+				}
+			}
+			echo " </select>
+	</th>
+	</tr></table><br>";
+echo "<center><table border='0' cellspacing='0' class='textomini'>
+<tr><td bgcolor='#ff8080' width='10%'></td><th>INGRESOS ANULADOS</th></tr>
+<tr><td bgcolor='#ffff99' width='10%'></td><th>INGRESOS CON MOVIMIENTO</th></tr>
+<tr><td bgcolor='' width='10%'></td><th>INGRESOS SIN MOVIMIENTO</th></tr></table></center>";
 
-echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()'>
+echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 <input type='button' value='Editar Ingreso' class='boton' onclick='editar_ingreso(this.form)'>
 <input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
@@ -228,7 +280,23 @@ echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th>
 <th>Observaciones</th>
 <th>Registro</th>
 <th>Ult. Edicion</th>
-<th>&nbsp;</th><th>&nbsp;</th><th>Nro PreIngreso</th></tr>";
+<th>&nbsp;</th><th>&nbsp;</th><th>Estado</th><th>Nro PreIngreso</th></tr>";
+$consulta = "SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso,
+ i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,p.nombre_proveedor,
+	i.nro_factura_proveedor, i.created_by,i.created_date, i.modified_by,
+	 i.modified_date,es.nombre_estado  
+	FROM ingreso_almacenes i
+	left join tipos_ingreso ti  on (i.cod_tipoingreso=ti.cod_tipoingreso )
+	left join proveedores p  on (i.cod_proveedor=p.cod_proveedor)	 
+	left join estados es on (i.ingreso_anulado=es.cod_estado)
+	WHERE i.cod_tipo=".$tipo."";
+if($estado<>'-1'){
+ $consulta =$consulta." and i.ingreso_anulado='".$estado."'";
+
+}
+$consulta =$consulta." AND i.cod_almacen='".$global_almacen."' order by i.nro_correlativo DESC limit 0, 70";
+
+$resp = mysqli_query($enlaceCon,$consulta);
 while ($dat = mysqli_fetch_array($resp)) {
     $codigo = $dat[0];
     $fecha_ingreso = $dat[1];
@@ -258,6 +326,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 		$usuMod =$datModUsu['nombres'][0].$datModUsu['paterno'];		
 	}
 	$modified_date=$dat[13];
+	$nombre_estado=$dat['nombre_estado'];
 	
 	$sqlAux=" select IFNULL(codigo_ingreso,0),nro_correlativo from  preingreso_almacenes  where codigo_ingreso=$codigo";
 	$respAux= mysqli_query($enlaceCon,$sqlAux);
@@ -274,11 +343,11 @@ while ($dat = mysqli_fetch_array($resp)) {
         $color_fondo = "#ffff99";
         $chkbox = "";
     }
-    if ($anulado == 1) {
+    if ($anulado == 2) {
         $color_fondo = "#ff8080";
         $chkbox = "";
     }
-    if ($num_filas_movimiento == 0 and $anulado == 0) {
+    if ($num_filas_movimiento == 0 and $anulado == 1) {
         $color_fondo = "";
         $chkbox = "<input type='checkbox' name='codigo' value='$codigo'>";
     }
@@ -300,18 +369,19 @@ while ($dat = mysqli_fetch_array($resp)) {
 		<a href='#' onclick='javascript:editarIngresoTipoProv($codigo)' > 
 			<img src='imagenes/edit.png' border='0' width='30' heigth='30' title='Editar Tipo & Proveedor'>
 		</a>
-	</td>";
+		<td>".$nombre_estado."</td>";
 	if($datAux[0]>0){
 		echo"<td align='center'>$datAux[1]</td>";
 	}else{
 		echo"<td align='center'></td>";
 	}
+
 	echo"</tr>";
 }
 echo "</table></center><br>";
 echo "</div>";
 
-echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()'>
+echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' name='adicionar' class='boton' onclick='enviar_nav()this.form'>
 <input type='button' value='Editar Ingreso' class='boton' onclick='editar_ingreso(this.form)'>
 <input type='button' value='Anular Ingreso' name='adicionar' class='boton2' onclick='anular_ingreso(this.form)'>
 <td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></div>";
@@ -349,7 +419,7 @@ echo "</form>";
 					<select name="ProvBusqueda" class="texto" id="provBusqueda">
 						<option value="0">Todos</option>
 					<?php
-						$sqlProv="select cod_proveedor, nombre_proveedor from proveedores order by 2";
+						$sqlProv="select cod_proveedor, nombre_proveedor from proveedores where cod_tipo in($tipo,0) order by 2";
 						$respProv=mysqli_query($enlaceCon,$sqlProv);
 						while($datProv=mysqli_fetch_array($respProv)){
 							$codProvBus=$datProv[0];

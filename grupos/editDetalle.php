@@ -5,7 +5,9 @@ require("../estilos2.inc");
 require("configModule.php");
 require_once("../funcion_nombres.php");
 
-	$codMaestro=$_GET['cod_maestro'];
+	$codMaestro=$_GET['codMaestro'];
+	$codigo_registro=$_GET['codigo_registro'];
+	$tipo=$_GET['tipo'];
 	$nameMaestro=obtenerNombreMaestro($enlaceCon,$table,$codMaestro);
 	
 $sql=mysqli_query($enlaceCon,"select nombre, abreviatura from $tableDetalle where codigo=$codigo_registro");
@@ -23,6 +25,8 @@ echo "<h1>$moduleNameSingular $nameMaestro</h1>";
 echo "<center><table class='texto' width='60%'>";
 
 echo "<input type='hidden' name='codigo' value='$codigo_registro'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
+echo "<input type='hidden' name='codMaestro' id='codMaestro' value='$codMaestro'>";
 
 echo "<tr><th align='left'>Nombre</th>";
 echo "<td align='left'>
@@ -35,12 +39,12 @@ echo "<td align='left'>
 echo "</tr>";
 echo "</table></center>";
 
-echo "<input type='hidden' name='cod_maestro' value='$codMaestro'>";
+
 
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"$urlList2\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"listDetalle.php?tipo=".$tipo."&codMaestro=".$codMaestro."\"'>
 ";
 
 echo "</form>";
