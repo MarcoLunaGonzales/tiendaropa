@@ -378,7 +378,7 @@ if($txtnroingreso!="")
 if($fecha1!="" && $fecha2!="")
    {$consulta = $consulta."AND '$fecha1'<=s.fecha AND s.fecha<='$fecha2' ";
    }
-$consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 100 ";
+$consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 500 ";
 
 //echo $consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
