@@ -24,6 +24,8 @@ $codUnidad=$_POST['cod_unidad'];
 
 $fechaCreacion=date("Y-m-d-H-i-s");
 
+$tipo=$_POST['tipo'];
+
 
 
 $sql="select IFNULL((max(codigo_material)+1),1) as codigo from material_apoyo m";
@@ -32,7 +34,7 @@ $dat=mysqli_fetch_array($resp);
 $codigo_material=$dat[0];
 $usuario=$_COOKIE['global_usuario'];
 
-$sql_inserta="insert into material_apoyo(codigo_material,codigo2,descripcion_material,observaciones,cod_unidad,cod_subgrupo,creado_por,fecha_creacion,estado,cod_tipo) values ($codigo_material,'$codigo2','$descripcion_material','$observaciones','$codUnidad',$cod_subgrupo,'$usuario','$fechaCreacion','1','2')";
+$sql_inserta="insert into material_apoyo(codigo_material,codigo2,descripcion_material,observaciones,cod_unidad,cod_subgrupo,creado_por,fecha_creacion,estado,cod_tipo) values ($codigo_material,'$codigo2','$descripcion_material','$observaciones','$codUnidad',$cod_subgrupo,'$usuario','$fechaCreacion','1','".$tipo."')";
 
 $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 
@@ -97,7 +99,7 @@ $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 if($resp_inserta){
 		echo "<script language='Javascript'>
 			alert('Los datos fueron insertados correctamente.');
-			location.href='navegador_insumos.php';
+			location.href='navegador_insumos.php?tipo=".$tipo."&estado=-1&grupo=".$cod_grupo."';
 			</script>";
 }else{
 	echo "<script language='Javascript'>

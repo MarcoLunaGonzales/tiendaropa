@@ -12,11 +12,13 @@ $descripcion_material = strtoupper($descripcion_material);
 $codigo2=$_POST['codigo2'];
 
 
-
+$cod_grupo=$_POST['cod_grupo'];
 $cod_subgrupo=$_POST['cod_subgrupo'];
 $observaciones=$_POST['observaciones'];
 
 $codUnidad=$_POST['cod_unidad'];
+
+$tipo=$_POST['tipo'];
 
 
 $sql_inserta="update material_apoyo set 
@@ -95,7 +97,7 @@ mysqli_query($enlaceCon,$sqlDelete);
 if($resp_inserta){
 		echo "<script language='Javascript'>
 			alert('Los datos fueron guardados correctamente.');
-			location.href='navegador_insumos.php';
+			location.href='navegador_insumos.php?tipo=".$tipo."&estado=-1&grupo=".$cod_grupo."';
 			</script>";
 }else{
 	echo "<script language='Javascript'>
