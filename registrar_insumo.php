@@ -38,7 +38,12 @@ function ajaxSubGrupo(combo){
 require("conexionmysqli2.inc");
 require('estilos.inc');
 
-echo "<form enctype='multipart/form-data' action='guarda_insumo.php' method='post' name='form1'>";
+$estado=$_GET['estado'];
+	$tipo=$_GET['tipo'];
+	$grupo=$_GET['grupo'];
+
+echo "<form  action='guarda_insumo.php' method='post' name='form1'>";
+echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";
 
 echo "<h2>Adicionar Insumo</h2>";
 
@@ -145,7 +150,7 @@ $ciudad=$_COOKIE['global_agencia'];
 echo"</table></center>";
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_insumos.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_insumos.php?tipo=".$tipo."&estado=".$estado."&grupo=".$grupo."\"'>
 </div>";
 echo "</form>";
 ?>

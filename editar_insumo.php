@@ -43,6 +43,10 @@ require('funciones.php');
 $codigo_material=$_GET['codigo'];
 $globalAgencia=$_COOKIE['global_agencia'];
 
+$estado=$_GET['estado'];
+	$tipo=$_GET['tipo'];
+	$grupo=$_GET['grupo'];
+
 $sqlEdit="select codigo2,descripcion_material,observaciones,cod_unidad,cod_subgrupo,
  creado_por,fecha_creacion,estado from material_apoyo where codigo_material='$codigo_material'";
  //echo $sqlEdit;
@@ -73,7 +77,7 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 
 
 echo "<form action='guarda_editarinsumo.php' method='post' name='form1'>";
-
+echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";
 echo "<h1>Editar Insumo</h1>";
 
 
@@ -222,7 +226,7 @@ $ciudad=$_COOKIE['global_agencia'];
 echo"</table></center>";
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_insumos.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_insumos.php?tipo=".$tipo."&estado=".$estado."&grupo=".$grupo."\"'>
 </div>";
 echo "</form>";
 ?>

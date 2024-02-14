@@ -111,7 +111,7 @@ include("datosUsuario.php");
 					<li><span>Produccion</span>
 				<ul>
 					<li><a href="grupos/list.php?tipo=2" target="contenedorPrincipal">Grupos</a></li>					
-					<li><a href="navegador_insumos.php" target="contenedorPrincipal">Insumos</a></li>
+					<li><a href="navegador_insumos.php?tipo=2&estado=-1&grupo=-1" target="contenedorPrincipal">Insumos</a></li>
 					<li><a href="navegador_procesosConstruccion.php?estado=-1" target="contenedorPrincipal">Procesos</a></li>
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Proveedores</a></li>
 					<li><a href="navegador_ingresoinsumos.php?estado=-1&tipo=2" target="contenedorPrincipal">Ingresos de Insumos</a></li>

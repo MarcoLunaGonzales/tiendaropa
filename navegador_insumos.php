@@ -4,12 +4,32 @@
 	require("funciones.php");
 
 echo "<script language='Javascript'>
-		function enviar_nav()
-		{	location.href='registrar_insumo.php';
+		function enviar_nav(f)
+		{	
+
+			var estado;
+			var grupo;
+			var tipo;
+
+			estado=f.estado.value;
+			grupo=f.grupo.value;
+			tipo=f.tipo.value;
+			
+		
+			location.href='registrar_insumo.php?estado='+estado+'&grupo='+grupo+'&tipo='+tipo;
+			
 		}
 
 		function eliminar_nav(f)
 		{
+			var estado;
+			var grupo;
+			var tipo;
+
+			estado=f.estado.value;
+			grupo=f.grupo.value;
+			tipo=f.tipo.value;
+
 			var i;
 			var j=0;
 			datos=new Array();
@@ -29,7 +49,7 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					location.href='eliminar_insumo.php?datos='+datos+'';
+					location.href='eliminar_insumo.php?datos='+datos+'&estado='+estado+'&grupo='+grupo+'&tipo='+tipo;
 				}
 				else
 				{
@@ -39,6 +59,14 @@ echo "<script language='Javascript'>
 		}
 		function editar_nav(f)
 		{
+
+			var estado;
+			var grupo;
+			var tipo;
+
+			estado=f.estado.value;
+			grupo=f.grupo.value;
+			tipo=f.tipo.value;
 			var i;
 			var j=0;
 			var j_ciclo;
@@ -62,18 +90,22 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					location.href='editar_insumo.php?codigo='+j_ciclo+'';
+					location.href='editar_insumo.php?codigo='+j_ciclo+'&estado='+estado+'&grupo='+grupo+'&tipo='+tipo;
 				}
 			}
 		}
     function cambiar_vista(f)
 		{
 			var estado;
+			var grupo;
+			var tipo;
 
 			estado=f.estado.value;
+			grupo=f.grupo.value;
+			tipo=f.tipo.value;
 			
 		
-			location.href='navegador_insumos.php?estado='+estado;
+			location.href='navegador_insumos.php?estado='+estado+'&grupo='+grupo+'&tipo='+tipo;
 		}
 		
 		
@@ -88,6 +120,8 @@ echo "<script language='Javascript'>
 <?php
 
 	$estado=$_GET['estado'];
+	$tipo=$_GET['tipo'];
+	$grupo=$_GET['grupo'];
 	$globalAgencia=$_COOKIE['global_agencia'];
 
     
@@ -95,12 +129,16 @@ echo "<script language='Javascript'>
 	echo "<h3 align='center'>Listado de Insumos</h3>";
 
 	echo "<form method='post' action=''>";
-		echo "<table align='center' class='texto'><tr><th>Ver Lotes:
+	echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";
+	
+
+		echo "<table align='center' class='texto'>
+		<tr><th>Ver Insumos:
 	<select name='estado' id='estado'class='texto' onChange='cambiar_vista(this.form)'>";
 			
 			$sql2="select es.cod_estado, es.nombre_estado from estados es order by es.cod_estado asc";
 			$resp2=mysqli_query($enlaceCon,$sql2);
-		echo"	<option value='' selected>TODOS</option>";
+		echo"	<option value='-1' selected>TODOS</option>";
 			while($dat2=mysqli_fetch_array($resp2)){
 				$codEstado=$dat2[0];
 				$nombreEstado=$dat2[1];
@@ -108,6 +146,24 @@ echo "<script language='Javascript'>
 				  echo "<option value=$codEstado selected>$nombreEstado</option>";	
 				}else{
 					echo "<option value=$codEstado>$nombreEstado</option>";
+				}
+			}
+			echo " </select>
+	</th>
+	<th>Ver Grupos:
+	<select name='grupo' id='grupo'class='texto' onChange='cambiar_vista(this.form)'>";
+			
+			$sql3="select codigo,nombre from grupos where estado=1 and cod_tipo='".$tipo."'  order by  nombre asc";
+			//echo $sql3."<br/>";
+			$resp3=mysqli_query($enlaceCon,$sql3);
+		echo"	<option value='-1' selected>TODOS</option>";
+			while($dat3=mysqli_fetch_array($resp3)){
+				$codGrupo=$dat3[0];
+				$nombreGrupo=$dat3[1];
+				if($codGrupo==$grupo){
+				  echo "<option value=$codGrupo selected>$nombreGrupo</option>";	
+				}else{
+					echo "<option value=$codGrupo>$nombreGrupo</option>";
 				}
 			}
 			echo " </select>
@@ -124,28 +180,30 @@ left join subgrupos sub on (ma.cod_subgrupo=sub.codigo)
 left join grupos gru on (sub.cod_grupo=gru.codigo)
 left join unidades_medida um on (ma.cod_unidad=um.codigo)
 left join funcionarios f on (ma.creado_por=f.codigo_funcionario)
-where ma.cod_tipo=2";
-if($estado<>''){
+where ma.cod_tipo=$tipo";
+if($estado<>'-1'){
  $sql=$sql." and ma.estado='".$estado."'";
 }
-
+if($grupo<>'-1'){
+ $sql=$sql." and sub.cod_grupo='".$grupo."'";
+}
 $sql=$sql."  order by ma.descripcion_material asc";
 
-
+//echo $sql;
 
 	$resp=mysqli_query($enlaceCon,$sql);
 	
 
 
 	echo "<div class='divBotones'>
-		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>		
+		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>		
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 		<input type='button' value='Anular' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 			
 		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Nombre</th>
+	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Nombre</th>
 		<th>Descripcion</th><th>Unidad<br/>Medida</th><th>&nbsp;</th>
 		<th>Grupo<br/>Subgrupo</th>
 		<th>Fecha Registro</th>		
@@ -185,7 +243,8 @@ $sql=$sql."  order by ma.descripcion_material asc";
 		}
 		echo "</td>";
 
-		echo" <td>$codigo2</td>
+		echo"<td>$indice_tabla</td> 
+		<td>$codigo2</td>
 		<td>$descripcion_material</td>
 		<td>$observaciones</td>
 		<td>$nombre_unidad_medida</td>
@@ -222,7 +281,7 @@ $sql=$sql."  order by ma.descripcion_material asc";
 	echo "</table></center><br>";
 	
 		echo "<div class='divBotones'>
-		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
+		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 		<input type='button' value='Anular' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
 		
