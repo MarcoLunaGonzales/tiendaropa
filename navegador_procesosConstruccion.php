@@ -12,6 +12,7 @@ echo "<script language='Javascript'>
 
 		function eliminar_nav(f)
 		{
+			var estado=f.estado.value;
 			var i;
 			var j=0;
 			datos=new Array();
@@ -31,7 +32,7 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					//location.href='eliminar_insumo.php?datos='+datos+'';
+					location.href='eliminar_procesoConstruccion.php?datos='+datos+'&estado=$estado';
 				}
 				else
 				{
@@ -65,7 +66,7 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					//location.href='editar_procesoConstruccion.php?codigo='+j_ciclo+'&estado='+estado;
+					location.href='editar_procesoConstruccion.php?codigo='+j_ciclo+'&estado='+estado;
 				}
 			}
 		}
@@ -96,7 +97,8 @@ echo "<script language='Javascript'>
 
 	echo "<form method='post' action=''>";
 
-		echo "<table align='center' class='texto'><tr><th>Ver Lotes:
+
+		echo "<table align='center' class='texto'><tr><th>Ver Procesos:
 	<select name='estado' id='estado'class='texto' onChange='cambiar_vista(this.form)'>";
 			
 			$sql2="select es.cod_estado, es.nombre_estado from estados es order by es.cod_estado asc";
@@ -117,13 +119,13 @@ echo "<script language='Javascript'>
 
 $sql="SELECT pc.cod_proceso_const,pc.nombre_proceso_const,
 pc.descripcion_proceso_const,pc.cod_estado, es.nombre_estado,  
-pc.created_by,concat(f.paterno,' ',f.materno,' ',f.nombres) as nombre_registro, pc.created_date
+pc.created_by, concat(f.paterno,' ',f.materno,' ',f.nombres)  funcionario, pc.created_date
 FROM procesos_construccion pc
 
 left join estados es on(pc.cod_estado=es.cod_estado)
 left join funcionarios f on (pc.created_by=f.codigo_funcionario)
 ";
-if($estado<>''){
+if($estado<>'-1'){
  $sql=$sql." and pc.cod_estado='".$estado."'";
 }
 
@@ -144,9 +146,9 @@ $sql=$sql."  order by pc.nombre_proceso_const asc";
 	
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th>
+	<th>Nro</th>
 	<th>Nombre</th>
-		<th>Descripcion</th>
-		
+		<th>Descripcion</th>		
 		<th>Fecha Registro</th>		
 		<th>Estado</th>
 	
@@ -155,19 +157,15 @@ $sql=$sql."  order by pc.nombre_proceso_const asc";
 	$indice_tabla=1;
 	while($dat=mysqli_fetch_array($resp))
 	{
-
-
 		$cod_proceso_const=$dat['cod_proceso_const'];
-		$nombre_proceso_const=$dat['nombre_proceso_const'];
-		
+		$nombre_proceso_const=$dat['nombre_proceso_const'];		
 		$descripcion_proceso_const=$dat['descripcion_proceso_const'];
 		$cod_estado=$dat['cod_estado'];	
-		$nombre_estado=$dat['nombre_estado']; 
-
+		$nombre_estado=$dat['nombre_estado']; 	
+		$funcionario=$dat['funcionario'];
+		$created_by=$dat['created_by'];	
+		$fecha_creacion=$dat['created_date'];				
 		
-		$fecha_creacion=$dat['created_date'];		
-		
-		$nombre_registro=$dat['nombre_registro'];
 		//////////////
 		$fecha_registro= explode(' ',$fecha_creacion);
 		$fecha_reg=$fecha_registro[0];
@@ -180,12 +178,13 @@ $sql=$sql."  order by pc.nombre_proceso_const asc";
 		if($cod_estado<>2){
 			echo" <input type='checkbox' name='codigo' id='codigo' value='$cod_proceso_const'>";
 		}
-		echo "</td>";
+		echo "</td>
+		<td>$indice_tabla</td>";
 
 		echo" <td>$nombre_proceso_const</td>
 		<td>$descripcion_proceso_const</td>
 					
-		<td align='center'>$nombre_registro<br/>$fecha_reg_mostrar</td>
+		<td align='center'>".$funcionario."<br/>".$fecha_reg_mostrar."</td>
 		<td>$nombre_estado</td>";
 		
 	
