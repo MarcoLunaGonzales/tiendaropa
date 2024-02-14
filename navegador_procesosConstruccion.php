@@ -12,6 +12,7 @@ echo "<script language='Javascript'>
 
 		function eliminar_nav(f)
 		{
+			var estado=f.estado.value;
 			var i;
 			var j=0;
 			datos=new Array();
@@ -31,7 +32,7 @@ echo "<script language='Javascript'>
 			{
 				if(confirm('Esta seguro de eliminar los datos.'))
 				{
-					//location.href='eliminar_insumo.php?datos='+datos+'';
+					location.href='eliminar_procesoConstruccion.php?datos='+datos+'&estado=$estado';
 				}
 				else
 				{
