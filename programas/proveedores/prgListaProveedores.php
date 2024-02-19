@@ -28,12 +28,7 @@ echo "<table align='center' class='texto'><tr><th>Tipos de Proveedores:
 					echo "<option value=$codigoTipoX>$nombreTipoX</option>";
 				}
 			}
-			if($tipo==0){
-			echo"<option value=0 selected>PRODUCTO TERMINADO/INSUMO</option>";
 
-			}else{
-				echo"<option value=0 >PRODUCTO TERMINADO/INSUMO</option>";
-			}
 			echo " </select>
 	</th>
 	</tr></table><br>";

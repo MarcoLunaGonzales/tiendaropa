@@ -172,7 +172,7 @@ echo "<script language='Javascript'>
 
 $sql="select ma.codigo_material,ma.descripcion_material,ma.estado as cod_estado, es.nombre_estado,ma.cod_linea_proveedor,ma.cod_grupo,sub.cod_grupo as cod_grupo2,gru.nombre as grupo, ma.cod_tipomaterial,ma.cantidad_presentacion,ma.observaciones,ma.imagen,ma.cod_unidad,um.abreviatura as nombre_unidad_medida,ma.peso,ma.cod_subgrupo,sub.nombre as subgrupo,ma.cod_marca,ma.codigo_barras,
 ma.talla,ma.color,ma.codigo_anterior,ma.codigo2,ma.fecha_creacion,ma.creado_por,
-concat(f.paterno,' ',f.materno,' ',f.nombres) nombre_registro,
+concat(f.paterno,' ',f.materno,' ',f.nombres) funcionario,
 ma.cod_modelo, ma.cod_material,ma.cod_genero,ma.cod_tipo,es.nombre_estado
  from material_apoyo ma
 left join estados es on (ma.estado=es.cod_estado)
@@ -226,7 +226,7 @@ $sql=$sql."  order by ma.descripcion_material asc";
 		$grupo=$dat['grupo'];
 		$fecha_creacion=$dat['fecha_creacion'];		
 		
-		$nombre_registro=$dat['nombre_registro'];
+		$funcionario=$dat['funcionario'];
 		//////////////
 		$fecha_registro= explode(' ',$fecha_creacion);
 		$fecha_reg=$fecha_registro[0];
@@ -271,7 +271,7 @@ $sql=$sql."  order by ma.descripcion_material asc";
 		echo" </table>";
 		echo"</td>
 		<td>$grupo/$subgrupo</td>		
-		<td align='center'>$nombre_registro<br/>$fecha_reg_mostrar</td>
+		<td align='center'>$funcionario<br/>$fecha_reg_mostrar</td>
 		<td>$nombre_estado</td>";
 		
 	

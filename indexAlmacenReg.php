@@ -64,6 +64,20 @@ include("datosUsuario.php");
 		<nav id="menu">
 		<div id="panel-menu">
 		<ul>
+			
+					<li><span>Produccion</span>
+				<ul>
+					<li><a href="grupos/list.php?tipo=2" target="contenedorPrincipal">Grupos</a></li>					
+					<li><a href="navegador_insumos.php?tipo=2&estado=-1&grupo=-1" target="contenedorPrincipal">Insumos</a></li>
+					<li><a href="navegador_procesosConstruccion.php?estado=-1" target="contenedorPrincipal">Procesos</a></li>
+					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Proveedores</a></li>
+					<li><a href="navegador_ingresoinsumos.php?estado=-1&tipo=2" target="contenedorPrincipal">Ingresos de Insumos</a></li>
+					<li><a href="navegador_lotes.php" target="contenedorPrincipal">Lotes de Produccion</a></li>
+					<li><a href="navegador_salidaInsumos.php?tipo=2&estado=-1" target="contenedorPrincipal"> Salidas de Insumos</a></li>	
+					
+					
+				</ul>	
+			</li>
 			<li><span>Datos Generales</span>
 				<ul>
 					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Proveedores</a></li>
@@ -106,18 +120,6 @@ include("datosUsuario.php");
 							
 						</ul>	
 					</li>							
-				</ul>	
-			</li>
-					<li><span>Produccion</span>
-				<ul>
-					<li><a href="grupos/list.php?tipo=2" target="contenedorPrincipal">Grupos</a></li>					
-					<li><a href="navegador_insumos.php?tipo=2&estado=-1&grupo=-1" target="contenedorPrincipal">Insumos</a></li>
-					<li><a href="navegador_procesosConstruccion.php?estado=-1" target="contenedorPrincipal">Procesos</a></li>
-					<li><a href="programas/proveedores/inicioProveedores.php" target="contenedorPrincipal">Proveedores</a></li>
-					<li><a href="navegador_ingresoinsumos.php?estado=-1&tipo=2" target="contenedorPrincipal">Ingresos de Insumos</a></li>
-					<li><a href="navegador_lotes.php" target="contenedorPrincipal">Lotes de Produccion</a></li>
-					
-					
 				</ul>	
 			</li>
 			<li><a href="navegador_preingreso.php" target="contenedorPrincipal">Pre - Ingresos</a></li>

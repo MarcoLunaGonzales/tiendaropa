@@ -64,16 +64,19 @@ echo "<script language='Javascript'>
 			}
 		}
 		</script>";
-	require("conexionmysqli.php");
+	require("conexionmysqli2.inc");
 	require("estilos_almacenes.inc");
+	require("funciones.php");
 
 	echo "<form method='post' action=''>";
-	$sql="select a.cod_almacen, c.descripcion, a.nombre_almacen, f.paterno, f.materno, f.nombres
-	from almacenes a, funcionarios f, ciudades c where
-	c.cod_ciudad=a.cod_ciudad and f.codigo_funcionario=a.responsable_almacen
+	$sql="select a.cod_almacen, c.descripcion, a.nombre_almacen, f.paterno, f.materno, f.nombres 
+	from almacenes a
+	left join funcionarios f on (f.codigo_funcionario=a.responsable_almacen)
+	left join ciudades c on (c.cod_ciudad=a.cod_ciudad)
 	order by c.descripcion, a.nombre_almacen";
+	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
-	echo "<h1>Registro de Almacenes</h1>";
+	echo "<h1>Almacenes</h1>";
 
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Territorio</th><th>Nombre Almacen</th><th>Responsable</th></tr>";

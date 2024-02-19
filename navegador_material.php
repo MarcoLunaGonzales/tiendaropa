@@ -284,7 +284,11 @@ echo "<script language='Javascript'>
 			$tamanioImagen=50;
 		}
 		echo "<tr>
-		<td align='center'><input type='checkbox' name='codigo' value='$codigo'></td>
+		<td align='center'>";
+		if($estado<>2){
+		echo"<input type='checkbox' name='codigo' value='$codigo'>";
+	}
+		echo"</td>
 		<td align='center'>$indice_tabla</td>
 		<td>$codigoBarras -$codigo2</td>
 		<td>$marca</td>
@@ -325,7 +329,7 @@ echo "<script language='Javascript'>
 		echo" </td>";
 		echo "<td align='center'>$fechaCreacion</td>
 		<td align='center'><img src='imagenesprod/$imagen' width='$tamanioImagen'><br><a href='reemplazarImagen.php?codigo=$codigo&nombre=$nombreProd'><img src='imagenes/change.png' width='20' title='Reemplazar Imagen'></a></td>
-		<td><a href='listaPrecios.php?codigo=$codigo&nombre=$nombreProd'>
+		<td><a href='listaPrecios.php?codigo=$codigo&nombre=$nombreProd&tipo=$tipo&estado=$estado'>
 		<img src='imagenes/fijarPrecio.jpg' width='30' title='Fijar Precio'></a></td>
 		<td>$nombre_estado</td>
 	
