@@ -10,7 +10,7 @@
 	$n=sizeof($vector);
 	for($i=0;$i<$n;$i++)
 	{
-		$sql="update material_apoyo set estado=0 where codigo_material=$vector[$i]";
+		$sql="update material_apoyo set estado=2 where codigo_material=$vector[$i]";
 		$resp=mysqli_query($enlaceCon,$sql);
 	}
 	echo "<script language='Javascript'>

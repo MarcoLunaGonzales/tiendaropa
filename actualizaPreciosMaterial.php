@@ -6,6 +6,9 @@ require("estilos.inc");
 $codProducto=$_POST['codProducto'];
 $nombreProducto=$_POST['nombreProducto'];
 
+$tipo=$_POST['tipo'];
+$estado=$_POST['estado'];
+
 
 
 $sqlCiu="select cod_ciudad,descripcion as desc_ciudad,nombre_ciudad 
@@ -62,9 +65,9 @@ $sqlCiu="select cod_ciudad,descripcion as desc_ciudad,nombre_ciudad
 }else{*/
 	echo "<script language='Javascript'>
 			alert('Los datos fueron modificados correctamente.');
-			location.href='listaPrecios.php?codigo=".$codProducto."&nombre=".$nombreProducto."';
+			location.href='listaPrecios.php?codigo=".$codProducto."&nombre=".$nombreProducto."&tipo=".$tipo."&estado=".$estado."'";
 			
-			</script>";
+			echo"</script>";
 //}
 	
 

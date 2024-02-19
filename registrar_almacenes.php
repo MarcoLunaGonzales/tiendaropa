@@ -2,32 +2,37 @@
 echo "<script language='Javascript'>
 	function validar(f)
 	{
-		var almacen, ciudad, responsable;
+		var cod_ciudad, nombre_almacen, cod_funcionario;
 		if(f.nombre_almacen.value=='')
 		{	alert('El campo Nombre de Almacen esta vacio.');
 			f.nombre_almacen.focus();
 			return(false);
 		}
-		almacen=f.nombre_almacen.value;
-		ciudad=f.territorio.value;
-		responsable=f.responsable.value;
-		location.href='guarda_almacenes.php?nombre_almacen='+almacen+'&territorio='+ciudad+'&responsable='+responsable+'';
+		nombre_almacen=f.nombre_almacen.value;
+		cod_ciudad=f.cod_ciudad.value;
+		cod_funcionario=f.cod_funcionario.value;
+		location.href='guarda_almacenes.php?nombre_almacen='+nombre_almacen+'&cod_ciudad='+cod_ciudad+'&cod_funcionario='+cod_funcionario+'';
 	}
 	function envia_form(f)
 	{	f.submit();
 	}
 	</script>";
-require("conexionmysqli.php");
-require("estilos.inc");
+	require("conexionmysqli2.inc");
+	require("estilos_almacenes.inc");
+	require("funciones.php");
+
 echo "<form action='' method='post'>";
 echo "<h1>Adicionar Almacen</h1>";
 
+
+
 echo "<center><table class='texto'>";
 echo "<tr><th>Nombre Almacen</th><th>Territorio</th><th>Responsable</th></tr>";
-echo "<tr><td align='center'><input type='text' class='texto' value='$nombre_almacen' name='nombre_almacen' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();'></td>";
+echo "<tr><td align='center'><input type='text' class='texto'  name='nombre_almacen' id='nombre_almacen' size='40' onKeyUp='javascript:this.value=this.value.toUpperCase();'></td>";
+
 $sql1="select * from ciudades order by descripcion";
 $resp1=mysqli_query($enlaceCon,$sql1);
-echo "<td><select name='territorio' class='texto' OnChange='envia_form(this.form)'>";
+echo "<td><select name='cod_ciudad' id='cod_ciudad' class='texto' OnChange='envia_form(this.form)'>";
 while($dat1=mysqli_fetch_array($resp1))
 {	$cod_ciudad=$dat1[0];
 	$nombre_ciudad=$dat1[1];
@@ -39,9 +44,10 @@ while($dat1=mysqli_fetch_array($resp1))
 	}
 }
 echo "</select></td>";
-$sql2="select codigo_funcionario, paterno, materno, nombres from funcionarios where cod_cargo=1016 and cod_ciudad='$territorio' order by paterno, materno";
+$sql2="select codigo_funcionario, paterno, materno, nombres from funcionarios order by paterno, materno";
+
 $resp2=mysqli_query($enlaceCon,$sql2);
-echo "<td><select name='responsable' class='texto'>";
+echo "<td><select id='cod_funcionario' name='cod_funcionario' class='texto'>";
 while($dat2=mysqli_fetch_array($resp2))
 {	$cod_funcionario=$dat2[0];
 	$nombre_funcionario="$dat2[1] $dat2[2] $dat2[3]";

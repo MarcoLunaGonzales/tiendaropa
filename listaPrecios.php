@@ -5,6 +5,8 @@ require('funciones.php');
 
 $codProducto=$_GET['codigo'];
 $nombreProducto=$_GET['nombre'];
+$tipo=$_GET['tipo'];
+$estado=$_GET['estado'];
 
 echo "<form  action='actualizaPreciosMaterial.php' method='post' name='form1'>";
 
@@ -13,6 +15,8 @@ echo "<h1>Lista de Precios</h1><h2>$nombreProducto</h2>";
 
 echo "<input type='hidden' name='codProducto' id='codProducto' value='$codProducto'>";
 echo "<input type='hidden' name='nombreProducto' id='nombreProducto' value='$nombreProducto'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
+echo "<input type='hidden' name='estado' id='estado' value='$estado'>";
 
 
 echo "<center><table class='texto'>";
@@ -31,14 +35,16 @@ echo "<center><table class='texto'>";
 			$desc_ciudad=$datCiu['desc_ciudad'];
 			$nombre_ciudad=$datCiu['nombre_ciudad'];		
 
-		$sqlGrupoPrecio="select codigo,nombre from grupos_precio where  estado=1 order by codigo asc";
+		$sqlGrupoPrecio="select codigo,nombre,cant_inicio,cant_final from grupos_precio where  estado=1 order by codigo asc";
 
 		$respGrupoPrecio=mysqli_query($enlaceCon,$sqlGrupoPrecio);
 		
 			while($datGrupoPrecio=mysqli_fetch_array($respGrupoPrecio)){
 
 				$codGrupoPrecio=$datGrupoPrecio['codigo'];
-				$nomGrupoPrecio=$datGrupoPrecio['nombre'];			
+				$nomGrupoPrecio=$datGrupoPrecio['nombre'];		
+				$cant_inicio=$datGrupoPrecio['cant_inicio'];		
+				$cant_final	=$datGrupoPrecio['cant_final'];		
 
 			$sqlPrecio="select p.codigo_material,p.precio, p.cant_inicio,p.cant_final, 
 			p.created_by, concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date
@@ -46,7 +52,7 @@ echo "<center><table class='texto'>";
 			left join funcionarios f on (p.created_by=f.codigo_funcionario)
 			
 			where p.codigo_material='".$codigo."' and p.cod_ciudad='".$cod_ciudad."' and p.cod_precio='".$codGrupoPrecio."'";
-
+			
 			$respPrecio=mysqli_query($enlaceCon,$sqlPrecio);
 			$cantSqlPrecio=mysqli_num_rows($respPrecio);
 
@@ -60,18 +66,20 @@ echo "<center><table class='texto'>";
 					echo "<td>".$desc_ciudad."</td>";
 					echo "<td>".$nomGrupoPrecio."</td>";
 					echo "<td><input type='number' class='inputnumber'  id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6' min='0.1' step='0.01'  value='".redondear2($precio)."'></td>";
-					echo "<td><input class='inputnumber' type='number' min='1' id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' step='1' value='".$cant_inicio."' required></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."' step='1' value='".$cant_final."' required></td>";
+					echo "<td><input class='inputnumber' type='number'  id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."'  value='".$cant_inicio."' required></td>";
+					echo " <td><input class='inputnumber' type='number'  id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."'  value='".$cant_final."' required></td>";
 					echo "</tr>";
 				}
 			}else{
+
+
 					echo "<tr>";
 					echo "<td>&nbsp;</td>";
 					echo "<td>".$desc_ciudad."</td>";
 					echo "<td>".$nomGrupoPrecio."</td>";
 					echo "<td><input type='number' class='inputnumber'  id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6' min='0.1' step='0.01'  value='0'></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' step='1' value='0' required></td>";
-					echo " <td><input class='inputnumber' type='number' min='1' id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."' step='1' value='0' required></td>";
+					echo " <td><input class='inputnumber' type='number' id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' value='".$cant_inicio."' required></td>";
+					echo " <td><input class='inputnumber' type='number' id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."'  value='".$cant_final."' required></td>";
 					echo "</tr>";
 
 			}	
@@ -83,7 +91,7 @@ echo"</table></center>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_material.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_material.php?estado=$estado&tipo=$tipo\"'>
 </div>";
 echo "</form>";
 

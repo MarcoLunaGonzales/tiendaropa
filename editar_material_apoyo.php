@@ -96,6 +96,8 @@ echo "<h1>Editar Producto</h1>";
 
 
 echo "<input type='hidden' name='codProducto' id='codProducto' value='$codProducto'>";
+echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
+echo "<input type='hidden' name='estado' id='estado' value='$estado'>";
 
 echo "<center><table class='texto'>";
 
