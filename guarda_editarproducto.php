@@ -26,12 +26,14 @@ $codigo2=$_POST['codigo2'];
 $codModelo=$_POST['cod_modelo'];
 $codGenero=$_POST['cod_genero'];
 $codMaterial=$_POST['cod_material'];
+$codColeccion=$_POST['cod_coleccion'];
 
 $sql_inserta="update material_apoyo set descripcion_material='$nombreProducto', 
 
 cod_grupo='$codGrupo', observaciones='$observaciones', cod_unidad='$codUnidad', codigo_barras='$codigoBarras', color='$color',
 talla='$talla', cod_marca='$codMarca', cod_subgrupo='$codSubGrupo',codigo2='$codigo2',
 cod_modelo='$codModelo',cod_genero='$codGenero',cod_material='$codMaterial'
+,cod_coleccion='$codColeccion'
 
 where codigo_material='$codProducto'";
 //echo $sql_inserta;

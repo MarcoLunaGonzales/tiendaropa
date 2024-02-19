@@ -100,14 +100,14 @@ function actualizaNombreProducto($enlaceCon,$codProducto){
 	$sql="select m.codigo_material, m.descripcion_material, m.estado, 
 		m.cod_grupo,gru.nombre as nombreGrupo, m.cod_subgrupo,sgru.nombre as nombreSubgrupo,
 		m.cod_marca, mar.nombre as nombreMarca,
-		(select pl.nombre_linea_proveedor from proveedores p, proveedores_lineas pl where p.cod_proveedor=pl.cod_proveedor and pl.cod_linea_proveedor=m.cod_linea_proveedor),
 		m.observaciones, imagen,
 		 m.color, col.nombre as nombreColor,
 		 m.talla, tal.nombre as nombreTalla,
 		 m.codigo_barras, m.codigo2, m.fecha_creacion,
 		m.cod_modelo,mo.nombre as nombreModelo, 
 		m.cod_material, mat.nombre as nombreMaterial, 
-		m.cod_genero, gen.nombre as nombreGenero
+		m.cod_genero, gen.nombre as nombreGenero,
+		m.cod_coleccion,cole.nombre as nombreColeccion
 		from material_apoyo m
 		left join grupos gru on ( gru.codigo=m.cod_grupo)
 		left join subgrupos sgru on ( sgru.codigo=m.cod_subgrupo)
@@ -117,6 +117,7 @@ function actualizaNombreProducto($enlaceCon,$codProducto){
 		left join generos gen on ( gen.codigo=m.cod_genero)
 		left join colores col on ( col.codigo=m.color)
 		left join tallas tal on ( tal.codigo=m.talla)
+		left join colecciones cole  on ( cole.codigo=m.cod_coleccion)
 		where m.codigo_material=".$codProducto;
 	$resp=mysqli_query($enlaceCon,$sql);
 	while($dat=mysqli_fetch_array($resp))
@@ -128,7 +129,7 @@ function actualizaNombreProducto($enlaceCon,$codProducto){
 		$grupo=$dat['nombreGrupo'];
 		$subgrupo=$dat['nombreSubgrupo'];
 		$marca=$dat['nombreMarca'];		
-		$nombreLinea=$dat['nombre_linea_proveedor'];
+	
 		$observaciones=$dat['observaciones'];
 		$imagen=$dat['imagen'];
 		$color=$dat['color'];
@@ -141,7 +142,8 @@ function actualizaNombreProducto($enlaceCon,$codProducto){
 		$nombreModelo=$dat['nombreModelo'];
 		$nombreMaterial=$dat['nombreMaterial'];
 		$nombreGenero=$dat['nombreGenero'];
-		$sqlActualizanombre="update material_apoyo set descripcion_material='".$codProducto." ".$grupo." ".$subgrupo." ".$nombreModelo." ".$nombreGenero." ".$nombreMaterial." ".$nombreColor." ".$nombreTalla."' where codigo_material=".$codProducto;
+		$nombreColeccion=$dat['nombreColeccion'];
+		$sqlActualizanombre="update material_apoyo set descripcion_material='".$codProducto." ".$grupo." ".$subgrupo." ".$nombreModelo." ".$nombreGenero." ".$nombreMaterial." ".$nombreColor." ".$nombreTalla." ".$nombreColeccion."' where codigo_material=".$codProducto;
 		$resp=mysqli_query($enlaceCon,$sqlActualizanombre);
 	}
 	return($resp);
