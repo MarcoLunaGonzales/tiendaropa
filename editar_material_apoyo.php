@@ -60,7 +60,7 @@ $globalAgencia=$_COOKIE['global_agencia'];
 
 $sqlEdit="select m.codigo_material, m.descripcion_material, m.estado, m.cod_linea_proveedor, m.cod_grupo, m.cod_tipomaterial, 
 	m.observaciones, m.cod_unidad, m.codigo_barras, m.color, m.talla, m.cod_marca, m.cod_subgrupo,
-	m.codigo2, m.cod_material,m.cod_modelo,  m.cod_genero
+	m.codigo2, m.cod_material,m.cod_modelo,  m.cod_genero,m.cod_coleccion
 	from material_apoyo m where m.codigo_material='$codProducto'";
 $respEdit=mysqli_query($enlaceCon,$sqlEdit);
 while($datEdit=mysqli_fetch_array($respEdit)){
@@ -87,6 +87,7 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 	$codMaterialX=$datEdit[14];
 	$codModeloX=$datEdit[15];
 	$codGeneroX=$datEdit[16];
+	$codColeccionX=$datEdit['cod_coleccion'];
 }
 
 
@@ -135,10 +136,7 @@ echo "<td>
 echo "<th>Marca</th>";
 $sqlMarca="select codigo, nombre from marcas where estado=1  order by nombre asc";
  $respMarca=mysqli_query($enlaceCon,$sqlMarca);
- if(mysqli_num_rows($respMarca)<=0){
-	 $sqlMarca="select codigo, nombre from marcas where estado=1 order by nombre asc";
-	$respMarca=mysqli_query($enlaceCon,$sqlMarca);
-}
+
 
 echo "<td><div id='divMarca'>
 			<select name='cod_marca' id='cod_marca' required>
@@ -258,8 +256,26 @@ echo "<td>
 			}
 			echo "</select>
 </td>";
+echo "<th>Coleccion</th>";
 
-echo "<td></td><td></td></tr>";
+$sqlColeccion="select codigo, nombre, abreviatura from colecciones  where estado=1 order by 2;";
+$respColeccion=mysqli_query($enlaceCon,$sqlColeccion);
+echo "<td>
+			<select name='cod_coleccion' id='cod_coleccion' required >
+			<option value=''></option>";
+			while($datColeccion=mysqli_fetch_array($respColeccion))
+			{	$codColeccion=$datColeccion[0];
+				$nombreColeccion=$datColeccion[1];
+				$abreviaturaColeccion=$datColeccion[2];
+				if($codColeccionX==$codColeccion){
+					echo "<option value='$codColeccion' selected>$nombreColeccion - $abreviaturaColeccion</option>";					
+				}else{
+					echo "<option value='$codColeccion'>$nombreColeccion - $abreviaturaColeccion</option>";					
+				}
+			}
+			echo "</select>
+</td>";
+echo "</tr>";
 
 echo "<tr><th align='left'>Talla</th>";
 $sqlTalla="select codigo, nombre, abreviatura from tallas  where estado=1 order by 2;";

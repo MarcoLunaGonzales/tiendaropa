@@ -167,7 +167,8 @@ echo "<script language='Javascript'>
 		 m.codigo_barras, m.codigo2, m.fecha_creacion,
 		m.cod_modelo,mo.nombre as nombreModelo, 
 		m.cod_material, mat.nombre as nombreMaterial, 
-		m.cod_genero, gen.nombre as nombreGenero, es.nombre_estado
+		m.cod_genero, gen.nombre as nombreGenero, es.nombre_estado,
+		m.cod_coleccion,cole.nombre as nombreColeccion
 		from material_apoyo m
 		left join estados es on (m.estado=es.cod_estado)
 		left join grupos gru on ( gru.codigo=m.cod_grupo)
@@ -178,6 +179,7 @@ echo "<script language='Javascript'>
 		left join generos gen on ( gen.codigo=m.cod_genero)
 		left join colores col on ( col.codigo=m.color)
 		left join tallas tal on ( tal.codigo=m.talla)
+		left join colecciones cole  on ( cole.codigo=m.cod_coleccion)
 		where m.cod_tipo=$tipo ";
 	
 	if($estado<>-1){
@@ -240,7 +242,7 @@ echo "<script language='Javascript'>
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
 		<th>Grupo/SubGrupo</th><th>Modelo</th><th>Genero</th><th>Material</th>
-		<th>Color/<br/>Talla</th>
+		<th>Color/<br/>Talla</th><th>Coleccion</th>
 		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
 		<th>Fijar Precios</th><th>Estado</th>
 	
@@ -272,7 +274,8 @@ echo "<script language='Javascript'>
 		$nombreMaterial=$dat['nombreMaterial'];
 		$nombreGenero=$dat['nombreGenero'];
 		$nombre_estado=$dat['nombre_estado'];
-				
+		$cod_coleccion=$dat['cod_coleccion'];
+		$nombreColeccion=$dat['nombreColeccion'];				
 
 		if($imagen==""){
 			$imagen="default.png";
@@ -299,6 +302,7 @@ echo "<script language='Javascript'>
 		<td>$nombreGenero</td>
 		<td>$nombreMaterial</td>
 		<td>$nombreColor<br/><center>T:$nombreTalla</center></td>
+		<td>$nombreColeccion</td>
 		<td align='center'>";
 		$sqlListPrecios="select p.codigo_material,p.cod_precio,gp.nombre ,gp.abreviatura ,p.precio,p.cod_ciudad,c.nombre_ciudad,
 		p.cant_inicio,p.cant_final, p.created_by, 

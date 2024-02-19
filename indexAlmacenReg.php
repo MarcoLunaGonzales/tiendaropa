@@ -91,6 +91,7 @@ include("datosUsuario.php");
 							<li><a href="tallas/list.php" target="contenedorPrincipal">Tallas</a></li>
 							<li><a href="colores/list.php" target="contenedorPrincipal">Colores</a></li>
 							<li><a href="generos/list.php" target="contenedorPrincipal">Generos</a></li>
+							<li><a href="colecciones/list.php" target="contenedorPrincipal">Colecciones</a></li>
 							<li><a href="navegador_material.php?estado=-1&tipo=1" target="contenedorPrincipal">Productos</a></li>
 							<li><a href="tipos_precio/list.php" target="contenedorPrincipal">Precios y Descuentos</a></li>
 							<!--li><a href="navegador_precios.php?orden=1" target="contenedorPrincipal">Precios (Orden Alfabetico)</a></li>

@@ -13,7 +13,7 @@ $globalAgencia=$_COOKIE['global_agencia'];
 $sqlEdit="select codigo_material,descripcion_material,estado,cod_linea_proveedor,
 cod_grupo,cod_tipomaterial,cantidad_presentacion,observaciones,imagen,cod_unidad,
 peso,cod_subgrupo, cod_marca,codigo_barras,talla,color,codigo_anterior,codigo2,fecha_creacion,cod_modelo,
-cod_material,cod_genero from material_apoyo
+cod_material,cod_genero,cod_coleccion from material_apoyo
  where codigo_material='$codProducto'";
 $respEdit=mysqli_query($enlaceCon,$sqlEdit);
 while($datEdit=mysqli_fetch_array($respEdit)){
@@ -36,6 +36,7 @@ while($datEdit=mysqli_fetch_array($respEdit)){
 	$cod_modelo=$datEdit['cod_modelo'];
 	$cod_material=$datEdit['cod_material'];
 	$cod_genero=$datEdit['cod_genero'];
+	$cod_coleccion=$datEdit['cod_coleccion'];
 
 }
 $fechaCreacion=date("Y-m-d-H-i-s");
@@ -48,9 +49,9 @@ $codigo=$dat[0];
 $txtCopia="COPIA ";
 
 $sql_inserta="insert into material_apoyo(codigo_material, descripcion_material, estado, cod_linea_proveedor, cod_grupo, cod_tipomaterial,
-cantidad_presentacion, observaciones, cod_unidad, cod_subgrupo, cod_marca, color, talla,fecha_creacion,cod_modelo,cod_material,cod_genero,cod_tipo) values ($codigo,'$txtCopia.$codigo.$descripcion_material','1','1','$cod_grupo','$cod_tipomaterial','1','$observaciones','$cod_unidad',
+cantidad_presentacion, observaciones, cod_unidad, cod_subgrupo, cod_marca, color, talla,fecha_creacion,cod_modelo,cod_material,cod_genero,cod_coleccion,cod_tipo) values ($codigo,'$txtCopia.$codigo.$descripcion_material','1','1','$cod_grupo','$cod_tipomaterial','1','$observaciones','$cod_unidad',
 '$cod_subgrupo','$cod_marca','$color','$talla','$fechaCreacion','$cod_modelo','$cod_material',
-'$cod_genero','$tipo')";
+'$cod_genero','$cod_coleccion','$tipo')";
 
 
 

@@ -150,10 +150,6 @@ echo "<tr><th>Modelo</th>";
 echo "<td>";
 $sqlModelo="select codigo, nombre,abreviatura from modelos where estado=1  order by nombre asc";
  $respModelo=mysqli_query($enlaceCon,$sqlModelo);
- if(mysqli_num_rows($respModelo)<=0){
-	 $sqlModelo="select codigo, nombre,abreviatura from modelos where estado=1 order by nombre asc";
-	$respModelo=mysqli_query($enlaceCon,$sqlModelo);
-}
 
 
 echo "<select name='cod_modelo' id='cod_modelo' class='texto' required>";
@@ -174,11 +170,6 @@ echo "<td>";
 
 $sqlGenero="select codigo, nombre,abreviatura from generos where estado=1  order by nombre asc";
  $respGenero=mysqli_query($enlaceCon,$sqlGenero);
- if(mysqli_num_rows($respGenero)<=0){
-	 $sqlGenero="select codigo, nombre,abreviatura from generos where estado=1 order by nombre asc";
-	$respGenero=mysqli_query($enlaceCon,$sqlGenero);
-}
-
 
 echo "<select name='cod_genero' id='cod_genero' class='texto' required>";
 echo "<option value=''>---</option>";
@@ -196,10 +187,7 @@ echo "<th align='left'>Material</th>";
 echo "<td>";
 $sqlMaterial="select codigo, nombre,abreviatura from materiales where estado=1  order by nombre asc";
  $respMaterial=mysqli_query($enlaceCon,$sqlMaterial);
- if(mysqli_num_rows($respTalla)<=0){
-	 $sqlMaterial="select codigo, nombre,abreviatura from materiales where estado=1 order by nombre asc";
-	$respMaterial=mysqli_query($enlaceCon,$sqlMaterial);
-}
+
 echo "<select name='cod_material' id='cod_material' class='texto' required>";
 echo "<option value=''>---</option>";
 while($datMaterial=mysqli_fetch_array($respMaterial)){
@@ -208,7 +196,21 @@ while($datMaterial=mysqli_fetch_array($respMaterial)){
 	$abrevMaterial=$datMaterial[2];
 	echo "<option value='$codMaterial'>$nombreMaterial - $abrevMaterial </option>";
 }
-echo "</select></td> <td></td><td></td>";
+echo "</select></td>";
+echo "<th align='left'>Coleccion</th>";
+echo"<td>";
+$sqlColeccion="select codigo, nombre,abreviatura from colecciones where estado=1  order by nombre asc";
+ $respColeccion=mysqli_query($enlaceCon,$sqlColeccion);
+echo "<select name='cod_coleccion' id='cod_coleccion' class='texto' required>";
+echo "<option value=''>---</option>";
+while($datColeccion=mysqli_fetch_array($respColeccion)){
+	$codColeccion=$datColeccion[0];
+	$nombreColeccion=$datColeccion[1];
+	$abrevColeccion=$datColeccion[2];
+	echo "<option value='$codColeccion'>$nombreColeccion - $abrevColeccion </option>";
+}
+echo "</select>";
+echo "</td>";
 echo "</tr>";
 
 
@@ -216,10 +218,7 @@ echo "<th align='left'>Talla</th>";
 echo "<td>";
 $sqlTalla="select codigo, nombre,abreviatura from tallas where estado=1  order by nombre asc";
  $respTalla=mysqli_query($enlaceCon,$sqlTalla);
- if(mysqli_num_rows($respTalla)<=0){
-	 $sqlTalla="select codigo, nombre,abreviatura from tallas where estado=1 order by nombre asc";
-	$respTalla=mysqli_query($enlaceCon,$sqlTalla);
-}
+
 echo "<select name='cod_talla' id='cod_talla' class='texto' required>";
 echo "<option value=''>---</option>";
 while($datTalla=mysqli_fetch_array($respTalla)){
@@ -234,10 +233,7 @@ echo "<th align='left'>Color</th>";
 echo "<td>";
 $sqlColores="select codigo, nombre,abreviatura from colores where estado=1  order by nombre asc";
  $respColores=mysqli_query($enlaceCon,$sqlColores);
- if(mysqli_num_rows($respTalla)<=0){
-	 $sqlColores="select codigo, nombre,abreviatura from colores where estado=1 order by nombre asc";
-	$respColores=mysqli_query($enlaceCon,$sqlColores);
-}
+
 echo "<select name='cod_color' id='cod_color' class='texto' required>";
 echo "<option value=''>---</option>";
 while($datTalla=mysqli_fetch_array($respColores)){
