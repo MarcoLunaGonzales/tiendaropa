@@ -87,7 +87,8 @@ function Hidden(){
 }
 
 
-function setMateriales(f, cod, nombreMat, cantidadPresentacion,costoItem,precioVenta,precioVentaMayor){
+function setMateriales(f, cod, nombreMat, costoItem,precioVenta,precioVentaMayor){
+	
 	var numRegistro=f.materialActivo.value;
 	
 	document.getElementById('material'+numRegistro).value=cod;

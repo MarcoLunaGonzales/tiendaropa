@@ -11,7 +11,7 @@ function descontar_inventarios($enlaceCon,$cod_salida, $cod_almacen, $cod_materi
 	
 	$sqlExistencias="select id.cod_material, id.cantidad_restante, id.lote, id.fecha_vencimiento, id.cod_ingreso_almacen 
 		from ingreso_almacenes i, ingreso_detalle_almacenes id 
-		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$cod_almacen' and i.ingreso_anulado=0 
+		where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.cod_almacen='$cod_almacen' and i.ingreso_anulado=1 
 		and id.cod_material='$cod_material' and id.cantidad_restante>0 order by id.lote, id.fecha_vencimiento asc";
 	
 	//AQUI SE DEBE CORREGIR EL DATO DE CANTIDAD RESTANTE >0 OJO
@@ -41,7 +41,7 @@ function descontar_inventarios($enlaceCon,$cod_salida, $cod_almacen, $cod_materi
 			descuento_unitario, monto_unitario, cod_ingreso_almacen, orden_detalle, precio_traspaso, precio_traspaso2) values ('$cod_salida', '$codMaterial', '$cantidadInsert', '$loteProducto', '$fechaVencProducto',
 			'$precio','$descuento','$montoparcial','$codIngreso','$orden', '$precioTraspaso', '$precioTraspaso2')";
 			
-			//echo $sqlInsert;
+			//echo "<br>".$sqlInsert;
 			$respInsert=mysqli_query($enlaceCon,$sqlInsert);
 			
 			//AQUI DAMOS DE BAJA EL DESCUENTO POR SI HUBIERAN DOS REGISTROS O MAS

@@ -10,6 +10,7 @@ require("enviar_correo/php/send-email_anulacion.php");
  error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
+$tipo=$_POST['tipo'];
 
 $banderaEditPreciosTraspaso=0;
 $banderaEditPreciosTraspaso=obtenerValorConfiguracion($enlaceCon, 20);
@@ -236,10 +237,10 @@ do {
 			`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
 			`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo,
 			monto_cambio,cod_tipopago,created_by,created_at,cod_tipopreciogeneral,cod_tipoventa2,monto_cancelado_bs,monto_cancelado_usd,tipo_cambio,cod_delivery,
-			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda)
+			siat_cuis,siat_cuf,siat_codigotipodocumentoidentidad,siat_complemento,siat_codigoPuntoVenta,siat_excepcion,siat_codigocufd,siat_cod_leyenda,cod_tipo)
 			values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
 			'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', 
-			'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio','$cod_tipodelivery','$cuis','$cuf','$siat_codigotipodocumentoidentidad','$complemento','$codigoPuntoVenta',$excepcion,'$codigoCufd','$cod_leyenda')";
+			'$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$totalEfectivo','$totalCambio','$tipoVenta','$created_by','$created_at','$cod_tipopreciogeneral','$cod_tipoVenta2','$monto_bs','$monto_usd','$tipo_cambio','$cod_tipodelivery','$cuis','$cuf','$siat_codigotipodocumentoidentidad','$complemento','$codigoPuntoVenta',$excepcion,'$codigoCufd','$cod_leyenda','$tipo')";
 		//echo $sql_insert;
 		$sql_inserta=mysqli_query($enlaceCon,$sql_insert);
 	}else{   //CUANDO ES NR O TRASPASOS U OTROS TIPOS DE DOCS
@@ -249,9 +250,11 @@ do {
 
 		$sql_inserta="INSERT INTO salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
  		cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
- 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago, monto_efectivo, monto_cambio)
+ 		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago, monto_efectivo, monto_cambio,cod_tipo)
  		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
- 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta','$totalEfectivo','$totalCambio')";
+ 		'$observaciones', '1', '$nro_correlativo', 0, '$codCliente', '$totalVenta', '$descuentoVenta', '$totalFinal', '$razonSocial', '$nitCliente', '$usuarioVendedor', '$vehiculo',0,'$cod_dosificacion','$tipoVenta','$totalEfectivo','$totalCambio',$tipo)";
+
+ 		//echo $sql_inserta."<br/>";
  		$sql_inserta=mysqli_query($enlaceCon,$sql_inserta);
 	}
 	$contador++;
@@ -285,8 +288,20 @@ if($sql_inserta==1){
 		if($codMaterial!=0){
 
 			$cantidadUnitaria=$_POST["cantidad_unitaria$i"];
-			$precioUnitario=$_POST["precio_unitario$i"];
-			$descuentoProducto=$_POST["descuentoProducto$i"];
+			if(isset($_POST["precio_unitario$i"])){
+				$precioUnitario=$_POST["precio_unitario$i"];
+			}else{
+
+			$precioUnitario=0;				
+			}
+
+			if(isset($_POST["descuentoProducto$i"])){
+				$descuentoProducto=$_POST["descuentoProducto$i"];
+
+			}else{
+				$descuentoProducto=0;
+			}
+			
 
 			/****************** Gestionamos los precios desde los traspasos  **************/
 			$precioTraspaso=0;
@@ -317,11 +332,26 @@ if($sql_inserta==1){
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			
+			//echo "banderaValidacionStock=".$banderaValidacionStock."<br>";
 			if($banderaValidacionStock==1){
-				//echo "descontando aca";
+				/*echo "descontando aca";
+				echo "enlaceCon=".$enlaceCon."<br/>";
+				echo "codigo=".$codigo."<br/>";
+				echo "almacenOrigen=".$almacenOrigen."<br/>";
+				echo "codMaterial=".$codMaterial."<br/>";
+				echo "cantidadUnitaria=".$cantidadUnitaria."<br/>";
+				echo "precioUnitario=".$precioUnitario."<br/>";
+				echo "descuentoProducto=".$descuentoProducto."<br/>";
+				echo "montoMaterial=".$montoMaterial."<br/>";
+				echo "i=".$i."<br/>";
+				echo "precioTraspaso=".$precioTraspaso."<br/>";
+				echo "precioTraspaso2=".$precioTraspaso2."<br/>";*/
+
 				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precioTraspaso,$precioTraspaso2);
+				//echo "descontar_inventarios=".$respuesta."<br>";
 			}else{
 				$respuesta=insertar_detalleSalidaVenta($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock,$i,$precioTraspaso,$precioTraspaso2);
+				//echo "insertar_detalleSalidaVenta=".$respuesta."<br>";
 			}
 	
 			if($respuesta!=1){
@@ -462,13 +492,13 @@ if($sql_inserta==1){
 		}
 	}else{	
 		echo "<script type='text/javascript' language='javascript'>
-			location.href='navegador_salidamateriales.php';
+			location.href='navegador_salidamateriales.php?tipo=$tipo';
 		</script>";
 	}	
 }else{
 		echo "<script type='text/javascript' language='javascript'>
 			alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-			location.href='navegador_salidamateriales.php';
+			location.href='navegador_salidamateriales.phptipo=$tipo';
 		</script>";
 }
 

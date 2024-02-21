@@ -265,7 +265,7 @@ function stockProducto($enlaceCon,$almacen, $item){
 	
 	$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$fechaInicioSistema' and '$fechaActual' and i.cod_almacen='$almacen'
-			and id.cod_material='$item' and i.ingreso_anulado=0";
+			and id.cod_material='$item' and i.ingreso_anulado=1";
 
 			//echo $sql_ingresos;
 

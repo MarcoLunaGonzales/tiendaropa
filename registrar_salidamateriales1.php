@@ -37,9 +37,9 @@ function nuevoAjax()
 
 function listaMateriales(f){
 	var contenedor;
-	var codTipo=f.itemTipoMaterial.value;
+	var codGrupo=f.codGrupo.value;
 	var nombreItem=f.itemNombreMaterial.value;
-	
+	var tipo=f.tipo.value;
 	var codMarca=f.itemMarca.value;
 	var codBarraCod2=f.itemCodBarraCod2.value;
 	contenedor = document.getElementById('divListaMateriales');
@@ -55,7 +55,7 @@ function listaMateriales(f){
 	}
 	
 	ajax=nuevoAjax();
-	ajax.open("GET", "ajaxListaMateriales.php?codTipo="+codTipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
+	ajax.open("GET", "ajaxListaMateriales.php?codGrupo="+codGrupo+"&tipo="+tipo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem+"&arrayItemsUtilizados="+arrayItemsUtilizados,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -290,7 +290,7 @@ function validar(f){
 echo "<body>";
 
 
-
+$tipo=$_GET['tipo'];
 
 if(isset($fecha)){
 	$fecha=$fecha;
@@ -304,7 +304,7 @@ if($fecha=="")
 }
 $fechaIni=date('Y-m-d',strtotime($fecha.'-5 days'));
 
-$sql="select nro_correlativo from salida_almacenes where cod_almacen='$global_almacen' order by cod_salida_almacenes desc";
+$sql="select nro_correlativo from salida_almacenes where cod_almacen='$global_almacen' and cod_tipo=$tipo order by cod_salida_almacenes desc";
 $resp=mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $num_filas=mysqli_num_rows($resp);
@@ -315,8 +315,11 @@ else
 {   $codigo=$dat[0];
     $codigo++;
 }
+
 ?>
 <form action='guardarSalidaMaterial.php' method='POST' name='form1'>
+<input type='hidden' id='tipo' name='tipo'  value='<?php echo $tipo?>'>
+
 <h1>Registrar Salida de Almacen</h1>
 
 <table class='texto' align='center' width='90%'>
@@ -427,7 +430,7 @@ echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'>
 		<table align='center'>
 			<tr><th>Grupo</th><th>Marca</th><th>Cod.Barra/Cod.Prov</th><th>Material</th><th>&nbsp;</th></tr>
 			<tr>
-			<td><select class="texto" name='itemTipoMaterial' style="width:120px">
+			<td><select class="texto" name='codGrupo' id='codGrupo' style="width:120px">
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
 			where g.estado=1 order by 2;";

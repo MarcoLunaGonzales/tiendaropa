@@ -5,6 +5,7 @@
 echo "<script language='Javascript'>
 		function editar_nav(f)
 		{
+			var tipo=f.tipo.value;
 			var i;
 			var j=0;
 			var j_cod_registro;
@@ -28,15 +29,18 @@ echo "<script language='Javascript'>
 				}
 				else
 				{
-					location.href='registrar_ingresotransito.php?codigo_registro='+j_cod_registro;
+					location.href='registrar_ingresotransito.php?tipo='+tipo+'&codigo_registro='+j_cod_registro;
 				}
 			}
 		}
 		</script>";
 	echo "<form method='post' action=''>";
+	$tipo=$_GET['tipo'];
+	echo "<input type='hidden' id='tipo' name='tipo' value='$tipo'>";
+	
 	$sql="select s.cod_salida_almacenes, s.cod_almacen, s.fecha, ts.nombre_tiposalida, a.nombre_almacen, s.observaciones, s.nro_correlativo 
 	FROM salida_almacenes s, tipos_salida ts, almacenes a 
-	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and s.salida_anulada <> 1";
+	where s.cod_tiposalida=ts.cod_tiposalida and s.almacen_destino='$global_almacen' and s.estado_salida=1 and a.cod_almacen=s.cod_almacen and cod_tipo=$tipo and s.salida_anulada <> 2";
 	//echo $sql;
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Ingreso en Transito</h1>";
