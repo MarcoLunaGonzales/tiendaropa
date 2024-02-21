@@ -53,6 +53,7 @@ echo "<script language='JavaScript'>
 
 
 $fecha_rptdefault=date("Y-m-d");
+$tipo=$_GET['tipo'];
 $globalCiudad=$_COOKIE['global_agencia'];
 $globalAlmacen=$_COOKIE['global_almacen'];
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];

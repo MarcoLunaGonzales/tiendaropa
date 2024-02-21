@@ -127,20 +127,20 @@ include("datosUsuario.php");
 			<li><span>Ingresos de Productos</span>
 				<ul>
 					<li><a href="navegador_ingresomateriales.php?estado=-1&tipo=1" target="contenedorPrincipal">Ingreso de Productos</a></li>
-					<li><a href="navegador_ingresotransito.php" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
+					<li><a href="navegador_ingresotransito.php?tipo=1" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>
 	
 			<li><span>Salidas de Productos</span>
 				<ul>
-					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Listado de Ventas</a></li>
-					<li><a href="navegador_salidamateriales.php" target="contenedorPrincipal">Listado de Traspasos & Salidas</a></li>									
+					<li><a href="navegadorVentas.php" target="contenedorPrincipal">Ventas</a></li>
+					<li><a href="navegador_salidamateriales.php?tipo=1" target="contenedorPrincipal">Traspasos y/o Otros</a></li>									
 					<li><a href="registrar_salidaventas_manuales.php" target="_blank">Factura Manual de Contigencia</a></li>
 				</ul>	
 			</li>
 			<li><a href="filtroDefinicionPrecios.php" target="contenedorPrincipal" >Definicion de Precios</a></li>
-			<li><a href="registrar_salidaventas.php" target="_blank">Vender / Facturar</a></li>
+			<li><a href="registrar_salidaventas.php?tipo=1" target="_blank">Vender / Facturar</a></li>
 			<li><span>Otros Ingresos </span>
 				<ul>
 				<li>
@@ -170,7 +170,7 @@ include("datosUsuario.php");
 					<li><span>Movimiento de Almacen</span>
 						<ul>
 							<li><a href="rpt_op_inv_kardex.php" target="contenedorPrincipal">Kardex de Movimiento</a></li>
-							<li><a href="rpt_op_inv_existencias.php" target="contenedorPrincipal">Existencias</a></li>
+							<li><a href="rpt_op_inv_existencias.php?tipo=1" target="contenedorPrincipal">Existencias</a></li>
 							<li><a href="rpt_op_inv_ingresos.php" target="contenedorPrincipal">Ingresos</a></li>
 							<li><a href="rpt_op_inv_salidas.php" target="contenedorPrincipal">Salidas</a></li>
 							<!--li><a href="rptOCPagar.php" target="contenedorPrincipal">OC por Pagar</a></li-->

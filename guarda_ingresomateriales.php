@@ -8,6 +8,7 @@ require("funciones.php");
 error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
+$tipo=$_POST['tipo'];
 $global_agencia=$_COOKIE['global_agencia'];
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -22,7 +23,7 @@ $nro_correlativo=$dat[0];
 
 
 $hora_sistema = date("H:i:s");
-$tipo=$_POST['tipo'];
+
 $tipo_ingreso=$_POST['tipo_ingreso'];
 $nota_entrega=0;
 $nro_factura=$_POST['nro_factura'];
@@ -94,13 +95,13 @@ if($sql_inserta==1){
 							}
 							if($numFilasPrecios==0){
 									$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,created_by,created_date) values('".$cod_material."','0','".$precioBruto."','".$global_agencia."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";
-									echo $sqlPrecios;					
+									//echo $sqlPrecios;					
 								$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
 							}else{
 									$sqlPrecios="update precios set precio='".$precioBruto."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."'
 									 where codigo_material='".$cod_material."' and cod_precio=0 and cod_ciudad='".$global_agencia."'";		
 									 $respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
-									 echo $sqlPrecios;					
+									 //echo $sqlPrecios;					
 							}			
 							// FIN COSTO
 							$cantIniPN=1;$cantFinPN=5;		 
@@ -116,13 +117,13 @@ if($sql_inserta==1){
 							}
 							if($numFilasPrecios==0){
 								$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,cant_inicio,cant_final,created_by,created_date) values('".$cod_material."','1','".$precioVenta."','".$global_agencia."','".$cantIniPN."','".$cantFinPN."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";
-								echo $sqlPrecios;
+								//echo $sqlPrecios;
 					  		$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
 							}else{					
 									$sqlPrecios="update precios set precio='$precioVenta',
 									cant_inicio='".$cantIniPN."', cant_final='".$cantFinPN."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."'
 						 			where codigo_material='".$cod_material."' and cod_precio=1 and cod_ciudad='".$global_agencia."'";
-						 			echo $sqlPrecios;			
+						 			//echo $sqlPrecios;			
 						 			$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);					
 							}			
 							// FIN PRECIO NORMAL
@@ -139,12 +140,12 @@ if($sql_inserta==1){
 							}
 							if($numFilasPrecios==0){
 								$sqlPrecios="insert into precios (codigo_material, cod_precio, precio,cod_ciudad,cant_inicio,cant_final,created_by,created_date) values('".$cod_material."','2','".$precioVentaMayor."','".$global_agencia."','".$cantIniPM."','".$cantFinPM."','".$_COOKIE['global_usuario']."','".$fechaHoy."')";
-								echo $sqlPrecios;
+								//echo $sqlPrecios;
 									$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);
 							}else{				
 									$sqlPrecios="update precios set precio='".$precioVentaMayor."',
 									cant_inicio='".$cantIniPM."', cant_final='".$cantFinPM."', modified_by='".$_COOKIE['global_usuario']."', modified_date='".$fechaHoy."' where codigo_material='".$cod_material."' and cod_precio=2 and cod_ciudad='".$global_agencia."'";
-									echo $sqlPrecios;
+									//echo $sqlPrecios;
 									$respPrecios=mysqli_query($enlaceCon,$sqlPrecios);					
 							}
 							// FIN PRECIO x MAYOR

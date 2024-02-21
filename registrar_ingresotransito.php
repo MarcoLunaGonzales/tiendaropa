@@ -6,6 +6,8 @@ require("funciones.php");
 $fecha=date("Y-m-d");
 $hora=date("H:i");
 $observaciones="";
+$tipo=$_GET['tipo'];
+$codigo_registro=$_GET['codigo_registro'];
 $sql_datos_salidaorigen="select s.nro_correlativo, s.cod_tiposalida, a.nombre_almacen from salida_almacenes s, almacenes a
 where a.cod_almacen=s.cod_almacen and s.cod_salida_almacenes='$codigo_registro'";
 $resp_datos_salidaorigen=mysqli_query($enlaceCon,$sql_datos_salidaorigen);
@@ -14,6 +16,7 @@ $correlativo_salidaorigen=$datos_salidaorigen[0];
 $tipo_salidaorigen=$datos_salidaorigen[1];
 $nombre_almacen_origen=$datos_salidaorigen[2];
 echo "<form action='guarda_ingresomateriales.php' method='post'>";
+	echo "<input type='hidden' id='tipo' name='tipo' value='$tipo'>";
 echo "<h1>Registrar Ingreso en Transito</h1>";
 echo "<center>
 	<table class='texto'>";
@@ -84,7 +87,7 @@ echo "<input type='hidden' name='cod_salida' value='$codigo_registro'>";
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar'>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresotransito.php\"'>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresotransito.php?tipo=$tipo\"'>
 </div>";
 echo "</form>";
 echo "</div></body>";

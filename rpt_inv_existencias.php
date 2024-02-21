@@ -226,7 +226,7 @@ $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre 
 			
 			$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and i.cod_almacen='$rpt_almacen'
-			and id.cod_material='$codigo_item' and i.ingreso_anulado=0";
+			and id.cod_material='$codigo_item' and i.ingreso_anulado=1";
 			
 			//echo $sql_ingresos;
 			
@@ -236,7 +236,7 @@ $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre 
 			
 			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
 			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and s.cod_almacen='$rpt_almacen'
-			and sd.cod_material='$codigo_item' and s.salida_anulada=0";
+			and sd.cod_material='$codigo_item' and s.salida_anulada=1";
 			
 			//echo $sql_salidas;
 			

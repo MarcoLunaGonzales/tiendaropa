@@ -94,8 +94,10 @@ function funOk(codReg,funOkConfirm)
         },function(){});
     });
 }
-function enviar_nav()
-{   location.href='registrar_salidamateriales1.php';
+function enviar_nav(f)
+{   
+    var tipo=f.tipo.value;
+    location.href='registrar_salidamateriales1.php?tipo='+tipo;
 }
 function editar_salida(f)
 {   var i;
@@ -276,6 +278,7 @@ $fecha_sistema=date("Y-m-d");
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
+echo "<input type='hidden' id='tipo' name='tipo' value='$tipo'>";
 
 
 echo "<h1>Listado de Traspasos</h1>";
@@ -287,7 +290,7 @@ echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>LE
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
 echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
+<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
 		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
 </div>";
@@ -298,14 +301,15 @@ echo "<tr><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida
 	<th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
 	
 	
-//
+$tipo=$_GET['tipo'];
 $consulta = "
 	SELECT s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
 	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
 	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
 	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc 
 	FROM salida_almacenes s, tipos_salida ts 
-	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' and s.cod_tiposalida<>1001 ";
+	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_almacen = '$global_almacen' 
+    and s.cod_tiposalida<>1001 and s.cod_tipo='$tipo'";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
@@ -365,7 +369,7 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chk = "&nbsp;";
     }
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
-    //echo "<tr><td><input type='checkbox' name='codigo' value='$codigo'></td><td align='center'>$fecha_salida_mostrar</td><td>$nombre_tiposalida</td><td>$nombre_ciudad</td><td>$nombre_almacen</td><td>$nombre_funcionario</td><td>&nbsp;$obs_salida</td><td>$txt_detalle</td></tr>";
+
     echo "<tr>";
     echo "<td align='center'>&nbsp;$chk</td>";
     echo "<td align='center'>$nro_correlativo</td>";
@@ -375,12 +379,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/detalles.png' border='0' title='Detalle' width='40'></a></td>";
-	/*if($codTipoDoc==1){
-		echo "<td><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'>Ver F.P.</a></td>";
-	}else{
-		echo "<td><a href='formatoNotaRemision.php?codVenta=$codigo' target='_BLANK'>Ver F.P.</a></td>";
-	}
-	echo "<td><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'>Imp. Formato</a></td>";*/
+
 
 	echo "</tr>";
 }

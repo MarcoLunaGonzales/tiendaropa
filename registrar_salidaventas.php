@@ -1,6 +1,7 @@
 <?php
 $indexGerencia=1;
 require "conexionmysqli.inc";
+$tipo=$_GET['tipo'];
 ?>
 
 <html>
@@ -1547,7 +1548,7 @@ if(isset($_GET['file'])){
             </nav>
 
 <form action='guardarSalidaMaterial.php' method='POST' name='form1' id="guardarSalidaVenta" onsubmit="return validar(this)">
-
+	<input type="hidden" id="tipo" name="tipo" value='<?=$tipo?>'>
 	<input type="hidden" id="siat_error_valor" name="siat_error_valor">
 	<input type="hidden" id="confirmacion_guardado" value="0">
 	<input type="hidden" id="tipo_cambio_dolar" name="tipo_cambio_dolar"value="<?=$tipoCambio?>">
@@ -1724,8 +1725,8 @@ while($dat2=mysqli_fetch_array($resp2)){
 			<option value=''>----</option>
 			<?php
 			$sql2="select f.`codigo_funcionario`,
-				concat(f.`paterno`,' ', f.`nombres`) as nombre from `funcionarios` f where 
-				f.`cod_ciudad`='$globalAgencia' and estado=1 order by 2";
+				concat(f.`paterno`,' ', f.`nombres`) as nombre from `funcionarios` f, funcionarios_agencias fa where 
+				f.codigo_funcionario=fa.codigo_funcionario and fa.`cod_ciudad`='$globalAgencia' and estado=1 order by 2";
 			$resp2=mysqli_query($enlaceCon,$sql2);
 
 			while($dat2=mysqli_fetch_array($resp2)){
