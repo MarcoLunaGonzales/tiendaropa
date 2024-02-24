@@ -7,16 +7,16 @@ require("funciones.php");
 $tipo=$_GET['tipo'];
 $estado=$_GET['estado'];
 $cod_ingreso_almacen=$_GET['cod_ingreso_almacen'];
-
 $global_almacen=$_COOKIE['global_almacen'];
 
-	$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$cod_ingreso_almacen;	
+
+$sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$cod_ingreso_almacen;	
 	echo $sql;
-	$num_materiales=0;
-	$resp= mysqli_query($enlaceCon,$sql);				
-	while($dat=mysqli_fetch_array($resp)){	
+$num_materiales=0;
+$resp= mysqli_query($enlaceCon,$sql);				
+while($dat=mysqli_fetch_array($resp)){	
 		$num_materiales=$dat[0];
-	}
+}
 echo "num_materiales=".$num_materiales;
 ?>
 <html>
@@ -26,7 +26,7 @@ echo "num_materiales=".$num_materiales;
         <script type="text/javascript" src="functionsGeneral.js"></script>				
 		<script type='text/javascript' language='javascript'>
 
-alert('num='+num);
+
 function nuevoAjax()
 {	var xmlhttp=false;
 	try {
@@ -471,6 +471,7 @@ else
 <td width="10%" align="center">
 	<div id="idstock<?php echo $num;?>">
 		<?=$stockProducto;?>
+		<input type='text' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value='<?=$stockProducto;?>' readonly size='4'>
 		<input type="hidden" id="stock<?php echo $num;?>" name="stock<?php echo $num;?>" value="<?=$stockProducto;?>">
 	</div>
 </td>
