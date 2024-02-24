@@ -416,7 +416,7 @@ else
 		<th width="10%">&nbsp;</th>
 	</tr>
 	</table>
-</fieldset>
+
 <?php
 
 	$sqlIng=" select ida.cod_material,ma.descripcion_material, ida.cantidad_unitaria,ida.cantidad_restante,ida.lote, ";
@@ -453,33 +453,31 @@ else
 	?>
 
 <div id="div<?=$num;?>">
-
-<table border="0" align="center" width="100%"  class="texto" id="data<?=$num;?>" >
+<table  border="0" align="center" cellSpacing="1" cellPadding="1" width="100%" style="border:#ccc 1px solid;" id="data<?=$num;?>" >
 <tr bgcolor="#FFFFFF">
 <td width="10%" align="center">
-	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
+	<a href="javascript:buscarMaterial(form1, <?=$num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
-
 <td width="40%" align="center">
 	<input type="hidden" name="materiales<?=$num;?>" id="materiales<?=$num;?>" value="<?=$cod_material;?>">
-	<div id="cod_material<?php echo $num;?>" class='textomedianonegro'><?=$descripcion_material;?></div>
+	<div id="cod_material<?=$num;?>" class='textomedianonegro'><?=$descripcion_material;?></div>
 </td>
 
 <td width="10%" align="center">
 	<div id="idstock<?php echo $num;?>">
-		<?=$stockProducto;?>
+		
 		<input type='text' id='stock<?php echo $num;?>' name='stock<?php echo $num;?>' value='<?=$stockProducto;?>' readonly size='4'>
-		<input type="hidden" id="stock<?php echo $num;?>" name="stock<?php echo $num;?>" value="<?=$stockProducto;?>">
+		
 	</div>
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="<?=$cantidad_unitaria;?>" min="0.01" id="cantidad_unitaria<?php echo $num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' name="cantidad_unitaria<?php echo $num;?>" onChange='calculaMontoMaterial(<?php echo $num;?>);' step="0.01" required> 
+	<input class="inputnumber" type="number" value="<?=$cantidad_unitaria;?>" min="0.01" id="cantidad_unitaria<?=$num;?>" onKeyUp='calculaMontoMaterial(<?php echo $num;?>);' name="cantidad_unitaria<?=$num;?>" onChange='calculaMontoMaterial(<?=$num;?>);' step="0.01" required> 
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="<?=$precio_venta?>" min="0.01" id="precio_traspaso<?php echo $num;?>" 
-	name="precio_traspaso<?php echo $num;?>" step="0.01" required> 
+	<input class="inputnumber" type="number" value="<?=$precio_venta?>" min="0.01" id="precio_traspaso<?=$num;?>" 
+	name="precio_traspaso<?=$num;?>" step="0.01" required> 
 </td>
 
 <td align="center" width="10%">
@@ -497,23 +495,18 @@ else
 	
 	}
 ?>
+</fieldset>
 <script>
 	num=<?=$num_materiales;?>;
 	cantidad_items=<?=$num_materiales;?>;
 	console.log('valores num='+num)
 </script>
 
-<div class='divBotones'>
-	<input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'>
-	<input type='button' class='boton2' value='Cancelar'
-	 onClick='location.href=\"navegador_ingresomateriales.php?tipo=<?=$tipo;?>&estado=<?=$estado;?>\"'>
+<div class="divBotones">
+	<input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);">
+	<input type="button" class="boton2" value="Cancelar"
+	 onClick="location.href='navegador_ingresomateriales.php?tipo=<?=$tipo;?>&estado=<?=$estado;?>'">
 </div>
-
-</div>
-<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>
-
-
-
 
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1100px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
