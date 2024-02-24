@@ -4,6 +4,10 @@ require("conexionmysqli.inc");
 require("estilos_almacenes.inc");
 require("funciones.php");
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 $tipo=$_GET['tipo'];
 $estado=$_GET['estado'];
 $cod_ingreso_almacen=$_GET['cod_ingreso_almacen'];
