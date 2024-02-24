@@ -18,6 +18,7 @@ require_once 'funciones.php';
 <tr bgcolor="#FFFFFF">
 
 <td width="10%" align="center">
+	<?php echo $num;?>
 	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 

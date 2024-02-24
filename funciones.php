@@ -274,7 +274,34 @@ function stockProducto($enlaceCon,$almacen, $item){
 			$cant_ingresos=$dat_ingresos[0];
 			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
 			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$fechaInicioSistema' and '$fechaActual' and s.cod_almacen='$almacen'
-			and sd.cod_material='$item' and s.salida_anulada=0";
+			and sd.cod_material='$item' and s.salida_anulada=1";
+			//echo $sql_salidas;
+			$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
+			$dat_salidas=mysqli_fetch_array($resp_salidas);
+			$cant_salidas=$dat_salidas[0];
+			$stock2=$cant_ingresos-$cant_salidas;
+	return($stock2);
+}
+function stockProductoIngreso($enlaceCon,$almacen, $item,$codIngreso){
+	//
+	//require("conexion.inc");
+	$fechaActual=date("Y-m-d");
+	
+	//SACAMOS LA FECHA EN QUE INICIAMOS OPERACIONES ESTE DATO ES MUY IMPORTANTE
+	$fechaInicioSistema=obtenerValorConfiguracion($enlaceCon,6);
+	
+	$sql_ingresos="select sum(id.cantidad_unitaria) from ingreso_almacenes i, ingreso_detalle_almacenes id
+			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$fechaInicioSistema' and '$fechaActual' and i.cod_almacen='$almacen'
+			and id.cod_material='$item' and i.ingreso_anulado=1 and i.cod_ingreso_almacen='$codIngreso'";
+
+			//echo $sql_ingresos;
+
+			$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
+			$dat_ingresos=mysqli_fetch_array($resp_ingresos);
+			$cant_ingresos=$dat_ingresos[0];
+			$sql_salidas="select sum(sd.cantidad_unitaria) from salida_almacenes s, salida_detalle_almacenes sd
+			where s.cod_salida_almacenes=sd.cod_salida_almacen and s.fecha between '$fechaInicioSistema' and '$fechaActual' and s.cod_almacen='$almacen'
+			and sd.cod_material='$item' and s.salida_anulada=1 and sd.cod_ingreso_almacen='$codIngreso'";
 			//echo $sql_salidas;
 			$resp_salidas=mysqli_query($enlaceCon,$sql_salidas);
 			$dat_salidas=mysqli_fetch_array($resp_salidas);

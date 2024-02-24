@@ -364,7 +364,7 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chk = "<input type='checkbox' name='codigo' value='$codigo'>";
         $estado_preparado = 1;
     }	
-    if ($salida_anulada == 1) {
+    if ($salida_anulada == 2) {
         $color_fondo = "#ff8080";
         $chk = "&nbsp;";
     }
@@ -387,7 +387,7 @@ echo "</table></center><br>";
 echo "</div>";
 
 echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
+<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
 		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
 </div>";

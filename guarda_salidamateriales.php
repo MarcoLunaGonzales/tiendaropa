@@ -41,7 +41,7 @@ $sql_inserta="INSERT INTO `salida_almacenes` (`cod_salida_almacenes`, `cod_almac
   `almacen_destino`, `observaciones`, 
   `estado_salida`,`nro_correlativo`, `salida_anulada`, `cod_cliente`, `monto_total`, monto_cancelado) 
    VALUE ($codigo,$global_almacen,$tipo_salida,'$fecha_real','$hora_salida','$territorio','$almacen','$observaciones',
-   0,'$nro_correlativo',0,$funcionario,0,0)";
+   0,'$nro_correlativo',1,$funcionario,0,0)";
 
    /*$sql_inserta="INSERT INTO salida_almacenes 
 	VALUES($codigo,$global_almacen,$tipo_salida,'$fecha_real','$hora_salida','$territorio','$almacen','$observaciones',0,2,'','',0,0,0,0,'','$nro_correlativo',0,0,0)";
