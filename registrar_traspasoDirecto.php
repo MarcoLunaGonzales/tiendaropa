@@ -190,9 +190,7 @@ cantidad_items=0;
 
 function mas(obj) {
 
-	if(num>=1000){
-		alert("No puede registrar mas de 15 items en una nota.");
-	}else{
+
 		//aca validamos que el item este seleccionado antes de adicionar nueva fila de datos
 		var banderaItems0=0;
 		for(var j=1; j<=num; j++){
@@ -226,9 +224,11 @@ function mas(obj) {
 				}
 			}		
 			ajax.send(null);
+
+
 		}
 
-	}
+
 	
 }
 		
@@ -456,14 +456,11 @@ else
 	
 	?>
 
-<div id="div<?=$num; ?>">
+<div id="div<?=$num;?>">
 
-	<table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >
+<table border="0" align="center" width="100%"  class="texto" id="data<?=$num;?>" >
 <tr bgcolor="#FFFFFF">
-
 <td width="10%" align="center">
-<div id="div<?= $num; ?>">
-<?=$num;?> <?="/cod_material".$cod_material;?>
 	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 
@@ -490,9 +487,8 @@ else
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="<?=$precio_venta2?>"  min="0.01" id="precio_traspaso2<?php echo $num;?>" name="precio_traspaso2<?php echo $num;?>" step="0.01" required> 
+	<input class="inputnumber" type="number" value="<?=$precio_venta2?>" min="0.01" id="precio_traspaso2<?=$num;?>" name="precio_traspaso2<?=$num;?>" step="0.01" required> 
 </td>
-
 
 <td align="center"  width="10%" ><input class="boton2peque" type="button" value="-" onclick="menos(<?php echo $num;?>)" /></td>
 
