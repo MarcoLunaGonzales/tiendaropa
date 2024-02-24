@@ -280,7 +280,10 @@ echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th>
 <th>Observaciones</th>
 <th>Registro</th>
 <th>Ult. Edicion</th>
-<th>&nbsp;</th><th>&nbsp;</th><th>Estado</th><th>Nro PreIngreso</th></tr>";
+<th>&nbsp;</th><th>&nbsp;</th><th>Estado</th>
+<th>Nro PreIngreso</th>
+<th>Generar Traspaso</th>
+</tr>";
 $consulta = "SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso,
  i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,p.nombre_proveedor,
 	i.nro_factura_proveedor, i.created_by,i.created_date, i.modified_by,
@@ -375,7 +378,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}else{
 		echo"<td align='center'></td>";
 	}
-
+	echo "<td>
+<a href='registrar_traspasoDirecto.php?cod_ingreso_almacen=$codigo&tipo=$tipo&estado=$estado'>
+		Traspaso</a>
+	</td>";
 	echo"</tr>";
 }
 echo "</table></center><br>";
