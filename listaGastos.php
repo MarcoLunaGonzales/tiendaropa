@@ -183,19 +183,19 @@ $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $global_agencia=$_COOKIE['global_agencia'];
 
 ?>
-<h1>GASTOS</h1>
+<h1>Gastos</h1>
 
 <table border='1' cellspacing='0' class='textomini'>
-<tr><th>LEYENDA:</th><th>GASTOS ANULADOS</th><td bgcolor='#ff8080' width='10%'>>&nbsp;</td>
+<tr><th>LEYENDA:</th><th>Gastos Anulados</th><td bgcolor='#ff8080' width='10%'>>&nbsp;</td>
 
-<th>GASTOS SIN ANULAR</th><td bgcolor='' width='10%'>&nbsp;</td></tr>
+<th>Gastos Registrados</th><td bgcolor='' width='10%'>&nbsp;</td></tr>
 </table><br>
 
 <div class='divBotones'>
 <input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_gasto()'>
 <input type='button' value='Editar' class='boton' onclick='editar_gasto(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_gasto(this.form)'>
-<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
+<td><input type='button' value='Buscar' class='boton-verde' onclick='ShowBuscar()'>
 </div>
 
 <br><div id='divCuerpo'>
@@ -327,7 +327,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 <input type='button' value='Registrar' name='adicionar' class='boton' onclick='registrar_gasto()'>
 <input type='button' value='Editar' class='boton' onclick='editar_gasto(this.form)'>
 <input type='button' value='Anular' name='adicionar' class='boton2' onclick='anular_gasto(this.form)'>
-<td><input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
+<td><input type='button' value='Buscar' class='boton-verde' onclick='ShowBuscar()'>
 </div>
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">

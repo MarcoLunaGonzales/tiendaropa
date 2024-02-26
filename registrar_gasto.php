@@ -1,6 +1,6 @@
 <?php
-require("conexionmysqli2.inc");
-require("estilos.inc");
+require("conexionmysqli.inc");
+require("estilos_almacenes.inc");
 require("funciones.php");
 ?>
 
@@ -8,7 +8,6 @@ require("funciones.php");
     <head>
         <title>Busqueda</title>
   <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="dlcalendar.js"></script>
         <script type="text/javascript" src="functionsGeneral.js"></script>
         <script src="lib/sweetalert2/sweetalert2.all.js"></script>
 <script>
@@ -25,18 +24,20 @@ function cancelar(f)
 
 
 if($fecha=="")
-{   $fecha=date("d/m/Y");
+{   $fecha=date("Y-m-d");
 }
 $global_agencia=$_COOKIE['global_agencia'];
 ?>
 
 <form id='guarda_gasto' action='guarda_gasto.php' method='post' name='form1' >
-<table border='0' class='textotit' align='center'><tr><th>Registro de Gasto</th></tr></table><br>
+
+<h1>Registro de Gasto</h1>
+
 <table border="0" class="texto" cellspacing="0" align="center" width="70%" style="border:#ccc 1px solid;">
 <tr><th>Tipo Gasto</th><th>Nro de Gasto</th><th>Fecha de Gasto</th><th>Forma de Pago</th><th>Monto</th></tr>
 <tr>
 <td>
-	<select name="tipoGasto" id="tipoGasto" class="texto"  >
+	<select name="tipoGasto" id="tipoGasto" class="selectpicker" data-style='btn-info'>
 <?php	
 	$sqlTipoGasto="select cod_tipogasto, nombre_tipogasto from tipos_gasto where estado=1  order by cod_tipogasto asc";
 	$respTipoGasto=mysqli_query($enlaceCon,$sqlTipoGasto);
@@ -66,12 +67,10 @@ else
 ?>
 <td align="center"><?=$nro_correlativo;?></td>
 <td align="center">
-<input type="text" align="left"  class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
-
-<img id="imagenFecha" src="imagenes/fecha.bmp">
+	<input type="date" align="left"  class="texto" value="<?=$fecha;?>" id="fecha" size="10" name="fecha">
 </td>
 <td>
-	<select name="tipoPago" id="tipoPago" class="texto"  >
+	<select name="tipoPago" id="tipoPago" class="selectpicker" data-style="btn btn-warning" >
 <?php	
 	$sqlTipoPago="select cod_tipopago, nombre_tipopago from tipos_pago where estado=1  order by cod_tipopago asc";
 	$respTipoPago=mysqli_query($enlaceCon,$sqlTipoPago);
@@ -93,7 +92,7 @@ else
 <tr><th>Grupo Gasto</th><th colspan="3">Descripcion de Gasto </th> <th >Proveedor</th></tr>
 <tr>
 <td>
-	<select name="grupoGasto" id="grupoGasto" class="texto"  >
+	<select name="grupoGasto" id="grupoGasto" class="selectpicker" data-style="btn btn-info" >
 <?php	
 	$sqlGrupoGasto="select cod_grupogasto, nombre_grupogasto from grupos_gasto where estado=1  order by cod_grupogasto asc";
 	$respGrupoGasto=mysqli_query($enlaceCon,$sqlGrupoGasto);
@@ -109,9 +108,12 @@ else
 	</select>
 	</td>
 
-<td colspan="3" ><input type='text' class='texto' name='descripcion_gasto' size='100' required></td>
+<td colspan="3" >
+	<textarea class='texto' name="descripcion_gasto" id="descripcion_gasto" cols="50" rows="3" required></textarea>
+</td>
+
 <td>
-	<select name="proveedor" id="proveedor" class="texto"  >
+	<select name="proveedor" id="proveedor" class="selectpicker" data-style="btn btn-warning" >
 	<option value="" >NINGUNO</option>
 <?php	
 	$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";

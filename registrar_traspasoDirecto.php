@@ -1,12 +1,8 @@
 <?php
 $indexGerencia=1;
-require("conexionmysqli.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
-
- error_reporting(E_ALL);
- ini_set('display_errors', '1');
-
 
 $tipo=$_GET['tipo'];
 $estado=$_GET['estado'];
@@ -432,7 +428,6 @@ else
 
 	//echo $sqlIng;
 
-
 	$indiceMaterial=1;
 	$respIng=mysqli_query($enlaceCon,$sqlIng);
 	while($datIng=mysqli_fetch_array($respIng)){
@@ -514,10 +509,6 @@ else
 </div>
 
 </div>
-<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>
-
-
-
 
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1100px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">
