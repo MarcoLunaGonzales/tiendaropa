@@ -1,3 +1,5 @@
+
+<html><body>
 <?php
 
 	require('conexionmysqli.php');
@@ -34,17 +36,20 @@
 	echo "</table><br>";
 	
 	echo "<table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Codigo Barras</th><th>Codigo Barras</th><th>Material</th><th>Cantidad</th></tr>";
+	echo "<tr><th>&nbsp;</th><th>Codigo Barras</th><th>Material</th><th>Cantidad</th><th>Precio Normal</th><th>Precio x Mayor</th></tr>";
 	echo "<form method='post' action=''>";
 	$indice_detalle=1;
-	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria) from salida_detalle_almacenes s 
+	$sql_detalle="select s.cod_material, sum(s.cantidad_unitaria), s.precio_traspaso,s.precio_traspaso2
+	from salida_detalle_almacenes s 
 	where s.cod_salida_almacen='$codigo_salida' group by s.cod_material ORDER BY orden_detalle ASC";
 	$resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	{	$cod_material=$dat_detalle[0];
 		$cantidad_unitaria=$dat_detalle[1];
+		$precio_traspaso=$dat_detalle['precio_traspaso'];
+		$precio_traspaso2=$dat_detalle['precio_traspaso2'];
 		
-		$sql_nombre_material="select concat(descripcion_material,' ',talla,' ',color), codigo_barras from material_apoyo where codigo_material='$cod_material'";
+		$sql_nombre_material="select descripcion_material, codigo_barras from material_apoyo where codigo_material='$cod_material'";
 
 		$resp_nombre_material=mysqli_query($enlaceCon, $sql_nombre_material);
 		$dat_nombre_material=mysqli_fetch_array($resp_nombre_material);
@@ -53,9 +58,12 @@
 		$barCode=$dat_nombre_material[1];
 		
 		
-		echo "<tr><td>$indice_detalle</td><td>$barCode</td><td>$nombre_material</td><td align='center'>$cantidad_unitaria</td></tr>";
+		echo "<tr><td>$indice_detalle</td><td>$barCode &nbsp;</td><td>$nombre_material</td>
+		<td align='center'>$cantidad_unitaria</td><td align='center'>$precio_traspaso</td><td align='center'>$precio_traspaso2</td></tr>";
 		$indice_detalle++;
 	}
-	echo "</table></center>";
+	echo "</table></center><br/>";
 
 ?>
+
+</body></html>

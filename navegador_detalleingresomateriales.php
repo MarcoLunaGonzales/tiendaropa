@@ -30,7 +30,7 @@
 	echo "</table>";
 	$sql_detalle="select i.cod_material, i.cantidad_unitaria, i.precio_neto, i.lote, DATE_FORMAT(i.fecha_vencimiento, '%d/%m/%Y'), m.descripcion_material, m.color, m.talla, m.codigo_barras,i.precio_venta,i.precio_venta2 
 	from ingreso_detalle_almacenes i, material_apoyo m
-	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by m.descripcion_material";
+	where i.cod_ingreso_almacen='$codigo' and m.codigo_material=i.cod_material order by i.orden_detalle asc";
 	$resp_detalle=mysqli_query($enlaceCon,$sql_detalle);
 
 	echo "<br><table border=0 class='textoform' align='center'>";

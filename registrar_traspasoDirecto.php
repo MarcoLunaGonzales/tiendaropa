@@ -11,13 +11,13 @@ $global_almacen=$_COOKIE['global_almacen'];
 
 
 $sql=" select count(*) from ingreso_detalle_almacenes where cod_ingreso_almacen=".$cod_ingreso_almacen;	
-	echo $sql;
+	//echo $sql;
 $num_materiales=0;
 $resp= mysqli_query($enlaceCon,$sql);				
 while($dat=mysqli_fetch_array($resp)){	
 		$num_materiales=$dat[0];
 }
-echo "num_materiales=".$num_materiales;
+//echo "num_materiales=".$num_materiales;
 ?>
 <html>
     <head>
@@ -164,8 +164,8 @@ function setMateriales(f, cod, nombreMat, stock_producto, precio_producto, preci
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	
-	document.getElementById('precio_traspaso'+numRegistro).value=precio_producto;
-	document.getElementById('precio_traspaso2'+numRegistro).value=precio_productomayor;
+	document.getElementById('precio_normal'+numRegistro).value=precio_producto;
+	document.getElementById('precio_mayor'+numRegistro).value=precio_productomayor;
 	
 
 	document.getElementById('divRecuadroExt').style.visibility='hidden';
@@ -181,8 +181,6 @@ function calculaMontoMaterial(){
 	console.log('enter calcula monto');
 }
 
-
-cantidad_items=0;
 
 function mas(obj) {
 
@@ -330,7 +328,7 @@ else
 }
 
 ?>
-<form action='guardarSalidaMaterial.php' method='POST' name='form1'>
+<form action='guardarTraspasoDirecto.php' method='POST' name='form1'>
 <input type='hidden' id='tipo' name='tipo'  value='<?php echo $tipo?>'>
 
 
@@ -453,12 +451,15 @@ else
 	?>
 
 <div id="div<?=$num;?>">
+
 <table  border="0" align="center" cellSpacing="1" cellPadding="1" width="100%" style="border:#ccc 1px solid;" id="data<?=$num;?>" >
 <tr bgcolor="#FFFFFF">
 <td width="10%" align="center">
+	<?=$num;?>
 	<a href="javascript:buscarMaterial(form1, <?=$num;?>)"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
 </td>
 <td width="40%" align="center">
+
 	<input type="hidden" name="materiales<?=$num;?>" id="materiales<?=$num;?>" value="<?=$cod_material;?>">
 	<div id="cod_material<?=$num;?>" class='textomedianonegro'><?=$descripcion_material;?></div>
 </td>
@@ -476,12 +477,14 @@ else
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="<?=$precio_venta?>" min="0.01" id="precio_traspaso<?=$num;?>" 
-	name="precio_traspaso<?=$num;?>" step="0.01" required> 
+	<input class="inputnumber" type="number" value="<?=$precio_venta?>" min="0.01" id="precio_normal<?=$num;?>" 
+	name="precio_normal<?=$num;?>" step="0.01" required> 
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="<?=$precio_venta2?>" min="0.01" id="precio_traspaso2<?=$num;?>" name="precio_traspaso2<?=$num;?>" step="0.01" required> 
+	<?=$precio_venta2;?>
+	<input class="inputnumber" type="number" value="<?=$precio_venta2?>" min="0.01" id="precio_mayor<?=$num;?>" 
+	name="precio_mayor<?=$num;?>" step="0.01" required> 
 </td>
 
 <td align="center"  width="10%" ><input class="boton2peque" type="button" value="-" onclick="menos(<?php echo $num;?>)" /></td>
@@ -571,12 +574,14 @@ else
 	</div>
 </div>
 
-<input type='hidden' id='totalmat' value='<?=$cantidad_material;?>'>
+<input type='hidden' id='totalmat' value='<?=$cantidad_items;?>'>
 <input type='hidden' id='codalmacen' value='<?=$global_almacen;?>'>
 <input type='hidden' id='global_almacen' value='<?=$global_almacen;?>'>
 
 <input type='hidden' name='materialActivo' value="0">
 <input type='hidden' name='cantidad_material' value="0">
+<input type='hidden' id='cod_ingreso_almacen' name='cod_ingreso_almacen' value='<?=$cod_ingreso_almacen;?>'>
+
 
 <input type='hidden' name='no_venta' value="1">
 

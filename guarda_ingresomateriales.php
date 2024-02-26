@@ -77,8 +77,8 @@ if($sql_inserta==1){
 						$precioUnitario=$precioBruto;			
 						$costo=$precioUnitario;			
 						$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
-						precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta,precio_venta2) 
-					values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo','$precioVenta','$precioVentaMayor')";
+						precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta,precio_venta2,orden_detalle) 
+					values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo','$precioVenta','$precioVentaMayor','$i')";
 				
 						$respuestaConsulta = mysqli_query($enlaceCon,$consulta);
 						$fechaHoy=date("Y-m-d-H-i-s");

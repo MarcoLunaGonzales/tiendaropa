@@ -338,7 +338,7 @@ while ($dat = mysqli_fetch_array($resp)) {
 
     echo "<input type='hidden' name='fecha_ingreso$nro_correlativo' value='$fecha_ingreso_mostrar'>";
     $sql_verifica_movimiento = "select * from salida_almacenes s, salida_detalle_almacenes sd, ingreso_almacenes i
-		where s.cod_salida_almacenes=sd.cod_salida_almacen  and sd.cod_ingreso_almacen=i.cod_ingreso_almacen and s.salida_anulada=0 and i.cod_ingreso_almacen='$codigo'";
+		where s.cod_salida_almacenes=sd.cod_salida_almacen  and sd.cod_ingreso_almacen=i.cod_ingreso_almacen and s.salida_anulada=1 and i.cod_ingreso_almacen='$codigo'";
 	//echo $sql_verifica_movimiento;
     $resp_verifica_movimiento = mysqli_query($enlaceCon,$sql_verifica_movimiento);
     $num_filas_movimiento = mysqli_num_rows($resp_verifica_movimiento);
@@ -378,10 +378,21 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}else{
 		echo"<td align='center'></td>";
 	}
-	echo "<td>
-<a href='registrar_traspasoDirecto.php?cod_ingreso_almacen=$codigo&tipo=$tipo&estado=$estado'>
-		Traspaso</a>
-	</td>";
+
+	$sqlSalidaDetalle="select count(*) from salida_detalle_almacenes where cod_ingreso_almacen='".$codigo."'";
+	$respSalidaDetalle=mysqli_query($enlaceCon,$sqlSalidaDetalle);
+	$cantSalIng=0;
+	while($datSalidaDetalle=mysqli_fetch_array($respSalidaDetalle)){
+		$cantSalIng=$datSalidaDetalle[0];
+	}
+
+
+	echo "<td>";
+	if($cantSalIng==0){
+echo"<a href='registrar_traspasoDirecto.php?cod_ingreso_almacen=$codigo&tipo=$tipo&estado=$estado'>
+		Traspaso</a>";
+	}
+	echo "</td>";
 	echo"</tr>";
 }
 echo "</table></center><br>";
