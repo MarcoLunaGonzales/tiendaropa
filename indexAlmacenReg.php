@@ -127,7 +127,7 @@ include("datosUsuario.php");
 			<li><span>Ingresos de Productos</span>
 				<ul>
 					<li><a href="navegador_ingresomateriales.php?estado=-1&tipo=1" target="contenedorPrincipal">Ingreso de Productos</a></li>
-					<li><a href="navegador_ingresotransito.php?tipo=1" target="contenedorPrincipal">Ingreso de Productos en Transito</a></li>
+					<li><a href="navegador_ingresotransito.php?tipo=1" target="contenedorPrincipal">Ingreso de Transitos</a></li>
 					<!--li><a href="navegadorLiquidacionIngresos.php" target="contenedorPrincipal">Liquidacion de Ingresos</a></li-->
 				</ul>	
 			</li>

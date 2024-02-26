@@ -152,8 +152,8 @@ function setMateriales(f, cod, nombreMat, stock_producto, precio_producto, preci
 	document.getElementById('materiales'+numRegistro).value=cod;
 	document.getElementById('cod_material'+numRegistro).innerHTML=nombreMat;
 	
-	document.getElementById('precio_traspaso'+numRegistro).value=precio_producto;
-	document.getElementById('precio_traspaso2'+numRegistro).value=precio_productomayor;
+	document.getElementById('precio_normal'+numRegistro).value=precio_producto;
+	document.getElementById('precio_mayor'+numRegistro).value=precio_productomayor;
 	
 
 	document.getElementById('divRecuadroExt').style.visibility='hidden';

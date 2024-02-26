@@ -61,12 +61,12 @@
 
 	echo "<table border='0' class='texto' cellspacing='0' width='90%' align='center'>";
 	
-	echo "<tr><th>Grupo/Subgrupo</th><th>Marca</th><th>COD</th><th>Producto</th><th>T</th><th>C</th><th>Cantidad</th><th>CostoUnitario</th><th>CostoItem</th></tr>";
+	echo "<tr><th>Nro</th><th>Grupo/Subgrupo</th><th>Marca</th><th>COD</th><th>Producto</th><th>Cantidad</th><th>CostoUnitario</th><th>CostoItem</th><th>Precio Normal</th><th>Precio x Mayor</th></tr>";
 	
 	echo "<form method='post' action=''>";
 	
 	$sql_detalle="select s.cod_material, m.descripcion_material, s.lote, s.fecha_vencimiento, 
-		sum(s.cantidad_unitaria), avg(s.costo_almacen)
+		sum(s.cantidad_unitaria), avg(s.costo_almacen),s.precio_traspaso, s.precio_traspaso2
 		from salida_detalle_almacenes s
 		left join material_apoyo m on(s.cod_material=m.codigo_material)
 		
@@ -81,14 +81,19 @@
 	
 	$costoTotal=0;
 	$montoUnitario=0;
+	$nroCorr=0;
 	while($dat_detalle=mysqli_fetch_array($resp_detalle))
-	{	$cod_material=$dat_detalle[0];
+	{	
+		$nroCorr++;
+		$cod_material=$dat_detalle[0];
 		$nombre_material=$dat_detalle[1];
 		$loteProducto=$dat_detalle[2];
 		$fechaVencimiento=$dat_detalle[3];
 		$cantidad_unitaria=$dat_detalle[4];
 		$costoUnitario=$dat_detalle[5];
-		$costoItem=$cantidad_unitaria*$costoUnitario;		
+		$costoItem=$cantidad_unitaria*$costoUnitario;
+		$precio_traspaso=$dat_detalle['precio_traspaso'];
+		$precio_traspaso2=$dat_detalle['precio_traspaso2'];		
 		
 			$sql_nombre_material="select s.nombre,g.nombre,m.nombre,ma.codigo2, ma.codigo_barras,ma.talla, ma.color
 		from material_apoyo ma
@@ -108,6 +113,8 @@
 		$talla=$dat_nombre_material[5];
 		$color=$dat_nombre_material[6];
 		
+
+		
 		
 		$costoTotal+=$costoItem;
 		
@@ -116,15 +123,17 @@
 		$costoItemF=redondear2($costoItem);
 		
 		echo "<tr>
+		<td class='bordeNegroTdMod'>$nroCorr</td>
 		<td class='bordeNegroTdMod'>$nombre_grupo / $nombre_subgrupo </td>
 		<td class='bordeNegroTdMod'>$nombre_marca</td>
 		<td class='bordeNegroTdMod'>$codigoBarras $codigo2</td>
 			<td class='bordeNegroTdMod'>$nombre_material</td>
-			<td class='bordeNegroTdMod'>$talla</td>
-			<td class='bordeNegroTdMod'>$color</td>
+		
 			<td class='bordeNegroTdMod'>$cantidadF</td>
 			<td class='bordeNegroTdMod'>$costoUnitF</td>
 			<td class='bordeNegroTdMod'>$costoItemF</td>
+			<td class='bordeNegroTdMod'>$precio_traspaso</td>
+			<td class='bordeNegroTdMod'>$precio_traspaso2</td>
 			</tr>";
 		$indice++;
 		$montoTotal=$montoTotal+$montoUnitario;
@@ -132,7 +141,7 @@
 	}
 	$costoTotalF=redondear2($costoTotal);
 	
-	echo "<tr><th colspan='7'>-</th><th>Costo Total</th><th>$costoTotalF</th></tr>";
+	echo "<tr><th colspan='6'>-</th><th>Costo Total</th><th>$costoTotalF</th></tr>";
 	echo "</table><br><br><br><br><br>";
 	echo "<div><table width='90%'>
 	<tr class='bordeNegroTdMod'><td width='33%' align='center'>Despachado</td><td width='33%' align='center'>Entregue Conforme</td><td width='33%' align='center'>Recibi Conforme</td></tr>

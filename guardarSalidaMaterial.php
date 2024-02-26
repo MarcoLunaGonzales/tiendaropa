@@ -232,7 +232,7 @@ do {
 		if($_POST['tipo_documento']==5){
 			$complemento="";
 		}
-		$sql_insert="INSERT INTO `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
+		$sql_insert="insert into `salida_almacenes`(`cod_salida_almacenes`, `cod_almacen`,`cod_tiposalida`, 
 			`cod_tipo_doc`, `fecha`, `hora_salida`, `territorio_destino`, 
 			`almacen_destino`, `observaciones`, `estado_salida`, `nro_correlativo`, `salida_anulada`, 
 			`cod_cliente`, `monto_total`, `descuento`, `monto_final`, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion, monto_efectivo,
@@ -248,7 +248,7 @@ do {
 		$nro_correlativo=$vectorNroCorrelativo[0];
 		$cod_dosificacion=0;
 
-		$sql_inserta="INSERT INTO salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
+		$sql_inserta="insert into salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
  		cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada, 
  		cod_cliente, monto_total, descuento, monto_final, razon_social, nit, cod_chofer, cod_vehiculo, monto_cancelado, cod_dosificacion,cod_tipopago, monto_efectivo, monto_cambio,cod_tipo)
  		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
@@ -307,8 +307,8 @@ if($sql_inserta==1){
 			$precioTraspaso=0;
 			$precioTraspaso2=0;
 			if(isset($_POST["precio_traspaso$i"])){
-				$precioTraspaso=$_POST["precio_traspaso$i"];
-				$precioTraspaso2=$_POST["precio_traspaso2$i"];
+				$precioTraspaso=$_POST["precio_normal$i"];
+				$precioTraspaso2=$_POST["precio_mayor$i"];
 			}
 			/******* Cuando es Traspaso y los precios no son Editables ******/
 			if($tipoSalida==1000 && $banderaEditPreciosTraspaso==0){
@@ -334,18 +334,7 @@ if($sql_inserta==1){
 			
 			//echo "banderaValidacionStock=".$banderaValidacionStock."<br>";
 			if($banderaValidacionStock==1){
-				/*echo "descontando aca";
-				echo "enlaceCon=".$enlaceCon."<br/>";
-				echo "codigo=".$codigo."<br/>";
-				echo "almacenOrigen=".$almacenOrigen."<br/>";
-				echo "codMaterial=".$codMaterial."<br/>";
-				echo "cantidadUnitaria=".$cantidadUnitaria."<br/>";
-				echo "precioUnitario=".$precioUnitario."<br/>";
-				echo "descuentoProducto=".$descuentoProducto."<br/>";
-				echo "montoMaterial=".$montoMaterial."<br/>";
-				echo "i=".$i."<br/>";
-				echo "precioTraspaso=".$precioTraspaso."<br/>";
-				echo "precioTraspaso2=".$precioTraspaso2."<br/>";*/
+
 
 				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precioTraspaso,$precioTraspaso2);
 				//echo "descontar_inventarios=".$respuesta."<br>";

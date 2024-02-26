@@ -38,11 +38,11 @@ require_once 'funciones.php';
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="" min="0.01" id="precio_traspaso<?php echo $num;?>" name="precio_traspaso<?php echo $num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
+	<input class="inputnumber" type="number" value="" min="0.01" id="precio_normal<?php echo $num;?>" name="precio_normal<?php echo $num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
 </td>
 
 <td align="center" width="10%">
-	<input class="inputnumber" type="number" value="" min="0.01" id="precio_traspaso2<?php echo $num;?>" name="precio_traspaso2<?php echo $num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
+	<input class="inputnumber" type="number" value="" min="0.01" id="precio_mayor<?=$num;?>" name="precio_mayor<?=$num;?>" step="0.01" <?=($banderaEditPrecios==0)?"disabled":"";?> required> 
 </td>
 
 
