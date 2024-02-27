@@ -80,6 +80,7 @@ if($sql_inserta==1){
 						$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 						precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta,precio_venta2,orden_detalle) 
 					values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo','$precioVenta','$precioVentaMayor','$i')";
+					echo $consulta;
 				
 						$respuestaConsulta = mysqli_query($enlaceCon,$consulta);
 						$fechaHoy=date("Y-m-d-H-i-s");
@@ -157,20 +158,19 @@ if($sql_inserta==1){
 		}
 
 
-	echo "Los datos fueron insertados correctamente";
+	/*echo "Los datos fueron insertados correctamente";
 echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
-		</script>";	
+		</script>";	*/
 }else{
 
 
 
 
-	echo "<script language='Javascript'>
+	/*echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
-		</script>";
-}
+		</script>";*/
 
 ?>
