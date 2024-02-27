@@ -1,6 +1,6 @@
 <?php
 $indexGerencia=1;
-require("conexionmysqli.inc");
+require("conexionmysqli.php");
 require("estilos_almacenes.inc");
 require("funciones.php");
 
@@ -396,7 +396,8 @@ else
 <br>
 <div class="codigo-barras div-center">
                <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
-         </div>
+</div>
+
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="80%" border="0" id="data0" style="border:#ccc 1px solid;">
 	<tr>
@@ -425,7 +426,6 @@ else
 	$sqlIng=$sqlIng." where ida.cod_ingreso_almacen='".$cod_ingreso_almacen."' order by ida.orden_detalle asc";
 
 	//echo $sqlIng;
-
 
 	$indiceMaterial=1;
 	$respIng=mysqli_query($enlaceCon,$sqlIng);
@@ -499,17 +499,18 @@ else
 	}
 ?>
 </fieldset>
-<script>
-	num=<?=$num_materiales;?>;
-	cantidad_items=<?=$num_materiales;?>;
-	console.log('valores num='+num)
-</script>
 
-<div class="divBotones">
-	<input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);">
-	<input type="button" class="boton2" value="Cancelar"
-	 onClick="location.href='navegador_ingresomateriales.php?tipo=<?=$tipo;?>&estado=<?=$estado;?>'">
-</div>
+	<script>
+		num=<?=$num_materiales;?>;
+		cantidad_items=<?=$num_materiales;?>;
+		console.log('valores num='+num)
+	</script>
+
+	<div class="divBotones">
+		<input type="submit" class="boton" value="Guardar" onClick="return validar(this.form);">
+		<input type="button" class="boton2" value="Cancelar"
+		 onClick="location.href='navegador_ingresomateriales.php?tipo=<?=$tipo;?>&estado=<?=$estado;?>'">
+	</div>
 
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:1100px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2; overflow: auto;">

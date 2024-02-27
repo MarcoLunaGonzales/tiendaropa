@@ -1,6 +1,6 @@
 <?php
-require("conexionmysqli2.inc");
-require("estilos.inc");
+require("conexionmysqli.inc");
+require("estilos_almacenes.inc");
 require("funciones.php");
 ?>
 
@@ -8,7 +8,6 @@ require("funciones.php");
     <head>
         <title>Busqueda</title>
   <script type="text/javascript" src="lib/externos/jquery/jquery-1.4.4.min.js"></script>
-        <script type="text/javascript" src="dlcalendar.js"></script>
         <script type="text/javascript" src="functionsGeneral.js"></script>
         <script src="lib/sweetalert2/sweetalert2.all.js"></script>
 <script>
@@ -42,8 +41,6 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 		$descripcion_gasto=$dat['descripcion_gasto'];
 		$cod_tipogasto=$dat['cod_tipogasto'];
 		$fecha_gasto=$dat['fecha_gasto'];
-		$vector_fecha_gasto=explode("-",$fecha_gasto);
-		$fecha_gasto_mostrar=$vector_fecha_gasto[2]."/".$vector_fecha_gasto[1]."/".$vector_fecha_gasto[0];
 		$monto=$dat['monto'];
 		$created_by=$dat['created_by'];
 		$modified_by=$dat['modified_by'];
@@ -61,12 +58,14 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 
 <form id="guarda_editarGasto" action="guarda_editarGasto.php" method="post" name="form1" >
 <input type="hidden" name="idGastoEditar" id="idGastoEditar" value="<?=$idGastoEditar;?>">
-<table border='0' class='textotit' align='center'><tr><th>Editar de Gasto</th></tr></table><br>
+
+<h1>Editar Gasto</h1>
+
 <table border="0" class="texto" cellspacing="0" align="center" width="70%" style="border:#ccc 1px solid;">
 <tr><th>Tipo Gasto</th><th>Nro de Gasto</th><th>Fecha de Gasto</th><th>Forma de Pago</th><th>Monto</th></tr>
 <tr>
 <td>
-	<select name="tipoGasto" id="tipoGasto" class="texto"  >
+	<select name="tipoGasto" id="tipoGasto" class="selectpicker" data-style="btn btn-success" >
 <?php	
 	$sqlTipoGasto="select cod_tipogasto, nombre_tipogasto from tipos_gasto where estado=1  order by cod_tipogasto asc";
 	$respTipoGasto=mysqli_query($enlaceCon,$sqlTipoGasto);
@@ -83,10 +82,13 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 	</td>
 
 <td align="center"><?=$idGastoEditar;?></td>
+
 <td align="center">
-<input type="text" align="left"  class="texto" value="<?=$fecha_gasto_mostrar;?>" id="fecha" size="10" name="fecha"></td>
+	<input type="date" class="texto" value="<?=$fecha_gasto;?>" id="fecha" size="10" name="fecha">
+</td>
+
 <td>
-	<select name="tipoPago" id="tipoPago" class="texto"  >
+	<select name="tipoPago" id="tipoPago" class="selectpicker" data-style="btn btn-warning" >
 <?php	
 	$sqlTipoPago="select cod_tipopago, nombre_tipopago from tipos_pago where estado=1  order by cod_tipopago asc";
 	$respTipoPago=mysqli_query($enlaceCon,$sqlTipoPago);
@@ -108,7 +110,7 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 <tr><th>Grupo Gasto</th><th colspan="3">Descripcion de Gasto </th> <th >Proveedor</th></tr>
 <tr>
 <td>
-	<select name="grupoGasto" id="grupoGasto" class="texto"  >
+	<select name="grupoGasto" id="grupoGasto" class="selectpicker" data-style="btn btn-success">
 <?php	
 	$sqlGrupoGasto="select cod_grupogasto, nombre_grupogasto from grupos_gasto where estado=1  order by cod_grupogasto asc";
 	$respGrupoGasto=mysqli_query($enlaceCon,$sqlGrupoGasto);
@@ -124,9 +126,12 @@ from gastos where cod_gasto='".$idGastoEditar."' and cod_ciudad='".$global_agenc
 	</select>
 	</td>
 
-<td colspan="3" ><input type='text' class='texto' name='descripcion_gasto' value="<?=$descripcion_gasto;?>" size='100' required></td>
+<td colspan="3">
+	<textarea class='texto' name='descripcion_gasto' cols="50" size='100' required><?=$descripcion_gasto;?></textarea>
+</td>
+
 <td>
-	<select name="proveedor" id="proveedor" class="texto"  >
+	<select name="proveedor" id="proveedor" class="selectpicker" data-style="btn btn-warning">
 	<option value="" >NINGUNO</option>
 <?php	
 	$sql3="select cod_proveedor, nombre_proveedor from proveedores where estado=1  order by nombre_proveedor asc";

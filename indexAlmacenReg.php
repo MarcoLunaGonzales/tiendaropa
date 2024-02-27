@@ -149,10 +149,11 @@ include("datosUsuario.php");
 					
 				</ul>	
 			</li>
-						<li><span>Egresos </span>
+				<li><span>Egresos </span>
 				<ul>
+					<li><a href="tipos_gasto/list.php" target="contenedorPrincipal">Tipos de Gasto</a></li>
+					<li><a href="grupos_gasto/list.php" target="contenedorPrincipal">Grupos de Gasto</a></li>
 					<li><a href="listaGastos.php" target="contenedorPrincipal">Gastos</a></li>
-					
 				</ul>	
 			</li>
 						

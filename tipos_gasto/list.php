@@ -71,16 +71,17 @@ echo "<script language='Javascript'>
 	
 	
 	echo "<form method='post' action=''>";
-	$sql="select codigo, nombre, abreviatura, estado from $table where estado=1 order by 2";
+	$sql="select cod_tipogasto, nombre_tipogasto, abreviatura, estado from $table where estado=1 order by 2";
+
 	$resp=mysqli_query($enlaceCon,$sql);
 	echo "<h1>Lista de $moduleNamePlural</h1>";
 	
-	echo "<div class='divBotones'>
+	/*echo "<div class='divBotones'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-	</div> <br>";
-	
+	</div> <br><br>";
+	*/
 	
 	echo "<center><table class='texto'>";
 	echo "<tr><th>&nbsp;</th><th>Codigo</th><th>Nombre</th><th>Abreviatura</th></tr>";
@@ -93,16 +94,16 @@ echo "<script language='Javascript'>
 		<td><input type='checkbox' name='codigo' value='$codigo'></td>
 		<td>$codigo</td>
 		<td>$nombre</td>
-		<td>$abreviatura</td
+		<td>$abreviatura</td>
 		</tr>";
 	}
 	echo "</table></center><br>";
 	
-	echo "<div class='divBotones'>
+	/*echo "<div class='divBotones'>
 	<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>
 	<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
 	<input type='button' value='Eliminar' name='eliminar' class='boton2' onclick='eliminar_nav(this.form)'>
-	</div>";
+	</div>";*/
 	
 	echo "</form>";
 ?>

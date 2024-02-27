@@ -31,10 +31,7 @@ $descripcion_gasto=$_POST['descripcion_gasto'];
 $createdBy=$_COOKIE['global_usuario'];
 $createdDate=date("Y-m-d H:i:s");
 
-$fecha=$_POST['fecha'];
-$vector_fecha_gasto=explode("/",$fecha);
-$fecha_gasto=$vector_fecha_gasto[2]."-".$vector_fecha_gasto[1]."-".$vector_fecha_gasto[0];
-
+$fecha_gasto=$_POST['fecha'];
 
 
 $consulta="insert into gastos (cod_gasto,descripcion_gasto,cod_tipogasto,fecha_gasto,monto,cod_ciudad,
