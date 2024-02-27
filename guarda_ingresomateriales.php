@@ -15,7 +15,7 @@ $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order
 $resp = mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $codigo=$dat[0];
-
+echo $sql;
 
 $sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' and cod_tipo=".$tipo."  order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -49,7 +49,7 @@ nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nr
 cod_proveedor,created_by,modified_by,created_date,modified_date,cod_tipo) 
 values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$nota_entrega','$nro_correlativo',1,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','','$tipo')";
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
-//echo "paso 1 sql_inserta".$sql_inserta;
+echo "paso 1 sql_inserta".$sql_inserta;
 if($sql_inserta==1){
    $valorExcel=0;
 		if(isset($_POST["tipo_submit"])){
