@@ -224,6 +224,7 @@ if($fecha=="")
 echo "<form id='guarda_ingresomateriales' action='guarda_ingresomateriales.php' method='post' name='form1' enctype='multipart/form-data'>";
 $tipo=$_GET['tipo'];
 $estado=$_GET['estado'];
+$global_almacen=$_COOKIE['global_almacen'];
 
 //echo "tipo=".$tipo."<br/> estado=".$estado;
 echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";

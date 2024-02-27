@@ -234,6 +234,7 @@ function cambiar_vista(f)
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $estado=$_GET['estado'];
 $tipo=$_GET['tipo'];
+$global_almacen=$_COOKIE['global_almacen'];
 //echo "tipo=".$tipo."<br/> estado=".$estado;
 
 echo "<form method='post' action='navegador_ingresomateriales.php'>";
