@@ -163,7 +163,7 @@ echo "<script language='Javascript'>
 		</script>";	
 }else{
 
-	//	echo "EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.";
+
 
 
 	echo "<script language='Javascript'>
