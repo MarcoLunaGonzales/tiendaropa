@@ -17,7 +17,7 @@ $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order
 $resp = mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
 $codigo=$dat[0];
-echo $sql;
+//echo $sql;
 
 $sql = "select IFNULL(MAX(nro_correlativo)+1,1) from ingreso_almacenes where cod_almacen='$global_almacen' and cod_tipo=".$tipo."  order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
@@ -51,7 +51,7 @@ nota_entrega,nro_correlativo,ingreso_anulado,cod_tipo_compra,cod_orden_compra,nr
 cod_proveedor,created_by,modified_by,created_date,modified_date,cod_tipo) 
 values($codigo,$global_almacen,$tipo_ingreso,'$fecha_real','$hora_sistema','$observaciones','$nota_entrega','$nro_correlativo',1,0,0,$nro_factura,0,0,'$proveedor','$createdBy','0','$createdDate','','$tipo')";
 $sql_inserta = mysqli_query($enlaceCon,$consulta);
-echo "paso 1 sql_inserta".$sql_inserta;
+//echo "paso 1 sql_inserta".$sql_inserta;
 if($sql_inserta==1){
    $valorExcel=0;
 		if(isset($_POST["tipo_submit"])){
@@ -82,7 +82,7 @@ if($sql_inserta==1){
 						$consulta="insert into ingreso_detalle_almacenes(cod_ingreso_almacen, cod_material, cantidad_unitaria, cantidad_restante, lote, fecha_vencimiento, 
 						precio_bruto, costo_almacen, costo_actualizado, costo_actualizado_final, costo_promedio, precio_neto,precio_venta,precio_venta2,orden_detalle) 
 					values('$codigo','$cod_material','$cantidad','$cantidad','$lote','$fechaVencimiento','$precioUnitario','$precioUnitario','$costo','$costo','$costo','$costo','$precioVenta','$precioVentaMayor','$i')";
-					echo $consulta;
+					//echo $consulta;
 				
 						$respuestaConsulta = mysqli_query($enlaceCon,$consulta);
 						$fechaHoy=date("Y-m-d-H-i-s");
@@ -160,20 +160,17 @@ if($sql_inserta==1){
 		}
 
 
-	/*echo "Los datos fueron insertados correctamente";
+	echo "Los datos fueron insertados correctamente";
 echo "<script language='Javascript'>
 		alert('Los datos fueron insertados correctamente.');
 		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
-		</script>";	*/
+		</script>";	
 }else{
 
-
-
-
-	/*echo "<script language='Javascript'>
+echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
-		</script>";*/
+		</script>";
 }
 
 ?>
