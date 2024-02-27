@@ -225,6 +225,7 @@ echo "<form id='guarda_ingresoinsumos' action='guarda_ingresoinsumos.php' method
 
 $tipo=$_GET['tipo'];
 $estado=$_GET['estado'];
+$global_almacen=$_COOKIE['global_almacen'];
 echo "<input type='hidden' value='$tipo' name='tipo' id='tipo'>";
 echo "<table border='0' class='textotit' align='center'><tr><th>Registrar Ingreso de Insumos</th></tr></table><br>";
 echo "<table border='0' class='texto' cellspacing='0' align='center' width='90%' style='border:#ccc 1px solid;'>";
@@ -333,8 +334,6 @@ echo "</div>";
 echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>";
 
 ?>
-
-
 
 <div id="divRecuadroExt" style="background-color:#666; position:absolute; width:800px; height: 500px; top:30px; left:150px; visibility: hidden; opacity: .70; -moz-opacity: .70; filter:alpha(opacity=70); -webkit-border-radius: 20px; -moz-border-radius: 20px; z-index:2;">
 </div>

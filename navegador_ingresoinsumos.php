@@ -229,6 +229,7 @@ var estado,tipo;
 $globalTipoFuncionario=$_COOKIE['globalTipoFuncionario'];
 $estado=$_GET['estado'];
 $tipo=$_GET['tipo'];
+$global_almacen=$_COOKIE['global_almacen'];
 echo "<form method='post' action='navegador_ingresomateriales.php'>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
 echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";

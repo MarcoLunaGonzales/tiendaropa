@@ -310,7 +310,7 @@ while($dat1=mysqli_fetch_array($resp1))
 				left join marcas mar on (m.cod_marca= mar.codigo)
 				where
 				id.`cod_material`=m.`codigo_material` 
-				and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
+				and id.`cod_ingreso_almacen`='$codIngresoEditar' order by id.orden_detalle asc";
 				
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;

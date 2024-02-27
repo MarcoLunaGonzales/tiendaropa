@@ -5,6 +5,9 @@ require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
 
+error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
 $global_agencia=$_COOKIE["global_agencia"];
 
 $sql = "select IFNULL(MAX(cod_gasto)+1,1) from gastos where cod_ciudad='".$global_agencia."' order by cod_gasto desc";
@@ -44,9 +47,9 @@ mysqli_query($enlaceCon,$consulta);
 ?>
 
 
-	<script language='Javascript'>
+	<!--script language='Javascript'>
 		location.href="listaGastos.php";
-	</script>	
+	</script-->	
     
 
     	
