@@ -5,7 +5,8 @@ require("estilos_almacenes.inc");
 require("funcionRecalculoCostos.php");
 require("funciones.php");
 
-error_reporting(E_ALL);
+
+ error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
 $tipo=$_POST['tipo'];
@@ -172,5 +173,6 @@ echo "<script language='Javascript'>
 		alert('EXISTIO UN ERROR EN LA TRANSACCION, POR FAVOR CONTACTE CON EL ADMINISTRADOR.');
 		location.href='navegador_ingresomateriales.php?tipo=".$tipo."&estado=-1'
 		</script>";*/
+}
 
 ?>
