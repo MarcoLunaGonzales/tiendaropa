@@ -41,15 +41,15 @@ $consulta="insert into gastos (cod_gasto,descripcion_gasto,cod_tipogasto,fecha_g
 created_by,created_date,
 gasto_anulado,cod_proveedor,cod_grupogasto,cod_tipopago) 
 values(".$cod_gasto.",'".$descripcion_gasto."',".$tipoGasto.",'".$fecha_gasto."',".$monto.",'".$global_agencia."',".$createdBy.",'".$createdDate."',0,'".$proveedor."','".$grupoGasto."','".$tipoPago."')";
-
+//echo $consulta;
 mysqli_query($enlaceCon,$consulta);
 
 ?>
 
 
-	<!--script language='Javascript'>
+	<script language='Javascript'>
 		location.href="listaGastos.php";
-	</script-->	
+	</script>	
     
 
     	

@@ -11,7 +11,7 @@ error_reporting(E_ALL);
 $tipo=$_POST['tipo'];
 $global_agencia=$_COOKIE['global_agencia'];
 $global_almacen=$_COOKIE['global_almacen'];
-$cantidad_material=$_COOKIE['cantidad_material'];
+$cantidad_material=$_POST['cantidad_material'];
 
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
