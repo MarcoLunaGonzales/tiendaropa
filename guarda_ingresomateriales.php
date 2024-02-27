@@ -12,6 +12,7 @@ require("funciones.php");
 $tipo=$_POST['tipo'];
 $global_agencia=$_COOKIE['global_agencia'];
 $global_almacen=$_COOKIE['global_almacen'];
+
 $sql = "select IFNULL(MAX(cod_ingreso_almacen)+1,1) from ingreso_almacenes order by cod_ingreso_almacen desc";
 $resp = mysqli_query($enlaceCon,$sql);
 $dat=mysqli_fetch_array($resp);
@@ -25,7 +26,7 @@ $nro_correlativo=$dat[0];
 
 
 $hora_sistema = date("H:i:s");
-
+$cantidad_material=$_POST['cantidad_material'];
 $tipo_ingreso=$_POST['tipo_ingreso'];
 $nota_entrega=0;
 $nro_factura=$_POST['nro_factura'];
