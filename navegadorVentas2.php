@@ -106,6 +106,11 @@ function ajaxBuscarVentas(f){
 function enviar_nav()
 {   location.href='registrar_salidaventas.php';
 }
+
+function regVentasExistencias(){ 
+  location.href='registrar_ventasExistenciasAlmacen.php';
+}
+
 function editar_salida(f)
 {   var i;
     var j=0;
@@ -352,6 +357,7 @@ echo "<table class='texto' cellspacing='0' width='90%'>
 //
 echo "<div class='divBotones'>
         <input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
+        <input type='button' value='Registrar Ventas de Existencias' name='regVentaExistencias' class='boton' onclick='regVentasExistencias()'>
         <input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>      
         <input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
     </div><br><br>";
@@ -447,6 +453,7 @@ echo "</div>";
 
 echo "<div class='divBotones'>
         <input type='button' value='Registrar' name='adicionar' class='boton' onclick='enviar_nav()'>
+         <input type='button' value='Registrar Ventas de Existencias' name='regVentaExistencias' class='boton' onclick='regVentasExistencias()'>
         <input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'></td>      
         <input type='button' value='Anular' class='boton2' onclick='anular_salida(this.form)'>
     </div>";

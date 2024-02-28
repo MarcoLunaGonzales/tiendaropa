@@ -75,6 +75,8 @@ if($rptBarCode!=""){
 
 $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre asc,mp.codigo_material asc";
 
+echo $sql_item;
+
 			/*if($rptOrdenar==1){
 				$sql_item.=" order by ma.descripcion_material";
 			}
@@ -190,15 +192,7 @@ $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre 
 			$cod_genero=$datos_item['cod_genero'];
  			$nombreGenero=$datos_item['nombreGenero'];
 
-			/*$nombre_item=$datos_item[1];
-			$cantidadPresentacion=$datos_item[2];
-			$nombreGrupo=$datos_item[3];
-			$pesoItem=$datos_item[4];
-			$colorItem=$datos_item[5];
-			$tallaItem=$datos_item[6];
-			$barCode=$datos_item[7];
-			$nombreMarca=$datos_item[8];
-			$codigo2=$datos_item[9];*/
+		
 						
 			$cadena_mostrar="";
 			if($rptOrdenar==1){			
@@ -228,7 +222,7 @@ $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre 
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and i.cod_almacen='$rpt_almacen'
 			and id.cod_material='$codigo_item' and i.ingreso_anulado=1";
 			
-			//echo $sql_ingresos;
+			echo $sql_ingresos."<br/>";
 			
 			$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
 			$dat_ingresos=mysqli_fetch_array($resp_ingresos);

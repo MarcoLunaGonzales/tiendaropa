@@ -114,7 +114,7 @@ if($resp_inserta==1){
 			echo "precio_mayor".$i."=".$precio_mayor."<br/>";*/
 			/******* Cuando es Traspaso y los precios no son Editables ******/
 			if($tipoSalida==1000 && $banderaEditPreciosTraspaso==0){
-				echo "saca precios de la base de datos del almacen origen";
+				//echo "saca precios de la base de datos del almacen origen";
 				$consulta="select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.`cod_precio`='1' and cod_ciudad='$globalSucursal'";
 				$rs=mysqli_query($enlaceCon,$consulta);
 				$registro=mysqli_fetch_array($rs);
