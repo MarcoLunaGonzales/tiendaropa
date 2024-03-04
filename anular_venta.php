@@ -53,7 +53,7 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 	}
 }
 
-$sql="update salida_almacenes set salida_anulada=1, estado_salida=3 where cod_salida_almacenes='$codigo_registro'";
+$sql="update salida_almacenes set salida_anulada=2, estado_salida=3 where cod_salida_almacenes='$codigo_registro'";
 $resp=mysqli_query($enlaceCon, $sql);
 
 $sql="update facturas_venta set cod_estado=2 where cod_venta='$codigo_registro'";
