@@ -245,9 +245,9 @@ $sql=$sql." order by  lp.nro_lote desc";
 						<img src='imagenes/cerrar.png' width='35'></a><br/>Finalizar<br/>Produccion";
 			}
 	}
-		echo"</td>
+		echo" </td>";
 	
-		</tr>";
+		echo" </tr>";
 		$indice_tabla++;
 	}
 	echo "</table></center><br>";

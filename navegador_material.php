@@ -152,7 +152,7 @@ echo "<script language='Javascript'>
 	$globalAgencia=$_COOKIE['global_agencia'];
     
 
-	echo "<h3 align='center'>Registro de Productos</h3>";
+	echo "<h3 align='center'>Listado de Productos</h3>";
 
 	echo "<form method='post' action=''>";
 	echo "<input type='hidden' name='tipo' id='tipo' value='$tipo'>";
@@ -240,9 +240,9 @@ echo "<script language='Javascript'>
 		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th>&nbsp;</th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
-		<th>Grupo/SubGrupo</th><th>Modelo</th><th>Genero</th><th>Material</th>
-		<th>Color/<br/>Talla</th><th>Coleccion</th>
+	echo "<tr><th></th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
+		<th>Grupo<br/>SubGrupo</th><th>Modelo<br/>Genero</th><th>Material<br/>
+		Color<br/>Talla<br/>Coleccion</th><th>Insumos</th>
 		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
 		<th>Fijar Precios</th><th>Estado</th>
 	
@@ -298,11 +298,28 @@ echo "<script language='Javascript'>
 		<td>$nombreProd</td>
 		<td>$grupo <br/> $subgrupo</td>
 		
-		<td>$nombreModelo</td>
-		<td>$nombreGenero</td>
-		<td>$nombreMaterial</td>
-		<td>$nombreColor<br/><center>T:$nombreTalla</center></td>
-		<td>$nombreColeccion</td>
+		<td>$nombreModelo<br/>$nombreGenero</td>
+		<td>$nombreMaterial<br/>$nombreColor<br/>T:$nombreTalla<br/>$nombreColeccion</td>
+		<td>";
+		 $sqlInsumosProductos="select ip.cod_producto, ip.cod_insumo,ip.cod_unidad_medida,ma.descripcion_material ,ip.cant,um.abreviatura from insumos_productos ip
+			left join material_apoyo ma on (ip.cod_insumo=ma.codigo_material)
+			left join unidades_medida um on (ip.cod_unidad_medida=um.codigo)
+			where ip.cod_producto=".$codigo."";
+
+			$respInsumosProductos=mysqli_query($enlaceCon,$sqlInsumosProductos);
+			echo" <table border='0' cellspacing='0' cellpadding='0' class='textomini' >";
+			while($datInsumosProductos=mysqli_fetch_array($respInsumosProductos)){
+				$insumo=$datInsumosProductos['descripcion_material'];
+				$cantInsumo=$datInsumosProductos['cant'];
+				$medidaInsumo=$datInsumosProductos['abreviatura'];
+				echo "<tr><td>".redondear2($cantInsumo)." ".$medidaInsumo."</td><td>".$insumo."</td></tr>";
+				//echo " ".redondear2($cantInsumo)." ".$medidaInsumo." ".$insumo."<br/>";
+			}
+		echo" </table>";
+
+
+		echo "<br/><center><a href='registroInsumosProductos.php?codigo=$codigo&nombre=$nombreProd&tipo=$tipo&estado=$estado'>
+		<img src='imagenes/agujas.png' width='30' title='Agregar Insumos'></a></center></td>
 		<td align='center'>";
 		$sqlListPrecios="select p.codigo_material,p.cod_precio,gp.nombre ,gp.abreviatura ,p.precio,p.cod_ciudad,c.nombre_ciudad,
 		p.cant_inicio,p.cant_final, p.created_by, 
@@ -317,7 +334,7 @@ echo "<script language='Javascript'>
 
 
 		$respListPrecios=mysqli_query($enlaceCon,$sqlListPrecios);
-		echo" <table border='0'>";
+		echo" <table border='0' class='textomini'>";
 		while($datListPrecios=mysqli_fetch_array($respListPrecios)){
 			$nombreGrupoPrecio=$datListPrecios['nombre'];
 			$abrevGrupoPrecio=$datListPrecios['abreviatura'];
