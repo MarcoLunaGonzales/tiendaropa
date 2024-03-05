@@ -67,7 +67,7 @@ $estado=$_GET['estado'];
 		<td><?=$grupo;?></td>
 		<td><?=$subgrupo;?></td>
 		<td><?=$descripcion_material;?></td>
-		<td><input type="number" value="<?=$cantidad;?>" id="cantidad<?=$codigo_material?>" step="0.01" name="cantidad<?=$codigo_material?>"></td>
+		<td><input type="number" value="<?=$cantidad;?>" id="cantidad<?=$codigo_material?>" step="0.001" name="cantidad<?=$codigo_material?>"></td>
 		<td><?=$nombre_unidad_medida;?>
 		</td>
 		

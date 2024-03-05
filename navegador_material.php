@@ -312,7 +312,7 @@ echo "<script language='Javascript'>
 				$insumo=$datInsumosProductos['descripcion_material'];
 				$cantInsumo=$datInsumosProductos['cant'];
 				$medidaInsumo=$datInsumosProductos['abreviatura'];
-				echo "<tr><td>".redondear2($cantInsumo)." ".$medidaInsumo."</td><td>".$insumo."</td></tr>";
+				echo "<tr><td>".$cantInsumo." ".$medidaInsumo."</td><td>".$insumo."</td></tr>";
 				//echo " ".redondear2($cantInsumo)." ".$medidaInsumo." ".$insumo."<br/>";
 			}
 		echo" </table>";
