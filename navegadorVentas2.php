@@ -419,7 +419,11 @@ while ($dat = mysqli_fetch_array($resp)) {
     }else{
         $color_fondo="#ffffff";
     }
+    if($salida_anulada==1){
     $chk = "<input type='checkbox' name='codigo' value='$codigo'>";
+    }else{
+        $chk = "";
+}
 
     
     echo "<input type='hidden' name='estado_preparado' value='$estado_preparado'>";
