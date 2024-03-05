@@ -139,7 +139,7 @@ $ciudad=$_COOKIE['global_agencia'];
 					echo "<td>&nbsp;</td>";
 					echo "<td>".$desc_ciudad."</td>";
 					echo "<td>".$nomGrupoPrecio."</td>";
-					echo "<td><input type='number' class='inputnumber'  id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6'  value='0'></td>";
+					echo "<td><input type='number' class='inputnumber' step='0.01' id='precio".$cod_ciudad.$codGrupoPrecio."' name='precio".$cod_ciudad.$codGrupoPrecio."' size='6'  value='0'></td>";
 					echo "<td><input class='inputnumber' type='number'  id='cant_ini".$cod_ciudad.$codGrupoPrecio."'  name='cant_ini".$cod_ciudad.$codGrupoPrecio."' value='".$cant_inicio."' ></td>";
 					echo " <td><input class='inputnumber' type='number'  id='cant_fin".$cod_ciudad.$codGrupoPrecio."'  name='cant_fin".$cod_ciudad.$codGrupoPrecio."' value='".$cant_final."' ></td>";
 					echo "</tr>";

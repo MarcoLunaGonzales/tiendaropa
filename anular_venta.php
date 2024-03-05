@@ -8,10 +8,13 @@ echo "holaa";
 
 $global_almacen=$_COOKIE["global_almacen"];
 $codigo_registro=$_GET["codigo_registro"];
+
+echo "codigo_registro=".$codigo_registro."<br/>";
 		
 $sql_detalle="select cod_salida_almacen, cod_material, cantidad_unitaria, lote, fecha_vencimiento, cod_ingreso_almacen
 			from salida_detalle_almacenes 
 			where cod_salida_almacen='$codigo_registro'";
+echo $sql_detalle;			
 $resp_detalle=mysqli_query($enlaceCon, $sql_detalle);
 while($dat_detalle=mysqli_fetch_array($resp_detalle))
 {	$codVenta=$dat_detalle[0];
@@ -41,11 +44,14 @@ while($dat_detalle=mysqli_fetch_array($resp_detalle))
 			if($maximoDevolver>=$cantidadSalida){
 				$sqlUpdate="update ingreso_detalle_almacenes set cantidad_restante=cantidad_restante+$cantidadSalidaPivote where 
 				cod_ingreso_almacen='$codIngreso' and cod_material='$codMaterialIng' and lote='$loteMaterial'";
+				echo $sqlUpdate."<br/>";
+
 				$respUpdate=mysqli_query($enlaceCon, $sqlUpdate);
 				$cantidadSalidaPivote=0;
 			}else{
 				$sqlUpdate="update ingreso_detalle_almacenes set cantidad_restante=cantidad_restante+$maximoDevolver where 
 				cod_ingreso_almacen='$codIngreso' and cod_material='$codMaterialIng' and lote='$loteMaterial'";
+				echo $sqlUpdate."<br/>";
 				$respUpdate=mysqli_query($enlaceCon, $sqlUpdate);
 				$cantidadSalidaPivote=$cantidadSalidaPivote-$maximoDevolver;
 			}
@@ -67,10 +73,10 @@ if($banderaCorreo==1){
 }else{
 	
 	?>
-	<script language='Javascript'>
+	<!--script language='Javascript'>
 		alert('El registro fue anulado.');
 		location.href='navegadorVentas2.php';
-	</script>
+	</script-->
 	
 <?php		
 }
