@@ -94,8 +94,14 @@ function funOk(codReg,funOkConfirm)
         },function(){});
     });
 }
-function enviar_nav()
+/*function enviar_nav()
 {   location.href='registrar_salidamateriales1.php';
+}*/
+
+function enviar_nav(f)
+{   
+    var tipo=f.tipo.value;
+    location.href='registrar_salidaInsumos.php?tipo='+tipo;
 }
 function editar_salida(f)
 {   var i;
@@ -279,7 +285,7 @@ $estado=$_GET['estado'];
 
 echo "<form method='post' action=''>";
 echo "<input type='hidden' name='fecha_sistema' value='$fecha_sistema'>";
-
+echo "<input type='hidden' id='tipo' name='tipo' value='$tipo'>";
 
 echo "<h1>Salidas de Insumos</h1>";
 echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>LEYENDA:</th>
@@ -290,7 +296,7 @@ echo "<table border='1' class='textomini' cellspacing='0' width='90%'><tr><th>LE
 <td bgcolor='' width='10%'>&nbsp;</td></tr></table><br>";
 //
 echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
+<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
 		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
 </div>";
@@ -318,7 +324,7 @@ if($fecha1!="" && $fecha2!="")
    }
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 50 ";
 
-//echo $consulta;
+echo $consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 
 while ($dat = mysqli_fetch_array($resp)) {
@@ -392,7 +398,7 @@ echo "</table></center><br>";
 echo "</div>";
 
 echo "<div class='divBotones'>
-<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav()'>
+<input type='button' value='Registrar Salida' name='adicionar' class='boton' onclick='enviar_nav(this.form)'>
 		<input type='button' value='Buscar' class='boton' onclick='ShowBuscar()'>
 		<input type='button' value='Anular Salida' class='boton2' onclick='anular_salida(this.form)'>
 </div>";
