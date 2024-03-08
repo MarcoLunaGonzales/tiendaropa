@@ -13,7 +13,7 @@ $rptFormato=$_GET["rpt_formato"];
 $rptBarCode=$_GET["rpt_barcode"];
 $rpt_ver=$_GET["rpt_ver"];
 $rpt_tipo=$_GET["rpt_tipo"];
-echo "rpt_tipo=".$rpt_tipo;
+//echo "rpt_tipo=".$rpt_tipo;
 
 
 $rptFechaInicio="2020-11-20";
