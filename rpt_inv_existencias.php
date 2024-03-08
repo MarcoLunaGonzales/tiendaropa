@@ -75,7 +75,7 @@ if($rptBarCode!=""){
 
 $sql_item.=" order by mo.nombre asc ,  sg.nombre asc, ge.nombre asc, col.nombre asc,mp.codigo_material asc";
 
-echo $sql_item;
+//echo $sql_item;
 
 			/*if($rptOrdenar==1){
 				$sql_item.=" order by ma.descripcion_material";
@@ -222,7 +222,7 @@ echo $sql_item;
 			where i.cod_ingreso_almacen=id.cod_ingreso_almacen and i.fecha between '$rptFechaInicio 00:00:00' and '$rpt_fecha 23:59:59' and i.cod_almacen='$rpt_almacen'
 			and id.cod_material='$codigo_item' and i.ingreso_anulado=1";
 			
-			echo $sql_ingresos."<br/>";
+			//echo $sql_ingresos."<br/>";
 			
 			$resp_ingresos=mysqli_query($enlaceCon,$sql_ingresos);
 			$dat_ingresos=mysqli_fetch_array($resp_ingresos);
