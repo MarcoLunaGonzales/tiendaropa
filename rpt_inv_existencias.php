@@ -12,6 +12,8 @@ $rptMarca=$_GET["rpt_marca"];
 $rptFormato=$_GET["rpt_formato"];
 $rptBarCode=$_GET["rpt_barcode"];
 $rpt_ver=$_GET["rpt_ver"];
+$rpt_tipo=$_GET["rpt_tipo"];
+echo "rpt_tipo=".$rpt_tipo;
 
 
 $rptFechaInicio="2020-11-20";
@@ -61,8 +63,10 @@ left join modelos mo on (mp.cod_modelo=mo.codigo)
 left join materiales ma on (mp.cod_material=ma.codigo)
 left join generos ge on (mp.cod_genero=ge.codigo)
 where mp.estado=1";
+if($rpt_tipo==1){
 if($rpt_marca!="-1"){
 	$sql_item.=" and mp.cod_marca in(".$rpt_marca.")";
+}
 }
 // Filtro Grupo
 if($rpt_grupo!="-1"){

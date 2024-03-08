@@ -12,13 +12,14 @@ echo "<script language='JavaScript'>
 		}
 
 		function envia_formulario(f)
-		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar, rpt_grupo, rpt_formato, rpt_barcode;
+		{	var rpt_territorio, rpt_almacen, tipo_item, rpt_ver, rpt_fecha, rpt_ordenar, rpt_grupo, rpt_formato, rpt_barcode,rpt_tipo;
 			rpt_territorio=f.rpt_territorio.value;
 			rpt_almacen=f.rpt_almacen.value;
 			rpt_ver=f.rpt_ver.value;
 			rpt_fecha=f.rpt_fecha.value;
 			rpt_ordenar=f.rpt_ordenar.value;
 			rpt_barcode=f.barcode.value;
+			rpt_tipo=f.tipo.value;
 			
 			var rpt_grupo=new Array();	
 			var rpt_marca=new Array();	
@@ -41,7 +42,7 @@ echo "<script language='JavaScript'>
 				}
 			}
 			
-			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_marca='+rpt_marca+'&rpt_formato='+rpt_formato+'&rpt_barcode='+rpt_barcode,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
+			window.open('rpt_inv_existencias.php?rpt_territorio='+rpt_territorio+'&rpt_almacen='+rpt_almacen+'&rpt_ver='+rpt_ver+'&rpt_fecha='+rpt_fecha+'&rpt_ordenar='+rpt_ordenar+'&rpt_grupo='+rpt_grupo+'&rpt_marca='+rpt_marca+'&rpt_formato='+rpt_formato+'&rpt_barcode='+rpt_barcode+'&rpt_tipo='+rpt_tipo,'','scrollbars=yes,status=no,toolbar=no,directories=no,menubar=no,resizable=yes,width=1000,height=800');
 			return(true);
 		}
 
@@ -70,6 +71,7 @@ if($rpt_territorio==""){
 echo "<h1>Reporte Existencias Almacen</h1>";
 
 echo"<form method='post' action=''>";
+echo "<input type='hidden' id='tipo' name='tipo' value='$tipo'>";
 	
 	echo"\n<table class='texto' align='center' cellSpacing='0' width='50%'>\n";
 	echo "<tr><th align='left'>Territorio</th><td><select name='rpt_territorio' class='texto' onChange='envia_select(this.form)'>";
