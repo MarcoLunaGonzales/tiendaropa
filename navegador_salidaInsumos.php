@@ -119,11 +119,11 @@ function editar_salida(f)
         }
     }
     if(j>1)
-    {   alert('Debe seleccionar solamente un registro para anularlo.');
+    {   alert('Debe seleccionar solamente un registro para editado.');
     }
     else
     {   if(j==0)
-        {   alert('Debe seleccionar un registro para anularlo.');
+        {   alert('Debe seleccionar un registro para editado.');
         }
         else
         {   if(f.fecha_sistema.value==fecha_registro)
@@ -169,7 +169,7 @@ function anular_salida(f)
         else
         {   
 			funOk(j_cod_registro,function() {
-				location.href='anular_salida.php?codigo_registro='+j_cod_registro+'&grupo_salida=2';
+				location.href='anular_salidaInsumo.php?codigo_registro='+j_cod_registro+'&grupo_salida=2';
 			});
         }
     }
@@ -324,7 +324,7 @@ if($fecha1!="" && $fecha2!="")
    }
 $consulta = $consulta."ORDER BY s.fecha desc, s.nro_correlativo DESC limit 0, 50 ";
 
-echo $consulta;
+//echo $consulta;
 $resp = mysqli_query($enlaceCon,$consulta);
 
 while ($dat = mysqli_fetch_array($resp)) {
@@ -371,7 +371,7 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chk = "<input type='checkbox' name='codigo' value='$codigo'>";
         $estado_preparado = 1;
     }	
-    if ($salida_anulada == 1) {
+    if ($salida_anulada == 2) {
         $color_fondo = "#ff8080";
         $chk = "&nbsp;";
     }
@@ -385,12 +385,7 @@ while ($dat = mysqli_fetch_array($resp)) {
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>
 		<img src='imagenes/detalles.png' border='0' title='Detalle' width='40'></a></td>";
-	/*if($codTipoDoc==1){
-		echo "<td><a href='formatoFactura.php?codVenta=$codigo' target='_BLANK'>Ver F.P.</a></td>";
-	}else{
-		echo "<td><a href='formatoNotaRemision.php?codVenta=$codigo' target='_BLANK'>Ver F.P.</a></td>";
-	}
-	echo "<td><a href='notaSalida.php?codVenta=$codigo' target='_BLANK'>Imp. Formato</a></td>";*/
+
 
 	echo "</tr>";
 }

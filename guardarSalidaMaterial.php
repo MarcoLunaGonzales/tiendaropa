@@ -220,7 +220,7 @@ do {
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}else{
 	  			// $vectorNroCorrelativo=numeroCorrelativoCUFD($enlaceCon,$tipoDoc);
-				$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
+				$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc,$tipo);
 	  			$nro_correlativo=$vectorNroCorrelativo[0];
 		}
 		$cod_dosificacion=$vectorNroCorrelativo[2];	
@@ -244,7 +244,7 @@ do {
 		//echo $sql_insert;
 		$sql_inserta=mysqli_query($enlaceCon,$sql_insert);
 	}else{   //CUANDO ES NR O TRASPASOS U OTROS TIPOS DE DOCS
-		$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc);
+		$vectorNroCorrelativo=numeroCorrelativo($enlaceCon,$tipoDoc,$tipo);
 		$nro_correlativo=$vectorNroCorrelativo[0];
 		$cod_dosificacion=0;
 

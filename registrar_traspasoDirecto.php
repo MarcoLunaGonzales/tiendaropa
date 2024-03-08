@@ -110,7 +110,8 @@ function ajaxNroDoc(f){
 	contenedor=document.getElementById("divNroDoc");
 	ajax=nuevoAjax();
 	var codTipoDoc=(f.tipoDoc.value);
-	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc,true);
+	var tipo=f.tipo.value;
+	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc+"&tipo="+tipo,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText

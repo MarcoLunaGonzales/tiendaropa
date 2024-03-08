@@ -9,9 +9,13 @@ require_once 'conexionmysqli2.inc';
 require_once 'funciones.php';
 
 	$num=$_GET['codigo'];
-
+	$tipo=$_GET['tipo'];
+	/// en las salidas de Insumos no se edita precios
+	if($tipo==2){
 	$banderaEditPrecios=0;
+	}else{
 	$banderaEditPrecios=obtenerValorConfiguracion($enlaceCon, 20);
+	}
 ?>
 
 <table border="0" align="center" width="100%"  class="texto" id="data<?php echo $num?>" >

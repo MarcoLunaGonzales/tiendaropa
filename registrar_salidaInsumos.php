@@ -95,10 +95,11 @@ function ajaxPesoMaximo(codVehiculo){
 
 function ajaxNroDoc(f){
 	var contenedor;
+	var tipo=f.tipo.value;
 	contenedor=document.getElementById("divNroDoc");
 	ajax=nuevoAjax();
 	var codTipoDoc=(f.tipoDoc.value);
-	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc,true);
+	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc+"&tipo="+tipo,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText
@@ -201,7 +202,7 @@ function mas(obj) {
 			var div_material;
 			div_material=document.getElementById("div"+num);			
 			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialSalida.php?codigo="+num,true);
+			ajax.open("GET","ajaxMaterialSalida.php?codigo="+num+"&tipo=2",true);
 			ajax.onreadystatechange=function(){
 				if (ajax.readyState==4) {
 					div_material.innerHTML=ajax.responseText;
@@ -216,6 +217,7 @@ function mas(obj) {
 }
 		
 function menos(numero) {
+	//alert("num="+numero);
 	cantidad_items--;
 	console.log("TOTAL ITEMS: "+num);
 	console.log("NUMERO A DISMINUIR: "+numero);
@@ -235,37 +237,45 @@ function pressEnter(e, f){
 	}
 }
 
-function mostrarItems(numInsumos){
-   console.log("mostrar items ");
-    alert("holaaaa=");
+function mostrarItems(objlote){
+	cantidad_items=1;
 
- 
-    if(numInsumos>0){
+	   var myArray ;
 
-    	for(var i=1; i<=numInsumos; i++){
-			num++;
-			cantidad_items++;
-			console.log("num: "+num);
-			console.log("cantidadItems: "+cantidad_items);
-			fi = document.getElementById('fiel');
-			contenedor = document.createElement('div');
-			contenedor.id = 'div'+num;  
-			fi.type="style";
-			fi.appendChild(contenedor);
-			var div_material;
-			div_material=document.getElementById("div"+num);			
-			ajax=nuevoAjax();
-			ajax.open("GET","ajaxMaterialSalida.php?codigo="+num,true);
-			ajax.onreadystatechange=function(){
-				if (ajax.readyState==4) {
-					div_material.innerHTML=ajax.responseText;
-					buscarMaterial(form1, num);
-				}
-			}		
-			ajax.send(null);
+     var lote;
+     var numInsumos;
+     var descProducto;
+     var cantLote;
+	if(objlote.value!=0){
+     	myArray = (objlote.value).split("-");
+     	lote=myArray[0];
+     	numInsumos=myArray[1];
+     	descProducto=myArray[2];
+     	cantLote=myArray[3];
+     		num=1;
+ 	}else{
+ 		lote=0;
+     	numInsumos="";
+     	descProducto="";
+     	cantLote="";
+     	num=0;
+
+ 	}
+  var contenedor;
+	contenedor=document.getElementById("fiel");
+	ajax=nuevoAjax();
+	
+	ajax.open("GET", "ajaxMaterialSalidaLote.php?lote="+lote+"&codigo="+num,true);
+	ajax.onreadystatechange=function() {
+		if (ajax.readyState==4) {
+			contenedor.innerHTML = ajax.responseText
 		}
 	}
-
+	ajax.send(null);
+	num=numInsumos;
+	cantidad_items=numInsumos;
+	document.getElementById('detalleLote').innerHTML=descProducto+' '+cantLote;
+	//actualizarDetalleLote(descProducto);
 }
 
 function validar(f){
@@ -274,11 +284,18 @@ function validar(f){
 	var cantidadItems=num;
 	console.log("numero de items: "+cantidadItems);
 	var tipoSalida=document.getElementById("tipoSalida").value;
+	var lote=document.getElementById("lote").value;
 	var almacenSalida=document.getElementById("almacen").value;
 	//alert(tipoSalida+"  almacen: "+almacenSalida);
 	if(tipoSalida==1000){
 		if(almacenSalida==0 || almacenSalida==""){
 			alert("Debe seleccionar un almacen de destino.");
+			return(false);
+		}
+	}
+	if(tipoSalida==1012){
+		if(lote==0){
+			alert("Cuando la Salida es por Produccion debe seleccionar un Lote.");
 			return(false);
 		}
 	}
@@ -351,10 +368,13 @@ else
 }
 
 ?>
-<form action='guardarSalidaMaterial.php' method='POST' name='form1'>
+<form action='guardarSalidaInsumo.php' method='POST' name='form1'>
+<?php
+	$banderaEditPrecios=0;
+?>	
 <input type='hidden' id='tipo' name='tipo'  value='<?php echo $tipo?>'>
 
-<h1>Registrar Salida de Almacen</h1>
+<h1>Registrar Salida de Insumos</h1>
 
 <table class='texto' align='center' width='90%'>
 <tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Almacen Destino</th></tr>
@@ -374,6 +394,7 @@ else
 	}
 ?>
 	</select>
+
 </td>
 <td align='center'>
 	<div id='divTipoDoc'>
@@ -411,9 +432,9 @@ else
 	<th colspan="3">Observaciones</th>
 </tr>
 <tr>	
-		<th  colspan="2" >
-		<select name='lote' id='lote' class='texto'>
-		<option value=''>-----</option>
+	<th  colspan="2" >
+		<select name='lote' id='lote' class='texto' onChange="mostrarItems(this);">
+		<option value='0'>-----</option>
 <?php
 
 	$sql4="select lp.cod_lote,lp.nro_lote,lp.nombre_lote,lp.obs_lote,lp.codigo_material,
@@ -424,7 +445,6 @@ else
 	left join material_apoyo ma on(lp.codigo_material=ma.codigo_material)
 	left join 
 	(select cod_producto,count(*) cant_ins from insumos_productos group by cod_producto) ip on(ma.codigo_material=ip.cod_producto)
-
 	where lp.cod_estado_lote<>4";
 	$resp4=mysqli_query($enlaceCon,$sql4);
 	while($dat4=mysqli_fetch_array($resp4)){
@@ -443,11 +463,12 @@ else
 		$fecha_fin_lote=$dat4['fecha_fin_lote'];
 		$cantInsumos=$dat4['cantInsumos'];
 ?>
-		<option value="<?=$cod_lote;?>" onChange="mostrarItems(<?=$cantInsumos;?>);"><?=$nro_lote." ".$nombre_lote.$cantInsumos;?></option>
+		<option value="<?=$cod_lote."-".$cantInsumos."-".$descripcion_material."- Cant:".$cant_lote;?>" ><?=$nro_lote." ".$nombre_lote.$cantInsumos;?></option>
 <?php		
 	}
 ?>
 	</select>
+		<div id="detalleLote" name="detalleLote"></div>
 	</th>
 	<th  colspan="3">
 		<input type='text' class='texto' name='observaciones' value='' size='70' rows="2">
@@ -482,7 +503,7 @@ else
 
 echo "<div class='divBotones'>
 	<input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'>
-	<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_salidamateriales.php\"'>
+	<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_salidaInsumos.php?tipo=2&estado=-1\"'>
 </div>";
 
 echo "</div>";
