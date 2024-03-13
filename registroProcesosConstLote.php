@@ -344,7 +344,31 @@ function validar(f){
 echo "<body>";
 
 
-$tipo=$_GET['tipo'];
+$codLote=$_GET['codLote'];
+
+	$sql="select lp.cod_lote,lp.nro_lote,lp.nombre_lote,lp.obs_lote,lp.codigo_material,
+mp.descripcion_material, lp.cant_lote,
+lp.cod_estado_lote, lp.created_by,lp.created_date,
+ lp.fecha_inicio_lote,lp.fecha_fin_lote 
+from lotes_produccion lp
+left join material_apoyo mp on(lp.codigo_material=mp.codigo_material) 
+where lp.cod_lote=$codLote ";
+//echo $sql;
+	$resp=mysqli_query($enlaceCon,$sql);
+while($dat=mysqli_fetch_array($resp))
+	{
+		$cod_lote=$dat['cod_lote'];
+		$nro_lote=$dat['nro_lote'];
+		$nombre_lote=$dat['nombre_lote'];
+		$obs_lote=$dat['obs_lote'];
+		$codigo_material=$dat['codigo_material'];
+		$descripcion_material=$dat['descripcion_material'];
+		$cant_lote=$dat['cant_lote'];
+		$cod_estado_lote=$dat['cod_estado_lote'];
+		$nombre_estado_lote=$dat['nombre_estado_lote'];
+		$created_by=$dat['created_by'];
+		$created_date=$dat['created_date'];
+}
 
 if(isset($fecha)){
 	$fecha=$fecha;
@@ -358,133 +382,10 @@ if($fecha=="")
 }
 $fechaIni=date('Y-m-d',strtotime($fecha.'-5 days'));
 
-$sql="select nro_correlativo from salida_almacenes where cod_almacen='$global_almacen' and cod_tipo=$tipo order by cod_salida_almacenes desc";
-$resp=mysqli_query($enlaceCon,$sql);
-$dat=mysqli_fetch_array($resp);
-$num_filas=mysqli_num_rows($resp);
-if($num_filas==0)
-{   $codigo=1;
-}
-else
-{   $codigo=$dat[0];
-    $codigo++;
-}
 
 ?>
-<form action='guardarSalidaInsumo.php' method='POST' name='form1'>
-<?php
-	$banderaEditPrecios=0;
-?>	
-<input type='hidden' id='tipo' name='tipo'  value='<?php echo $tipo?>'>
-
-<h1>Registrar Salida de Insumos</h1>
-
-<table class='texto' align='center' width='90%'>
-<tr><th>Tipo de Salida</th><th>Tipo de Documento</th><th>Nro. Salida</th><th>Fecha</th><th>Almacen Destino</th></tr>
-<tr>
-<td align='center'>
-	<select name='tipoSalida' id='tipoSalida' onChange='ajaxTipoDoc(form1)' class="texto" required>
-		<option value="">--------</option>
-<?php
-	$sqlTipo="select cod_tiposalida, nombre_tiposalida from tipos_salida where cod_tiposalida<>1001 order by 2";
-	$respTipo=mysqli_query($enlaceCon,$sqlTipo);
-	while($datTipo=mysqli_fetch_array($respTipo)){
-		$codigo=$datTipo[0];
-		$nombre=$datTipo[1];
-?>
-		<option value='<?php echo $codigo?>'><?php echo $nombre?></option>
-<?php		
-	}
-?>
-	</select>
-
-</td>
-<td align='center'>
-	<div id='divTipoDoc'>
-		<select name='tipoDoc' id='tipoDoc'><option value="0"></select>
-	</div>
-</td>
-<td align='center'>
-	<div id='divNroDoc' class='textogranderojo'>
-	</div>
-</td>
-
-<td align='center'>
-	<input type='date' class='texto' value='<?=$fecha;?>' id='fecha' name='fecha' min='<?=$fechaIni;?>' max='<?=$fecha;?>'>
-</td>
-
-<td align='center'>
-	<select name='almacen' id='almacen' class='texto'>
-		<option value=''>-----</option>
-<?php
-	$sql3="select cod_almacen, nombre_almacen from almacenes where cod_almacen not in ($global_almacen) order by nombre_almacen";
-	$resp3=mysqli_query($enlaceCon,$sql3);
-	while($dat3=mysqli_fetch_array($resp3)){
-		$cod_almacen=$dat3[0];
-		$nombre_almacen="$dat3[1] $dat3[2] $dat3[3]";
-?>
-		<option value="<?php echo $cod_almacen?>"><?php echo $nombre_almacen?></option>
-<?php		
-	}
-?>
-	</select>
-</td>
-</tr>
-<tr>
-	<th colspan="2">Lote de Produccion</th>
-	<th colspan="3">Observaciones</th>
-</tr>
-<tr>	
-	<th  colspan="2" >
-		<select name='lote' id='lote' class='texto' onChange="mostrarItems(this);">
-		<option value='0'>-----</option>
-<?php
-
-	$sql4="select lp.cod_lote,lp.nro_lote,lp.nombre_lote,lp.obs_lote,lp.codigo_material,
-	ma.descripcion_material,lp.cant_lote,
-	lp.cod_estado_lote,lp.created_by,lp.created_date,lp.fecha_inicio_lote,lp.fecha_fin_lote,
-	IFNULL (ip.cant_ins,0) as cantInsumos
-	from lotes_produccion lp
-	left join material_apoyo ma on(lp.codigo_material=ma.codigo_material)
-	left join 
-	(select cod_producto,count(*) cant_ins from insumos_productos group by cod_producto) ip on(ma.codigo_material=ip.cod_producto)
-	where lp.cod_estado_lote<>4
-	and lp.cod_lote not in (select cod_lote from salida_almacenes where cod_lote is not null) ";
-
-	$resp4=mysqli_query($enlaceCon,$sql4);
-	while($dat4=mysqli_fetch_array($resp4)){
-		$cod_lote=$dat4['cod_lote'];
-		$nro_lote=$dat4['nro_lote'];
-		$nombre_lote=$dat4['nombre_lote'];
-		$obs_lote=$dat4['obs_lote'];
-		$codigo_material=$dat4['codigo_material'];
-		$descripcion_material=$dat4['descripcion_material'];
-		$cant_lote=$dat4['cant_lote'];
-		$cod_estado_lote=$dat4['cod_estado_lote'];
-		$created_by=$dat4['created_by'];
-		$created_date=$dat4['nro_lote'];
-		$fecha_inicio_lote=$dat4['fecha_inicio_lote'];
-		$fecha_fin_lote=$dat4['fecha_fin_lote'];
-		$fecha_fin_lote=$dat4['fecha_fin_lote'];
-		$cantInsumos=$dat4['cantInsumos'];
-?>
-		<option value="<?=$cod_lote."-".$cantInsumos."-".$descripcion_material."-CANT:".$cant_lote."-OBS:".$obs_lote;?>" ><?=$nro_lote." ".$nombre_lote.$cantInsumos;?></option>
-<?php		
-	}
-?>
-	</select>
-		<div id="detalleLote" name="detalleLote"></div>
-	</th>
-	<th  colspan="3">
-		<input type='text' class='texto' name='observaciones' value='' size='70' rows="2">
-	</th>
-</tr>
-</table>
-
-<br>
-<div class="codigo-barras div-center">
-               <input type="text" class="form-codigo-barras" id="input_codigo_barras" placeholder="Ingrese el código de barras." autofocus autocomplete="off">
-         </div>
+<form action='' method='POST' name='form1'>
+<h1>Registrar Procesos<br/> LOTE:<?=$nombre_lote;?> </h1>
 <fieldset id="fiel" style="width:100%;border:0;">
 	<table align="center" class="texto" width="80%" border="0" id="data0" style="border:#ccc 1px solid;">
 	<tr>
@@ -493,22 +394,82 @@ else
 		</td>
 	</tr>
 	<tr align="center">
-		<th width="10%">-</th>
-		<th width="40%">Producto</th>
-		<th width="10%">Stock</th>
-		<th width="10%">Cantidad</th>
-		<th width="10%">Precio</th>
-		<th width="10%">Precio por Mayor</th>
-		<th width="10%">&nbsp;</th>
+		<th width="15%">-</th>
+		<th width="35%">Proceso</th>
+		<th width="35%">Proveedor</th>
+		<th width="15%">Precio</th>
 	</tr>
 	</table>
+
+	<?php
+				$sqlDetalle="select pcp.cod_proceso_const,pc.nombre_proceso_const 
+from procesos_construccion_producto pcp
+left join procesos_construccion pc on (pcp.cod_proceso_const=pc.cod_proceso_const)
+where pcp.cod_producto=".$codigo_material." order by pc.nombre_proceso_const asc";
+				
+			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
+			$indiceMaterial=1;
+			while($datDetalle=mysqli_fetch_array($respDetalle)){
+				$cod_proceso_const=$datDetalle['cod_proceso_const'];
+				$nombre_proceso_const=$datDetalle['nombre_proceso_const'];
+				
+				$num=$indiceMaterial;
+					
+			?>
+
+<div id="div<?php echo $num?>">
+
+<table border="0" align="center" cellSpacing="1" cellPadding="1" width="100%" style="border:#ccc 1px solid;" id="data<?php echo $num?>" >
+<tr bgcolor="#FFFFFF">
+
+<td width="15%" align="center">
+	<a href="javascript:buscarMaterial(form1, <?php echo $num;?>)" accesskey="B"><img src='imagenes/buscar2.png' title="Buscar Producto" width="30"></a>
+</td>
+
+<td width="35%" align="left">
+<input type="hidden" name="procesConst<?php echo $num;?>"
+ id="procesConst<?php echo $num;?>" value="<?=$cod_proceso_const;?>">
+<div id="descProcesConst<?php echo $num;?>" class='textoform'><?=$nombre_proceso_const;?></div>
+</td>
+<td width="35%" align="left">
+<?php
+$sql1="select cod_proveedor, nombre_proveedor from proveedores  order by nombre_proveedor";
+$resp1=mysqli_query($enlaceCon,$sql1);
+?>
+
+	<select name='proveedor<?php echo $num;?>' id='proveedor<?php echo $num;?>' class='texto'>
+<?php
+while($dat1=mysqli_fetch_array($resp1))
+{   $codigo=$dat1[0];
+    $nombre=$dat1[1];
+ ?>
+    <option value='<?=$codigo;?>'><?=$nombre;?></option>
+<?php
+}
+?>
+</select>
+</td>
+<td align="center" width="15%">
+<input type="number" class="inputnumber" min="0.001" max="1000000" id="precio<?php echo $num;?>" name="precio<?php echo $num;?>" size="5"  value="0" step="0.001" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
+</td>
+
+</tr>
+</table>
+
+</div>
+			
+			<?php
+				$indiceMaterial++;
+			}
+			?>
+	
 </fieldset>
 
 <?php
 
 echo "<div class='divBotones'>
 	<input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'>
-	<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_salidaInsumos.php?tipo=2&estado=-1\"'>
+	<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_lotes.php?estado=\"'>
 </div>";
 
 echo "</div>";

@@ -22,9 +22,12 @@
 	$sql="select s.cod_salida_almacenes, s.fecha, ts.nombre_tiposalida, s.observaciones,
 	s.nro_correlativo, s.territorio_destino, s.almacen_destino, (select c.nombre_cliente from clientes c where c.cod_cliente=s.cod_cliente),
 	(select c.dir_cliente from clientes c where c.cod_cliente=s.cod_cliente),
-	s.monto_total, s.descuento, s.monto_final
-	FROM salida_almacenes s, tipos_salida ts
-	where s.cod_tiposalida=ts.cod_tiposalida and s.cod_almacen='$global_almacen' and s.cod_salida_almacenes='$codigo_salida'";
+	s.monto_total, s.descuento, s.monto_final,lp.nro_lote,lp.nombre_lote, lp.cant_lote, lp.obs_lote,mp.descripcion_material
+	FROM salida_almacenes s
+	left join tipos_salida ts on (s.cod_tiposalida = ts.cod_tiposalida )
+	left join lotes_produccion lp on (s.cod_lote=lp.cod_lote)
+	left join material_apoyo mp on (lp.codigo_material=mp.codigo_material)
+	where s.cod_almacen='$global_almacen' and s.cod_salida_almacenes='$codigo_salida'";
 	$resp=mysqli_query($enlaceCon,$sql);
 	$dat=mysqli_fetch_array($resp);
 	$codigo=$dat[0];
@@ -46,6 +49,12 @@
 	$montoFinal=$dat[11];
 	$montoFinal=redondear2($montoFinal);
 
+	$nro_lote=$dat['nro_lote'];
+	$nombre_lote=$dat['nombre_lote'];
+	$cant_lote=$dat['cant_lote'];
+	$obs_lote=$dat['obs_lote'];
+	$descripcion_material=$dat['descripcion_material'];
+
 		
 	echo "<table class='texto' align='center'>";
 	echo "<tr><th colspan='3' align='center'>Nota de Remision</th></tr>";
@@ -56,11 +65,14 @@
 	
 	echo "<tr><th align='left' class='bordeNegroTdMod'>Tipo de Salida: $nombre_tiposalida</th>
 	<th align='center' class='bordeNegroTdMod'>Almacen Destino: $nombreAlmacenDestino</th><th align='right'>Observaciones: $obs_salida</th></tr>";
-			
+		if($nro_lote<>null){
+		echo "<tr>
+		<th align='left' class='bordeNegroTdMod' colspan='3'>LOTE: $nro_lote $nombre_lote $cant_lote <br/>$descripcion_material / $obs_lote</th></tr>";
+			}
 	echo "</table><br>";
 
 	echo "<table border='0' class='texto' cellspacing='0' width='90%' align='center'>";
-	
+
 	echo "<tr><th>Nro</th><th>Grupo/Subgrupo</th><th>Marca</th><th>COD</th><th>Producto</th><th>Cantidad</th><th>CostoUnitario</th><th>CostoItem</th><th>Precio Normal</th><th>Precio x Mayor</th></tr>";
 	
 	echo "<form method='post' action=''>";

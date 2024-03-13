@@ -28,7 +28,7 @@ $fechaActual=date("Y-m-d");
 </td>
 
 <td align="center" width="10%">
-<input type="number" class="inputnumber" min="0.1" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="1" step="0.01" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
+<input type="number" class="inputnumber" min="0.001" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="1" step="0.001" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
 </td>
 
 <td align="center" width="10%">

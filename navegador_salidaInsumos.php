@@ -304,17 +304,17 @@ echo "<div class='divBotones'>
 echo "<br><br><div id='divCuerpo'>";
 echo "<center><table class='texto'>";
 echo "<tr><th>&nbsp;</th><th>Numero Salida</th><th>Fecha/hora<br>Registro Salida</th><th>Tipo de Salida</th>
-	<th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
+	<th>Lote</th><th>Almacen Destino</th><th>Cliente</th><th>Observaciones</th><th>&nbsp;</th></tr>";
 	
-	
-//
+
 $consulta = "
-	select s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida, 
-	(select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, 
-	s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, 
-	(select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc 
-	FROM salida_almacenes s, tipos_salida ts 
-	WHERE s.cod_tiposalida = ts.cod_tiposalida AND s.cod_tipo='$tipo' and s.cod_almacen = '$global_almacen' and s.cod_tiposalida<>1001 ";
+	select s.cod_salida_almacenes, s.fecha, s.hora_salida, ts.nombre_tiposalida,
+ (select a.nombre_almacen from almacenes a where a.`cod_almacen`=s.almacen_destino), s.observaciones, s.estado_salida, s.nro_correlativo, s.salida_anulada, s.almacen_destino, (select c.nombre_cliente from clientes c where c.cod_cliente = s.cod_cliente), s.cod_tipo_doc, lp.nro_lote,lp.nombre_lote, lp.cant_lote, lp.obs_lote,mp.descripcion_material
+FROM salida_almacenes s 
+left join tipos_salida ts on (s.cod_tiposalida = ts.cod_tiposalida )
+left join lotes_produccion lp on (s.cod_lote=lp.cod_lote)
+left join material_apoyo mp on (lp.codigo_material=mp.codigo_material)
+	WHERE  s.cod_tipo='$tipo' and s.cod_almacen = '$global_almacen' and s.cod_tiposalida<>1001 ";
 
 if($txtnroingreso!="")
    {$consulta = $consulta."AND s.nro_correlativo='$txtnroingreso' ";
@@ -341,6 +341,13 @@ while ($dat = mysqli_fetch_array($resp)) {
     $cod_almacen_destino = $dat[9];
 	$nombreCliente=$dat[10];
 	$codTipoDoc=$dat[11];
+
+    $nro_lote=$dat['nro_lote'];
+    $nombre_lote=$dat['nombre_lote'];
+    $cant_lote=$dat['cant_lote'];
+    $obs_lote=$dat['obs_lote'];
+    $descripcion_material=$dat['descripcion_material'];
+
     echo "<input type='hidden' name='fecha_salida$nro_correlativo' value='$fecha_salida_mostrar'>";
     $estado_preparado = 0;
     if ($estado_almacen == 0) {
@@ -380,7 +387,10 @@ while ($dat = mysqli_fetch_array($resp)) {
     echo "<td align='center'>&nbsp;$chk</td>";
     echo "<td align='center'>$nro_correlativo</td>";
     echo "<td align='center'>$fecha_salida_mostrar $hora_salida</td>";
-    echo "<td>$nombre_tiposalida</td><td>&nbsp;$nombre_almacen</td>";
+    echo "<td>$nombre_tiposalida</td>";
+    echo "<td align='center'>$nro_lote $nombre_lote<br/> $descripcion_material<br/> $cant_lote  $obs_lote</td>";
+     echo "<td>&nbsp;$nombre_almacen</td>";
+  
     echo "<td>&nbsp;$nombreCliente</td><td>&nbsp;$obs_salida</td>";
     $url_notaremision = "navegador_detallesalidamuestras.php?codigo_salida=$codigo";    
     echo "<td bgcolor='$color_fondo'><a href='javascript:llamar_preparado(this.form, $estado_preparado, $codigo)'>

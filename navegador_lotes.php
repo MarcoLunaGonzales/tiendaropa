@@ -185,7 +185,9 @@ $sql=$sql." order by  lp.nro_lote desc";
 		<th>Fecha Registro</th>
 		<th>Fecha Inicio</th>
 		<th>Fecha Final</th>
+		<th>Procesos<br/>Construccion</th>
 		<th>&nbsp;</th>
+		
 	
 		</tr>";
 	
@@ -229,9 +231,10 @@ $sql=$sql." order by  lp.nro_lote desc";
 		<td>$nombre_estado_lote</td>
 		<td align='center'>$nombre_registro<br/>$fecha_reg_mostrar</td>
 		<td align='center'>$fecha_inicio_lote</td>
-		<td align='center'>$fecha_fin_lote</td>
-
-		<td align='center'>";
+		<td align='center'>$fecha_fin_lote</td>	
+		<td align='center'><a href='registroProcesosConstLote.php?codLote=$cod_lote'>
+						Incluir Procesos</a></td>";
+		echo"<td>";
 
 		if($cod_estado_lote<>4){
 			if($cod_estado_lote==1){
@@ -247,6 +250,7 @@ $sql=$sql." order by  lp.nro_lote desc";
 	}
 		echo" </td>";
 	
+
 		echo" </tr>";
 		$indice_tabla++;
 	}
