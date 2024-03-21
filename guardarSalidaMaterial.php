@@ -306,7 +306,7 @@ if($sql_inserta==1){
 			/****************** Gestionamos los precios desde los traspasos  **************/
 			$precioTraspaso=0;
 			$precioTraspaso2=0;
-			if(isset($_POST["precio_traspaso$i"])){
+			if(isset($_POST["precio_normal$i"])){
 				$precioTraspaso=$_POST["precio_normal$i"];
 				$precioTraspaso2=$_POST["precio_mayor$i"];
 			}
@@ -332,15 +332,17 @@ if($sql_inserta==1){
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			
+			echo "precioTraspaso=".$precioTraspaso;
+			echo "precioTraspaso2=".$precioTraspaso2;
 			//echo "banderaValidacionStock=".$banderaValidacionStock."<br>";
 			if($banderaValidacionStock==1){
 
 
 				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precioTraspaso,$precioTraspaso2);
-				//echo "descontar_inventarios=".$respuesta."<br>";
+				echo "descontar_inventarios=".$respuesta."<br>";
 			}else{
 				$respuesta=insertar_detalleSalidaVenta($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock,$i,$precioTraspaso,$precioTraspaso2);
-				//echo "insertar_detalleSalidaVenta=".$respuesta."<br>";
+				echo "insertar_detalleSalidaVenta=".$respuesta."<br>";
 			}
 	
 			if($respuesta!=1){
