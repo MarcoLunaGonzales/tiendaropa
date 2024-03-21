@@ -117,6 +117,7 @@ echo "<script language='Javascript'>
 
 	$estado=$_GET['estado'];
 	$globalAgencia=$_COOKIE['global_agencia'];
+	$global_almacen=$_COOKIE['global_almacen'];
 
     
 
@@ -135,6 +136,7 @@ from lotes_produccion lp
 left join estados_lote el on(lp.cod_estado_lote=el.cod_estado)
 left join material_apoyo mp on(lp.codigo_material=mp.codigo_material)
 left join funcionarios f on(lp.created_by=f.codigo_funcionario)
+
 where lp.cod_lote<>0 ";
 if($estado<>''){
  $sql=$sql." and lp.cod_estado_lote='".$estado."'";
@@ -175,9 +177,9 @@ $sql=$sql." order by  lp.nro_lote desc";
 		<th>Fecha Inicio</th>
 		<th>Fecha Final</th>
 		<th>Salida de <br/>Insumos</th>
-		<th>Procesos<br/>Construccion</th>
-		<th></th>
+		<th>Procesos<br/>Construccion</th>		
 		<th>&nbsp;</th>
+		<th>Generar Ingresos <br/> a Almacen</th>
 		
 	
 		</tr>";
@@ -267,7 +269,26 @@ $sql=$sql." order by  lp.nro_lote desc";
 	}
 		echo" </td>";
 	
+?>
+<td>
 
+<?php
+
+$sqlIngreso="select ia.cod_ingreso_almacen,ia.nro_correlativo,ia.fecha,ia.hora_ingreso
+ from ingreso_almacenes ia where ia.cod_lote=".$cod_lote." 
+ and ia.cod_almacen=".$global_almacen." order by ia.nro_correlativo desc";
+ $respIngreso=mysqli_query($enlaceCon,$sqlIngreso);
+		while($datIngreso=mysqli_fetch_array($respIngreso)){
+			$cod_ingreso_almacen=$datIngreso['cod_ingreso_almacen'];
+			$nro_correlativo=$datIngreso['nro_correlativo'];
+			$fecha=$datIngreso['fecha'];
+			$hora_ingreso=$datIngreso['hora_ingreso'];
+			echo "Nro:".$nro_correlativo." ".$fecha."<br/>";
+
+		}
+?>
+	<a href='registrarIngresoAlmProductoLote.php?cod_lote=<?=$cod_lote;?>&tipo=1'>Generar</a></td>
+<?php
 		echo" </tr>";
 		$indice_tabla++;
 	}
