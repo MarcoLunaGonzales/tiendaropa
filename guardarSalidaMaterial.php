@@ -332,8 +332,8 @@ if($sql_inserta==1){
 			
 			$montoTotalVentaDetalle=$montoTotalVentaDetalle+$montoMaterialConDescuento;
 			
-			echo "precioTraspaso=".$precioTraspaso;
-			echo "precioTraspaso2=".$precioTraspaso2;
+			/*echo "precioTraspaso=".$precioTraspaso;
+			echo "precioTraspaso2=".$precioTraspaso2;*/
 			//echo "banderaValidacionStock=".$banderaValidacionStock."<br>";
 			if($banderaValidacionStock==1){
 
