@@ -486,7 +486,6 @@ echo "<div class='divBotones'>
 </div>";
 
 echo "</div>";
-echo "<script type='text/javascript' language='javascript'  src='dlcalendar.js'></script>";
 
 ?>
 
