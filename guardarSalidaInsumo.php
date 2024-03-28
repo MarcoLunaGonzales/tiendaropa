@@ -1,10 +1,10 @@
 <?php
 $start_time = microtime(true);
-require("conexionmysqli2.inc");
-require("estilos.inc");
-
+require("conexionmysqli.php");
+require("estilos_almacenes.inc");
 require("funciones.php");
 require("funciones_inventarios.php");
+require("enviar_correo/php/send-email_anulacion.php");
 
 
  error_reporting(E_ALL);
@@ -12,13 +12,22 @@ require("funciones_inventarios.php");
 
 $tipo=$_POST['tipo'];
 
+$lote=$_POST['lote'];
+echo "lote=".$lote."<br/>";
+if($lote!=0){
+	$arrayLote=explode("-", $lote);
+	$lote=$arrayLote[0];
+}
+
+echo "lote=".$lote;
+//Cuando es salida de Insumos no hay modificacion de precios
 $banderaEditPreciosTraspaso=0;
-$banderaEditPreciosTraspaso=obtenerValorConfiguracion($enlaceCon, 20);
+//$banderaEditPreciosTraspaso=obtenerValorConfiguracion($enlaceCon, 20);
 
 $usuarioVendedor=$_COOKIE['global_usuario'];
 $globalSucursal=$_COOKIE['global_agencia'];
 
-$cod_ingreso_almacen=$_POST['cod_ingreso_almacen'];
+
 
 
 
@@ -79,9 +88,9 @@ $created_by=$usuarioVendedor;
 	$cod_dosificacion=0;
 
 	$sql_inserta="insert into salida_almacenes(cod_salida_almacenes, cod_almacen, cod_tiposalida, 
- 	cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada,  cod_chofer, cod_tipo)
+ 	cod_tipo_doc, fecha, hora_salida, territorio_destino, almacen_destino, observaciones, estado_salida, nro_correlativo, salida_anulada,  cod_chofer, cod_tipo,cod_lote)
  		values ('$codigo', '$almacenOrigen', '$tipoSalida', '$tipoDoc', '$fecha', '$hora', '0', '$almacenDestino', 
- 		'$observaciones', '1', '$nro_correlativo','1',  '$usuarioVendedor','$tipo')";
+ 		'$observaciones', '1', '$nro_correlativo','1',  '$usuarioVendedor','$tipo','$lote')";
 
  $resp_inserta=mysqli_query($enlaceCon,$sql_inserta);
 	//echo $sql_inserta;
@@ -92,6 +101,7 @@ if($resp_inserta==1){
 	
 	for($i=1;$i<=$cantidad_material;$i++)
 	{   	
+		if(isset($_POST['materiales'.$i])){
 		$codMaterial=$_POST["materiales".$i];
 		
 		if($codMaterial!=0){
@@ -103,11 +113,11 @@ if($resp_inserta==1){
 			$precio_normal=0;
 			$precio_mayor=0;
 		
-				$precio_normal=$_POST['precio_normal'.$i];
+		/*		$precio_normal=$_POST['precio_normal'.$i];
 				$precio_mayor=$_POST['precio_mayor'.$i];
 
 			/******* Cuando es Traspaso y los precios no son Editables ******/
-			if($tipoSalida==1000 && $banderaEditPreciosTraspaso==0){
+			/*if($tipoSalida==1000 && $banderaEditPreciosTraspaso==0){
 				//echo "saca precios de la base de datos del almacen origen";
 				$consulta="select p.`precio` from precios p where p.`codigo_material`='$codMaterial' and p.`cod_precio`='1' and cod_ciudad='$globalSucursal'";
 				$rs=mysqli_query($enlaceCon,$consulta);
@@ -121,7 +131,7 @@ if($resp_inserta==1){
 				if(mysqli_num_rows($rs)>0){
 					$precio_mayor=$registro[0];
 				}
-			}
+			}*/
 
 			//SE DEBE CALCULAR EL MONTO DEL MATERIAL POR CADA UNO PRECIO*CANTIDAD - EL DESCUENTO ES UN DATO ADICIONAL
 			$montoMaterial=$precioUnitario*$cantidadUnitaria;
@@ -131,7 +141,7 @@ if($resp_inserta==1){
 			
 			if($banderaValidacionStock==1){
 
-				$respuesta=descontar_inventariosIngreso($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precio_normal,$precio_mayor,$cod_ingreso_almacen);
+				$respuesta=descontar_inventarios($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$i,$precio_normal,$precio_mayor);
 				//echo "descontar_inventarios=".$respuesta."<br>";
 			}else{
 				$respuesta=insertar_detalleSalidaVenta($enlaceCon,$codigo, $almacenOrigen,$codMaterial,$cantidadUnitaria,$precioUnitario,$descuentoProducto,$montoMaterial,$banderaValidacionStock,$i,$precio_normal,$precio_mayor);
@@ -143,18 +153,19 @@ if($resp_inserta==1){
 					alert('Existio un error en el detalle. Contacte con el administrador del sistema.');
 				</script>";
 			}
+		}
 		}			
 	}
 	
 		echo "<script type='text/javascript' language='javascript'>
 		alert('El trasposo se efectuo correctamente.');
-			location.href='navegador_ingresomateriales.php?tipo=$tipo&estado=-1';
+			location.href='navegador_salidaInsumos.php?tipo=$tipo&estado=-1';
 		</script>";
 
 }else{
 		echo "<script type='text/javascript' language='javascript'>
 			alert('Ocurrio un error en la transaccion. Contacte con el administrador del sistema.');
-			location.href='navegador_ingresomateriales.php?tipo=$tipo&estado=-1';
+			location.href='navegador_salidaInsumos.php?tipo=$tipo&estado=-1';
 		</script>";
 }
 

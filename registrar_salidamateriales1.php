@@ -96,9 +96,10 @@ function ajaxPesoMaximo(codVehiculo){
 function ajaxNroDoc(f){
 	var contenedor;
 	contenedor=document.getElementById("divNroDoc");
+		var tipo=f.tipo.value;
 	ajax=nuevoAjax();
 	var codTipoDoc=(f.tipoDoc.value);
-	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc,true);
+	ajax.open("GET", "ajaxNroDoc.php?codTipoDoc="+codTipoDoc+"&tipo="+tipo,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText

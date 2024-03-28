@@ -117,6 +117,7 @@ echo "<script language='Javascript'>
 
 	$estado=$_GET['estado'];
 	$globalAgencia=$_COOKIE['global_agencia'];
+	$global_almacen=$_COOKIE['global_almacen'];
 
     
 
@@ -135,21 +136,14 @@ from lotes_produccion lp
 left join estados_lote el on(lp.cod_estado_lote=el.cod_estado)
 left join material_apoyo mp on(lp.codigo_material=mp.codigo_material)
 left join funcionarios f on(lp.created_by=f.codigo_funcionario)
+
 where lp.cod_lote<>0 ";
 if($estado<>''){
  $sql=$sql." and lp.cod_estado_lote='".$estado."'";
-
 }
-
-$sql=$sql." order by  lp.nro_lote desc";	
- //echo $sql;
-
-    
-	
-
-	
+$sql=$sql." order by  lp.nro_lote desc";		
 	//echo $sql;
-	$resp=mysqli_query($enlaceCon,$sql);
+	
 	
 	echo "<table align='center' class='texto'><tr><th>Ver Lotes:
 	<select name='estado' id='estado'class='texto' onChange='cambiar_vista(this.form)'>";
@@ -168,10 +162,7 @@ $sql=$sql." order by  lp.nro_lote desc";
 			}
 			echo " </select>
 	</th>
-	</tr></table><br>";
-
-	
-	
+	</tr></table><br>";	
 	echo "<div class='divBotones'>
 		<input type='button' value='Adicionar' name='adicionar' class='boton' onclick='enviar_nav()'>		
 		<input type='button' value='Editar' name='Editar' class='boton' onclick='editar_nav(this.form)'>
@@ -185,13 +176,18 @@ $sql=$sql." order by  lp.nro_lote desc";
 		<th>Fecha Registro</th>
 		<th>Fecha Inicio</th>
 		<th>Fecha Final</th>
+		<th>Salida de <br/>Insumos</th>
+		<th>Procesos<br/>Construccion</th>		
 		<th>&nbsp;</th>
+		<th>Generar Ingresos <br/> a Almacen</th>
+		
 	
 		</tr>";
 	
 	$indice_tabla=1;
-	while($dat=mysqli_fetch_array($resp))
-	{
+	$resp=mysqli_query($enlaceCon,$sql);
+	while($dat=mysqli_fetch_array($resp)){
+
 		$cod_lote=$dat['cod_lote'];
 		$nro_lote=$dat['nro_lote'];
 		$nombre_lote=$dat['nombre_lote'];
@@ -229,9 +225,35 @@ $sql=$sql." order by  lp.nro_lote desc";
 		<td>$nombre_estado_lote</td>
 		<td align='center'>$nombre_registro<br/>$fecha_reg_mostrar</td>
 		<td align='center'>$fecha_inicio_lote</td>
-		<td align='center'>$fecha_fin_lote</td>
-
+		<td align='center'>$fecha_fin_lote</td>	
 		<td align='center'>";
+		$sqlSalida="select nro_correlativo,fecha,hora_salida from salida_almacenes where cod_lote='".$cod_lote."'";
+		$respSalida=mysqli_query($enlaceCon,$sqlSalida);
+		while($datSalida=mysqli_fetch_array($respSalida)){
+			$nroCorrelativo=$datSalida['nro_correlativo'];
+			$fecha=$datSalida['fecha'];
+			$horaSalida=$datSalida['hora_salida'];
+			echo "Nro ".$nroCorrelativo." ".$fecha." ".$horaSalida;
+		}
+		echo"</td>	
+		<td align='center' class='textomini'>";
+		$sqlProcesosLote="select pc.nombre_proceso_const,p.nombre_proveedor,lpc.cantidad,lpc.precio
+		from lote_procesoconst lpc
+		left join procesos_construccion pc on (lpc.cod_proceso_const=pc.cod_proceso_const)
+		left join proveedores p on (lpc.cod_proveedor=p.cod_proveedor)
+		where cod_lote=".$cod_lote." order by nombre_proceso_const asc";
+		$respProcesosLote=mysqli_query($enlaceCon,$sqlProcesosLote);
+		while($datProcesoLote=mysqli_fetch_array($respProcesosLote)){
+			$nombre_proceso_const=$datProcesoLote['nombre_proceso_const'];
+			$nombre_proveedor=$datProcesoLote['nombre_proveedor'];
+			$cantidad=$datProcesoLote['cantidad'];
+			$precio=$datProcesoLote['precio'];
+			echo "- ".$nombre_proceso_const." ".$nombre_proveedor." ".$cantidad." ".$precio."<br/>";
+		}
+
+		echo "<a href='registroProcesosConstLote.php?codLote=$cod_lote'  >Incluir Procesos en Grupo</a>
+		</td>";
+		echo"<td>";
 
 		if($cod_estado_lote<>4){
 			if($cod_estado_lote==1){
@@ -247,6 +269,26 @@ $sql=$sql." order by  lp.nro_lote desc";
 	}
 		echo" </td>";
 	
+?>
+<td>
+
+<?php
+
+$sqlIngreso="select ia.cod_ingreso_almacen,ia.nro_correlativo,ia.fecha,ia.hora_ingreso
+ from ingreso_almacenes ia where ia.cod_lote=".$cod_lote." 
+ and ia.cod_almacen=".$global_almacen." order by ia.nro_correlativo desc";
+ $respIngreso=mysqli_query($enlaceCon,$sqlIngreso);
+		while($datIngreso=mysqli_fetch_array($respIngreso)){
+			$cod_ingreso_almacen=$datIngreso['cod_ingreso_almacen'];
+			$nro_correlativo=$datIngreso['nro_correlativo'];
+			$fecha=$datIngreso['fecha'];
+			$hora_ingreso=$datIngreso['hora_ingreso'];
+			echo "Nro:".$nro_correlativo." ".$fecha."<br/>";
+
+		}
+?>
+	<a href='registrarIngresoAlmProductoLote.php?cod_lote=<?=$cod_lote;?>&tipo=1'>Generar</a></td>
+<?php
 		echo" </tr>";
 		$indice_tabla++;
 	}

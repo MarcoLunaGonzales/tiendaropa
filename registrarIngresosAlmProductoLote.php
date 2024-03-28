@@ -73,8 +73,7 @@ function listaMateriales(f){
 	contenedor = document.getElementById('divListaMateriales');
 	ajax=nuevoAjax();
 	
-		ajax.open("GET", "ajaxListaMaterialesIngreso.php?tipo="+tipo+"&codGrupo="+codGrupo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);;
-	
+	ajax.open("GET", "ajaxListaMaterialesIngreso.php?tipo="+tipo+"&codGrupo="+codGrupo+"&codMarca="+codMarca+"&codBarraCod2="+codBarraCod2+"&nombreItem="+nombreItem,true);
 	ajax.onreadystatechange=function() {
 		if (ajax.readyState==4) {
 			contenedor.innerHTML = ajax.responseText;
@@ -214,11 +213,12 @@ function validar(f){
 
 	</script>
 
-<form action='guarda_editaringresoinsumos.php' method='post' name='form1'>
+<form action='guarda_editaringresomateriales.php' method='post' name='form1'>
+
+<input type="hidden" name="codIngreso" value="<?php echo $codIngresoEditar;?>" id="codIngreso">
 <input type="hidden" name="tipo" value="<?php echo $tipo;?>" id="tipo">
 <input type="hidden" name="estado" value="<?php echo $estado;?>" id="estado">
-<input type="hidden" name="codIngreso" value="<?php echo $codIngresoEditar;?>" id="codIngreso">
-<table border='0' class='textotit' align='center'><tr><th>Editar Ingreso de Insumos</th></tr></table><br>
+<table border='0' class='textotit' align='center'><tr><th>Editar Ingreso de Materiales</th></tr></table><br>
 
 <?php
 
@@ -280,7 +280,7 @@ while($dat1=mysqli_fetch_array($resp1))
 			<table align="center"class="text" cellSpacing="1" cellPadding="2" width="100%" border="0" id="data0" style="border:#ccc 1px solid;">
 				<tr>
 					<td align="center" colspan="6">
-						<input class="boton" type="button" value="Buscar Insumo(+)" onclick="mas(this)" />
+						<input class="boton" type="button" value="Buscar Producto(+)" onclick="mas(this)" />
 					</td>
 				</tr>
 				<tr>
@@ -310,7 +310,7 @@ while($dat1=mysqli_fetch_array($resp1))
 				left join marcas mar on (m.cod_marca= mar.codigo)
 				where
 				id.`cod_material`=m.`codigo_material` 
-				and id.`cod_ingreso_almacen`='$codIngresoEditar' order by id.orden_detalle asc";
+				and id.`cod_ingreso_almacen`='$codIngresoEditar' order by 2";
 				
 			$respDetalle=mysqli_query($enlaceCon,$sqlDetalle);
 			$indiceMaterial=1;
@@ -385,7 +385,7 @@ while($dat1=mysqli_fetch_array($resp1))
 <div id="cod_material<?php echo $num;?>" class='textoform'><strong><?=$codigo2;?><?=$codBarra;?></strong> <?=$nombreMaterial;?><strong><? echo " (".$nombreMarca.")";?></strong></div>
 </td>
 <td align="center" width="10%">
-<input type="number" class="inputnumber" min="0.001" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="<?=$cantidadMaterial;?>" step="0.001" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
+<input type="number" class="inputnumber" min="1" max="1000000" id="cantidad_unitaria<?php echo $num;?>" name="cantidad_unitaria<?php echo $num;?>" size="5"  value="<?=$cantidadMaterial;?>" step="0.01" onchange='cambiaCosto(this.form,<?php echo $num;?>)' onkeyup='cambiaCosto(this.form,<?php echo $num;?>)' required>
 </td>
 
 <td align="center" width="10%">
@@ -432,7 +432,7 @@ onchange='cambiaCosto(this.form,<?=$num;?>)' onkeyup='cambiaCosto(this.form,<?=$
 
 echo "<div class='divBotones'>
 <input type='submit' class='boton' value='Guardar' onClick='return validar(this.form);'></center>
-<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresoinsumos.php\"'></center>
+<input type='button' class='boton2' value='Cancelar' onClick='location.href=\"navegador_ingresomateriales.php?tipo=".$tipo."&estado=".$estado."\"'></center>
 </div>";
 ?>
 
@@ -453,13 +453,13 @@ echo "<div class='divBotones'>
 			<td><select name='codGrupo' id="codGrupo" class="texto" style="width:120px">
 			<?php
 			$sqlTipo="select g.codigo, g.nombre from grupos g
-			where g.estado=1 and g.cod_tipo=".$tipo." order by 2;";
+			where g.estado=1 and cod_tipo=".$tipo." order by 2;";
 			$respTipo=mysqli_query($enlaceCon,$sqlTipo);
 			echo "<option value='0'>--</option>";
 			while($datTipo=mysqli_fetch_array($respTipo)){
-				$codTipoMat=$datTipo[0];
-				$nombreTipoMat=$datTipo[1];
-				echo "<option value=$codTipoMat>$nombreTipoMat</option>";
+				$codGrupo=$datTipo[0];
+				$nombreGrupo=$datTipo[1];
+				echo "<option value=$codGrupo>$nombreGrupo</option>";
 			}
 			?>
 			</select>

@@ -240,9 +240,9 @@ echo "<script language='Javascript'>
 		</div> <br> <br>";
 	
 	echo "<center><table class='texto'>";
-	echo "<tr><th></th><th>Nro</th><th>Codigo</th><th>Marca</th><th>Nombre</th>
+	echo "<tr><th></th><th>Nro</th><th>Marca</th><th>Nombre</th>
 		<th>Grupo<br/>SubGrupo</th><th>Modelo<br/>Genero</th><th>Material<br/>
-		Color<br/>Talla<br/>Coleccion</th><th>Insumos</th>
+		Color<br/>Talla<br/>Coleccion</th><th>Insumos</th><th>Procesos<br/>Construccion</th>
 		<th>Precios</th><th>Fecha Creacion</th><th>Imagen</th>
 		<th>Fijar Precios</th><th>Estado</th>
 	
@@ -292,8 +292,7 @@ echo "<script language='Javascript'>
 		echo"<input type='checkbox' name='codigo' value='$codigo'>";
 	}
 		echo"</td>
-		<td align='center'>$indice_tabla</td>
-		<td>$codigoBarras -$codigo2</td>
+		<td align='center'>$indice_tabla<br/>$codigoBarras -$codigo2</td>
 		<td>$marca</td>
 		<td>$nombreProd</td>
 		<td>$grupo <br/> $subgrupo</td>
@@ -319,8 +318,27 @@ echo "<script language='Javascript'>
 
 
 		echo "<br/><center><a href='registroInsumosProductos.php?codigo=$codigo&nombre=$nombreProd&tipo=$tipo&estado=$estado'>
-		<img src='imagenes/agujas.png' width='30' title='Agregar Insumos'></a></center></td>
-		<td align='center'>";
+		<img src='imagenes/agujas.png' width='30' title='Agregar Insumos'></a></center></td>";
+		echo"<td>";
+		$sqlProcesosProducto="select pc.nombre_proceso_const 
+from procesos_construccion_producto pcp
+left join procesos_construccion pc on (pcp.cod_proceso_const=pc.cod_proceso_const)
+where pcp.cod_producto=".$codigo." order by pc.nombre_proceso_const asc";
+
+			$respProcesosProducto=mysqli_query($enlaceCon,$sqlProcesosProducto);
+			echo" <table border='0' cellspacing='0' cellpadding='0' >";
+			while($datProcesosProducto=mysqli_fetch_array($respProcesosProducto)){
+				$proceso=$datProcesosProducto['nombre_proceso_const'];
+				
+				echo "<tr><td>".$proceso."</td></tr>";
+				
+			}
+		echo" </table>";
+
+		echo"<a href='registroProcesosProducto.php?codigo=$codigo&nombre=$nombreProd&tipo=$tipo&estado=$estado'>Procesos
+		</a>";
+		echo"<br></td>";
+		echo" <td align='center'>";
 		$sqlListPrecios="select p.codigo_material,p.cod_precio,gp.nombre ,gp.abreviatura ,p.precio,p.cod_ciudad,c.nombre_ciudad,
 		p.cant_inicio,p.cant_final, p.created_by, 
 		concat(f.nombres,' ',f.paterno,' ',f.materno) as creado_por, p.created_date

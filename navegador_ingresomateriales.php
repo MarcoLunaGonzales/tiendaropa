@@ -276,7 +276,9 @@ echo "<div class='divBotones'><input type='button' value='Registrar Ingreso' nam
 
 echo "<br><div id='divCuerpo'>";
 echo "<br><center><table class='texto'>";
-echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th><th>Fecha</th><th>Tipo de Ingreso</th>
+echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th><th>Fecha</th>
+<th>Tipo de Ingreso</th>
+<th>Lote</th>
 <th>Proveedor</th>
 <th>Observaciones</th>
 <th>Registro</th>
@@ -288,11 +290,14 @@ echo "<tr><th>&nbsp;</th><th>Nro. Ingreso</th><th>Factura o Nota de Ingreso</th>
 $consulta = "SELECT i.cod_ingreso_almacen, i.fecha, i.hora_ingreso, ti.nombre_tipoingreso,
  i.observaciones, i.nota_entrega, i.nro_correlativo, i.ingreso_anulado,p.nombre_proveedor,
 	i.nro_factura_proveedor, i.created_by,i.created_date, i.modified_by,
-	 i.modified_date,es.nombre_estado  
+	 i.modified_date,es.nombre_estado, i.cod_lote , lp.nro_lote, lp.nombre_lote,lp.codigo_material,
+	 ma.descripcion_material
 	FROM ingreso_almacenes i
 	left join tipos_ingreso ti  on (i.cod_tipoingreso=ti.cod_tipoingreso )
 	left join proveedores p  on (i.cod_proveedor=p.cod_proveedor)	 
 	left join estados es on (i.ingreso_anulado=es.cod_estado)
+	left join lotes_produccion lp on (i.cod_lote=lp.cod_lote)
+	left join material_apoyo ma on (lp.codigo_material=ma.codigo_material)
 	WHERE i.cod_tipo=".$tipo."";
 if($estado<>'-1'){
  $consulta =$consulta." and i.ingreso_anulado='".$estado."'";
@@ -331,6 +336,10 @@ while ($dat = mysqli_fetch_array($resp)) {
 	}
 	$modified_date=$dat[13];
 	$nombre_estado=$dat['nombre_estado'];
+	$nro_lote=$dat['nro_lote'];
+	$nombre_lote=$dat['nombre_lote'];
+	$codigo_material=$dat['codigo_material'];
+	$descripcion_material=$dat['descripcion_material'];
 	
 	$sqlAux=" select IFNULL(codigo_ingreso,0),nro_correlativo from  preingreso_almacenes  where codigo_ingreso=$codigo";
 	$respAux= mysqli_query($enlaceCon,$sqlAux);
@@ -356,7 +365,10 @@ while ($dat = mysqli_fetch_array($resp)) {
         $chkbox = "<input type='checkbox' name='codigo' value='$codigo'>";
     }
     echo "<tr bgcolor='$color_fondo'><td align='center'>$chkbox</td><td align='center'>$nro_correlativo</td><td align='center'>$nroFacturaProveedor</td>
-	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td><td>$nombre_tipoingreso</td>
+	<td align='center'>$fecha_ingreso_mostrar $hora_ingreso</td>
+
+	<td>$nombre_tipoingreso</td>
+	<td>Nro Lote:$nro_lote<br/>$nombre_lote</td>
 	<td>&nbsp;$proveedor</td>
 	<td>&nbsp;$obs_ingreso</td>
 	<td>&nbsp;$usuReg<br>$created_date</td>";
